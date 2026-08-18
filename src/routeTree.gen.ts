@@ -16,9 +16,9 @@ import { Route as AuthenticatedDashboardRouteImport } from './routes/_authentica
 import { Route as AuthenticatedDuelsRouteImport } from './routes/_authenticated/duels'
 import { Route as AuthenticatedLeaderboardRouteImport } from './routes/_authenticated/leaderboard'
 import { Route as AuthenticatedPracticeRouteImport } from './routes/_authenticated/practice'
-import { Route as AuthenticatedTeacherRouteImport } from './routes/_authenticated/teacher'
 import { Route as AuthenticatedHomeworkHomeworkIdRouteImport } from './routes/_authenticated/homework.$homeworkId'
 import { Route as AuthenticatedPlaySlugRouteImport } from './routes/_authenticated/play.$slug'
+import { Route as AuthenticatedTeacherIndexRouteImport } from './routes/_authenticated/teacher.index'
 
 const IndexRoute = IndexRouteImport.update({
   id: '/',
@@ -55,11 +55,6 @@ const AuthenticatedPracticeRoute = AuthenticatedPracticeRouteImport.update({
   path: '/practice',
   getParentRoute: () => AuthenticatedRouteRoute,
 } as any)
-const AuthenticatedTeacherRoute = AuthenticatedTeacherRouteImport.update({
-  id: '/teacher',
-  path: '/teacher',
-  getParentRoute: () => AuthenticatedRouteRoute,
-} as any)
 const AuthenticatedHomeworkHomeworkIdRoute =
   AuthenticatedHomeworkHomeworkIdRouteImport.update({
     id: '/homework/$homeworkId',
@@ -71,6 +66,12 @@ const AuthenticatedPlaySlugRoute = AuthenticatedPlaySlugRouteImport.update({
   path: '/play/$slug',
   getParentRoute: () => AuthenticatedRouteRoute,
 } as any)
+const AuthenticatedTeacherIndexRoute =
+  AuthenticatedTeacherIndexRouteImport.update({
+    id: '/teacher/',
+    path: '/teacher/',
+    getParentRoute: () => AuthenticatedRouteRoute,
+  } as any)
 
 export interface FileRoutesByFullPath {
   '/': typeof IndexRoute
@@ -79,9 +80,9 @@ export interface FileRoutesByFullPath {
   '/duels': typeof AuthenticatedDuelsRoute
   '/leaderboard': typeof AuthenticatedLeaderboardRoute
   '/practice': typeof AuthenticatedPracticeRoute
-  '/teacher': typeof AuthenticatedTeacherRoute
   '/homework/$homeworkId': typeof AuthenticatedHomeworkHomeworkIdRoute
   '/play/$slug': typeof AuthenticatedPlaySlugRoute
+  '/teacher/': typeof AuthenticatedTeacherIndexRoute
 }
 export interface FileRoutesByTo {
   '/': typeof IndexRoute
@@ -90,9 +91,9 @@ export interface FileRoutesByTo {
   '/duels': typeof AuthenticatedDuelsRoute
   '/leaderboard': typeof AuthenticatedLeaderboardRoute
   '/practice': typeof AuthenticatedPracticeRoute
-  '/teacher': typeof AuthenticatedTeacherRoute
   '/homework/$homeworkId': typeof AuthenticatedHomeworkHomeworkIdRoute
   '/play/$slug': typeof AuthenticatedPlaySlugRoute
+  '/teacher': typeof AuthenticatedTeacherIndexRoute
 }
 export interface FileRoutesById {
   __root__: typeof rootRouteImport
@@ -103,9 +104,9 @@ export interface FileRoutesById {
   '/_authenticated/duels': typeof AuthenticatedDuelsRoute
   '/_authenticated/leaderboard': typeof AuthenticatedLeaderboardRoute
   '/_authenticated/practice': typeof AuthenticatedPracticeRoute
-  '/_authenticated/teacher': typeof AuthenticatedTeacherRoute
   '/_authenticated/homework/$homeworkId': typeof AuthenticatedHomeworkHomeworkIdRoute
   '/_authenticated/play/$slug': typeof AuthenticatedPlaySlugRoute
+  '/_authenticated/teacher/': typeof AuthenticatedTeacherIndexRoute
 }
 export interface FileRouteTypes {
   fileRoutesByFullPath: FileRoutesByFullPath
@@ -116,9 +117,9 @@ export interface FileRouteTypes {
     | '/duels'
     | '/leaderboard'
     | '/practice'
-    | '/teacher'
     | '/homework/$homeworkId'
     | '/play/$slug'
+    | '/teacher/'
   fileRoutesByTo: FileRoutesByTo
   to:
     | '/'
@@ -127,9 +128,9 @@ export interface FileRouteTypes {
     | '/duels'
     | '/leaderboard'
     | '/practice'
-    | '/teacher'
     | '/homework/$homeworkId'
     | '/play/$slug'
+    | '/teacher'
   id:
     | '__root__'
     | '/'
@@ -139,9 +140,9 @@ export interface FileRouteTypes {
     | '/_authenticated/duels'
     | '/_authenticated/leaderboard'
     | '/_authenticated/practice'
-    | '/_authenticated/teacher'
     | '/_authenticated/homework/$homeworkId'
     | '/_authenticated/play/$slug'
+    | '/_authenticated/teacher/'
   fileRoutesById: FileRoutesById
 }
 export interface RootRouteChildren {
@@ -201,13 +202,6 @@ declare module '@tanstack/react-router' {
       preLoaderRoute: typeof AuthenticatedPracticeRouteImport
       parentRoute: typeof AuthenticatedRouteRoute
     }
-    '/_authenticated/teacher': {
-      id: '/_authenticated/teacher'
-      path: '/teacher'
-      fullPath: '/teacher'
-      preLoaderRoute: typeof AuthenticatedTeacherRouteImport
-      parentRoute: typeof AuthenticatedRouteRoute
-    }
     '/_authenticated/homework/$homeworkId': {
       id: '/_authenticated/homework/$homeworkId'
       path: '/homework/$homeworkId'
@@ -222,6 +216,13 @@ declare module '@tanstack/react-router' {
       preLoaderRoute: typeof AuthenticatedPlaySlugRouteImport
       parentRoute: typeof AuthenticatedRouteRoute
     }
+    '/_authenticated/teacher/': {
+      id: '/_authenticated/teacher/'
+      path: '/teacher'
+      fullPath: '/teacher/'
+      preLoaderRoute: typeof AuthenticatedTeacherIndexRouteImport
+      parentRoute: typeof AuthenticatedRouteRoute
+    }
   }
 }
 
@@ -230,9 +231,9 @@ interface AuthenticatedRouteRouteChildren {
   AuthenticatedDuelsRoute: typeof AuthenticatedDuelsRoute
   AuthenticatedLeaderboardRoute: typeof AuthenticatedLeaderboardRoute
   AuthenticatedPracticeRoute: typeof AuthenticatedPracticeRoute
-  AuthenticatedTeacherRoute: typeof AuthenticatedTeacherRoute
   AuthenticatedHomeworkHomeworkIdRoute: typeof AuthenticatedHomeworkHomeworkIdRoute
   AuthenticatedPlaySlugRoute: typeof AuthenticatedPlaySlugRoute
+  AuthenticatedTeacherIndexRoute: typeof AuthenticatedTeacherIndexRoute
 }
 
 const AuthenticatedRouteRouteChildren: AuthenticatedRouteRouteChildren = {
@@ -240,9 +241,9 @@ const AuthenticatedRouteRouteChildren: AuthenticatedRouteRouteChildren = {
   AuthenticatedDuelsRoute: AuthenticatedDuelsRoute,
   AuthenticatedLeaderboardRoute: AuthenticatedLeaderboardRoute,
   AuthenticatedPracticeRoute: AuthenticatedPracticeRoute,
-  AuthenticatedTeacherRoute: AuthenticatedTeacherRoute,
   AuthenticatedHomeworkHomeworkIdRoute: AuthenticatedHomeworkHomeworkIdRoute,
   AuthenticatedPlaySlugRoute: AuthenticatedPlaySlugRoute,
+  AuthenticatedTeacherIndexRoute: AuthenticatedTeacherIndexRoute,
 }
 
 const AuthenticatedRouteRouteWithChildren =
