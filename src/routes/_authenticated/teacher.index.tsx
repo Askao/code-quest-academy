@@ -8,7 +8,7 @@ import { Button } from "@/components/ui/button";
 import { Input } from "@/components/ui/input";
 import type { TrackKey } from "@/lib/game";
 
-export const Route = createFileRoute("/_authenticated/teacher")({
+export const Route = createFileRoute("/_authenticated/teacher/")({
   head: () => ({
     meta: [
       { title: "Teacher — PyForge" },
