@@ -7,7 +7,7 @@ import { Button } from "@/components/ui/button";
 function NavLink({ to, children }: { to: string; children: ReactNode }) {
   return (
     <Link
-      to={to}
+      to={to as never}
       className="rounded-md px-3 py-1.5 text-sm text-muted-foreground transition-colors hover:bg-secondary hover:text-foreground"
       activeProps={{ className: "bg-secondary text-foreground" }}
     >
