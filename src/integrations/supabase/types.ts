@@ -110,12 +110,15 @@ export type Database = {
           difficulty: number
           hints: Json
           id: string
+          lesson_id: string | null
+          lesson_order: number
           slug: string
           starter_code: string
           tests: Json
           title: string
           topic: string
           track: Database["public"]["Enums"]["track"]
+          wording_tier: number
           xp: number
         }
         Insert: {
@@ -124,12 +127,15 @@ export type Database = {
           difficulty?: number
           hints?: Json
           id?: string
+          lesson_id?: string | null
+          lesson_order?: number
           slug: string
           starter_code?: string
           tests?: Json
           title: string
           topic: string
           track: Database["public"]["Enums"]["track"]
+          wording_tier?: number
           xp?: number
         }
         Update: {
@@ -138,15 +144,26 @@ export type Database = {
           difficulty?: number
           hints?: Json
           id?: string
+          lesson_id?: string | null
+          lesson_order?: number
           slug?: string
           starter_code?: string
           tests?: Json
           title?: string
           topic?: string
           track?: Database["public"]["Enums"]["track"]
+          wording_tier?: number
           xp?: number
         }
-        Relationships: []
+        Relationships: [
+          {
+            foreignKeyName: "challenges_lesson_id_fkey"
+            columns: ["lesson_id"]
+            isOneToOne: false
+            referencedRelation: "lessons"
+            referencedColumns: ["id"]
+          },
+        ]
       }
       class_members: {
         Row: {
@@ -299,6 +316,48 @@ export type Database = {
           },
         ]
       }
+      lessons: {
+        Row: {
+          created_at: string
+          id: string
+          notes: string
+          order_index: number
+          slug: string
+          summary: string
+          title: string
+          topic: string
+          track: Database["public"]["Enums"]["track"]
+          worked_example: string
+          worked_example_note: string
+        }
+        Insert: {
+          created_at?: string
+          id?: string
+          notes?: string
+          order_index?: number
+          slug: string
+          summary?: string
+          title: string
+          topic: string
+          track: Database["public"]["Enums"]["track"]
+          worked_example?: string
+          worked_example_note?: string
+        }
+        Update: {
+          created_at?: string
+          id?: string
+          notes?: string
+          order_index?: number
+          slug?: string
+          summary?: string
+          title?: string
+          topic?: string
+          track?: Database["public"]["Enums"]["track"]
+          worked_example?: string
+          worked_example_note?: string
+        }
+        Relationships: []
+      }
       profiles: {
         Row: {
           created_at: string
@@ -330,6 +389,7 @@ export type Database = {
           track: Database["public"]["Enums"]["track"]
           updated_at: string
           user_id: string
+          wording_tier: number
         }
         Insert: {
           attempts?: number
@@ -340,6 +400,7 @@ export type Database = {
           track: Database["public"]["Enums"]["track"]
           updated_at?: string
           user_id: string
+          wording_tier?: number
         }
         Update: {
           attempts?: number
@@ -350,6 +411,7 @@ export type Database = {
           track?: Database["public"]["Enums"]["track"]
           updated_at?: string
           user_id?: string
+          wording_tier?: number
         }
         Relationships: []
       }
