@@ -99,7 +99,7 @@ function ClassDetail() {
       toast.error("Give the homework a title");
       return;
     }
-    let query = supabase.from("challenges").select("id").eq("track", track).eq("active", true);
+    let query = supabase.from("challenges").select("id").eq("track", track);
     if (topic !== "all") query = query.eq("topic", topic);
     const { data: pool } = await query;
     const ids = (pool ?? []).map((c) => c.id).sort(() => Math.random() - 0.5).slice(0, count);
