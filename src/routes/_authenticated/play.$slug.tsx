@@ -312,17 +312,22 @@ async function submitDuelTime(duelId: string, userId: string, ms: number) {
   const { data: duel } = await supabase.from("duels").select("*").eq("id", duelId).maybeSingle();
   if (!duel) return;
   const isChallenger = duel.challenger_id === userId;
-  const patch: Record<string, unknown> = isChallenger
-    ? { challenger_ms: ms }
-    : { opponent_ms: ms };
-  const mine = ms;
   const theirs = isChallenger ? duel.opponent_ms : duel.challenger_ms;
-  if (theirs != null) {
-    patch["status"] = "complete";
-    patch["winner_id"] =
-      mine < theirs ? userId : isChallenger ? duel.opponent_id : duel.challenger_id;
-  } else {
-    patch["status"] = "in_progress";
-  }
-  await supabase.from("duels").update(patch).eq("id", duelId);
+  const done = theirs != null;
+  const winner = done
+    ? ms < theirs
+      ? userId
+      : isChallenger
+        ? duel.opponent_id
+        : duel.challenger_id
+    : null;
+  await supabase
+    .from("duels")
+    .update({
+      ...(isChallenger ? { challenger_ms: ms } : { opponent_ms: ms }),
+      status: done ? "complete" : "in_progress",
+      ...(winner ? { winner_id: winner } : {}),
+    })
+    .eq("id", duelId);
+
 }
