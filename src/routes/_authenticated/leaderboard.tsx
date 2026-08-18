@@ -64,7 +64,6 @@ function Leaderboard() {
             name: (profiles.data ?? []).find((p) => p.id === id)?.full_name ?? "Student",
             xp: s?.xp ?? 0,
             streak: s?.streak_days ?? 0,
-            solved: s?.challenges_solved ?? 0,
             wins: wins.get(id) ?? 0,
           };
         })
@@ -120,7 +119,6 @@ function Leaderboard() {
                 <td className="p-3">{levelFromXp(r.xp).level}</td>
                 <td className="p-3 text-primary">{r.xp}</td>
                 <td className="p-3">{r.streak} 🔥</td>
-                <td className="p-3">{r.solved}</td>
                 <td className="p-3">{r.wins}</td>
               </tr>
             ))}
