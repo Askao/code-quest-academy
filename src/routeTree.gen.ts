@@ -14,6 +14,7 @@ import { Route as AuthenticatedRouteRouteImport } from './routes/_authenticated/
 import { Route as AuthRouteImport } from './routes/auth'
 import { Route as AuthenticatedDashboardRouteImport } from './routes/_authenticated/dashboard'
 import { Route as AuthenticatedPracticeRouteImport } from './routes/_authenticated/practice'
+import { Route as AuthenticatedHomeworkHomeworkIdRouteImport } from './routes/_authenticated/homework.$homeworkId'
 import { Route as AuthenticatedPlaySlugRouteImport } from './routes/_authenticated/play.$slug'
 
 const IndexRoute = IndexRouteImport.update({
@@ -40,6 +41,12 @@ const AuthenticatedPracticeRoute = AuthenticatedPracticeRouteImport.update({
   path: '/practice',
   getParentRoute: () => AuthenticatedRouteRoute,
 } as any)
+const AuthenticatedHomeworkHomeworkIdRoute =
+  AuthenticatedHomeworkHomeworkIdRouteImport.update({
+    id: '/homework/$homeworkId',
+    path: '/homework/$homeworkId',
+    getParentRoute: () => AuthenticatedRouteRoute,
+  } as any)
 const AuthenticatedPlaySlugRoute = AuthenticatedPlaySlugRouteImport.update({
   id: '/play/$slug',
   path: '/play/$slug',
@@ -51,6 +58,7 @@ export interface FileRoutesByFullPath {
   '/auth': typeof AuthRoute
   '/dashboard': typeof AuthenticatedDashboardRoute
   '/practice': typeof AuthenticatedPracticeRoute
+  '/homework/$homeworkId': typeof AuthenticatedHomeworkHomeworkIdRoute
   '/play/$slug': typeof AuthenticatedPlaySlugRoute
 }
 export interface FileRoutesByTo {
@@ -58,6 +66,7 @@ export interface FileRoutesByTo {
   '/auth': typeof AuthRoute
   '/dashboard': typeof AuthenticatedDashboardRoute
   '/practice': typeof AuthenticatedPracticeRoute
+  '/homework/$homeworkId': typeof AuthenticatedHomeworkHomeworkIdRoute
   '/play/$slug': typeof AuthenticatedPlaySlugRoute
 }
 export interface FileRoutesById {
@@ -67,13 +76,26 @@ export interface FileRoutesById {
   '/auth': typeof AuthRoute
   '/_authenticated/dashboard': typeof AuthenticatedDashboardRoute
   '/_authenticated/practice': typeof AuthenticatedPracticeRoute
+  '/_authenticated/homework/$homeworkId': typeof AuthenticatedHomeworkHomeworkIdRoute
   '/_authenticated/play/$slug': typeof AuthenticatedPlaySlugRoute
 }
 export interface FileRouteTypes {
   fileRoutesByFullPath: FileRoutesByFullPath
-  fullPaths: '/' | '/auth' | '/dashboard' | '/practice' | '/play/$slug'
+  fullPaths:
+    | '/'
+    | '/auth'
+    | '/dashboard'
+    | '/practice'
+    | '/homework/$homeworkId'
+    | '/play/$slug'
   fileRoutesByTo: FileRoutesByTo
-  to: '/' | '/auth' | '/dashboard' | '/practice' | '/play/$slug'
+  to:
+    | '/'
+    | '/auth'
+    | '/dashboard'
+    | '/practice'
+    | '/homework/$homeworkId'
+    | '/play/$slug'
   id:
     | '__root__'
     | '/'
@@ -81,6 +103,7 @@ export interface FileRouteTypes {
     | '/auth'
     | '/_authenticated/dashboard'
     | '/_authenticated/practice'
+    | '/_authenticated/homework/$homeworkId'
     | '/_authenticated/play/$slug'
   fileRoutesById: FileRoutesById
 }
@@ -127,6 +150,13 @@ declare module '@tanstack/react-router' {
       preLoaderRoute: typeof AuthenticatedPracticeRouteImport
       parentRoute: typeof AuthenticatedRouteRoute
     }
+    '/_authenticated/homework/$homeworkId': {
+      id: '/_authenticated/homework/$homeworkId'
+      path: '/homework/$homeworkId'
+      fullPath: '/homework/$homeworkId'
+      preLoaderRoute: typeof AuthenticatedHomeworkHomeworkIdRouteImport
+      parentRoute: typeof AuthenticatedRouteRoute
+    }
     '/_authenticated/play/$slug': {
       id: '/_authenticated/play/$slug'
       path: '/play/$slug'
@@ -140,12 +170,14 @@ declare module '@tanstack/react-router' {
 interface AuthenticatedRouteRouteChildren {
   AuthenticatedDashboardRoute: typeof AuthenticatedDashboardRoute
   AuthenticatedPracticeRoute: typeof AuthenticatedPracticeRoute
+  AuthenticatedHomeworkHomeworkIdRoute: typeof AuthenticatedHomeworkHomeworkIdRoute
   AuthenticatedPlaySlugRoute: typeof AuthenticatedPlaySlugRoute
 }
 
 const AuthenticatedRouteRouteChildren: AuthenticatedRouteRouteChildren = {
   AuthenticatedDashboardRoute: AuthenticatedDashboardRoute,
   AuthenticatedPracticeRoute: AuthenticatedPracticeRoute,
+  AuthenticatedHomeworkHomeworkIdRoute: AuthenticatedHomeworkHomeworkIdRoute,
   AuthenticatedPlaySlugRoute: AuthenticatedPlaySlugRoute,
 }
 
