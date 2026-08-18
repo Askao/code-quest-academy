@@ -37,13 +37,10 @@ function Duels() {
         .select("class_id, classes(id, name, track)")
         .eq("student_id", uid);
       const classIds = (memberships.data ?? []).map((m) => m.class_id);
-      const [classmates, duels] = await Promise.all([
+      const [members, duels] = await Promise.all([
         classIds.length
-          ? supabase
-              .from("class_members")
-              .select("student_id, class_id, profiles(id, full_name)")
-              .in("class_id", classIds)
-          : Promise.resolve({ data: [] as never[] }),
+          ? supabase.from("class_members").select("student_id, class_id").in("class_id", classIds)
+          : Promise.resolve({ data: [] as { student_id: string; class_id: string }[] }),
         supabase
           .from("duels")
           .select("*, challenges(title, slug)")
@@ -51,11 +48,20 @@ function Duels() {
           .order("created_at", { ascending: false })
           .limit(20),
       ]);
+      const others = (members.data ?? []).filter((m) => m.student_id !== uid);
+      const profiles = others.length
+        ? await supabase
+            .from("profiles")
+            .select("id, full_name")
+            .in("id", others.map((o) => o.student_id))
+        : { data: [] as { id: string; full_name: string | null }[] };
+      const nameOf = new Map((profiles.data ?? []).map((p) => [p.id, p.full_name]));
       return {
         classes: (memberships.data ?? []).map((m) => m.classes).filter(Boolean),
-        classmates: (classmates.data ?? []).filter((c) => c.student_id !== uid),
+        classmates: others.map((o) => ({ ...o, name: nameOf.get(o.student_id) ?? "Student" })),
         duels: duels.data ?? [],
       };
+
     },
   });
 
