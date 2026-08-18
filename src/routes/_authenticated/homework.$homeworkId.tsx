@@ -25,21 +25,22 @@ function HomeworkPage() {
     queryKey: ["homework", homeworkId, user?.id],
     enabled: !!user,
     queryFn: async () => {
-      const [hw, items, attempts] = await Promise.all([
+      const [hw, attempts] = await Promise.all([
         supabase.from("homework").select("*, classes(name)").eq("id", homeworkId).maybeSingle(),
-        supabase
-          .from("homework_challenges")
-          .select("challenge_id, challenges(*)")
-          .eq("homework_id", homeworkId),
         supabase.from("attempts").select("challenge_id").eq("user_id", user!.id).eq("passed", true),
       ]);
+      const ids = hw.data?.challenge_ids ?? [];
+      const items = ids.length
+        ? await supabase.from("challenges").select("*").in("id", ids)
+        : { data: [] };
       return {
         hw: hw.data,
-        items: (items.data ?? []).map((i) => i.challenges).filter(Boolean),
+        items: items.data ?? [],
         done: new Set((attempts.data ?? []).map((a) => a.challenge_id)),
       };
     },
   });
+
 
   if (!data?.hw) return <p className="text-muted-foreground">Loading homework…</p>;
 
