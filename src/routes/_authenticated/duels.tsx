@@ -111,7 +111,7 @@ function Duels() {
         <div className="grid gap-3 sm:grid-cols-2 lg:grid-cols-3">
           {data?.classmates.map((c) => (
             <div key={`${c.class_id}-${c.student_id}`} className="panel flex items-center gap-3 p-4">
-              <span className="flex-1 font-medium">{c.profiles?.full_name ?? "Student"}</span>
+              <span className="flex-1 font-medium">{c.name}</span>
               <Button
                 size="sm"
                 onClick={() => challenge(c.student_id, c.class_id, trackOf(c.class_id))}
