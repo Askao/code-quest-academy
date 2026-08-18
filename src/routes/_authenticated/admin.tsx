@@ -76,7 +76,7 @@ function Admin() {
     (data?.roles.find((r) => r.user_id === id)?.role ?? "student") as RoleKey;
 
   const settingValue = (key: string) =>
-    settings[key] ?? data?.settings.find((s) => s.key === key)?.value ?? "";
+    settings[key] ?? String(data?.settings.find((s) => s.key === key)?.value ?? "");
 
   return (
     <div className="space-y-8">
