@@ -62,32 +62,62 @@ function ClassDetail() {
           .eq("class_id", classId)
           .order("created_at", { ascending: false }),
       ]);
+      const students = (profiles.data ?? []).map((p) => {
+        const s = (stats.data ?? []).find((x) => x.user_id === p.id);
+        const mine = (skills.data ?? []).filter((k) => k.user_id === p.id);
+        const avg = mine.length
+          ? mine.reduce((a, b) => a + Number(b.level), 0) / mine.length
+          : 1;
+        const mineAttempts = (attempts.data ?? []).filter((a) => a.user_id === p.id);
+        const accuracy = mineAttempts.length
+          ? Math.round((mineAttempts.filter((a) => a.passed).length / mineAttempts.length) * 100)
+          : 0;
+        return {
+          id: p.id,
+          name: p.full_name ?? p.email ?? "Student",
+          xp: s?.xp ?? 0,
+          streak: s?.streak_days ?? 0,
+          avg,
+          accuracy,
+          lastActive: s?.last_active,
+          skills: mine,
+        };
+      });
+
+      // Homework completion: which of a homework's challenges has each
+      // student actually passed. The `attempts` fetch above is capped at
+      // 500 rows class-wide for the accuracy view, so it isn't reliable for
+      // this — fetch passed attempts for exactly the challenges set as
+      // homework instead.
+      const homeworkChallengeIds = Array.from(
+        new Set((homework.data ?? []).flatMap((h) => h.challenge_ids ?? [])),
+      );
+      const passedForHomework =
+        ids.length && homeworkChallengeIds.length
+          ? await supabase
+              .from("attempts")
+              .select("user_id, challenge_id")
+              .in("user_id", ids)
+              .in("challenge_id", homeworkChallengeIds)
+              .eq("passed", true)
+          : { data: [] };
+      const passedSet = new Set(
+        (passedForHomework.data ?? []).map((a) => `${a.user_id}:${a.challenge_id}`),
+      );
+
       return {
         cls: cls.data,
-        students: (profiles.data ?? []).map((p) => {
-          const s = (stats.data ?? []).find((x) => x.user_id === p.id);
-          const mine = (skills.data ?? []).filter((k) => k.user_id === p.id);
-          const avg = mine.length
-            ? mine.reduce((a, b) => a + Number(b.level), 0) / mine.length
-            : 1;
-          const mineAttempts = (attempts.data ?? []).filter((a) => a.user_id === p.id);
-          const accuracy = mineAttempts.length
-            ? Math.round(
-                (mineAttempts.filter((a) => a.passed).length / mineAttempts.length) * 100,
-              )
-            : 0;
-          return {
-            id: p.id,
-            name: p.full_name ?? p.email ?? "Student",
-            xp: s?.xp ?? 0,
-            streak: s?.streak_days ?? 0,
-            avg,
-            accuracy,
-            lastActive: s?.last_active,
-            skills: mine,
-          };
-        }),
-        homework: homework.data ?? [],
+        students,
+        homework: (homework.data ?? []).map((h) => ({
+          ...h,
+          completion: students.map((s) => ({
+            id: s.id,
+            name: s.name,
+            done: (h.challenge_ids ?? []).filter((cid) => passedSet.has(`${s.id}:${cid}`))
+              .length,
+            total: (h.challenge_ids ?? []).length,
+          })),
+        })),
       };
     },
   });
@@ -225,26 +255,47 @@ function ClassDetail() {
 
       <section>
         <h2 className="mb-3 text-xl font-semibold">Homework set</h2>
-        <div className="space-y-2">
-          {(data?.homework ?? []).map((h) => (
-            <div key={h.id} className="panel flex flex-wrap items-center gap-3 p-4 text-sm">
-              <span className="flex-1 font-medium">{h.title}</span>
-              <span className="font-mono text-xs text-muted-foreground">
-                {h.challenge_ids.length} challenges
-                {h.due_at ? ` · due ${new Date(h.due_at).toLocaleDateString()}` : ""}
-              </span>
-              <Button
-                size="sm"
-                variant="secondary"
-                onClick={async () => {
-                  await supabase.from("homework").delete().eq("id", h.id);
-                  void qc.invalidateQueries({ queryKey: ["class", classId] });
-                }}
-              >
-                Delete
-              </Button>
-            </div>
-          ))}
+        <div className="space-y-3">
+          {(data?.homework ?? []).map((h) => {
+            const sorted = [...h.completion].sort((a, b) => a.done - b.done);
+            return (
+              <div key={h.id} className="panel p-4 text-sm">
+                <div className="flex flex-wrap items-center gap-3">
+                  <span className="flex-1 font-medium">{h.title}</span>
+                  <span className="font-mono text-xs text-muted-foreground">
+                    {h.challenge_ids.length} challenges
+                    {h.due_at ? ` · due ${new Date(h.due_at).toLocaleDateString()}` : ""}
+                  </span>
+                  <Button
+                    size="sm"
+                    variant="secondary"
+                    onClick={async () => {
+                      await supabase.from("homework").delete().eq("id", h.id);
+                      void qc.invalidateQueries({ queryKey: ["class", classId] });
+                    }}
+                  >
+                    Delete
+                  </Button>
+                </div>
+                {sorted.length > 0 ? (
+                  <div className="mt-3 grid gap-1.5 border-t border-border pt-3 sm:grid-cols-2 lg:grid-cols-3">
+                    {sorted.map((c) => (
+                      <div key={c.id} className="flex items-center justify-between gap-2 text-xs">
+                        <span
+                          className={c.done === c.total && c.total > 0 ? "text-success" : ""}
+                        >
+                          {c.done === c.total && c.total > 0 ? "✓" : "○"} {c.name}
+                        </span>
+                        <span className="font-mono text-muted-foreground">
+                          {c.done}/{c.total}
+                        </span>
+                      </div>
+                    ))}
+                  </div>
+                ) : null}
+              </div>
+            );
+          })}
           {(data?.homework ?? []).length === 0 ? (
             <p className="text-muted-foreground">No homework set yet.</p>
           ) : null}
