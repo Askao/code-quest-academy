@@ -11,9 +11,9 @@ import { levelFromXp, topicsFor, type TrackKey } from "@/lib/game";
 export const Route = createFileRoute("/_authenticated/teacher/$classId")({
   head: () => ({
     meta: [
-      { title: "Class — PyForge" },
+      { title: "Class — H-Code" },
       { name: "description", content: "Class roster, skill levels and homework." },
-      { property: "og:title", content: "Class — PyForge" },
+      { property: "og:title", content: "Class — H-Code" },
       { property: "og:description", content: "Class roster, skill levels and homework." },
     ],
   }),

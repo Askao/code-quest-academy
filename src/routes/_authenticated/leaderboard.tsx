@@ -8,9 +8,9 @@ import { levelFromXp } from "@/lib/game";
 export const Route = createFileRoute("/_authenticated/leaderboard")({
   head: () => ({
     meta: [
-      { title: "Leaderboard — PyForge" },
+      { title: "Leaderboard — H-Code" },
       { name: "description", content: "See how your class ranks on XP, streaks and duel wins." },
-      { property: "og:title", content: "Leaderboard — PyForge" },
+      { property: "og:title", content: "Leaderboard — H-Code" },
       {
         property: "og:description",
         content: "See how your class ranks on XP, streaks and duel wins.",

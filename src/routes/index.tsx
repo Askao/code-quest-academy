@@ -5,13 +5,13 @@ import { GCSE_TOPICS, ALEVEL_TOPICS } from "@/lib/game";
 export const Route = createFileRoute("/")({
   head: () => ({
     meta: [
-      { title: "PyForge — free Python practice for GCSE & A level" },
+      { title: "H-Code — free Python practice for GCSE & A level" },
       {
         name: "description",
         content:
           "Adaptive Python challenges for GCSE OCR programming and A level, with classes, homework, duels and class leaderboards. Free for students.",
       },
-      { property: "og:title", content: "PyForge — free Python practice for GCSE & A level" },
+      { property: "og:title", content: "H-Code — free Python practice for GCSE & A level" },
       {
         property: "og:description",
         content:
@@ -26,7 +26,7 @@ function Landing() {
   return (
     <div className="min-h-screen">
       <header className="mx-auto flex max-w-6xl items-center justify-between px-4 py-5">
-        <span className="font-mono text-lg font-bold text-primary">&gt;_ PyForge</span>
+        <span className="font-mono text-lg font-bold text-primary">&gt;_ H-Code</span>
         <div className="flex gap-2">
           <Button asChild variant="ghost" size="sm">
             <Link to="/auth">Sign in</Link>
@@ -45,7 +45,7 @@ function Landing() {
           Every student gets a different challenge, at their own level.
         </h1>
         <p className="mx-auto mt-5 max-w-2xl text-lg text-muted-foreground">
-          PyForge marks Python automatically in the browser, tracks a skill level per topic, and
+          H-Code marks Python automatically in the browser, tracks a skill level per topic, and
           keeps GCSE OCR programming completely separate from A level content.
         </p>
         <div className="mt-8 flex flex-wrap justify-center gap-3">
@@ -111,7 +111,7 @@ function Landing() {
       </section>
 
       <footer className="border-t border-border py-8 text-center text-sm text-muted-foreground">
-        PyForge — self-hostable Python practice for computer science departments.
+        H-Code — self-hostable Python practice for computer science departments.
       </footer>
     </div>
   );

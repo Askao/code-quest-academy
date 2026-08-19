@@ -1,6 +1,6 @@
-# Self-hosting PyForge
+# Self-hosting H-Code
 
-PyForge is a standard TanStack Start (React + Vite) app on top of Postgres (Supabase-compatible). Nothing is tied to the editor.
+H-Code is a standard TanStack Start (React + Vite) app on top of Postgres (Supabase-compatible). Nothing is tied to the editor.
 
 ## What you need
 

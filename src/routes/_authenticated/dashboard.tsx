@@ -12,9 +12,9 @@ import { BADGES, levelFromXp, skillLabel, topicLabel, topicsFor } from "@/lib/ga
 export const Route = createFileRoute("/_authenticated/dashboard")({
   head: () => ({
     meta: [
-      { title: "Dashboard — PyForge" },
+      { title: "Dashboard — H-Code" },
       { name: "description", content: "Your XP, streak, skill levels and homework." },
-      { property: "og:title", content: "Dashboard — PyForge" },
+      { property: "og:title", content: "Dashboard — H-Code" },
       { property: "og:description", content: "Your XP, streak, skill levels and homework." },
     ],
   }),

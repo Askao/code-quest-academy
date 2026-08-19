@@ -8,6 +8,7 @@ import { Button } from "@/components/ui/button";
 import { BADGES, topicLabel, type TrackKey } from "@/lib/game";
 import { getPyodide, runTests, type RunOutcome } from "@/lib/python-runner";
 import { pickChallenge, recordAttempt, type Challenge } from "@/lib/progress";
+import { withContent } from "@/lib/content";
 
 type Search = {
   mode: "practice" | "boss" | "duel" | "homework";
@@ -31,9 +32,9 @@ export const Route = createFileRoute("/_authenticated/play/$slug")({
   }),
   head: () => ({
     meta: [
-      { title: "Challenge — PyForge" },
+      { title: "Challenge — H-Code" },
       { name: "description", content: "Write and test Python in the browser." },
-      { property: "og:title", content: "Challenge — PyForge" },
+      { property: "og:title", content: "Challenge — H-Code" },
       { property: "og:description", content: "Write and test Python in the browser." },
     ],
   }),
@@ -42,7 +43,7 @@ export const Route = createFileRoute("/_authenticated/play/$slug")({
 
 function readBoss(): BossState | null {
   try {
-    const raw = sessionStorage.getItem("pyforge-boss");
+    const raw = sessionStorage.getItem("hcode-boss");
     return raw ? (JSON.parse(raw) as BossState) : null;
   } catch {
     return null;
@@ -74,7 +75,7 @@ function Play() {
         .eq("slug", slug)
         .maybeSingle();
       if (error) throw error;
-      return data as unknown as Challenge | null;
+      return data ? withContent(data as unknown as Challenge) : null;
     },
   });
 
@@ -104,7 +105,7 @@ function Play() {
       const left = Math.max(0, Math.round((boss.endsAt - Date.now()) / 1000));
       setRemaining(left);
       if (left === 0) {
-        sessionStorage.removeItem("pyforge-boss");
+        sessionStorage.removeItem("hcode-boss");
         toast.success(`Boss battle over — ${boss.score} challenge(s) cleared!`);
         void navigate({ to: "/practice" });
       }
@@ -142,7 +143,7 @@ function Play() {
           const boss = readBoss();
           if (boss) {
             boss.score += 1;
-            sessionStorage.setItem("pyforge-boss", JSON.stringify(boss));
+            sessionStorage.setItem("hcode-boss", JSON.stringify(boss));
           }
         }
         if (search.mode === "duel" && search.duel) {

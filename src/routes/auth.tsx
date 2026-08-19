@@ -15,10 +15,10 @@ export const Route = createFileRoute("/auth")({
   }),
   head: () => ({
     meta: [
-      { title: "Sign in — PyForge" },
-      { name: "description", content: "Sign in or create a free PyForge account." },
-      { property: "og:title", content: "Sign in — PyForge" },
-      { property: "og:description", content: "Sign in or create a free PyForge account." },
+      { title: "Sign in — H-Code" },
+      { name: "description", content: "Sign in or create a free H-Code account." },
+      { property: "og:title", content: "Sign in — H-Code" },
+      { property: "og:description", content: "Sign in or create a free H-Code account." },
     ],
   }),
   component: AuthPage,
@@ -76,7 +76,7 @@ function AuthPage() {
     <div className="flex min-h-screen items-center justify-center px-4">
       <div className="panel w-full max-w-md p-8">
         <Link to="/" className="font-mono text-sm text-primary">
-          &gt;_ PyForge
+          &gt;_ H-Code
         </Link>
         <h1 className="mt-4 text-2xl font-bold">
           {mode === "signup" ? "Create your account" : "Welcome back"}
