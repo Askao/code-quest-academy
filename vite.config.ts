@@ -12,4 +12,10 @@ export default defineConfig({
     // nitro/vite builds from this
     server: { entry: "server" },
   },
+  // Self-hosted on Railway as a plain Node process, not Cloudflare Workers
+  // (the default preset here). node-server outputs .output/server/index.mjs
+  // as a standalone HTTP server that actually listens on PORT/HOST.
+  nitro: {
+    preset: "node-server",
+  },
 });
