@@ -15,6 +15,7 @@ import { Route as AuthRouteImport } from './routes/auth'
 import { Route as AuthenticatedAdminRouteImport } from './routes/_authenticated/admin'
 import { Route as AuthenticatedDashboardRouteImport } from './routes/_authenticated/dashboard'
 import { Route as AuthenticatedDuelsRouteImport } from './routes/_authenticated/duels'
+import { Route as AuthenticatedIdeRouteImport } from './routes/_authenticated/ide'
 import { Route as AuthenticatedLeaderboardRouteImport } from './routes/_authenticated/leaderboard'
 import { Route as AuthenticatedPracticeRouteImport } from './routes/_authenticated/practice'
 import { Route as AuthenticatedHomeworkHomeworkIdRouteImport } from './routes/_authenticated/homework.$homeworkId'
@@ -51,6 +52,11 @@ const AuthenticatedDashboardRoute = AuthenticatedDashboardRouteImport.update({
 const AuthenticatedDuelsRoute = AuthenticatedDuelsRouteImport.update({
   id: '/duels',
   path: '/duels',
+  getParentRoute: () => AuthenticatedRouteRoute,
+} as any)
+const AuthenticatedIdeRoute = AuthenticatedIdeRouteImport.update({
+  id: '/ide',
+  path: '/ide',
   getParentRoute: () => AuthenticatedRouteRoute,
 } as any)
 const AuthenticatedLeaderboardRoute =
@@ -105,6 +111,7 @@ export interface FileRoutesByFullPath {
   '/admin': typeof AuthenticatedAdminRoute
   '/dashboard': typeof AuthenticatedDashboardRoute
   '/duels': typeof AuthenticatedDuelsRoute
+  '/ide': typeof AuthenticatedIdeRoute
   '/leaderboard': typeof AuthenticatedLeaderboardRoute
   '/practice': typeof AuthenticatedPracticeRoute
   '/homework/$homeworkId': typeof AuthenticatedHomeworkHomeworkIdRoute
@@ -120,6 +127,7 @@ export interface FileRoutesByTo {
   '/admin': typeof AuthenticatedAdminRoute
   '/dashboard': typeof AuthenticatedDashboardRoute
   '/duels': typeof AuthenticatedDuelsRoute
+  '/ide': typeof AuthenticatedIdeRoute
   '/leaderboard': typeof AuthenticatedLeaderboardRoute
   '/practice': typeof AuthenticatedPracticeRoute
   '/homework/$homeworkId': typeof AuthenticatedHomeworkHomeworkIdRoute
@@ -137,6 +145,7 @@ export interface FileRoutesById {
   '/_authenticated/admin': typeof AuthenticatedAdminRoute
   '/_authenticated/dashboard': typeof AuthenticatedDashboardRoute
   '/_authenticated/duels': typeof AuthenticatedDuelsRoute
+  '/_authenticated/ide': typeof AuthenticatedIdeRoute
   '/_authenticated/leaderboard': typeof AuthenticatedLeaderboardRoute
   '/_authenticated/practice': typeof AuthenticatedPracticeRoute
   '/_authenticated/homework/$homeworkId': typeof AuthenticatedHomeworkHomeworkIdRoute
@@ -154,6 +163,7 @@ export interface FileRouteTypes {
     | '/admin'
     | '/dashboard'
     | '/duels'
+    | '/ide'
     | '/leaderboard'
     | '/practice'
     | '/homework/$homeworkId'
@@ -169,6 +179,7 @@ export interface FileRouteTypes {
     | '/admin'
     | '/dashboard'
     | '/duels'
+    | '/ide'
     | '/leaderboard'
     | '/practice'
     | '/homework/$homeworkId'
@@ -185,6 +196,7 @@ export interface FileRouteTypes {
     | '/_authenticated/admin'
     | '/_authenticated/dashboard'
     | '/_authenticated/duels'
+    | '/_authenticated/ide'
     | '/_authenticated/leaderboard'
     | '/_authenticated/practice'
     | '/_authenticated/homework/$homeworkId'
@@ -243,6 +255,13 @@ declare module '@tanstack/react-router' {
       path: '/duels'
       fullPath: '/duels'
       preLoaderRoute: typeof AuthenticatedDuelsRouteImport
+      parentRoute: typeof AuthenticatedRouteRoute
+    }
+    '/_authenticated/ide': {
+      id: '/_authenticated/ide'
+      path: '/ide'
+      fullPath: '/ide'
+      preLoaderRoute: typeof AuthenticatedIdeRouteImport
       parentRoute: typeof AuthenticatedRouteRoute
     }
     '/_authenticated/leaderboard': {
@@ -308,6 +327,7 @@ interface AuthenticatedRouteRouteChildren {
   AuthenticatedAdminRoute: typeof AuthenticatedAdminRoute
   AuthenticatedDashboardRoute: typeof AuthenticatedDashboardRoute
   AuthenticatedDuelsRoute: typeof AuthenticatedDuelsRoute
+  AuthenticatedIdeRoute: typeof AuthenticatedIdeRoute
   AuthenticatedLeaderboardRoute: typeof AuthenticatedLeaderboardRoute
   AuthenticatedPracticeRoute: typeof AuthenticatedPracticeRoute
   AuthenticatedHomeworkHomeworkIdRoute: typeof AuthenticatedHomeworkHomeworkIdRoute
@@ -322,6 +342,7 @@ const AuthenticatedRouteRouteChildren: AuthenticatedRouteRouteChildren = {
   AuthenticatedAdminRoute: AuthenticatedAdminRoute,
   AuthenticatedDashboardRoute: AuthenticatedDashboardRoute,
   AuthenticatedDuelsRoute: AuthenticatedDuelsRoute,
+  AuthenticatedIdeRoute: AuthenticatedIdeRoute,
   AuthenticatedLeaderboardRoute: AuthenticatedLeaderboardRoute,
   AuthenticatedPracticeRoute: AuthenticatedPracticeRoute,
   AuthenticatedHomeworkHomeworkIdRoute: AuthenticatedHomeworkHomeworkIdRoute,

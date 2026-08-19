@@ -1,6 +1,9 @@
 import { StateEffect, StateField } from "@codemirror/state";
-import { Decoration, type DecorationSet, EditorView, type ViewUpdate } from "@codemirror/view";
+import { Decoration, type DecorationSet, EditorView, keymap, type ViewUpdate } from "@codemirror/view";
 import type { EditorView as EditorViewType } from "@codemirror/view";
+import { python } from "@codemirror/lang-python";
+import { indentUnit } from "@codemirror/language";
+import { indentWithTab } from "@codemirror/commands";
 
 /** Dispatch with a line number (1-indexed) to highlight it, or null to clear. */
 export const setErrorLine = StateEffect.define<number | null>();
@@ -44,3 +47,12 @@ export const clearErrorLineOnEdit = EditorView.updateListener.of((update: ViewUp
 export function highlightErrorLine(view: EditorViewType, line: number | null) {
   view.dispatch({ effects: setErrorLine.of(line) });
 }
+
+/** Shared editor setup for every Python CodeMirror instance in the app. */
+export const pythonEditorExtensions = [
+  python(),
+  indentUnit.of("    "),
+  keymap.of([indentWithTab]),
+  errorLineExtension,
+  clearErrorLineOnEdit,
+];

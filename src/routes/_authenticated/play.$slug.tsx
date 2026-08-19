@@ -3,26 +3,15 @@ import { useQuery } from "@tanstack/react-query";
 import { useEffect, useRef, useState } from "react";
 import { toast } from "sonner";
 import CodeMirror from "@uiw/react-codemirror";
-import { python } from "@codemirror/lang-python";
-import { indentUnit } from "@codemirror/language";
-import { EditorView, keymap } from "@codemirror/view";
-import { indentWithTab } from "@codemirror/commands";
+import type { EditorView } from "@codemirror/view";
 import { supabase } from "@/integrations/supabase/client";
 import { useAuth } from "@/hooks/useAuth";
 import { Button } from "@/components/ui/button";
 import { BADGES, topicLabel, type TrackKey } from "@/lib/game";
 import { checkSyntax, getPyodide, runTests, type RunOutcome } from "@/lib/python-runner";
-import { clearErrorLineOnEdit, errorLineExtension, highlightErrorLine } from "@/lib/python-lint";
+import { highlightErrorLine, pythonEditorExtensions } from "@/lib/python-lint";
 import { pickChallenge, recordAttempt, type Challenge } from "@/lib/progress";
 import { withContent } from "@/lib/content";
-
-const editorExtensions = [
-  python(),
-  indentUnit.of("    "),
-  keymap.of([indentWithTab]),
-  errorLineExtension,
-  clearErrorLineOnEdit,
-];
 
 type Search = {
   mode: "practice" | "boss" | "duel" | "homework";
@@ -294,7 +283,7 @@ function Play() {
               value={code}
               height="26rem"
               theme="dark"
-              extensions={editorExtensions}
+              extensions={pythonEditorExtensions}
               onChange={(value) => {
                 setCode(value);
                 setSyntaxError(null);
