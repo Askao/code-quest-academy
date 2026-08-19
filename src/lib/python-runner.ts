@@ -132,7 +132,15 @@ export async function runInteractive(code: string, answers: string[]): Promise<I
 
   pyodide.setStdin({
     stdin: () => {
-      if (cursor < answers.length) return answers[cursor++]!;
+      if (cursor < answers.length) {
+        const value = answers[cursor++]!;
+        // A real terminal echoes what you type; our fake stdin doesn't, so
+        // without this the typed answer never appears in the console at
+        // all and whatever the program prints next looks like it's sharing
+        // the prompt's line instead of following the (invisible) answer.
+        out.push(`${value}\n`);
+        return value;
+      }
       waiting = true;
       throw new StdinExhausted();
     },
