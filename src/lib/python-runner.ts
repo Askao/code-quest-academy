@@ -28,8 +28,8 @@ export type RunOutcome = {
 type Pyodide = {
   runPythonAsync: (code: string, options?: { globals?: unknown }) => Promise<unknown>;
   setStdin: (options: { stdin: () => string; isatty?: boolean }) => void;
-  setStdout: (options: { batched: (s: string) => void }) => void;
-  setStderr: (options: { batched: (s: string) => void }) => void;
+  setStdout: (options: { batched: (s: string) => void } | { raw: (byte: number) => void }) => void;
+  setStderr: (options: { batched: (s: string) => void } | { raw: (byte: number) => void }) => void;
   globals: {
     get: (name: string) => (() => unknown) | undefined;
     set: (name: string, value: unknown) => void;
@@ -137,21 +137,37 @@ export async function runInteractive(code: string, answers: string[]): Promise<I
       throw new StdinExhausted();
     },
   });
-  pyodide.setStdout({ batched: (s) => out.push(s) });
-  pyodide.setStderr({ batched: (s) => out.push(s) });
+  // Pyodide's "batched" stdout only flushes on a newline, so a prompt like
+  // input("Name? ") - which never ends in \n - would sit stuck in its
+  // internal buffer forever. Decode raw bytes instead so partial lines
+  // (i.e. every input() prompt) show up immediately.
+  const stdoutDecoder = new TextDecoder();
+  const stderrDecoder = new TextDecoder();
+  pyodide.setStdout({
+    raw: (byte) => {
+      const chunk = stdoutDecoder.decode(new Uint8Array([byte]), { stream: true });
+      if (chunk) out.push(chunk);
+    },
+  });
+  pyodide.setStderr({
+    raw: (byte) => {
+      const chunk = stderrDecoder.decode(new Uint8Array([byte]), { stream: true });
+      if (chunk) out.push(chunk);
+    },
+  });
 
   const makeDict = pyodide.globals.get("dict");
   const namespace = makeDict ? makeDict() : undefined;
 
   try {
     await pyodide.runPythonAsync(code, namespace ? { globals: namespace } : undefined);
-    return { output: out.join("\n"), waiting: false };
+    return { output: out.join(""), waiting: false };
   } catch (err) {
     if (waiting) {
-      return { output: out.join("\n"), waiting: true };
+      return { output: out.join(""), waiting: true };
     }
     return {
-      output: out.join("\n"),
+      output: out.join(""),
       waiting: false,
       error: cleanTraceback(err instanceof Error ? err.message : String(err)),
     };
