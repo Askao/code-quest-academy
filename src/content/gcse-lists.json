@@ -1,0 +1,128 @@
+{
+  "track": "gcse",
+  "topic": "lists",
+  "lessons": [
+    {
+      "slug": "gcse-lists-1",
+      "title": "Making and indexing lists",
+      "summary": "Storing many values under one name.",
+      "notes": "A **list** (OCR calls it an array) stores many values in order.\n\n```python\nscores = [10, 20, 30]\nprint(scores[0])   # 10 - counting starts at 0\nscores[1] = 25     # change an item\nscores.append(40)  # add to the end\nprint(len(scores)) # how many items\n```\n\nThe last item is at index `len(list) - 1`. Going past it gives an *index out of range* error.\n\nLoop over a list either by item or by index:\n\n```python\nfor score in scores:      # each value\nfor i in range(len(scores)):  # each position\n```",
+      "worked_example": "values = []\nfor i in range(3):\n    values.append(int(input()))\nprint(values[0])\nprint(len(values))",
+      "worked_example_note": "Start with an empty list and `append()` inside the loop to build it from user input."
+    },
+    {
+      "slug": "gcse-lists-2",
+      "title": "Searching, totalling and 2D lists",
+      "summary": "Linear search, aggregation and lists of lists.",
+      "notes": "A **linear search** checks each item in turn:\n\n```python\nfound = False\nfor item in items:\n    if item == target:\n        found = True\n```\n\nUseful built-ins: `sum(list)`, `max(list)`, `min(list)`, `len(list)`, `sorted(list)`, `list.index(value)`.\n\nA **2D list** is a list of lists — a grid:\n\n```python\ngrid = [[1, 2], [3, 4]]\nprint(grid[1][0])  # 3  -> row 1, column 0\n```\n\nOCR writes 2D arrays as `array[row][column]`, so read the row first.",
+      "worked_example": "names = [\"ada\", \"alan\", \"grace\"]\ntarget = input()\nif target in names:\n    print(names.index(target))\nelse:\n    print(-1)",
+      "worked_example_note": "`in` performs the search for you; `index()` then reports the position. An exam answer may need the loop written out in full."
+    },
+    {
+      "slug": "gcse-lists-3",
+      "title": "Exam-style list problems",
+      "summary": "Building, filtering and reporting on data sets.",
+      "notes": "Most list questions are a variation of four jobs:\n\n1. **Build** — read values into a list\n2. **Search** — find one value or its position\n3. **Aggregate** — total, average, biggest, smallest, count how many match\n4. **Report** — print the results in a stated format\n\nDecide which jobs the question needs, then write them one after another. Be careful with output order and whether the question wants the value, the position, or both.",
+      "worked_example": "# Read 5 marks and report how many were at least 40\nmarks = []\nfor i in range(5):\n    marks.append(int(input()))\npassed = 0\nfor mark in marks:\n    if mark >= 40:\n        passed = passed + 1\nprint(f\"{passed} passed out of {len(marks)}\")",
+      "worked_example_note": "Build first, then process. Keeping the two loops separate makes the logic easier to follow and to mark."
+    }
+  ],
+  "tasks": [
+    {
+      "slug": "gcse-lists-t1-01", "lesson": 1, "tier": 1, "difficulty": 1, "xp": 10,
+      "title": "First and last",
+      "brief": "Read three words on separate lines into a list. Print the first item, then the last item, on separate lines.",
+      "starter": "",
+      "hints": ["Index 0 is first", "The last index is `len(items) - 1`"],
+      "tests": [{ "stdin": "a\nb\nc", "expect": "a\nc" }, { "stdin": "red\ngreen\nblue", "expect": "red\nblue" }]
+    },
+    {
+      "slug": "gcse-lists-t1-02", "lesson": 1, "tier": 1, "difficulty": 2, "xp": 15,
+      "title": "List total",
+      "brief": "Read four whole numbers on separate lines into a list, then print the total of the list.",
+      "starter": "",
+      "hints": ["`sum(numbers)` totals a list"],
+      "tests": [{ "stdin": "1\n2\n3\n4", "expect": "10" }, { "stdin": "5\n5\n0\n0", "expect": "10" }]
+    },
+    {
+      "slug": "gcse-lists-t1-03", "lesson": 1, "tier": 1, "difficulty": 2, "xp": 15,
+      "title": "Print in reverse",
+      "brief": "Read four words on separate lines into a list. Print them one per line in the opposite order to how they were entered.",
+      "starter": "",
+      "hints": ["`for item in reversed(items):` or loop the indexes backwards"],
+      "tests": [{ "stdin": "a\nb\nc\nd", "expect": "d\nc\nb\na" }, { "stdin": "one\ntwo\nthree\nfour", "expect": "four\nthree\ntwo\none" }]
+    },
+    {
+      "slug": "gcse-lists-t2-01", "lesson": 2, "tier": 2, "difficulty": 2, "xp": 15,
+      "title": "Highest and lowest",
+      "brief": "A shop records five daily sales figures, entered one per line. Display the highest figure on the first line and the lowest on the second.",
+      "starter": "",
+      "hints": ["`max()` and `min()` work on a list"],
+      "tests": [{ "stdin": "3\n9\n1\n7\n5", "expect": "9\n1" }, { "stdin": "4\n4\n4\n4\n4", "expect": "4\n4" }]
+    },
+    {
+      "slug": "gcse-lists-t2-02", "lesson": 2, "tier": 2, "difficulty": 3, "xp": 20,
+      "title": "Search a register",
+      "brief": "Five names are entered one per line, followed by a sixth line containing a name to search for. Display the position of that name in the list counting from 1 (so the first name is position 1), or `Not found` if it is not there.",
+      "starter": "",
+      "hints": ["Positions counting from 1 are index + 1", "Handle the missing case with an else"],
+      "tests": [{ "stdin": "ada\nalan\ngrace\nlin\nsam\ngrace", "expect": "3" }, { "stdin": "ada\nalan\ngrace\nlin\nsam\nbob", "expect": "Not found" }]
+    },
+    {
+      "slug": "gcse-lists-t2-03", "lesson": 2, "tier": 2, "difficulty": 3, "xp": 20,
+      "title": "Count above average",
+      "brief": "Six whole numbers are entered, one per line. Display how many of them are strictly greater than the mean of all six.",
+      "starter": "",
+      "hints": ["Work out the mean first, then loop again to count"],
+      "tests": [{ "stdin": "1\n2\n3\n4\n5\n6", "expect": "3" }, { "stdin": "10\n10\n10\n10\n10\n10", "expect": "0" }]
+    },
+    {
+      "slug": "gcse-lists-t3-01", "lesson": 3, "tier": 3, "difficulty": 3, "xp": 25,
+      "title": "Sorted scoreboard",
+      "brief": "A games console stores the last five scores achieved by a player. The scores are entered one per line. The program should display the scores in order from highest to lowest, one per line, followed by a final line showing the average score rounded to 1 decimal place.",
+      "starter": "",
+      "hints": ["`sorted(scores, reverse=True)` sorts high to low", "Average is the total divided by how many"],
+      "tests": [{ "stdin": "10\n40\n30\n20\n50", "expect": "50\n40\n30\n20\n10\n30.0" }, { "stdin": "1\n1\n1\n1\n2", "expect": "2\n1\n1\n1\n1\n1.2" }]
+    },
+    {
+      "slug": "gcse-lists-t3-02", "lesson": 3, "tier": 3, "difficulty": 4, "xp": 30,
+      "title": "Stock check",
+      "brief": "A shop stores the quantity in stock of six products, entered one per line as whole numbers. Any product with fewer than 5 items in stock needs reordering. The program should list the position of each product that needs reordering (counting from 1), one per line, and then display the number needing reorder in the form `2 to reorder`.",
+      "starter": "",
+      "hints": ["Loop by index so you can print the position", "Count the matches as you go"],
+      "tests": [{ "stdin": "10\n2\n7\n0\n5\n9", "expect": "2\n4\n2 to reorder" }, { "stdin": "5\n5\n5\n5\n5\n5", "expect": "0 to reorder" }]
+    },
+    {
+      "slug": "gcse-lists-t3-03", "lesson": 3, "tier": 3, "difficulty": 4, "xp": 30,
+      "title": "Seating grid",
+      "brief": "A small cinema has 3 rows of 4 seats, stored as a 2D list. The program reads 12 values, one per line, reading across row 1 first then row 2 then row 3. Each value is `X` for a taken seat or `-` for a free one. Display the number of free seats in each row, one row per line, in the form `Row 1: 2 free`.",
+      "starter": "",
+      "hints": ["Build the rows with a loop inside a loop", "Count the `-` values in each row"],
+      "tests": [{ "stdin": "X\nX\n-\n-\nX\nX\nX\nX\n-\n-\n-\n-", "expect": "Row 1: 2 free\nRow 2: 0 free\nRow 3: 4 free" }, { "stdin": "-\n-\n-\n-\n-\n-\n-\n-\n-\n-\n-\n-", "expect": "Row 1: 4 free\nRow 2: 4 free\nRow 3: 4 free" }]
+    },
+    {
+      "slug": "gcse-lists-t4-01", "lesson": 3, "tier": 4, "difficulty": 4, "xp": 35,
+      "title": "Sports day results",
+      "brief": "A school records the times of eight runners in a race.\n\nEach time is entered on its own line as a whole number of seconds.\n\nThe program must produce a results summary of exactly three lines:\n\n```\nWinner time: 42\nSlowest time: 61\nUnder 50: 3\n```\n\nwhere `Under 50` is the number of runners whose time was less than 50 seconds.",
+      "starter": "",
+      "hints": ["Read all eight into a list first", "`min()`, `max()` and a counting loop give the three figures"],
+      "tests": [{ "stdin": "55\n42\n61\n49\n50\n47\n58\n60", "expect": "Winner time: 42\nSlowest time: 61\nUnder 50: 3" }, { "stdin": "50\n50\n50\n50\n50\n50\n50\n50", "expect": "Winner time: 50\nSlowest time: 50\nUnder 50: 0" }]
+    },
+    {
+      "slug": "gcse-lists-t4-02", "lesson": 3, "tier": 4, "difficulty": 5, "xp": 40,
+      "title": "Club membership search",
+      "brief": "A club stores its members' names and their ages in two separate lists that share the same positions, so position 0 of each list refers to the same person.\n\nThe program reads 4 names, each followed on the next line by that member's age, so the input alternates name, age, name, age, and so on.\n\nAfter the data has been read, one more line is entered containing a name to look up. The program must output either the age of that member in the form `Grace is 24` or, if the name is not in the list, the line `Not a member`.\n\nThe search must be case sensitive and must report the **first** match if a name appears twice.",
+      "starter": "",
+      "hints": ["Append to two lists inside one loop", "Find the index in the names list, then use the same index in the ages list"],
+      "tests": [{ "stdin": "Ada\n36\nGrace\n24\nAlan\n41\nLin\n19\nGrace", "expect": "Grace is 24" }, { "stdin": "Ada\n36\nGrace\n24\nAlan\n41\nLin\n19\ngrace", "expect": "Not a member" }]
+    },
+    {
+      "slug": "gcse-lists-t4-03", "lesson": 3, "tier": 4, "difficulty": 5, "xp": 40,
+      "title": "Tuck shop takings",
+      "brief": "A school tuck shop records how many items it sold of each of five products, along with the price of each product.\n\nThe program reads five lines, each containing the quantity sold, then five more lines each containing the matching price as a decimal.\n\nIt must output:\n- the total takings for the day, rounded to 2 decimal places, in the form `Takings: 24.5`\n- the position (counting from 1) of the product that earned the most, in the form `Best seller: 3`\n\nIf two products earn exactly the same amount, report the earlier position.",
+      "starter": "",
+      "hints": ["Read the quantities into one list and the prices into another", "The takings for a product is quantity × price"],
+      "tests": [{ "stdin": "2\n0\n5\n1\n3\n1.0\n2.0\n3.0\n4.0\n0.5", "expect": "Takings: 22.5\nBest seller: 3" }, { "stdin": "1\n1\n1\n1\n1\n1.0\n1.0\n1.0\n1.0\n1.0", "expect": "Takings: 5.0\nBest seller: 1" }]
+    }
+  ]
+}

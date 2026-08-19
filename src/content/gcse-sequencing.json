@@ -1,0 +1,160 @@
+{
+  "track": "gcse",
+  "topic": "sequencing",
+  "lessons": [
+    {
+      "slug": "gcse-sequencing-1",
+      "title": "Input, output and variables",
+      "summary": "Read data in, store it, print it back out.",
+      "notes": "A program runs one line at a time, top to bottom. That order is called **sequence**.\n\n- `input()` reads one line of text typed by the user.\n- A **variable** stores a value so you can use it later: `name = input()`.\n- `print()` sends a value to the screen.\n- Everything `input()` gives you is a **string**. Use `int()` or `float()` to turn it into a number before doing maths.\n\nIn OCR exam wording, look for the words *read*, *accept*, *ask the user* (they mean `input()`) and *display*, *output*, *report* (they mean `print()`).",
+      "worked_example": "# Ask for a name and an age, then report back\nname = input()\nage = int(input())\nnext_year = age + 1\nprint(f\"{name} will be {next_year} next year\")",
+      "worked_example_note": "`int(input())` reads a line and converts it to a whole number in one step. The f-string drops the variables straight into the message."
+    },
+    {
+      "slug": "gcse-sequencing-2",
+      "title": "Arithmetic and rounding",
+      "summary": "Calculations, integer division and formatting numbers.",
+      "notes": "Python arithmetic operators you need for OCR:\n\n| Operator | Meaning | Example |\n| --- | --- | --- |\n| `+ - * /` | add, subtract, multiply, divide | `7 / 2` is `3.5` |\n| `//` | integer (whole) division | `7 // 2` is `3` |\n| `%` | remainder (modulus) | `7 % 2` is `1` |\n| `**` | to the power of | `3 ** 2` is `9` |\n\n`round(value, 2)` rounds to 2 decimal places. Watch the difference between `/` (always a decimal) and `//` (drops the decimal part).",
+      "worked_example": "# Convert a number of minutes into hours and minutes\ntotal = int(input())\nhours = total // 60\nmins = total % 60\nprint(f\"{hours} hours {mins} minutes\")",
+      "worked_example_note": "`//` and `%` work as a pair: one gives how many whole lots fit, the other gives what is left over."
+    },
+    {
+      "slug": "gcse-sequencing-3",
+      "title": "Exam-style sequencing problems",
+      "summary": "Longer scenarios where you decide the steps yourself.",
+      "notes": "Exam questions rarely say \"use a variable\". They describe a situation and leave you to work out the steps.\n\nA reliable method:\n1. Underline every value the program must **read in**.\n2. Underline every value it must **output**, and the exact wording.\n3. Write the calculation that gets from one to the other.\n\nIf the question gives an example of the output, copy the format exactly — spaces, capital letters and units all count.",
+      "worked_example": "# A shop adds 20% VAT to every price.\n# Read a price and display the price including VAT to 2 decimal places.\nprice = float(input())\nwith_vat = price * 1.2\nprint(round(with_vat, 2))",
+      "worked_example_note": "Adding 20% is the same as multiplying by 1.2. Rounding happens last, after the maths."
+    }
+  ],
+  "tasks": [
+    {
+      "slug": "gcse-sequencing-t1-01", "lesson": 1, "tier": 1, "difficulty": 1, "xp": 10,
+      "title": "Print a message",
+      "brief": "Read one line of text and print it back exactly as it was typed.",
+      "starter": "",
+      "hints": ["`text = input()` then `print(text)`"],
+      "tests": [{ "stdin": "hello", "expect": "hello" }, { "stdin": "Computer Science", "expect": "Computer Science" }]
+    },
+    {
+      "slug": "gcse-sequencing-t1-02", "lesson": 1, "tier": 1, "difficulty": 1, "xp": 10,
+      "title": "Double a number",
+      "brief": "Read a whole number and print it multiplied by 2.",
+      "starter": "",
+      "hints": ["Convert with `int(input())` before multiplying"],
+      "tests": [{ "stdin": "5", "expect": "10" }, { "stdin": "0", "expect": "0" }, { "stdin": "-3", "expect": "-6" }]
+    },
+    {
+      "slug": "gcse-sequencing-t1-03", "lesson": 1, "tier": 1, "difficulty": 1, "xp": 10,
+      "title": "Add two numbers",
+      "brief": "Read two whole numbers on separate lines and print their total.",
+      "starter": "",
+      "hints": ["Call `input()` twice and store each value"],
+      "tests": [{ "stdin": "3\n4", "expect": "7" }, { "stdin": "20\n-5", "expect": "15" }]
+    },
+    {
+      "slug": "gcse-sequencing-t1-04", "lesson": 1, "tier": 1, "difficulty": 2, "xp": 15,
+      "title": "Full name",
+      "brief": "Read a first name then a surname (two lines). Print them on one line separated by a single space.",
+      "starter": "",
+      "hints": ["An f-string keeps the spacing easy to see"],
+      "tests": [{ "stdin": "Ada\nLovelace", "expect": "Ada Lovelace" }, { "stdin": "Alan\nTuring", "expect": "Alan Turing" }]
+    },
+    {
+      "slug": "gcse-sequencing-t2-01", "lesson": 2, "tier": 2, "difficulty": 2, "xp": 15,
+      "title": "Seconds to minutes",
+      "brief": "A stopwatch records a time in seconds. Read the number of seconds and display the whole minutes and the remaining seconds in the form `2 min 30 s`.",
+      "starter": "",
+      "hints": ["`//` gives whole minutes", "`%` gives the seconds left over"],
+      "tests": [{ "stdin": "150", "expect": "2 min 30 s" }, { "stdin": "59", "expect": "0 min 59 s" }, { "stdin": "600", "expect": "10 min 0 s" }]
+    },
+    {
+      "slug": "gcse-sequencing-t2-02", "lesson": 2, "tier": 2, "difficulty": 2, "xp": 15,
+      "title": "Average of three marks",
+      "brief": "A teacher records three test marks. Read the three marks (one per line) and display the mean rounded to 1 decimal place.",
+      "starter": "",
+      "hints": ["Total the marks, divide by 3", "`round(value, 1)`"],
+      "tests": [{ "stdin": "10\n11\n12", "expect": "11.0" }, { "stdin": "7\n8\n10", "expect": "8.3" }]
+    },
+    {
+      "slug": "gcse-sequencing-t2-03", "lesson": 2, "tier": 2, "difficulty": 2, "xp": 15,
+      "title": "Change from a note",
+      "brief": "A customer pays with a £10 note. Read the cost of the item as a decimal and display the change to 2 decimal places.",
+      "starter": "",
+      "hints": ["`float(input())` reads a decimal", "Change is 10 minus the cost"],
+      "tests": [{ "stdin": "3.5", "expect": "6.5" }, { "stdin": "9.99", "expect": "0.01" }]
+    },
+    {
+      "slug": "gcse-sequencing-t2-04", "lesson": 2, "tier": 2, "difficulty": 3, "xp": 20,
+      "title": "Perimeter and area",
+      "brief": "Read the width then the height of a rectangle (whole numbers). Display the area on the first line and the perimeter on the second line.",
+      "starter": "",
+      "hints": ["Perimeter is 2 * (width + height)", "Two separate `print()` calls"],
+      "tests": [{ "stdin": "3\n4", "expect": "12\n14" }, { "stdin": "5\n5", "expect": "25\n20" }]
+    },
+    {
+      "slug": "gcse-sequencing-t3-01", "lesson": 3, "tier": 3, "difficulty": 3, "xp": 25,
+      "title": "Sponsored walk",
+      "brief": "A student is sponsored for a charity walk. Sponsors pay a fixed amount for every complete kilometre walked. The program should accept the distance walked in kilometres (a whole number) followed by the amount paid per kilometre (a decimal), then report the total raised to 2 decimal places.",
+      "starter": "",
+      "hints": ["Read the distance first, then the rate", "Multiply, then round to 2 places"],
+      "tests": [{ "stdin": "5\n2.5", "expect": "12.5" }, { "stdin": "12\n1.75", "expect": "21.0" }]
+    },
+    {
+      "slug": "gcse-sequencing-t3-02", "lesson": 3, "tier": 3, "difficulty": 3, "xp": 25,
+      "title": "Cinema booking",
+      "brief": "A cinema charges £7.50 per adult ticket and £4.25 per child ticket. Write a program that accepts the number of adults followed by the number of children and outputs the total cost of the booking to 2 decimal places.",
+      "starter": "",
+      "hints": ["Work out each subtotal, then add them", "The prices are fixed — no need to read them in"],
+      "tests": [{ "stdin": "2\n3", "expect": "27.75" }, { "stdin": "0\n4", "expect": "17.0" }]
+    },
+    {
+      "slug": "gcse-sequencing-t3-03", "lesson": 3, "tier": 3, "difficulty": 3, "xp": 25,
+      "title": "Fuel efficiency",
+      "brief": "A driver wants to know how economical a journey was. The program is to take the distance travelled in miles and then the litres of fuel used, both as decimals, and report the miles travelled per litre correct to 2 decimal places.",
+      "starter": "",
+      "hints": ["Divide distance by litres", "Round only when printing"],
+      "tests": [{ "stdin": "100\n8", "expect": "12.5" }, { "stdin": "250.5\n21.2", "expect": "11.82" }]
+    },
+    {
+      "slug": "gcse-sequencing-t3-04", "lesson": 3, "tier": 3, "difficulty": 4, "xp": 30,
+      "title": "Packing boxes",
+      "brief": "A warehouse packs items into boxes that hold 12 items each. Given the number of items in stock, the program must state how many full boxes can be packed and how many items would be left unpacked, using the format `4 full boxes, 3 left over`.",
+      "starter": "",
+      "hints": ["Whole boxes uses `//`", "Left over uses `%`"],
+      "tests": [{ "stdin": "51", "expect": "4 full boxes, 3 left over" }, { "stdin": "12", "expect": "1 full boxes, 0 left over" }, { "stdin": "7", "expect": "0 full boxes, 7 left over" }]
+    },
+    {
+      "slug": "gcse-sequencing-t4-01", "lesson": 3, "tier": 4, "difficulty": 4, "xp": 35,
+      "title": "Sports club membership",
+      "brief": "A sports club is writing software to work out annual membership costs.\n\nMembership costs £25 per month. Members also pay a one-off joining fee of £15.\n\nWrite a program that:\n- accepts the number of months a new member wishes to join for\n- calculates the total amount payable, including the joining fee\n- outputs the total in the format `Total: £315`\n\nAssume the total is always a whole number of pounds.",
+      "starter": "",
+      "hints": ["Months × 25, then add 15", "Match the output format exactly, including the £ sign"],
+      "tests": [{ "stdin": "12", "expect": "Total: £315" }, { "stdin": "1", "expect": "Total: £40" }]
+    },
+    {
+      "slug": "gcse-sequencing-t4-02", "lesson": 3, "tier": 4, "difficulty": 4, "xp": 35,
+      "title": "Temperature conversion utility",
+      "brief": "A weather station stores temperatures in degrees Celsius but its display board works in degrees Fahrenheit.\n\nThe conversion is: Fahrenheit = Celsius × 1.8 + 32\n\nWrite a program that accepts a temperature in degrees Celsius (which may include a decimal part) and outputs the equivalent temperature in degrees Fahrenheit, correct to 1 decimal place, in the format `21.5C = 70.7F`.",
+      "starter": "",
+      "hints": ["Store the Celsius value so you can print it as well", "Round the Fahrenheit value to 1 decimal place"],
+      "tests": [{ "stdin": "21.5", "expect": "21.5C = 70.7F" }, { "stdin": "0", "expect": "0.0C = 32.0F" }]
+    },
+    {
+      "slug": "gcse-sequencing-t4-03", "lesson": 3, "tier": 4, "difficulty": 5, "xp": 40,
+      "title": "Payroll slip",
+      "brief": "A small business needs a program to produce a simple pay summary.\n\nAn employee is paid an hourly rate for the hours they work. Tax of 20% is deducted from the gross pay.\n\nThe program must accept the hours worked (a whole number) followed by the hourly rate (a decimal), then output three lines:\n\n```\nGross: 300.0\nTax: 60.0\nNet: 240.0\n```\n\nAll three figures should be rounded to 2 decimal places.",
+      "starter": "",
+      "hints": ["Gross = hours × rate", "Tax = gross × 0.2", "Net = gross − tax"],
+      "tests": [{ "stdin": "30\n10", "expect": "Gross: 300.0\nTax: 60.0\nNet: 240.0" }, { "stdin": "37\n11.5", "expect": "Gross: 425.5\nTax: 85.1\nNet: 340.4" }]
+    },
+    {
+      "slug": "gcse-sequencing-t4-04", "lesson": 3, "tier": 4, "difficulty": 5, "xp": 40,
+      "title": "Delivery charge calculator",
+      "brief": "An online shop calculates delivery charges by parcel weight.\n\nThe charge is 50p per kilogram, plus a fixed handling fee of £2.99. The shop always rounds the final charge to 2 decimal places.\n\nDesign a program that takes the weight of a parcel in kilograms (a decimal value) and displays the delivery charge in the format `Delivery: £5.49`.",
+      "starter": "",
+      "hints": ["50p is 0.5 in pounds", "Add the handling fee before rounding"],
+      "tests": [{ "stdin": "5", "expect": "Delivery: £5.49" }, { "stdin": "2.5", "expect": "Delivery: £4.24" }]
+    }
+  ]
+}
