@@ -7,7 +7,7 @@ import { useAuth } from "@/hooks/useAuth";
 import { Button } from "@/components/ui/button";
 import { Progress } from "@/components/ui/progress";
 import { pickChallenge } from "@/lib/progress";
-import { skillLabel, topicsFor, type TrackKey } from "@/lib/game";
+import { skillLabel, skillPercent, topicsFor, type TrackKey } from "@/lib/game";
 
 export const Route = createFileRoute("/_authenticated/practice")({
   head: () => ({
@@ -126,9 +126,9 @@ function Practice() {
             <div key={t.key} className="panel flex flex-col p-5">
               <p className="font-semibold">{t.label}</p>
               <p className="mt-1 text-sm text-muted-foreground">{t.blurb}</p>
-              <Progress value={(lvl / 5) * 100} className="mt-4" />
+              <Progress value={skillPercent(lvl)} className="mt-4" />
               <p className="mt-2 font-mono text-xs text-muted-foreground">
-                Level {lvl.toFixed(1)} · {skillLabel(lvl)}
+                {skillPercent(lvl)}% · {skillLabel(lvl)}
               </p>
               <div className="mt-4 flex gap-2">
                 <Button size="sm" className="flex-1" onClick={() => start(t.key, "practice")}>

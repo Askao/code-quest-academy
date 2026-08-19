@@ -47,6 +47,17 @@ export function skillLabel(level: number) {
   return SKILL_LABELS[Math.min(4, Math.max(0, Math.round(level) - 1))]!;
 }
 
+/**
+ * Skill level is stored 1-5 internally (1 = untouched, since that's the
+ * adaptive engine's starting point), which reads as "already 20% done"
+ * if shown as a raw fraction. For display, remap to 0-100% so an
+ * untouched topic reads as 0% and full mastery (level 5) reads as 100%.
+ */
+export function skillPercent(level: number) {
+  const clamped = Math.min(5, Math.max(1, level));
+  return Math.round(((clamped - 1) / 4) * 100);
+}
+
 export const BADGES: Record<string, { name: string; description: string; icon: string }> = {
   first_pass: { name: "First light", description: "Passed your first challenge", icon: "🌱" },
   ten_pass: { name: "Ten up", description: "Passed 10 challenges", icon: "🔟" },

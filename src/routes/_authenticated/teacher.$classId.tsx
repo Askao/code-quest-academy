@@ -6,7 +6,7 @@ import { supabase } from "@/integrations/supabase/client";
 import { Button } from "@/components/ui/button";
 import { Input } from "@/components/ui/input";
 import { Progress } from "@/components/ui/progress";
-import { levelFromXp, topicsFor, type TrackKey } from "@/lib/game";
+import { levelFromXp, skillPercent, topicsFor, type TrackKey } from "@/lib/game";
 
 export const Route = createFileRoute("/_authenticated/teacher/$classId")({
   head: () => ({
@@ -230,15 +230,17 @@ function ClassDetail() {
                     <div key={t.key}>
                       <div className="flex justify-between text-xs">
                         <span>{t.label}</span>
-                        <span className="font-mono text-muted-foreground">{lvl.toFixed(1)}</span>
+                        <span className="font-mono text-muted-foreground">
+                          {skillPercent(lvl)}%
+                        </span>
                       </div>
-                      <Progress value={(lvl / 5) * 100} className="mt-1" />
+                      <Progress value={skillPercent(lvl)} className="mt-1" />
                     </div>
                   );
                 })}
               </div>
               <p className="mt-3 text-xs text-muted-foreground">
-                Average skill level {s.avg.toFixed(1)}/5
+                Average skill level {skillPercent(s.avg)}%
                 {s.lastActive
                   ? ` · last active ${new Date(s.lastActive).toLocaleDateString()}`
                   : " · not started yet"}

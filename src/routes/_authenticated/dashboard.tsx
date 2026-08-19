@@ -7,7 +7,7 @@ import { useAuth } from "@/hooks/useAuth";
 import { Button } from "@/components/ui/button";
 import { Input } from "@/components/ui/input";
 import { Progress } from "@/components/ui/progress";
-import { BADGES, levelFromXp, skillLabel, topicLabel, topicsFor } from "@/lib/game";
+import { BADGES, levelFromXp, skillLabel, skillPercent, topicLabel, topicsFor } from "@/lib/game";
 
 export const Route = createFileRoute("/_authenticated/dashboard")({
   head: () => ({
@@ -162,10 +162,10 @@ function Dashboard() {
                       <div className="flex items-center justify-between">
                         <p className="font-medium">{t.label}</p>
                         <span className="font-mono text-xs text-muted-foreground">
-                          {lvl.toFixed(1)}/5
+                          {skillPercent(lvl)}%
                         </span>
                       </div>
-                      <Progress value={(lvl / 5) * 100} className="mt-3" />
+                      <Progress value={skillPercent(lvl)} className="mt-3" />
                       <p className="mt-2 text-xs text-muted-foreground">{skillLabel(lvl)}</p>
                     </div>
                   );
