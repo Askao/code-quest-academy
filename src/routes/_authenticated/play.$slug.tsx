@@ -5,14 +5,14 @@ import { toast } from "sonner";
 import CodeMirror from "@uiw/react-codemirror";
 import { python } from "@codemirror/lang-python";
 import { indentUnit } from "@codemirror/language";
-import { keymap } from "@codemirror/view";
+import { EditorView, keymap } from "@codemirror/view";
 import { indentWithTab } from "@codemirror/commands";
 import { supabase } from "@/integrations/supabase/client";
 import { useAuth } from "@/hooks/useAuth";
 import { Button } from "@/components/ui/button";
 import { BADGES, topicLabel, type TrackKey } from "@/lib/game";
-import { getPyodide, runTests, type RunOutcome } from "@/lib/python-runner";
-import { pythonSyntaxLinter } from "@/lib/python-lint";
+import { checkSyntax, getPyodide, runTests, type RunOutcome } from "@/lib/python-runner";
+import { clearErrorLineOnEdit, errorLineExtension, highlightErrorLine } from "@/lib/python-lint";
 import { pickChallenge, recordAttempt, type Challenge } from "@/lib/progress";
 import { withContent } from "@/lib/content";
 
@@ -20,7 +20,8 @@ const editorExtensions = [
   python(),
   indentUnit.of("    "),
   keymap.of([indentWithTab]),
-  pythonSyntaxLinter,
+  errorLineExtension,
+  clearErrorLineOnEdit,
 ];
 
 type Search = {
@@ -77,7 +78,9 @@ function Play() {
   const [tries, setTries] = useState(0);
   const [solved, setSolved] = useState(false);
   const [remaining, setRemaining] = useState<number | null>(null);
+  const [syntaxError, setSyntaxError] = useState<{ line: number; message: string } | null>(null);
   const startedAt = useRef(Date.now());
+  const editorViewRef = useRef<EditorView | null>(null);
 
   const { data: challenge } = useQuery({
     queryKey: ["challenge", slug],
@@ -99,6 +102,7 @@ function Play() {
       setSolved(false);
       setTries(0);
       setHintsShown(0);
+      setSyntaxError(null);
       startedAt.current = Date.now();
     }
   }, [challenge]);
@@ -132,6 +136,12 @@ function Play() {
     if (!challenge || !user) return;
     setRunning(true);
     try {
+      const syntaxIssue = await checkSyntax(code);
+      setSyntaxError(syntaxIssue);
+      if (editorViewRef.current) {
+        highlightErrorLine(editorViewRef.current, syntaxIssue?.line ?? null);
+      }
+
       const result = await runTests(code, challenge.tests);
       setOutcome(result);
       const attemptNumber = tries + 1;
@@ -285,11 +295,22 @@ function Play() {
               height="26rem"
               theme="dark"
               extensions={editorExtensions}
-              onChange={(value) => setCode(value)}
+              onChange={(value) => {
+                setCode(value);
+                setSyntaxError(null);
+              }}
+              onCreateEditor={(view) => {
+                editorViewRef.current = view;
+              }}
               placeholder="# write your Python here"
               basicSetup={{ tabSize: 4 }}
             />
           </div>
+          {syntaxError ? (
+            <div className="rounded-lg border border-destructive/40 bg-destructive/10 px-4 py-3 font-mono text-sm text-destructive">
+              Line {syntaxError.line}: {syntaxError.message}
+            </div>
+          ) : null}
           <div className="flex flex-wrap gap-2">
             <Button onClick={run} disabled={running || !engineReady}>
               {!engineReady ? "Starting Python…" : running ? "Running…" : "Run tests"}

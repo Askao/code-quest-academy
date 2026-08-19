@@ -1,26 +1,46 @@
-import { linter, type Diagnostic } from "@codemirror/lint";
-import { checkSyntax } from "@/lib/python-runner";
+import { StateEffect, StateField } from "@codemirror/state";
+import { Decoration, type DecorationSet, EditorView, type ViewUpdate } from "@codemirror/view";
+import type { EditorView as EditorViewType } from "@codemirror/view";
 
-/**
- * Live syntax checking for the student's code, backed by the same Pyodide
- * instance used to run tests (compile()-only, nothing is executed). Debounced
- * by @codemirror/lint's own `delay` so it doesn't run on every keystroke.
- */
-export const pythonSyntaxLinter = linter(
-  async (view) => {
-    const code = view.state.doc.toString();
-    if (!code.trim()) return [];
-    const issue = await checkSyntax(code);
-    if (!issue) return [];
-    const lineNumber = Math.min(Math.max(1, issue.line), view.state.doc.lines);
-    const line = view.state.doc.line(lineNumber);
-    const diagnostic: Diagnostic = {
-      from: line.from,
-      to: line.to,
-      severity: "error",
-      message: issue.message,
-    };
-    return [diagnostic];
+/** Dispatch with a line number (1-indexed) to highlight it, or null to clear. */
+export const setErrorLine = StateEffect.define<number | null>();
+
+const errorLineDecoration = Decoration.line({ attributes: { class: "cm-error-line" } });
+
+const errorLineField = StateField.define<DecorationSet>({
+  create: () => Decoration.none,
+  update(decorations, tr) {
+    let next = decorations.map(tr.changes);
+    for (const effect of tr.effects) {
+      if (effect.is(setErrorLine)) {
+        if (effect.value == null) {
+          next = Decoration.none;
+        } else {
+          const lineNumber = Math.min(Math.max(1, effect.value), tr.state.doc.lines);
+          const line = tr.state.doc.line(lineNumber);
+          next = Decoration.set([errorLineDecoration.range(line.from)]);
+        }
+      }
+    }
+    return next;
   },
-  { delay: 600 },
-);
+  provide: (field) => EditorView.decorations.from(field),
+});
+
+const errorLineTheme = EditorView.baseTheme({
+  ".cm-error-line": { backgroundColor: "rgba(239, 68, 68, 0.22)" },
+});
+
+/** Static extension: shows a full-line red highlight wherever setErrorLine points, until cleared. */
+export const errorLineExtension = [errorLineField, errorLineTheme];
+
+/** Clear the error highlight whenever the student edits the doc, so it never goes stale. */
+export const clearErrorLineOnEdit = EditorView.updateListener.of((update: ViewUpdate) => {
+  if (update.docChanged) {
+    update.view.dispatch({ effects: setErrorLine.of(null) });
+  }
+});
+
+export function highlightErrorLine(view: EditorViewType, line: number | null) {
+  view.dispatch({ effects: setErrorLine.of(line) });
+}
