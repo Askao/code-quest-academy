@@ -30,7 +30,10 @@ type Pyodide = {
   setStdin: (options: { stdin: () => string; isatty?: boolean }) => void;
   setStdout: (options: { batched: (s: string) => void }) => void;
   setStderr: (options: { batched: (s: string) => void }) => void;
-  globals: { get: (name: string) => (() => unknown) | undefined };
+  globals: {
+    get: (name: string) => (() => unknown) | undefined;
+    set: (name: string, value: unknown) => void;
+  };
 };
 
 let pyodidePromise: Promise<Pyodide> | null = null;
@@ -101,6 +104,35 @@ export async function runOnce(code: string, stdin: string) {
       output: out.join("\n"),
       error: cleanTraceback(err instanceof Error ? err.message : String(err)),
     };
+  }
+}
+
+const SYNTAX_CHECK_SNIPPET = `
+import json as __json__
+try:
+    compile(__student_code__, "<student>", "exec")
+    __check_result__ = None
+except (SyntaxError, ValueError) as __e__:
+    __check_result__ = __json__.dumps(
+        {"line": getattr(__e__, "lineno", None) or 1, "message": str(getattr(__e__, "msg", __e__))}
+    )
+__check_result__
+`;
+
+/**
+ * Compile-check (not execute) the student's code so syntax errors can be
+ * shown live, before they hit "Run tests". Fails open (returns null) on any
+ * unexpected runner error - this must never block editing.
+ */
+export async function checkSyntax(code: string): Promise<{ line: number; message: string } | null> {
+  try {
+    const pyodide = await getPyodide();
+    pyodide.globals.set("__student_code__", code);
+    const raw = await pyodide.runPythonAsync(SYNTAX_CHECK_SNIPPET);
+    if (!raw) return null;
+    return JSON.parse(raw as string) as { line: number; message: string };
+  } catch {
+    return null;
   }
 }
 

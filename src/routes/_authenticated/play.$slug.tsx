@@ -2,13 +2,26 @@ import { createFileRoute, useNavigate, Link } from "@tanstack/react-router";
 import { useQuery } from "@tanstack/react-query";
 import { useEffect, useRef, useState } from "react";
 import { toast } from "sonner";
+import CodeMirror from "@uiw/react-codemirror";
+import { python } from "@codemirror/lang-python";
+import { indentUnit } from "@codemirror/language";
+import { keymap } from "@codemirror/view";
+import { indentWithTab } from "@codemirror/commands";
 import { supabase } from "@/integrations/supabase/client";
 import { useAuth } from "@/hooks/useAuth";
 import { Button } from "@/components/ui/button";
 import { BADGES, topicLabel, type TrackKey } from "@/lib/game";
 import { getPyodide, runTests, type RunOutcome } from "@/lib/python-runner";
+import { pythonSyntaxLinter } from "@/lib/python-lint";
 import { pickChallenge, recordAttempt, type Challenge } from "@/lib/progress";
 import { withContent } from "@/lib/content";
+
+const editorExtensions = [
+  python(),
+  indentUnit.of("    "),
+  keymap.of([indentWithTab]),
+  pythonSyntaxLinter,
+];
 
 type Search = {
   mode: "practice" | "boss" | "duel" | "homework";
@@ -183,16 +196,6 @@ function Play() {
     void navigate({ to: "/play/$slug", params: { slug: next.slug }, search });
   };
 
-  const handleTab = (e: React.KeyboardEvent<HTMLTextAreaElement>) => {
-    if (e.key !== "Tab") return;
-    e.preventDefault();
-    const el = e.currentTarget;
-    const start = el.selectionStart;
-    const value = `${code.slice(0, start)}    ${code.slice(el.selectionEnd)}`;
-    setCode(value);
-    requestAnimationFrame(() => el.setSelectionRange(start + 4, start + 4));
-  };
-
   if (!challenge) {
     return <p className="text-muted-foreground">Loading challenge…</p>;
   }
@@ -276,14 +279,17 @@ function Play() {
         </div>
 
         <div className="space-y-3">
-          <textarea
-            className="code h-[26rem] w-full resize-y rounded-xl border border-border bg-card p-4 text-sm text-foreground outline-none focus:ring-2 focus:ring-ring"
-            value={code}
-            spellCheck={false}
-            onKeyDown={handleTab}
-            onChange={(e) => setCode(e.target.value)}
-            placeholder="# write your Python here"
-          />
+          <div className="overflow-hidden rounded-xl border border-border">
+            <CodeMirror
+              value={code}
+              height="26rem"
+              theme="dark"
+              extensions={editorExtensions}
+              onChange={(value) => setCode(value)}
+              placeholder="# write your Python here"
+              basicSetup={{ tabSize: 4 }}
+            />
+          </div>
           <div className="flex flex-wrap gap-2">
             <Button onClick={run} disabled={running || !engineReady}>
               {!engineReady ? "Starting Python…" : running ? "Running…" : "Run tests"}
