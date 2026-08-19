@@ -1,9 +1,13 @@
 import { createFileRoute } from "@tanstack/react-router";
+import { useQuery, useQueryClient } from "@tanstack/react-query";
 import { useEffect, useRef, useState } from "react";
 import { toast } from "sonner";
 import CodeMirror from "@uiw/react-codemirror";
 import type { EditorView } from "@codemirror/view";
+import { supabase } from "@/integrations/supabase/client";
+import { useAuth } from "@/hooks/useAuth";
 import { Button } from "@/components/ui/button";
+import { Input } from "@/components/ui/input";
 import { checkSyntax, getPyodide, runOnce } from "@/lib/python-runner";
 import { highlightErrorLine, pythonEditorExtensions } from "@/lib/python-lint";
 
@@ -22,28 +26,45 @@ export const Route = createFileRoute("/_authenticated/ide")({
   component: Ide,
 });
 
-const STORAGE_KEY = "hcode-ide-code";
-const STDIN_STORAGE_KEY = "hcode-ide-stdin";
+const DRAFT_KEY = "hcode-ide-draft";
 const DEFAULT_CODE = 'print("Hello, world!")\n';
 
-function loadStored(key: string, fallback: string) {
-  if (typeof window === "undefined") return fallback;
+function loadDraft() {
+  if (typeof window === "undefined") return DEFAULT_CODE;
   try {
-    return window.localStorage.getItem(key) ?? fallback;
+    return window.localStorage.getItem(DRAFT_KEY) ?? DEFAULT_CODE;
   } catch {
-    return fallback;
+    return DEFAULT_CODE;
   }
 }
 
 function Ide() {
-  const [code, setCode] = useState(() => loadStored(STORAGE_KEY, DEFAULT_CODE));
-  const [stdin, setStdin] = useState(() => loadStored(STDIN_STORAGE_KEY, ""));
+  const { user } = useAuth();
+  const qc = useQueryClient();
+
+  const [code, setCode] = useState(loadDraft);
+  const [currentId, setCurrentId] = useState<string | null>(null);
+  const [currentName, setCurrentName] = useState("");
   const [output, setOutput] = useState<string | null>(null);
   const [runError, setRunError] = useState<string | null>(null);
   const [syntaxError, setSyntaxError] = useState<{ line: number; message: string } | null>(null);
   const [running, setRunning] = useState(false);
+  const [saving, setSaving] = useState(false);
   const [engineReady, setEngineReady] = useState(false);
   const editorViewRef = useRef<EditorView | null>(null);
+
+  const { data: programs } = useQuery({
+    queryKey: ["ide-programs", user?.id],
+    enabled: !!user,
+    queryFn: async () => {
+      const { data } = await supabase
+        .from("ide_programs")
+        .select("id, name, updated_at")
+        .eq("user_id", user!.id)
+        .order("updated_at", { ascending: false });
+      return data ?? [];
+    },
+  });
 
   useEffect(() => {
     void getPyodide()
@@ -53,19 +74,11 @@ function Ide() {
 
   useEffect(() => {
     try {
-      window.localStorage.setItem(STORAGE_KEY, code);
+      window.localStorage.setItem(DRAFT_KEY, code);
     } catch {
       // storage unavailable (private browsing etc.) - not worth surfacing
     }
   }, [code]);
-
-  useEffect(() => {
-    try {
-      window.localStorage.setItem(STDIN_STORAGE_KEY, stdin);
-    } catch {
-      // storage unavailable - not worth surfacing
-    }
-  }, [stdin]);
 
   const run = async () => {
     setRunning(true);
@@ -76,7 +89,7 @@ function Ide() {
         highlightErrorLine(editorViewRef.current, syntaxIssue?.line ?? null);
       }
 
-      const result = await runOnce(code, stdin);
+      const result = await runOnce(code, "");
       setOutput(result.output);
       setRunError(result.error ?? null);
     } catch (err) {
@@ -88,10 +101,59 @@ function Ide() {
 
   const reset = () => {
     setCode(DEFAULT_CODE);
-    setStdin("");
+    setCurrentId(null);
+    setCurrentName("");
     setOutput(null);
     setRunError(null);
     setSyntaxError(null);
+  };
+
+  const loadProgram = async (id: string) => {
+    const { data } = await supabase
+      .from("ide_programs")
+      .select("*")
+      .eq("id", id)
+      .maybeSingle();
+    if (!data) return;
+    setCode(data.code);
+    setCurrentId(data.id);
+    setCurrentName(data.name);
+    setOutput(null);
+    setRunError(null);
+    setSyntaxError(null);
+  };
+
+  const saveProgram = async () => {
+    if (!user) return;
+    const name = currentName.trim();
+    if (!name) {
+      toast.error("Give your program a name first");
+      return;
+    }
+    setSaving(true);
+    const { data, error } = await supabase
+      .from("ide_programs")
+      .upsert({ user_id: user.id, name, code }, { onConflict: "user_id,name" })
+      .select("id")
+      .single();
+    setSaving(false);
+    if (error) {
+      toast.error(error.message);
+      return;
+    }
+    setCurrentId(data.id);
+    toast.success("Saved");
+    void qc.invalidateQueries({ queryKey: ["ide-programs", user.id] });
+  };
+
+  const deleteProgram = async (id: string) => {
+    if (!user) return;
+    await supabase.from("ide_programs").delete().eq("id", id);
+    if (id === currentId) {
+      setCurrentId(null);
+      setCurrentName("");
+    }
+    void qc.invalidateQueries({ queryKey: ["ide-programs", user.id] });
   };
 
   return (
@@ -103,41 +165,41 @@ function Ide() {
         </p>
       </div>
 
-      <div className="grid gap-6 lg:grid-cols-[minmax(0,1fr)_minmax(0,1.2fr)]">
-        <div className="space-y-4">
-          <div className="panel p-5">
-            <h2 className="font-semibold">Input</h2>
-            <p className="mt-1 text-sm text-muted-foreground">
-              If your program calls <code className="font-mono">input()</code>, add each value on
-              its own line here before running — they're fed in one by one, in order.
-            </p>
-            <textarea
-              className="code mt-3 h-28 w-full resize-y rounded-xl border border-border bg-card p-3 text-sm text-foreground outline-none focus:ring-2 focus:ring-ring"
-              value={stdin}
-              spellCheck={false}
-              onChange={(e) => setStdin(e.target.value)}
-              placeholder={"e.g.\n5\nAda"}
-            />
-          </div>
+      <div className="panel flex flex-wrap items-center gap-2 p-4">
+        <select
+          className="rounded-md border border-border bg-card px-3 py-2 text-sm"
+          value={currentId ?? ""}
+          onChange={(e) => {
+            if (e.target.value) void loadProgram(e.target.value);
+          }}
+        >
+          <option value="">My programs…</option>
+          {(programs ?? []).map((p) => (
+            <option key={p.id} value={p.id}>
+              {p.name}
+            </option>
+          ))}
+        </select>
+        <Input
+          className="max-w-[12rem]"
+          placeholder="Program name"
+          value={currentName}
+          onChange={(e) => setCurrentName(e.target.value)}
+        />
+        <Button size="sm" onClick={saveProgram} disabled={saving}>
+          {saving ? "Saving…" : "Save"}
+        </Button>
+        <Button size="sm" variant="secondary" onClick={reset}>
+          New
+        </Button>
+        {currentId ? (
+          <Button size="sm" variant="ghost" onClick={() => void deleteProgram(currentId)}>
+            Delete
+          </Button>
+        ) : null}
+      </div>
 
-          <div className="panel p-5">
-            <h2 className="font-semibold">Console</h2>
-            {output == null && runError == null ? (
-              <p className="mt-3 text-sm text-muted-foreground">
-                Output from your program will appear here after you run it.
-              </p>
-            ) : (
-              <div className="mt-3 space-y-2 font-mono text-sm">
-                {output ? <pre className="whitespace-pre-wrap">{output}</pre> : null}
-                {runError ? <pre className="whitespace-pre-wrap text-destructive">{runError}</pre> : null}
-                {!output && !runError ? (
-                  <p className="text-muted-foreground">(no output)</p>
-                ) : null}
-              </div>
-            )}
-          </div>
-        </div>
-
+      <div className="grid gap-6 lg:grid-cols-[minmax(0,1.2fr)_minmax(0,1fr)]">
         <div className="space-y-3">
           <div className="overflow-hidden rounded-xl border border-border">
             <CodeMirror
@@ -165,14 +227,25 @@ function Ide() {
             <Button onClick={run} disabled={running || !engineReady}>
               {!engineReady ? "Starting Python…" : running ? "Running…" : "Run"}
             </Button>
-            <Button variant="secondary" onClick={reset}>
-              Reset
-            </Button>
           </div>
           <p className="font-mono text-xs text-muted-foreground">
-            Python runs entirely in your browser — nothing is executed on the server. Your code is
-            saved locally as you go.
+            Python runs entirely in your browser — nothing is executed on the server.
           </p>
+        </div>
+
+        <div className="panel p-5">
+          <h2 className="font-semibold">Console</h2>
+          {output == null && runError == null ? (
+            <p className="mt-3 text-sm text-muted-foreground">
+              Output from your program will appear here after you run it.
+            </p>
+          ) : (
+            <div className="mt-3 space-y-2 font-mono text-sm">
+              {output ? <pre className="whitespace-pre-wrap">{output}</pre> : null}
+              {runError ? <pre className="whitespace-pre-wrap text-destructive">{runError}</pre> : null}
+              {!output && !runError ? <p className="text-muted-foreground">(no output)</p> : null}
+            </div>
+          )}
         </div>
       </div>
     </div>

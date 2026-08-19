@@ -221,6 +221,30 @@ export type Database = {
         }
         Relationships: []
       }
+      ide_programs: {
+        Row: {
+          code: string
+          id: string
+          name: string
+          updated_at: string
+          user_id: string
+        }
+        Insert: {
+          code?: string
+          id?: string
+          name: string
+          updated_at?: string
+          user_id: string
+        }
+        Update: {
+          code?: string
+          id?: string
+          name?: string
+          updated_at?: string
+          user_id?: string
+        }
+        Relationships: []
+      }
       duels: {
         Row: {
           challenge_id: string
