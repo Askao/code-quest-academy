@@ -11,10 +11,10 @@ import { BADGES, topicLabel, type TrackKey } from "@/lib/game";
 import { checkSyntax, getPyodide, runTests, type RunOutcome } from "@/lib/python-runner";
 import { highlightErrorLine, pythonEditorExtensions } from "@/lib/python-lint";
 import { pickChallenge, recordAttempt, type Challenge } from "@/lib/progress";
-import { withContent } from "@/lib/content";
+import { tasksInGroup, withContent } from "@/lib/content";
 
 type Search = {
-  mode: "practice" | "boss" | "duel" | "homework";
+  mode: "practice" | "boss" | "duel" | "homework" | "recap";
   track?: TrackKey;
   topic?: string;
   duel?: string;
@@ -25,7 +25,7 @@ type BossState = { endsAt: number; score: number; track: TrackKey; topic: string
 
 export const Route = createFileRoute("/_authenticated/play/$slug")({
   validateSearch: (s: Record<string, unknown>): Search => ({
-    mode: (["practice", "boss", "duel", "homework"] as const).includes(s["mode"] as never)
+    mode: (["practice", "boss", "duel", "homework", "recap"] as const).includes(s["mode"] as never)
       ? (s["mode"] as Search["mode"])
       : "practice",
     ...(s["track"] === "alevel" || s["track"] === "gcse" ? { track: s["track"] } : {}),
@@ -180,6 +180,19 @@ function Play() {
 
   const nextChallenge = async () => {
     if (!challenge) return;
+
+    // Multi-part problems: once this part is passed, go straight to the
+    // next part of the same scenario rather than picking something random.
+    if (challenge.group) {
+      const parts = tasksInGroup(challenge.group);
+      const myIndex = parts.findIndex((p) => p.slug === challenge.slug);
+      const nextPart = parts[myIndex + 1];
+      if (nextPart) {
+        void navigate({ to: "/play/$slug", params: { slug: nextPart.slug }, search });
+        return;
+      }
+    }
+
     const next = await pickChallenge({
       track: (search.track ?? challenge.track) as TrackKey,
       ...(search.topic ?? (search.mode === "boss" ? undefined : challenge.topic)
@@ -212,6 +225,11 @@ function Play() {
         <span className="font-mono text-xs text-muted-foreground">
           {topicLabel(challenge.topic)} · difficulty {challenge.difficulty}/5 · {challenge.xp} XP
         </span>
+        {challenge.part ? (
+          <span className="rounded-full bg-secondary px-3 py-1 font-mono text-xs text-foreground">
+            Part {challenge.part}
+          </span>
+        ) : null}
         {search.mode === "boss" && remaining !== null ? (
           <span className="ml-auto rounded-full bg-warning/15 px-3 py-1 font-mono text-sm text-warning">
             ⏱ {Math.floor(remaining / 60)}:{String(remaining % 60).padStart(2, "0")}
@@ -220,6 +238,11 @@ function Play() {
         {search.mode === "duel" ? (
           <span className="ml-auto rounded-full bg-destructive/15 px-3 py-1 font-mono text-sm text-destructive">
             ⚔ Duel — fastest correct answer wins
+          </span>
+        ) : null}
+        {search.mode === "recap" ? (
+          <span className="ml-auto rounded-full bg-primary/15 px-3 py-1 font-mono text-sm text-primary">
+            ↻ Daily recap
           </span>
         ) : null}
       </div>

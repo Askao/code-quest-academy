@@ -31,11 +31,18 @@ function Dashboard() {
     enabled: !!user,
     queryFn: async () => {
       const uid = user!.id;
-      const [stats, skills, badges, memberships] = await Promise.all([
+      const todayStart = new Date().toISOString().slice(0, 10) + "T00:00:00.000Z";
+      const [stats, skills, badges, memberships, recapToday] = await Promise.all([
         supabase.from("stats").select("*").eq("user_id", uid).maybeSingle(),
         supabase.from("skills").select("*").eq("user_id", uid),
         supabase.from("badges").select("*").eq("user_id", uid),
         supabase.from("class_members").select("class_id, classes(*)").eq("student_id", uid),
+        supabase
+          .from("attempts")
+          .select("id", { count: "exact", head: true })
+          .eq("user_id", uid)
+          .eq("mode", "recap")
+          .gte("created_at", todayStart),
       ]);
       const classIds = (memberships.data ?? []).map((m) => m.class_id);
       const homework = classIds.length
@@ -51,6 +58,7 @@ function Dashboard() {
         badges: badges.data ?? [],
         classes: (memberships.data ?? []).map((m) => m.classes).filter(Boolean),
         homework: homework.data ?? [],
+        recapDoneToday: (recapToday.count ?? 0) > 0,
       };
     },
   });
@@ -115,6 +123,20 @@ function Dashboard() {
             <Link to="/practice">Practise now</Link>
           </Button>
         </div>
+      </div>
+
+      <div className="panel flex flex-wrap items-center gap-4 p-5">
+        <div className="flex-1">
+          <p className="font-mono text-xs text-muted-foreground">TODAY'S RECAP</p>
+          <p className="mt-1 font-medium">
+            {data?.recapDoneToday
+              ? "Done for today ✓"
+              : "One quick task and one quick question to keep things fresh."}
+          </p>
+        </div>
+        <Button asChild variant={data?.recapDoneToday ? "secondary" : "default"}>
+          <Link to="/recap">{data?.recapDoneToday ? "Do it again" : "Start recap"}</Link>
+        </Button>
       </div>
 
       {(data?.homework ?? []).length > 0 ? (

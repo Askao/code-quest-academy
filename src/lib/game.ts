@@ -1,4 +1,5 @@
 export const GCSE_TOPICS = [
+  { key: "fundamentals", label: "Data types & variables", blurb: "Variables, data types, casting, input and output" },
   { key: "sequencing", label: "Sequencing", blurb: "Input, output, variables, arithmetic" },
   { key: "selection", label: "Selection", blurb: "if / elif / else and conditions" },
   { key: "iteration", label: "Iteration", blurb: "for and while loops" },

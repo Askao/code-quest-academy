@@ -3,7 +3,14 @@ import { useQuery } from "@tanstack/react-query";
 import { supabase } from "@/integrations/supabase/client";
 import { useAuth } from "@/hooks/useAuth";
 import { topicLabel } from "@/lib/game";
-import { LESSONS, tasksForLesson, topicsWithLessons } from "@/lib/content";
+import {
+  LESSONS,
+  isLessonComplete,
+  isTopicComplete,
+  tasksForLesson,
+  topicsWithLessons,
+} from "@/lib/content";
+import { TopicRoadmap, type RoadmapTopic } from "@/components/TopicRoadmap";
 
 export const Route = createFileRoute("/_authenticated/learn/")({
   head: () => ({
@@ -41,7 +48,30 @@ function LearnIndex() {
     },
   });
 
+  const { data: quizPassed = new Set<string>() } = useQuery({
+    queryKey: ["quiz-passed-lessons", user?.id],
+    enabled: !!user,
+    queryFn: async () => {
+      const { data } = await supabase
+        .from("quiz_attempts")
+        .select("lesson_slug")
+        .eq("user_id", user!.id)
+        .eq("passed", true);
+      return new Set((data ?? []).map((r) => r.lesson_slug));
+    },
+  });
+
   const topics = topicsWithLessons("gcse");
+  const roadmap: RoadmapTopic[] = topics.map((topic, i) => {
+    const complete = isTopicComplete("gcse", topic, passed, quizPassed);
+    const prevComplete =
+      i === 0 || isTopicComplete("gcse", topics[i - 1]!, passed, quizPassed);
+    return {
+      key: topic,
+      label: topicLabel(topic),
+      state: complete ? "complete" : prevComplete ? "current" : "locked",
+    };
+  });
 
   return (
     <div className="space-y-8">
@@ -56,15 +86,24 @@ function LearnIndex() {
         </p>
       </div>
 
+      <TopicRoadmap topics={roadmap} />
+
       <div className="space-y-6">
-        {topics.map((topic) => {
+        {topics.map((topic, topicIndex) => {
           const lessons = LESSONS.filter((l) => l.track === "gcse" && l.topic === topic);
           const all = lessons.flatMap((l) => tasksForLesson(l.slug));
           const done = all.filter((t) => passed.has(t.slug)).length;
+          const topicLocked = roadmap[topicIndex]!.state === "locked";
           return (
-            <section key={topic} className="panel p-6">
+            <section
+              key={topic}
+              id={topic}
+              className={`panel p-6 ${topicLocked ? "opacity-50" : ""}`}
+            >
               <div className="flex flex-wrap items-baseline justify-between gap-2">
-                <h2 className="text-xl font-semibold">{topicLabel(topic)}</h2>
+                <h2 className="flex items-center gap-2 text-xl font-semibold">
+                  {topicLocked ? "🔒" : null} {topicLabel(topic)}
+                </h2>
                 <span className="font-mono text-xs text-muted-foreground">
                   {done}/{all.length} tasks passed
                 </span>
@@ -75,30 +114,51 @@ function LearnIndex() {
                   style={{ width: `${all.length ? (done / all.length) * 100 : 0}%` }}
                 />
               </div>
-              <ol className="mt-5 grid gap-3 md:grid-cols-3">
-                {lessons.map((lesson) => {
-                  const tasks = tasksForLesson(lesson.slug);
-                  const lessonDone = tasks.filter((t) => passed.has(t.slug)).length;
-                  return (
-                    <li key={lesson.slug}>
-                      <Link
-                        to="/learn/$lessonSlug"
-                        params={{ lessonSlug: lesson.slug }}
-                        className="block h-full rounded-xl border border-border p-4 transition-colors hover:border-primary/60 hover:bg-secondary/40"
-                      >
-                        <span className="font-mono text-xs text-muted-foreground">
-                          Lesson {lesson.order}
-                        </span>
-                        <h3 className="mt-1 font-medium">{lesson.title}</h3>
-                        <p className="mt-1 text-sm text-muted-foreground">{lesson.summary}</p>
-                        <p className="mt-3 font-mono text-xs text-primary">
-                          {lessonDone}/{tasks.length} tasks
-                        </p>
-                      </Link>
-                    </li>
-                  );
-                })}
-              </ol>
+              {topicLocked ? (
+                <p className="mt-4 text-sm text-muted-foreground">
+                  Complete {topicLabel(topics[topicIndex - 1]!)} first to unlock this topic.
+                </p>
+              ) : (
+                <ol className="mt-5 grid gap-3 md:grid-cols-3">
+                  {lessons.map((lesson, lessonIndex) => {
+                    const tasks = tasksForLesson(lesson.slug);
+                    const lessonDone = tasks.filter((t) => passed.has(t.slug)).length;
+                    const lessonLocked =
+                      lessonIndex > 0 &&
+                      !isLessonComplete(lessons[lessonIndex - 1]!.slug, passed, quizPassed);
+                    return (
+                      <li key={lesson.slug}>
+                        {lessonLocked ? (
+                          <div className="block h-full rounded-xl border border-border p-4 opacity-50">
+                            <span className="font-mono text-xs text-muted-foreground">
+                              🔒 Lesson {lesson.order}
+                            </span>
+                            <h3 className="mt-1 font-medium">{lesson.title}</h3>
+                            <p className="mt-1 text-xs text-muted-foreground">
+                              Complete lesson {lesson.order - 1} first
+                            </p>
+                          </div>
+                        ) : (
+                          <Link
+                            to="/learn/$lessonSlug"
+                            params={{ lessonSlug: lesson.slug }}
+                            className="block h-full rounded-xl border border-border p-4 transition-colors hover:border-primary/60 hover:bg-secondary/40"
+                          >
+                            <span className="font-mono text-xs text-muted-foreground">
+                              Lesson {lesson.order}
+                            </span>
+                            <h3 className="mt-1 font-medium">{lesson.title}</h3>
+                            <p className="mt-1 text-sm text-muted-foreground">{lesson.summary}</p>
+                            <p className="mt-3 font-mono text-xs text-primary">
+                              {lessonDone}/{tasks.length} tasks
+                            </p>
+                          </Link>
+                        )}
+                      </li>
+                    );
+                  })}
+                </ol>
+              )}
             </section>
           );
         })}

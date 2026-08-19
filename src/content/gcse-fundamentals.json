@@ -1,0 +1,172 @@
+{
+  "track": "gcse",
+  "topic": "fundamentals",
+  "lessons": [
+    {
+      "slug": "gcse-fundamentals-1",
+      "title": "Variables and assignment",
+      "summary": "What a variable actually is, and how to store a value in one.",
+      "notes": "A **variable** is a named location in memory that holds a value while a program runs. Think of it as a labelled box: the label is the variable's name, and whatever is currently inside is its value.\n\nIn Python you create a variable and give it a value with the **assignment operator**, `=`:\n\n```\nscore = 10\n```\n\nThis does not mean \"score equals 10\" the way it would in maths — it means \"put the value 10 in the box labelled `score`\". You can change what's in the box later by assigning to it again: `score = 15` replaces the old value.\n\nVariable naming rules Python enforces: a name must start with a letter or underscore, can only contain letters, numbers and underscores, and is case-sensitive (`total` and `Total` are different variables). OCR exam questions use the words *declare*, *assign* and *initialise* — they all mean \"create a variable and give it a starting value\".",
+      "worked_example": "# Store a player's score, then update it after they earn bonus points\nscore = 10\nprint(score)\nscore = score + 5\nprint(score)",
+      "worked_example_note": "`score = score + 5` reads the current value out of the box, adds 5, then puts the result back in the same box. The right-hand side is always worked out first."
+    },
+    {
+      "slug": "gcse-fundamentals-2",
+      "title": "Data types",
+      "summary": "The four data types OCR expects you to know, and how to check one.",
+      "notes": "Every value has a **data type**, which decides what kind of thing it is and what you can do with it. OCR's specification names four you need to know:\n\n| OCR name | Python type | Example |\n| --- | --- | --- |\n| Integer | `int` | `7`, `-3`, `0` — a whole number |\n| Real | `float` | `3.5`, `-0.2` — a number with a decimal point |\n| String | `str` | `\"hello\"` — text, in quotes |\n| Boolean | `bool` | `True` or `False` — exactly one of two values |\n\nUse the built-in `type()` function to check what type a value is: `type(7)` reports `int`.\n\n**Careful:** OCR's exam pseudocode also lists a *character* data type (a single letter). Python doesn't have a separate character type — a single character is just a string of length 1, e.g. `\"a\"`. If an OCR question asks for a character, a one-letter string is the Python answer.\n\nMixing types incorrectly causes errors: `\"Score: \" + 7` crashes, because Python won't silently join text and a number — you have to convert the number to a string first (next lesson covers this).",
+      "worked_example": "# Check the type of a few different values\nprint(type(7))\nprint(type(3.5))\nprint(type(\"hello\"))\nprint(type(True))",
+      "worked_example_note": "`type()` is mainly a tool for checking your understanding while you learn — you won't normally need it in a finished program."
+    },
+    {
+      "slug": "gcse-fundamentals-3",
+      "title": "Casting, input and output",
+      "summary": "input() always gives you text — converting it to the type you actually need.",
+      "notes": "`input()` reads whatever the user typed and always hands it back as a **string**, even if they typed a number. If you try to do maths with it directly, Python either crashes or does the wrong thing (e.g. `\"3\" + \"4\"` gives `\"34\"`, not `7`, because it's string joining, not addition).\n\n**Casting** converts a value from one data type to another:\n\n- `int(\"3\")` → the integer `3`\n- `float(\"3.5\")` → the real number `3.5`\n- `str(3)` → the string `\"3\"` (needed to join a number onto text with `+`)\n\nThe usual pattern is to cast the moment you read input: `age = int(input())`.\n\nOCR exam wording tells you which function to use even when it doesn't say \"input\" or \"print\" directly:\n\n| Wording in the question | What it means |\n| --- | --- |\n| *read*, *accept*, *ask the user for* | `input()` |\n| *display*, *output*, *report* | `print()` |\n\nAn f-string (`f\"...\"`) lets you drop variables straight into text you print, without manually casting them with `str()`: `print(f\"Age: {age}\")` works even though `age` is an integer.",
+      "worked_example": "# Accept two numbers as text, cast them, then report the total\nfirst_text = input()\nsecond_text = input()\nfirst = int(first_text)\nsecond = int(second_text)\nprint(f\"Total: {first + second}\")",
+      "worked_example_note": "Casting can happen in one step too: `first = int(input())`. Splitting it here just shows what's actually happening underneath."
+    }
+  ],
+  "quiz": [
+    {
+      "lessonSlug": "gcse-fundamentals-1",
+      "question": "Which symbol assigns a value to a variable in Python?",
+      "options": ["=", "==", "->", ":="],
+      "answer": "=",
+      "explanation": "`=` is the assignment operator. `==` is used later on to compare two values for equality, which is a different thing."
+    },
+    {
+      "lessonSlug": "gcse-fundamentals-1",
+      "question": "After running `total = 4` then `total = total + 1`, what is the value of total?",
+      "options": ["4", "5", "1", "total + 1"],
+      "answer": "5",
+      "explanation": "The right-hand side is worked out first using the old value of total (4), giving 5, which is then stored back in total."
+    },
+    {
+      "lessonSlug": "gcse-fundamentals-1",
+      "question": "Which of these is a valid Python variable name?",
+      "options": ["student age", "2ndScore", "student_age", "student-age"],
+      "answer": "student_age",
+      "explanation": "Names can't contain spaces or hyphens, and can't start with a digit. Underscores are allowed, so student_age is valid."
+    },
+    {
+      "lessonSlug": "gcse-fundamentals-2",
+      "question": "Which OCR data type would you use to store a person's height in metres, e.g. 1.75?",
+      "options": ["Integer", "Real", "String", "Boolean"],
+      "answer": "Real",
+      "explanation": "A value with a decimal part is a real number (Python's float). Integer is for whole numbers only."
+    },
+    {
+      "lessonSlug": "gcse-fundamentals-2",
+      "question": "Which of these is NOT a Python data type (even though OCR's pseudocode lists it separately)?",
+      "options": ["Integer", "Character", "String", "Boolean"],
+      "answer": "Character",
+      "explanation": "Python has no separate character type — a single character is just a string of length 1."
+    },
+    {
+      "lessonSlug": "gcse-fundamentals-2",
+      "question": "What does calling type(True) report?",
+      "options": ["int", "str", "bool", "float"],
+      "answer": "bool",
+      "explanation": "True and False are Boolean values, Python's bool type."
+    },
+    {
+      "lessonSlug": "gcse-fundamentals-3",
+      "question": "What data type does input() always return, no matter what the user types?",
+      "options": ["Integer", "Real", "String", "Boolean"],
+      "answer": "String",
+      "explanation": "input() always hands back text. You must cast it with int() or float() before doing maths with it."
+    },
+    {
+      "lessonSlug": "gcse-fundamentals-3",
+      "question": "An OCR question says \"the program should display the total cost\". Which Python function does this describe?",
+      "options": ["input()", "print()", "int()", "str()"],
+      "answer": "print()",
+      "explanation": "\"Display\", \"output\" and \"report\" all describe print() in OCR's exam wording."
+    },
+    {
+      "lessonSlug": "gcse-fundamentals-3",
+      "question": "What does int(\"3\") + int(\"4\") evaluate to?",
+      "options": ["7", "\"34\"", "\"7\"", "34"],
+      "answer": "7",
+      "explanation": "Casting both strings to integers first means + performs numeric addition (7), not string joining (which would give \"34\")."
+    }
+  ],
+  "tasks": [
+    { "slug": "gcse-fundamentals-t1-01", "lesson": 1, "tier": 1, "difficulty": 1, "xp": 10,
+      "title": "Store and print",
+      "brief": "Create a variable called message with the value \"Hello, OCR\" and print it.",
+      "starter": "", "hints": ["message = \"Hello, OCR\"", "Then print(message)"],
+      "tests": [{ "expect": "Hello, OCR" }] },
+    { "slug": "gcse-fundamentals-t1-02", "lesson": 1, "tier": 1, "difficulty": 1, "xp": 10,
+      "title": "Update a variable",
+      "brief": "Set a variable called total to 10. Add 5 to it, then print the new value.",
+      "starter": "", "hints": ["total = 10", "total = total + 5"],
+      "tests": [{ "expect": "15" }] },
+    { "slug": "gcse-fundamentals-t1-03", "lesson": 1, "tier": 1, "difficulty": 1, "xp": 10,
+      "title": "Two variables",
+      "brief": "Read a whole number into a variable called first, and another into a variable called second. Print the two variables on separate lines, first then second.",
+      "starter": "", "hints": ["Two separate input() calls, stored in two named variables"],
+      "tests": [{ "stdin": "3\n9", "expect": "3\n9" }, { "stdin": "-1\n0", "expect": "-1\n0" }] },
+    { "slug": "gcse-fundamentals-t1-04", "lesson": 1, "tier": 1, "difficulty": 2, "xp": 15,
+      "title": "Overwrite a variable",
+      "brief": "Read a whole number. Store it in a variable called value, then overwrite value with double the original number, then print value.",
+      "starter": "", "hints": ["value = int(input())", "value = value * 2"],
+      "tests": [{ "stdin": "6", "expect": "12" }, { "stdin": "0", "expect": "0" }] },
+    { "slug": "gcse-fundamentals-t2-01", "lesson": 2, "tier": 2, "difficulty": 1, "xp": 15,
+      "title": "Name that type",
+      "brief": "A program stores the value 42. Print the name of its Python data type using type().",
+      "starter": "", "hints": ["print(type(42))"],
+      "tests": [{ "expect": "<class 'int'>" }] },
+    { "slug": "gcse-fundamentals-t2-02", "lesson": 2, "tier": 2, "difficulty": 2, "xp": 15,
+      "title": "Pick the right type",
+      "brief": "A school stores each student's exam score as a whole number out of 100. Read a score and print it back exactly as read — no decimal point should appear even if a teacher accidentally enters one, so read it as an integer.",
+      "starter": "", "hints": ["int(input()) truncates any decimal part on the way in"],
+      "tests": [{ "stdin": "87", "expect": "87" }, { "stdin": "100", "expect": "100" }] },
+    { "slug": "gcse-fundamentals-t2-03", "lesson": 2, "tier": 2, "difficulty": 2, "xp": 20,
+      "title": "Boolean check",
+      "brief": "Read a whole number. Store, in a variable called is_positive, whether the number is greater than 0 (a Boolean value), then print is_positive.",
+      "starter": "", "hints": ["is_positive = number > 0", "Comparisons produce True or False directly"],
+      "tests": [{ "stdin": "5", "expect": "True" }, { "stdin": "-2", "expect": "False" }, { "stdin": "0", "expect": "False" }] },
+    { "slug": "gcse-fundamentals-t2-04", "lesson": 2, "tier": 2, "difficulty": 2, "xp": 20,
+      "title": "A single character",
+      "brief": "OCR's pseudocode has a character data type. Read one letter grade (e.g. \"A\") and print the message `Grade received: A` using exact wording, remembering Python represents a single character as a one-character string.",
+      "starter": "", "hints": ["grade = input()", "f\"Grade received: {grade}\""],
+      "tests": [{ "stdin": "A", "expect": "Grade received: A" }, { "stdin": "C", "expect": "Grade received: C" }] },
+    { "slug": "gcse-fundamentals-t3-01", "lesson": 3, "tier": 3, "difficulty": 2, "xp": 20,
+      "title": "Age next year",
+      "brief": "A form asks the user to state their age. Accept the age and report what their age will be next year, in the format `Next year you will be 13`.",
+      "starter": "", "hints": ["Cast the input to an integer before adding 1"],
+      "tests": [{ "stdin": "12", "expect": "Next year you will be 13" }, { "stdin": "15", "expect": "Next year you will be 16" }] },
+    { "slug": "gcse-fundamentals-t3-02", "lesson": 3, "tier": 3, "difficulty": 3, "xp": 25,
+      "title": "Product price",
+      "brief": "A till system needs to accept the price of an item, which may include pence, and display it back in the format `Price: £3.5`. The value the till receives is always text, so make sure it is converted to a real number before it is used.",
+      "starter": "", "hints": ["price = float(input())", "f\"Price: £{price}\""],
+      "tests": [{ "stdin": "3.5", "expect": "Price: £3.5" }, { "stdin": "10", "expect": "Price: £10.0" }] },
+    { "slug": "gcse-fundamentals-t3-03", "lesson": 3, "tier": 3, "difficulty": 3, "xp": 25,
+      "title": "Joining text and numbers",
+      "brief": "A school office wants a program that accepts a student's name, then their year group as a whole number, and reports it as one sentence: `Ada is in year 10`. Trying to join text and a number directly causes an error, so make sure everything is combined safely.",
+      "starter": "", "hints": ["An f-string handles the conversion for you", "Or use str() to convert the year group manually"],
+      "tests": [{ "stdin": "Ada\n10", "expect": "Ada is in year 10" }, { "stdin": "Alan\n11", "expect": "Alan is in year 11" }] },
+    { "slug": "gcse-fundamentals-t4-01", "lesson": 3, "tier": 4, "difficulty": 4, "xp": 30,
+      "title": "Validated-looking receipt line",
+      "brief": "A shop's till software processes one item at a time.\n\nWrite a program that:\n- accepts the name of the item\n- accepts the price of the item, which may include pence\n- accepts the quantity bought, which is always a whole number\n- outputs a single receipt line in the format `Bread x2 = £2.40`\n\nThe total shown is the price multiplied by the quantity.",
+      "starter": "", "hints": ["Read name, then price (as a real number), then quantity (as an integer)", "total = price * quantity", "Format the total to 2 decimal places, e.g. f\"{total:.2f}\", so £2.4 shows as £2.40"],
+      "tests": [{ "stdin": "Bread\n1.2\n2", "expect": "Bread x2 = £2.40" }, { "stdin": "Milk\n0.9\n3", "expect": "Milk x3 = £2.70" }] },
+    { "slug": "gcse-fundamentals-t4-02", "lesson": 3, "tier": 4, "difficulty": 4, "xp": 35,
+      "title": "Type-safe area calculator",
+      "brief": "A DIY store's website calculates how much paint a customer needs.\n\nOne litre of paint covers 12 square metres. The customer enters the width and height of a wall in metres, which may include decimals.\n\nWrite a program that accepts the width, then the height, calculates the wall's area, and reports the litres of paint needed, rounded up to the nearest whole litre so there is always enough paint. Output in the format `Litres needed: 3`.",
+      "starter": "", "hints": ["area = width * height", "litres = area / 12", "import math and use math.ceil() to round up"],
+      "tests": [{ "stdin": "4\n3", "expect": "Litres needed: 1" }, { "stdin": "6\n5", "expect": "Litres needed: 3" }] },
+    { "slug": "gcse-fundamentals-t4-big1a", "lesson": 3, "tier": 4, "difficulty": 3, "xp": 25, "group": "gcse-fundamentals-big1", "part": "A",
+      "title": "Cinema booking system — Part A: customer details",
+      "brief": "A cinema is building a booking system, split into two parts.\n\n**Part A.** Accept a customer's name, then their age (a whole number). Display the details in the exact format `Name: Ada, Age: 14`.",
+      "starter": "", "hints": ["Two input() calls: one for name, one cast to int() for age", "f\"Name: {name}, Age: {age}\""],
+      "tests": [{ "stdin": "Ada\n14", "expect": "Name: Ada, Age: 14" }, { "stdin": "Alan\n30", "expect": "Name: Alan, Age: 30" }] },
+    { "slug": "gcse-fundamentals-t4-big1b", "lesson": 3, "tier": 4, "difficulty": 4, "xp": 30, "group": "gcse-fundamentals-big1", "part": "B",
+      "title": "Cinema booking system — Part B: ticket type",
+      "brief": "**Part B.** Continuing the booking system: accept a customer's age (a whole number). Anyone under 12 gets a child ticket; everyone else gets an adult ticket. Display the result in the format `Ticket type: Child` or `Ticket type: Adult`.",
+      "starter": "", "hints": ["age = int(input())", "Compare age against 12 to decide which text to print"],
+      "tests": [{ "stdin": "14", "expect": "Ticket type: Adult" }, { "stdin": "8", "expect": "Ticket type: Child" }, { "stdin": "12", "expect": "Ticket type: Adult" }] }
+  ]
+}

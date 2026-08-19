@@ -100,7 +100,7 @@ function Practice() {
         </p>
       </div>
 
-      <div className="flex gap-2">
+      <div className="flex flex-wrap gap-2">
         {(["gcse", "alevel"] as const).map((t) => (
           <Button
             key={t}
@@ -110,6 +110,16 @@ function Practice() {
             {t === "gcse" ? "GCSE (OCR)" : "A level"}
           </Button>
         ))}
+        <Button
+          variant="secondary"
+          onClick={() => {
+            const topics = topicsFor(track);
+            const pick = topics[Math.floor(Math.random() * topics.length)];
+            if (pick) void start(pick.key, "practice");
+          }}
+        >
+          🎲 Surprise me
+        </Button>
       </div>
 
       {alevelLocked ? (

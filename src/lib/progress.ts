@@ -14,6 +14,9 @@ export type Challenge = {
   starter_code: string;
   hints: string[];
   tests: { stdin?: string; expect: string }[];
+  /** Multi-part problems: tasks sharing a group are ordered steps of one bigger scenario. */
+  group?: string;
+  part?: string;
 };
 
 function today() {
@@ -162,4 +165,30 @@ export async function pickChallenge(opts: {
   const near = pool.filter((c) => Math.abs(c.difficulty - target) <= 1);
   const chosenPool = near.length ? near : pool;
   return chosenPool[Math.floor(Math.random() * chosenPool.length)] as unknown as Challenge;
+}
+
+/**
+ * Pick something from a topic the student has already covered, favouring
+ * whichever topic they're weakest in - used by the daily recap page to
+ * fight forgetting rather than push new material.
+ */
+export async function pickRecapChallenge(opts: {
+  userId: string;
+  track: TrackKey;
+  excludeIds?: string[];
+}): Promise<Challenge | null> {
+  const { data: skills } = await supabase
+    .from("skills")
+    .select("topic, level")
+    .eq("user_id", opts.userId)
+    .eq("track", opts.track);
+  if (!skills || skills.length === 0) return null;
+
+  const weakest = [...skills].sort((a, b) => Number(a.level) - Number(b.level))[0]!;
+  return pickChallenge({
+    track: opts.track,
+    topic: weakest.topic,
+    level: Number(weakest.level),
+    excludeIds: opts.excludeIds ?? [],
+  });
 }

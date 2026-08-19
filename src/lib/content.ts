@@ -3,11 +3,12 @@
  * edited, reviewed and self-hosted without touching the database. The database only
  * stores the identity and metadata of each lesson/task plus student progress.
  */
+import fundamentals from "@/content/gcse-fundamentals.json";
 import iteration from "@/content/gcse-iteration.json";
 import lists from "@/content/gcse-lists.json";
 import selection from "@/content/gcse-selection.json";
 import sequencing from "@/content/gcse-sequencing.json";
-import type { TrackKey } from "@/lib/game";
+import { GCSE_TOPICS, type TrackKey } from "@/lib/game";
 
 export type LessonContent = {
   slug: string;
@@ -35,6 +36,17 @@ export type TaskContent = {
   tests: { stdin?: string; expect: string }[];
   track: TrackKey;
   topic: string;
+  /** Multi-part problems: tasks sharing a group are steps of one bigger scenario. */
+  group?: string;
+  part?: string;
+};
+
+export type QuizQuestion = {
+  lessonSlug: string;
+  question: string;
+  options: string[];
+  answer: string;
+  explanation: string;
 };
 
 type RawTopic = {
@@ -42,9 +54,10 @@ type RawTopic = {
   topic: string;
   lessons: Omit<LessonContent, "track" | "topic" | "order">[];
   tasks: Omit<TaskContent, "lessonSlug" | "track" | "topic">[];
+  quiz?: QuizQuestion[];
 };
 
-const RAW = [sequencing, selection, iteration, lists] as unknown as RawTopic[];
+const RAW = [fundamentals, sequencing, selection, iteration, lists] as unknown as RawTopic[];
 
 export const LESSONS: LessonContent[] = RAW.flatMap((t) =>
   t.lessons.map((l, i) => ({
@@ -63,6 +76,8 @@ export const TASKS: TaskContent[] = RAW.flatMap((t) =>
     topic: t.topic,
   })),
 );
+
+export const QUIZZES: QuizQuestion[] = RAW.flatMap((t) => t.quiz ?? []);
 
 const lessonBySlug = new Map(LESSONS.map((l) => [l.slug, l]));
 const taskBySlug = new Map(TASKS.map((t) => [t.slug, t]));
@@ -83,8 +98,56 @@ export function tasksForLesson(lessonSlug: string) {
   return TASKS.filter((t) => t.lessonSlug === lessonSlug);
 }
 
+export function quizForLesson(lessonSlug: string) {
+  return QUIZZES.filter((q) => q.lessonSlug === lessonSlug);
+}
+
+/** Tasks sharing a `group` are ordered steps (Part A, B, ...) of one bigger problem. */
+export function tasksInGroup(group: string) {
+  return TASKS.filter((t) => t.group === group).sort((a, b) =>
+    (a.part ?? "").localeCompare(b.part ?? ""),
+  );
+}
+
+/**
+ * Topics that have lesson content, in the canonical GCSE_TOPICS order (this
+ * order is what sequential lesson gating in /learn walks) - not just
+ * "whichever topic happened to load first".
+ */
 export function topicsWithLessons(track: TrackKey) {
-  return [...new Set(LESSONS.filter((l) => l.track === track).map((l) => l.topic))];
+  const present = new Set(LESSONS.filter((l) => l.track === track).map((l) => l.topic));
+  const ordered = (track === "gcse" ? GCSE_TOPICS : []).map((t) => t.key);
+  return ordered.filter((topic) => present.has(topic));
+}
+
+/**
+ * A lesson is complete once every one of its tasks has a passed attempt and
+ * (if it has a quiz) the quiz has been passed at least once. Used both to
+ * show progress and to decide what's locked in /learn.
+ */
+export function isLessonComplete(
+  lessonSlug: string,
+  passedTaskSlugs: Set<string>,
+  quizPassedLessonSlugs: Set<string>,
+): boolean {
+  const tasks = tasksForLesson(lessonSlug);
+  const allTasksPassed = tasks.length > 0 && tasks.every((t) => passedTaskSlugs.has(t.slug));
+  const quiz = quizForLesson(lessonSlug);
+  const quizOk = quiz.length === 0 || quizPassedLessonSlugs.has(lessonSlug);
+  return allTasksPassed && quizOk;
+}
+
+export function isTopicComplete(
+  track: TrackKey,
+  topic: string,
+  passedTaskSlugs: Set<string>,
+  quizPassedLessonSlugs: Set<string>,
+): boolean {
+  const lessons = lessonsForTopic(track, topic);
+  return (
+    lessons.length > 0 &&
+    lessons.every((l) => isLessonComplete(l.slug, passedTaskSlugs, quizPassedLessonSlugs))
+  );
 }
 
 /** Merge repository content over a database challenge row. */
@@ -100,5 +163,6 @@ export function withContent<T extends { slug: string }>(row: T): T {
     tests: c.tests,
     difficulty: c.difficulty,
     xp: c.xp,
+    ...(c.group ? { group: c.group, part: c.part } : {}),
   };
 }

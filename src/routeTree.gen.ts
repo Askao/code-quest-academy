@@ -18,6 +18,7 @@ import { Route as AuthenticatedDuelsRouteImport } from './routes/_authenticated/
 import { Route as AuthenticatedIdeRouteImport } from './routes/_authenticated/ide'
 import { Route as AuthenticatedLeaderboardRouteImport } from './routes/_authenticated/leaderboard'
 import { Route as AuthenticatedPracticeRouteImport } from './routes/_authenticated/practice'
+import { Route as AuthenticatedRecapRouteImport } from './routes/_authenticated/recap'
 import { Route as AuthenticatedHomeworkHomeworkIdRouteImport } from './routes/_authenticated/homework.$homeworkId'
 import { Route as AuthenticatedLearnIndexRouteImport } from './routes/_authenticated/learn.index'
 import { Route as AuthenticatedLearnLessonSlugRouteImport } from './routes/_authenticated/learn.$lessonSlug'
@@ -70,6 +71,11 @@ const AuthenticatedPracticeRoute = AuthenticatedPracticeRouteImport.update({
   path: '/practice',
   getParentRoute: () => AuthenticatedRouteRoute,
 } as any)
+const AuthenticatedRecapRoute = AuthenticatedRecapRouteImport.update({
+  id: '/recap',
+  path: '/recap',
+  getParentRoute: () => AuthenticatedRouteRoute,
+} as any)
 const AuthenticatedHomeworkHomeworkIdRoute =
   AuthenticatedHomeworkHomeworkIdRouteImport.update({
     id: '/homework/$homeworkId',
@@ -114,6 +120,7 @@ export interface FileRoutesByFullPath {
   '/ide': typeof AuthenticatedIdeRoute
   '/leaderboard': typeof AuthenticatedLeaderboardRoute
   '/practice': typeof AuthenticatedPracticeRoute
+  '/recap': typeof AuthenticatedRecapRoute
   '/homework/$homeworkId': typeof AuthenticatedHomeworkHomeworkIdRoute
   '/learn/$lessonSlug': typeof AuthenticatedLearnLessonSlugRoute
   '/play/$slug': typeof AuthenticatedPlaySlugRoute
@@ -130,6 +137,7 @@ export interface FileRoutesByTo {
   '/ide': typeof AuthenticatedIdeRoute
   '/leaderboard': typeof AuthenticatedLeaderboardRoute
   '/practice': typeof AuthenticatedPracticeRoute
+  '/recap': typeof AuthenticatedRecapRoute
   '/homework/$homeworkId': typeof AuthenticatedHomeworkHomeworkIdRoute
   '/learn/$lessonSlug': typeof AuthenticatedLearnLessonSlugRoute
   '/play/$slug': typeof AuthenticatedPlaySlugRoute
@@ -148,6 +156,7 @@ export interface FileRoutesById {
   '/_authenticated/ide': typeof AuthenticatedIdeRoute
   '/_authenticated/leaderboard': typeof AuthenticatedLeaderboardRoute
   '/_authenticated/practice': typeof AuthenticatedPracticeRoute
+  '/_authenticated/recap': typeof AuthenticatedRecapRoute
   '/_authenticated/homework/$homeworkId': typeof AuthenticatedHomeworkHomeworkIdRoute
   '/_authenticated/learn/$lessonSlug': typeof AuthenticatedLearnLessonSlugRoute
   '/_authenticated/play/$slug': typeof AuthenticatedPlaySlugRoute
@@ -166,6 +175,7 @@ export interface FileRouteTypes {
     | '/ide'
     | '/leaderboard'
     | '/practice'
+    | '/recap'
     | '/homework/$homeworkId'
     | '/learn/$lessonSlug'
     | '/play/$slug'
@@ -182,6 +192,7 @@ export interface FileRouteTypes {
     | '/ide'
     | '/leaderboard'
     | '/practice'
+    | '/recap'
     | '/homework/$homeworkId'
     | '/learn/$lessonSlug'
     | '/play/$slug'
@@ -199,6 +210,7 @@ export interface FileRouteTypes {
     | '/_authenticated/ide'
     | '/_authenticated/leaderboard'
     | '/_authenticated/practice'
+    | '/_authenticated/recap'
     | '/_authenticated/homework/$homeworkId'
     | '/_authenticated/learn/$lessonSlug'
     | '/_authenticated/play/$slug'
@@ -278,6 +290,13 @@ declare module '@tanstack/react-router' {
       preLoaderRoute: typeof AuthenticatedPracticeRouteImport
       parentRoute: typeof AuthenticatedRouteRoute
     }
+    '/_authenticated/recap': {
+      id: '/_authenticated/recap'
+      path: '/recap'
+      fullPath: '/recap'
+      preLoaderRoute: typeof AuthenticatedRecapRouteImport
+      parentRoute: typeof AuthenticatedRouteRoute
+    }
     '/_authenticated/homework/$homeworkId': {
       id: '/_authenticated/homework/$homeworkId'
       path: '/homework/$homeworkId'
@@ -330,6 +349,7 @@ interface AuthenticatedRouteRouteChildren {
   AuthenticatedIdeRoute: typeof AuthenticatedIdeRoute
   AuthenticatedLeaderboardRoute: typeof AuthenticatedLeaderboardRoute
   AuthenticatedPracticeRoute: typeof AuthenticatedPracticeRoute
+  AuthenticatedRecapRoute: typeof AuthenticatedRecapRoute
   AuthenticatedHomeworkHomeworkIdRoute: typeof AuthenticatedHomeworkHomeworkIdRoute
   AuthenticatedLearnLessonSlugRoute: typeof AuthenticatedLearnLessonSlugRoute
   AuthenticatedPlaySlugRoute: typeof AuthenticatedPlaySlugRoute
@@ -345,6 +365,7 @@ const AuthenticatedRouteRouteChildren: AuthenticatedRouteRouteChildren = {
   AuthenticatedIdeRoute: AuthenticatedIdeRoute,
   AuthenticatedLeaderboardRoute: AuthenticatedLeaderboardRoute,
   AuthenticatedPracticeRoute: AuthenticatedPracticeRoute,
+  AuthenticatedRecapRoute: AuthenticatedRecapRoute,
   AuthenticatedHomeworkHomeworkIdRoute: AuthenticatedHomeworkHomeworkIdRoute,
   AuthenticatedLearnLessonSlugRoute: AuthenticatedLearnLessonSlugRoute,
   AuthenticatedPlaySlugRoute: AuthenticatedPlaySlugRoute,

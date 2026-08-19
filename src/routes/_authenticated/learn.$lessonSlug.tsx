@@ -1,11 +1,21 @@
 import { createFileRoute, Link } from "@tanstack/react-router";
-import { useQuery } from "@tanstack/react-query";
+import { useQuery, useQueryClient } from "@tanstack/react-query";
+import { useState } from "react";
+import { toast } from "sonner";
 import { supabase } from "@/integrations/supabase/client";
 import { useAuth } from "@/hooks/useAuth";
 import { Button } from "@/components/ui/button";
 import { LessonNotes } from "@/components/LessonNotes";
 import { topicLabel } from "@/lib/game";
-import { getLesson, lessonsForTopic, tasksForLesson } from "@/lib/content";
+import {
+  getLesson,
+  isLessonComplete,
+  isTopicComplete,
+  lessonsForTopic,
+  quizForLesson,
+  tasksForLesson,
+  topicsWithLessons,
+} from "@/lib/content";
 
 const TIER_LABEL: Record<number, string> = {
   1: "Direct instruction",
@@ -13,6 +23,8 @@ const TIER_LABEL: Record<number, string> = {
   3: "Scenario",
   4: "Exam-style",
 };
+
+const QUIZ_PASS_PERCENT = 70;
 
 export const Route = createFileRoute("/_authenticated/learn/$lessonSlug")({
   head: () => ({
@@ -31,6 +43,117 @@ export const Route = createFileRoute("/_authenticated/learn/$lessonSlug")({
   }),
   component: LessonPage,
 });
+
+function QuickCheck({ lessonSlug, alreadyPassed }: { lessonSlug: string; alreadyPassed: boolean }) {
+  const { user } = useAuth();
+  const qc = useQueryClient();
+  const questions = quizForLesson(lessonSlug);
+  const [answers, setAnswers] = useState<Record<number, string>>({});
+  const [submitted, setSubmitted] = useState(false);
+  const [score, setScore] = useState(0);
+
+  if (questions.length === 0) return null;
+
+  const submit = async () => {
+    if (!user) return;
+    const correct = questions.filter((q, i) => answers[i] === q.answer).length;
+    setScore(correct);
+    setSubmitted(true);
+    const passed = correct / questions.length >= QUIZ_PASS_PERCENT / 100;
+    const { error } = await supabase.from("quiz_attempts").insert({
+      user_id: user.id,
+      lesson_slug: lessonSlug,
+      score: correct,
+      total: questions.length,
+      passed,
+    });
+    if (error) {
+      toast.error(error.message);
+      return;
+    }
+    if (passed) toast.success(`Quiz passed — ${correct}/${questions.length}`);
+    void qc.invalidateQueries({ queryKey: ["quiz-passed-lessons", user.id] });
+  };
+
+  const retry = () => {
+    setAnswers({});
+    setSubmitted(false);
+    setScore(0);
+  };
+
+  return (
+    <section className="panel p-6">
+      <div className="flex items-baseline justify-between">
+        <h2 className="text-lg font-semibold">Quick check</h2>
+        {alreadyPassed ? <span className="font-mono text-xs text-primary">✓ passed</span> : null}
+      </div>
+      <p className="mt-1 text-sm text-muted-foreground">
+        A few questions to check the theory has landed, not just the code.
+      </p>
+      <ol className="mt-4 space-y-5">
+        {questions.map((q, i) => (
+          <li key={i}>
+            <p className="text-sm font-medium">{q.question}</p>
+            <div className="mt-2 space-y-1.5">
+              {q.options.map((option) => {
+                const chosen = answers[i] === option;
+                const showResult = submitted;
+                const isCorrect = option === q.answer;
+                return (
+                  <label
+                    key={option}
+                    className={`flex cursor-pointer items-center gap-2 rounded-md border p-2 text-sm transition-colors ${
+                      showResult
+                        ? isCorrect
+                          ? "border-success/50 bg-success/10"
+                          : chosen
+                            ? "border-destructive/50 bg-destructive/10"
+                            : "border-border"
+                        : chosen
+                          ? "border-primary/60 bg-secondary/40"
+                          : "border-border hover:bg-secondary/30"
+                    }`}
+                  >
+                    <input
+                      type="radio"
+                      name={`q-${lessonSlug}-${i}`}
+                      className="accent-primary"
+                      disabled={submitted}
+                      checked={chosen}
+                      onChange={() => setAnswers((a) => ({ ...a, [i]: option }))}
+                    />
+                    {option}
+                  </label>
+                );
+              })}
+            </div>
+            {submitted ? (
+              <p className="mt-1.5 text-xs text-muted-foreground">{q.explanation}</p>
+            ) : null}
+          </li>
+        ))}
+      </ol>
+      {submitted ? (
+        <div className="mt-5 flex items-center gap-3">
+          <span className="font-mono text-sm">
+            {score}/{questions.length} correct
+          </span>
+          <Button size="sm" variant="secondary" onClick={retry}>
+            Try again
+          </Button>
+        </div>
+      ) : (
+        <Button
+          className="mt-5"
+          disabled={Object.keys(answers).length < questions.length}
+          onClick={submit}
+        >
+          Submit answers
+        </Button>
+      )}
+    </section>
+  );
+}
 
 function LessonPage() {
   const { lessonSlug } = Route.useParams();
@@ -51,6 +174,19 @@ function LessonPage() {
     },
   });
 
+  const { data: quizPassed = new Set<string>() } = useQuery({
+    queryKey: ["quiz-passed-lessons", user?.id],
+    enabled: !!user,
+    queryFn: async () => {
+      const { data } = await supabase
+        .from("quiz_attempts")
+        .select("lesson_slug")
+        .eq("user_id", user!.id)
+        .eq("passed", true);
+      return new Set((data ?? []).map((r) => r.lesson_slug));
+    },
+  });
+
   if (!lesson) {
     return (
       <div className="panel p-6">
@@ -66,6 +202,31 @@ function LessonPage() {
   const siblings = lessonsForTopic(lesson.track, lesson.topic);
   const next = siblings.find((l) => l.order === lesson.order + 1);
   const done = tasks.filter((t) => passed.has(t.slug)).length;
+
+  const topicOrder = topicsWithLessons(lesson.track);
+  const topicIndex = topicOrder.indexOf(lesson.topic);
+  const previousTopicComplete =
+    topicIndex <= 0 || isTopicComplete(lesson.track, topicOrder[topicIndex - 1]!, passed, quizPassed);
+  const previousSibling = siblings.find((l) => l.order === lesson.order - 1);
+  const previousLessonComplete =
+    !previousSibling || isLessonComplete(previousSibling.slug, passed, quizPassed);
+  const locked = !previousTopicComplete || !previousLessonComplete;
+
+  if (locked) {
+    return (
+      <div className="panel p-6">
+        <p className="font-medium">🔒 This lesson is locked.</p>
+        <p className="mt-2 text-sm text-muted-foreground">
+          {!previousTopicComplete
+            ? `Finish ${topicLabel(topicOrder[topicIndex - 1]!)} first.`
+            : `Finish "${previousSibling?.title}" first.`}
+        </p>
+        <Button asChild className="mt-4">
+          <Link to="/learn">Back to lessons</Link>
+        </Button>
+      </div>
+    );
+  }
 
   return (
     <div className="space-y-6">
@@ -97,6 +258,8 @@ function LessonPage() {
               <p className="mt-3 text-sm text-muted-foreground">{lesson.worked_example_note}</p>
             ) : null}
           </section>
+
+          <QuickCheck lessonSlug={lesson.slug} alreadyPassed={quizPassed.has(lesson.slug)} />
         </div>
 
         <section className="panel h-fit p-6">
@@ -119,7 +282,14 @@ function LessonPage() {
                     {passed.has(task.slug) ? "✓" : "○"}
                   </span>
                   <span className="min-w-0">
-                    <span className="block font-medium">{task.title}</span>
+                    <span className="block font-medium">
+                      {task.title}
+                      {task.part ? (
+                        <span className="ml-1.5 font-mono text-xs text-muted-foreground">
+                          Part {task.part}
+                        </span>
+                      ) : null}
+                    </span>
                     <span className="mt-0.5 block font-mono text-xs text-muted-foreground">
                       {TIER_LABEL[task.tier]} · difficulty {task.difficulty}/5 · {task.xp} XP
                     </span>
