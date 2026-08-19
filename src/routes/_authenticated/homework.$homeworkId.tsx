@@ -25,11 +25,20 @@ function HomeworkPage() {
     queryKey: ["homework", homeworkId, user?.id],
     enabled: !!user,
     queryFn: async () => {
-      const [hw, attempts] = await Promise.all([
+      const [hw, attempts, assignment] = await Promise.all([
         supabase.from("homework").select("*, classes(name)").eq("id", homeworkId).maybeSingle(),
         supabase.from("attempts").select("challenge_id").eq("user_id", user!.id).eq("passed", true),
+        supabase
+          .from("homework_assignments")
+          .select("challenge_ids")
+          .eq("homework_id", homeworkId)
+          .eq("student_id", user!.id)
+          .maybeSingle(),
       ]);
-      const ids = hw.data?.challenge_ids ?? [];
+      // Personalized list if one was generated for this student; legacy
+      // homework (set before per-student assignments existed) falls back
+      // to the shared list on the homework row itself.
+      const ids = assignment.data?.challenge_ids ?? hw.data?.challenge_ids ?? [];
       const items = ids.length
         ? await supabase.from("challenges").select("*").in("id", ids)
         : { data: [] };

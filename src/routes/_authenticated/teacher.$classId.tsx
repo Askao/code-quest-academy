@@ -7,6 +7,9 @@ import { Button } from "@/components/ui/button";
 import { Input } from "@/components/ui/input";
 import { Progress } from "@/components/ui/progress";
 import { levelFromXp, skillPercent, topicsFor, type TrackKey } from "@/lib/game";
+import { pickHomeworkSet } from "@/lib/progress";
+
+const EFFORT_COUNT: Record<string, number> = { low: 2, medium: 4, high: 6 };
 
 export const Route = createFileRoute("/_authenticated/teacher/$classId")({
   head: () => ({
@@ -27,7 +30,7 @@ function ClassDetail() {
   const [instructions, setInstructions] = useState("");
   const [dueAt, setDueAt] = useState("");
   const [topic, setTopic] = useState("all");
-  const [count, setCount] = useState(3);
+  const [effort, setEffort] = useState("medium");
 
   const { data } = useQuery({
     queryKey: ["class", classId],
@@ -84,13 +87,31 @@ function ClassDetail() {
         };
       });
 
+      // Personalized assignments: each student can have their own list of
+      // challenges for a given homework (see setHomework below). Legacy
+      // homework created before this existed has no assignment rows, so it
+      // falls back to the shared h.challenge_ids for every student.
+      const homeworkIds = (homework.data ?? []).map((h) => h.id);
+      const assignments = homeworkIds.length
+        ? await supabase
+            .from("homework_assignments")
+            .select("homework_id, student_id, challenge_ids")
+            .in("homework_id", homeworkIds)
+        : { data: [] };
+      const assignmentByKey = new Map(
+        (assignments.data ?? []).map((a) => [`${a.homework_id}:${a.student_id}`, a.challenge_ids]),
+      );
+
       // Homework completion: which of a homework's challenges has each
       // student actually passed. The `attempts` fetch above is capped at
       // 500 rows class-wide for the accuracy view, so it isn't reliable for
       // this — fetch passed attempts for exactly the challenges set as
       // homework instead.
       const homeworkChallengeIds = Array.from(
-        new Set((homework.data ?? []).flatMap((h) => h.challenge_ids ?? [])),
+        new Set([
+          ...(homework.data ?? []).flatMap((h) => h.challenge_ids ?? []),
+          ...(assignments.data ?? []).flatMap((a) => a.challenge_ids ?? []),
+        ]),
       );
       const passedForHomework =
         ids.length && homeworkChallengeIds.length
@@ -110,13 +131,16 @@ function ClassDetail() {
         students,
         homework: (homework.data ?? []).map((h) => ({
           ...h,
-          completion: students.map((s) => ({
-            id: s.id,
-            name: s.name,
-            done: (h.challenge_ids ?? []).filter((cid) => passedSet.has(`${s.id}:${cid}`))
-              .length,
-            total: (h.challenge_ids ?? []).length,
-          })),
+          completion: students.map((s) => {
+            const personal = assignmentByKey.get(`${h.id}:${s.id}`);
+            const challengeIds = personal ?? h.challenge_ids ?? [];
+            return {
+              id: s.id,
+              name: s.name,
+              done: challengeIds.filter((cid) => passedSet.has(`${s.id}:${cid}`)).length,
+              total: challengeIds.length,
+            };
+          }),
         })),
       };
     },
@@ -129,30 +153,61 @@ function ClassDetail() {
       toast.error("Give the homework a title");
       return;
     }
-    let query = supabase.from("challenges").select("id").eq("track", track);
+    const students = data?.students ?? [];
+    if (students.length === 0) {
+      toast.error("No students in this class yet");
+      return;
+    }
+    let query = supabase.from("challenges").select("id, difficulty").eq("track", track);
     if (topic !== "all") query = query.eq("topic", topic);
     const { data: pool } = await query;
-    const ids = (pool ?? []).map((c) => c.id).sort(() => Math.random() - 0.5).slice(0, count);
-    if (ids.length === 0) {
+    if (!pool || pool.length === 0) {
       toast.error("No challenges match that topic");
       return;
     }
-    const { error } = await supabase.from("homework").insert({
-      class_id: classId,
-      title: title.trim(),
-      instructions: instructions.trim(),
-      challenge_ids: ids,
-      adaptive: true,
-      ...(dueAt ? { due_at: new Date(dueAt).toISOString() } : {}),
-    });
-    if (error) toast.error(error.message);
-    else {
-      toast.success("Homework set");
-      setTitle("");
-      setInstructions("");
-      setDueAt("");
-      void qc.invalidateQueries({ queryKey: ["class", classId] });
+    const count = EFFORT_COUNT[effort] ?? 4;
+
+    const { data: hw, error: hwError } = await supabase
+      .from("homework")
+      .insert({
+        class_id: classId,
+        title: title.trim(),
+        instructions: instructions.trim(),
+        adaptive: true,
+        ...(dueAt ? { due_at: new Date(dueAt).toISOString() } : {}),
+      })
+      .select("id")
+      .single();
+    if (hwError || !hw) {
+      toast.error(hwError?.message ?? "Could not create homework");
+      return;
     }
+
+    // Each student gets challenges picked at their own level for this
+    // topic (their overall average level when "all topics" is chosen) —
+    // not the same list for the whole class.
+    const assignments = students.map((s) => {
+      const level =
+        topic !== "all"
+          ? Number(s.skills.find((k) => k.topic === topic && k.track === track)?.level ?? 2)
+          : s.avg || 2;
+      return {
+        homework_id: hw.id,
+        student_id: s.id,
+        challenge_ids: pickHomeworkSet(pool, level, count),
+      };
+    });
+    const { error } = await supabase.from("homework_assignments").insert(assignments);
+    if (error) {
+      await supabase.from("homework").delete().eq("id", hw.id);
+      toast.error(error.message);
+      return;
+    }
+    toast.success("Homework set");
+    setTitle("");
+    setInstructions("");
+    setDueAt("");
+    void qc.invalidateQueries({ queryKey: ["class", classId] });
   };
 
   return (
@@ -168,8 +223,8 @@ function ClassDetail() {
       <section className="panel space-y-3 p-5">
         <h2 className="text-lg font-semibold">Set homework</h2>
         <p className="text-sm text-muted-foreground">
-          Challenges are picked from this class's track only, and each student's skill level still
-          shapes what they see in practice.
+          Each student gets their own set of challenges, picked at their own skill level for this
+          topic — not the same list for the whole class.
         </p>
         <div className="grid gap-2 sm:grid-cols-2">
           <Input placeholder="Title" value={title} onChange={(e) => setTitle(e.target.value)} />
@@ -192,14 +247,12 @@ function ClassDetail() {
           </select>
           <select
             className="rounded-md border border-border bg-card px-3 py-2 text-sm"
-            value={count}
-            onChange={(e) => setCount(Number(e.target.value))}
+            value={effort}
+            onChange={(e) => setEffort(e.target.value)}
           >
-            {[1, 2, 3, 4, 5, 6].map((n) => (
-              <option key={n} value={n}>
-                {n} challenge{n > 1 ? "s" : ""}
-              </option>
-            ))}
+            <option value="low">Low effort — {EFFORT_COUNT.low} challenges each</option>
+            <option value="medium">Medium effort — {EFFORT_COUNT.medium} challenges each</option>
+            <option value="high">High effort — {EFFORT_COUNT.high} challenges each</option>
           </select>
         </div>
         <Input
@@ -260,12 +313,13 @@ function ClassDetail() {
         <div className="space-y-3">
           {(data?.homework ?? []).map((h) => {
             const sorted = [...h.completion].sort((a, b) => a.done - b.done);
+            const perStudentCount = Math.max(0, ...sorted.map((c) => c.total));
             return (
               <div key={h.id} className="panel p-4 text-sm">
                 <div className="flex flex-wrap items-center gap-3">
                   <span className="flex-1 font-medium">{h.title}</span>
                   <span className="font-mono text-xs text-muted-foreground">
-                    {h.challenge_ids.length} challenges
+                    {perStudentCount} challenges each
                     {h.due_at ? ` · due ${new Date(h.due_at).toLocaleDateString()}` : ""}
                   </span>
                   <Button

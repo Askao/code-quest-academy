@@ -202,6 +202,8 @@ function LessonPage() {
   const siblings = lessonsForTopic(lesson.track, lesson.topic);
   const next = siblings.find((l) => l.order === lesson.order + 1);
   const done = tasks.filter((t) => passed.has(t.slug)).length;
+  const lessonQuiz = quizForLesson(lesson.slug);
+  const quizGateOpen = lessonQuiz.length === 0 || quizPassed.has(lesson.slug);
 
   const topicOrder = topicsWithLessons(lesson.track);
   const topicIndex = topicOrder.indexOf(lesson.topic);
@@ -269,35 +271,69 @@ function LessonPage() {
               {done}/{tasks.length} passed
             </span>
           </div>
-          <ol className="mt-4 space-y-2">
-            {tasks.map((task) => (
-              <li key={task.slug}>
-                <Link
-                  to="/play/$slug"
-                  params={{ slug: task.slug }}
-                  search={{ mode: "practice" as const, track: task.track, topic: task.topic }}
-                  className="flex items-start gap-3 rounded-lg border border-border p-3 transition-colors hover:border-primary/60 hover:bg-secondary/40"
-                >
-                  <span className={passed.has(task.slug) ? "text-primary" : "text-muted-foreground"}>
-                    {passed.has(task.slug) ? "✓" : "○"}
-                  </span>
-                  <span className="min-w-0">
-                    <span className="block font-medium">
-                      {task.title}
-                      {task.part ? (
-                        <span className="ml-1.5 font-mono text-xs text-muted-foreground">
-                          Part {task.part}
+          {!quizGateOpen ? (
+            <div className="mt-4 rounded-lg border border-border p-4 opacity-60">
+              <p className="font-medium">🔒 Locked</p>
+              <p className="mt-1 text-sm text-muted-foreground">
+                Complete the quick check above first.
+              </p>
+            </div>
+          ) : (
+            <ol className="mt-4 space-y-2">
+              {tasks.map((task, i) => {
+                const taskLocked = i > 0 && !passed.has(tasks[i - 1]!.slug);
+                if (taskLocked) {
+                  return (
+                    <li key={task.slug} className="rounded-lg border border-border p-3 opacity-50">
+                      <span className="flex items-start gap-3">
+                        <span className="text-muted-foreground">🔒</span>
+                        <span className="min-w-0">
+                          <span className="block font-medium">{task.title}</span>
+                          <span className="mt-0.5 block text-xs text-muted-foreground">
+                            Complete the previous task first
+                          </span>
                         </span>
-                      ) : null}
-                    </span>
-                    <span className="mt-0.5 block font-mono text-xs text-muted-foreground">
-                      {TIER_LABEL[task.tier]} · difficulty {task.difficulty}/5 · {task.xp} XP
-                    </span>
-                  </span>
-                </Link>
-              </li>
-            ))}
-          </ol>
+                      </span>
+                    </li>
+                  );
+                }
+                return (
+                  <li key={task.slug}>
+                    <Link
+                      to="/play/$slug"
+                      params={{ slug: task.slug }}
+                      search={{
+                        mode: "practice" as const,
+                        track: task.track,
+                        topic: task.topic,
+                        lesson: lesson.slug,
+                      }}
+                      className="flex items-start gap-3 rounded-lg border border-border p-3 transition-colors hover:border-primary/60 hover:bg-secondary/40"
+                    >
+                      <span
+                        className={passed.has(task.slug) ? "text-primary" : "text-muted-foreground"}
+                      >
+                        {passed.has(task.slug) ? "✓" : "○"}
+                      </span>
+                      <span className="min-w-0">
+                        <span className="block font-medium">
+                          {task.title}
+                          {task.part ? (
+                            <span className="ml-1.5 font-mono text-xs text-muted-foreground">
+                              Part {task.part}
+                            </span>
+                          ) : null}
+                        </span>
+                        <span className="mt-0.5 block font-mono text-xs text-muted-foreground">
+                          {TIER_LABEL[task.tier]} · difficulty {task.difficulty}/5 · {task.xp} XP
+                        </span>
+                      </span>
+                    </Link>
+                  </li>
+                );
+              })}
+            </ol>
+          )}
           {next ? (
             <Button asChild variant="secondary" className="mt-5 w-full">
               <Link to="/learn/$lessonSlug" params={{ lessonSlug: next.slug }}>

@@ -11,7 +11,7 @@ import { BADGES, topicLabel, type TrackKey } from "@/lib/game";
 import { checkSyntax, getPyodide, runTests, type RunOutcome } from "@/lib/python-runner";
 import { highlightErrorLine, pythonEditorExtensions } from "@/lib/python-lint";
 import { pickChallenge, recordAttempt, type Challenge } from "@/lib/progress";
-import { tasksInGroup, withContent } from "@/lib/content";
+import { tasksForLesson, tasksInGroup, withContent } from "@/lib/content";
 
 type Search = {
   mode: "practice" | "boss" | "duel" | "homework" | "recap";
@@ -19,6 +19,7 @@ type Search = {
   topic?: string;
   duel?: string;
   hw?: string;
+  lesson?: string;
 };
 
 type BossState = { endsAt: number; score: number; track: TrackKey; topic: string | null };
@@ -32,6 +33,7 @@ export const Route = createFileRoute("/_authenticated/play/$slug")({
     ...(typeof s["topic"] === "string" ? { topic: s["topic"] } : {}),
     ...(typeof s["duel"] === "string" ? { duel: s["duel"] } : {}),
     ...(typeof s["hw"] === "string" ? { hw: s["hw"] } : {}),
+    ...(typeof s["lesson"] === "string" ? { lesson: s["lesson"] } : {}),
   }),
   head: () => ({
     meta: [
@@ -180,6 +182,18 @@ function Play() {
 
   const nextChallenge = async () => {
     if (!challenge) return;
+
+    // Came from a lesson's task list: follow that lesson's task order
+    // rather than picking something random from the whole topic.
+    if (search.lesson) {
+      const lessonTasks = tasksForLesson(search.lesson);
+      const myIndex = lessonTasks.findIndex((t) => t.slug === challenge.slug);
+      const nextTask = lessonTasks[myIndex + 1];
+      if (nextTask) {
+        void navigate({ to: "/play/$slug", params: { slug: nextTask.slug }, search });
+        return;
+      }
+    }
 
     // Multi-part problems: once this part is passed, go straight to the
     // next part of the same scenario rather than picking something random.

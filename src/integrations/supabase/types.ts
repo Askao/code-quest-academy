@@ -370,6 +370,38 @@ export type Database = {
           },
         ]
       }
+      homework_assignments: {
+        Row: {
+          challenge_ids: string[]
+          created_at: string
+          homework_id: string
+          id: string
+          student_id: string
+        }
+        Insert: {
+          challenge_ids?: string[]
+          created_at?: string
+          homework_id: string
+          id?: string
+          student_id: string
+        }
+        Update: {
+          challenge_ids?: string[]
+          created_at?: string
+          homework_id?: string
+          id?: string
+          student_id?: string
+        }
+        Relationships: [
+          {
+            foreignKeyName: "homework_assignments_homework_id_fkey"
+            columns: ["homework_id"]
+            isOneToOne: false
+            referencedRelation: "homework"
+            referencedColumns: ["id"]
+          },
+        ]
+      }
       lessons: {
         Row: {
           created_at: string

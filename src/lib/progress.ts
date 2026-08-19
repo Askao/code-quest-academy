@@ -168,6 +168,24 @@ export async function pickChallenge(opts: {
 }
 
 /**
+ * Pick up to `count` distinct challenges from a pool, closest to `level`
+ * first. Naturally gives a spread (mostly at-level, a couple either side)
+ * without a hand-built distribution - used to build one student's
+ * personalized homework set.
+ */
+export function pickHomeworkSet(
+  pool: { id: string; difficulty: number }[],
+  level: number,
+  count: number,
+): string[] {
+  const target = Math.round(level);
+  const sorted = [...pool].sort(
+    (a, b) => Math.abs(a.difficulty - target) - Math.abs(b.difficulty - target),
+  );
+  return sorted.slice(0, count).map((c) => c.id);
+}
+
+/**
  * Pick something from a topic the student has already covered, favouring
  * whichever topic they're weakest in - used by the daily recap page to
  * fight forgetting rather than push new material.
