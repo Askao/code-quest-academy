@@ -107,6 +107,57 @@ export async function runOnce(code: string, stdin: string) {
   }
 }
 
+class StdinExhausted extends Error {}
+
+export type InteractiveOutcome = {
+  output: string;
+  error?: string;
+  /** True if the program is paused on an input() call with no value supplied yet. */
+  waiting: boolean;
+};
+
+/**
+ * Run the student's program against a growing list of already-known input()
+ * answers. If the program calls input() again after those are used up, the
+ * run stops right there (rather than silently feeding it "") so the caller
+ * can prompt for one more value and re-run with it appended - this is what
+ * lets the IDE's console page ask for input right where the program needs
+ * it, without a full Worker/SharedArrayBuffer-based pause/resume engine.
+ */
+export async function runInteractive(code: string, answers: string[]): Promise<InteractiveOutcome> {
+  const pyodide = await getPyodide();
+  let cursor = 0;
+  let waiting = false;
+  const out: string[] = [];
+
+  pyodide.setStdin({
+    stdin: () => {
+      if (cursor < answers.length) return answers[cursor++]!;
+      waiting = true;
+      throw new StdinExhausted();
+    },
+  });
+  pyodide.setStdout({ batched: (s) => out.push(s) });
+  pyodide.setStderr({ batched: (s) => out.push(s) });
+
+  const makeDict = pyodide.globals.get("dict");
+  const namespace = makeDict ? makeDict() : undefined;
+
+  try {
+    await pyodide.runPythonAsync(code, namespace ? { globals: namespace } : undefined);
+    return { output: out.join("\n"), waiting: false };
+  } catch (err) {
+    if (waiting) {
+      return { output: out.join("\n"), waiting: true };
+    }
+    return {
+      output: out.join("\n"),
+      waiting: false,
+      error: cleanTraceback(err instanceof Error ? err.message : String(err)),
+    };
+  }
+}
+
 const SYNTAX_CHECK_SNIPPET = `
 import json as __json__
 try:

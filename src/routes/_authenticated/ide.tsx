@@ -8,7 +8,7 @@ import { supabase } from "@/integrations/supabase/client";
 import { useAuth } from "@/hooks/useAuth";
 import { Button } from "@/components/ui/button";
 import { Input } from "@/components/ui/input";
-import { checkSyntax, getPyodide, runOnce } from "@/lib/python-runner";
+import { checkSyntax, getPyodide, runInteractive } from "@/lib/python-runner";
 import { highlightErrorLine, pythonEditorExtensions } from "@/lib/python-lint";
 
 export const Route = createFileRoute("/_authenticated/ide")({
@@ -51,7 +51,11 @@ function Ide() {
   const [running, setRunning] = useState(false);
   const [saving, setSaving] = useState(false);
   const [engineReady, setEngineReady] = useState(false);
+  const [answers, setAnswers] = useState<string[]>([]);
+  const [waitingForInput, setWaitingForInput] = useState(false);
+  const [pendingAnswer, setPendingAnswer] = useState("");
   const editorViewRef = useRef<EditorView | null>(null);
+  const inputFieldRef = useRef<HTMLInputElement | null>(null);
 
   const { data: programs } = useQuery({
     queryKey: ["ide-programs", user?.id],
@@ -80,23 +84,38 @@ function Ide() {
     }
   }, [code]);
 
-  const run = async () => {
+  const execute = async (nextAnswers: string[]) => {
     setRunning(true);
     try {
-      const syntaxIssue = await checkSyntax(code);
-      setSyntaxError(syntaxIssue);
-      if (editorViewRef.current) {
-        highlightErrorLine(editorViewRef.current, syntaxIssue?.line ?? null);
-      }
-
-      const result = await runOnce(code, "");
+      const result = await runInteractive(code, nextAnswers);
       setOutput(result.output);
       setRunError(result.error ?? null);
+      setWaitingForInput(result.waiting);
+      if (result.waiting) {
+        setPendingAnswer("");
+        requestAnimationFrame(() => inputFieldRef.current?.focus());
+      }
     } catch (err) {
       toast.error(err instanceof Error ? err.message : "Run failed");
     } finally {
       setRunning(false);
     }
+  };
+
+  const run = async () => {
+    const syntaxIssue = await checkSyntax(code);
+    setSyntaxError(syntaxIssue);
+    if (editorViewRef.current) {
+      highlightErrorLine(editorViewRef.current, syntaxIssue?.line ?? null);
+    }
+    setAnswers([]);
+    await execute([]);
+  };
+
+  const submitAnswer = async () => {
+    const next = [...answers, pendingAnswer];
+    setAnswers(next);
+    await execute(next);
   };
 
   const reset = () => {
@@ -106,6 +125,9 @@ function Ide() {
     setOutput(null);
     setRunError(null);
     setSyntaxError(null);
+    setAnswers([]);
+    setWaitingForInput(false);
+    setPendingAnswer("");
   };
 
   const loadProgram = async (id: string) => {
@@ -121,6 +143,9 @@ function Ide() {
     setOutput(null);
     setRunError(null);
     setSyntaxError(null);
+    setAnswers([]);
+    setWaitingForInput(false);
+    setPendingAnswer("");
   };
 
   const saveProgram = async () => {
@@ -210,6 +235,7 @@ function Ide() {
               onChange={(value) => {
                 setCode(value);
                 setSyntaxError(null);
+                setWaitingForInput(false);
               }}
               onCreateEditor={(view) => {
                 editorViewRef.current = view;
@@ -235,15 +261,33 @@ function Ide() {
 
         <div className="panel p-5">
           <h2 className="font-semibold">Console</h2>
-          {output == null && runError == null ? (
+          {output == null && runError == null && !waitingForInput ? (
             <p className="mt-3 text-sm text-muted-foreground">
-              Output from your program will appear here after you run it.
+              Output from your program will appear here after you run it. If it calls{" "}
+              <code className="font-mono">input()</code>, you'll be prompted right here.
             </p>
           ) : (
-            <div className="mt-3 space-y-2 font-mono text-sm">
+            <div className="mt-3 space-y-1 font-mono text-sm">
               {output ? <pre className="whitespace-pre-wrap">{output}</pre> : null}
+              {waitingForInput ? (
+                <div className="flex items-center gap-1">
+                  <span className="text-primary">›</span>
+                  <input
+                    ref={inputFieldRef}
+                    className="flex-1 border-none bg-transparent font-mono text-sm text-foreground outline-none"
+                    value={pendingAnswer}
+                    onChange={(e) => setPendingAnswer(e.target.value)}
+                    onKeyDown={(e) => {
+                      if (e.key === "Enter") void submitAnswer();
+                    }}
+                    autoFocus
+                  />
+                </div>
+              ) : null}
               {runError ? <pre className="whitespace-pre-wrap text-destructive">{runError}</pre> : null}
-              {!output && !runError ? <p className="text-muted-foreground">(no output)</p> : null}
+              {!output && !runError && !waitingForInput ? (
+                <p className="text-muted-foreground">(no output)</p>
+              ) : null}
             </div>
           )}
         </div>
