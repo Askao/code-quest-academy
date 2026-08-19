@@ -11,9 +11,9 @@ import type { TrackKey } from "@/lib/game";
 export const Route = createFileRoute("/_authenticated/teacher/")({
   head: () => ({
     meta: [
-      { title: "Teacher — PyForge" },
+      { title: "Teacher — H-Code" },
       { name: "description", content: "Create classes, set homework and track your students." },
-      { property: "og:title", content: "Teacher — PyForge" },
+      { property: "og:title", content: "Teacher — H-Code" },
       {
         property: "og:description",
         content: "Create classes, set homework and track your students.",

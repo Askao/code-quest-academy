@@ -30,7 +30,7 @@ export function AppShell({ children }: { children: ReactNode }) {
       <header className="sticky top-0 z-40 border-b border-border bg-background/80 backdrop-blur">
         <div className="mx-auto flex max-w-6xl items-center gap-2 px-4 py-3">
           <Link to="/dashboard" className="mr-2 font-mono text-lg font-bold text-primary">
-            &gt;_ PyForge
+            &gt;_ H-Code
           </Link>
           <nav className="flex flex-wrap items-center gap-1">
             <NavLink to="/dashboard">Dashboard</NavLink>

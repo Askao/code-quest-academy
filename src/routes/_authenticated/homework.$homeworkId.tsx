@@ -8,9 +8,9 @@ import { topicLabel } from "@/lib/game";
 export const Route = createFileRoute("/_authenticated/homework/$homeworkId")({
   head: () => ({
     meta: [
-      { title: "Homework — PyForge" },
+      { title: "Homework — H-Code" },
       { name: "description", content: "Homework challenges set by your teacher." },
-      { property: "og:title", content: "Homework — PyForge" },
+      { property: "og:title", content: "Homework — H-Code" },
       { property: "og:description", content: "Homework challenges set by your teacher." },
     ],
   }),

@@ -12,12 +12,12 @@ import { skillLabel, topicsFor, type TrackKey } from "@/lib/game";
 export const Route = createFileRoute("/_authenticated/practice")({
   head: () => ({
     meta: [
-      { title: "Practise — PyForge" },
+      { title: "Practise — H-Code" },
       {
         name: "description",
         content: "Pick a topic and get a fresh Python challenge matched to your level.",
       },
-      { property: "og:title", content: "Practise — PyForge" },
+      { property: "og:title", content: "Practise — H-Code" },
       {
         property: "og:description",
         content: "Pick a topic and get a fresh Python challenge matched to your level.",
@@ -73,7 +73,7 @@ function Practice() {
     }
     if (mode === "boss") {
       sessionStorage.setItem(
-        "pyforge-boss",
+        "hcode-boss",
         JSON.stringify({
           endsAt: Date.now() + 5 * 60 * 1000,
           score: 0,

@@ -79,7 +79,7 @@ export const Route = createRootRouteWithContext<{ queryClient: QueryClient }>()(
     meta: [
       { charSet: "utf-8" },
       { name: "viewport", content: "width=device-width, initial-scale=1" },
-      { title: "PyForge — Python practice for GCSE & A level" },
+      { title: "H-Code — Python practice for GCSE & A level" },
       {
         name: "description",
         content:

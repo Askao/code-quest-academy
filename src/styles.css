@@ -5,7 +5,7 @@
 @custom-variant dark (&:is(.dark *));
 
 /*
- * PyForge design system — dark "terminal" aesthetic with a lime accent.
+ * H-Code design system — dark "terminal" aesthetic with a lime accent.
  * All colours are oklch semantic tokens. Never hardcode colours in components.
  */
 

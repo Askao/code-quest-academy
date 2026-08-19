@@ -10,9 +10,9 @@ import type { TrackKey } from "@/lib/game";
 export const Route = createFileRoute("/_authenticated/duels")({
   head: () => ({
     meta: [
-      { title: "Duels — PyForge" },
+      { title: "Duels — H-Code" },
       { name: "description", content: "Challenge a classmate to a head-to-head Python duel." },
-      { property: "og:title", content: "Duels — PyForge" },
+      { property: "og:title", content: "Duels — H-Code" },
       {
         property: "og:description",
         content: "Challenge a classmate to a head-to-head Python duel.",

@@ -71,10 +71,10 @@
     {
       "slug": "gcse-selection-t2-03", "lesson": 2, "tier": 2, "difficulty": 3, "xp": 20,
       "title": "Login with two checks",
-      "brief": "Read a username then a password. Print `Welcome` only if the username is `admin` and the password is `pyforge`. Otherwise print `Rejected`.",
+      "brief": "Read a username then a password. Print `Welcome` only if the username is `admin` and the password is `hcode`. Otherwise print `Rejected`.",
       "starter": "",
       "hints": ["Join the two conditions with `and`"],
-      "tests": [{ "stdin": "admin\npyforge", "expect": "Welcome" }, { "stdin": "admin\nwrong", "expect": "Rejected" }, { "stdin": "guest\npyforge", "expect": "Rejected" }]
+      "tests": [{ "stdin": "admin\nhcode", "expect": "Welcome" }, { "stdin": "admin\nwrong", "expect": "Rejected" }, { "stdin": "guest\nhcode", "expect": "Rejected" }]
     },
     {
       "slug": "gcse-selection-t3-01", "lesson": 3, "tier": 3, "difficulty": 3, "xp": 25,

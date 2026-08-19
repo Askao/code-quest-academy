@@ -10,9 +10,9 @@ import { Input } from "@/components/ui/input";
 export const Route = createFileRoute("/_authenticated/admin")({
   head: () => ({
     meta: [
-      { title: "Admin — PyForge" },
+      { title: "Admin — H-Code" },
       { name: "description", content: "Manage users, roles and site settings." },
-      { property: "og:title", content: "Admin — PyForge" },
+      { property: "og:title", content: "Admin — H-Code" },
       { property: "og:description", content: "Manage users, roles and site settings." },
     ],
   }),
@@ -114,7 +114,7 @@ function Admin() {
             ["smtp_host", "smtp.yourschool.org"],
             ["smtp_port", "587"],
             ["smtp_user", "noreply@yourschool.org"],
-            ["smtp_from", "PyForge <noreply@yourschool.org>"],
+            ["smtp_from", "H-Code <noreply@yourschool.org>"],
           ].map(([key, placeholder]) => (
             <div key={key} className="space-y-1">
               <label className="font-mono text-xs text-muted-foreground">{key}</label>
