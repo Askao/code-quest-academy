@@ -8,6 +8,7 @@ import { Button } from "@/components/ui/button";
 import { BADGES, topicLabel, type TrackKey } from "@/lib/game";
 import { getPyodide, runTests, type RunOutcome } from "@/lib/python-runner";
 import { pickChallenge, recordAttempt, type Challenge } from "@/lib/progress";
+import { withContent } from "@/lib/content";
 
 type Search = {
   mode: "practice" | "boss" | "duel" | "homework";
@@ -74,7 +75,7 @@ function Play() {
         .eq("slug", slug)
         .maybeSingle();
       if (error) throw error;
-      return data as unknown as Challenge | null;
+      return data ? withContent(data as unknown as Challenge) : null;
     },
   });
 

@@ -34,6 +34,7 @@ export function AppShell({ children }: { children: ReactNode }) {
           </Link>
           <nav className="flex flex-wrap items-center gap-1">
             <NavLink to="/dashboard">Dashboard</NavLink>
+            <NavLink to="/learn">Lessons</NavLink>
             <NavLink to="/practice">Practise</NavLink>
             <NavLink to="/duels">Duels</NavLink>
             <NavLink to="/leaderboard">Leaderboard</NavLink>
