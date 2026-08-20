@@ -31,7 +31,7 @@
     {
       "slug": "gcse-sequencing-t1-01", "lesson": 1, "tier": 1, "difficulty": 1, "xp": 10,
       "title": "Print a message",
-      "brief": "Read one line of text. Print it back exactly as it was typed.",
+      "brief": "Input one line of text. Print it back exactly as it was typed.",
       "starter": "",
       "hints": ["Reading and printing are two separate steps — store what you read before printing it.", "text = input(), then print(text)"],
       "tests": [{ "stdin": "hello", "expect": "hello" }, { "stdin": "Computer Science", "expect": "Computer Science" }]
@@ -39,7 +39,7 @@
     {
       "slug": "gcse-sequencing-t1-02", "lesson": 1, "tier": 1, "difficulty": 1, "xp": 10,
       "title": "Double a number",
-      "brief": "Read a whole number. Print it multiplied by 2.\n\nFor example, if 5 is entered, print 10.",
+      "brief": "Input a whole number. Print it multiplied by 2.\n\nFor example, if 5 is entered, print 10.",
       "starter": "",
       "hints": ["Text can't be multiplied like a number — convert it with int() first.", "number = int(input()), then print(number * 2)"],
       "tests": [{ "stdin": "5", "expect": "10" }, { "stdin": "0", "expect": "0" }, { "stdin": "-3", "expect": "-6" }]
@@ -47,7 +47,7 @@
     {
       "slug": "gcse-sequencing-t1-03", "lesson": 1, "tier": 1, "difficulty": 1, "xp": 10,
       "title": "Add two numbers",
-      "brief": "Read two whole numbers, one per line. Print their total.",
+      "brief": "Input two whole numbers, one per line. Print their total.",
       "starter": "",
       "hints": ["Call input() twice and store each value in its own variable before adding them.", "a = int(input()), b = int(input()), then print(a + b)"],
       "tests": [{ "stdin": "3\n4", "expect": "7" }, { "stdin": "20\n-5", "expect": "15" }]
@@ -55,7 +55,7 @@
     {
       "slug": "gcse-sequencing-t1-04", "lesson": 1, "tier": 1, "difficulty": 2, "xp": 15,
       "title": "Full name",
-      "brief": "Read a first name, then a surname — two separate lines. Print them on one line, separated by a single space.\n\nFor example, Ada then Lovelace prints as `Ada Lovelace`.",
+      "brief": "Input a first name, then a surname — two separate lines. Print them on one line, separated by a single space.\n\nFor example, Ada then Lovelace prints as `Ada Lovelace`.",
       "starter": "",
       "hints": ["An f-string keeps the spacing easy to see and get right.", "first = input(), last = input(), then print(f\"{first} {last}\")"],
       "tests": [{ "stdin": "Ada\nLovelace", "expect": "Ada Lovelace" }, { "stdin": "Alan\nTuring", "expect": "Alan Turing" }]
@@ -71,7 +71,7 @@
     {
       "slug": "gcse-sequencing-t2-01", "lesson": 2, "tier": 2, "difficulty": 2, "xp": 15,
       "title": "Seconds to minutes",
-      "brief": "A stopwatch records a time in seconds. Read the number of seconds. Display the whole minutes and the remaining seconds in the format `<minutes> min <seconds> s`.\n\nFor example, 150 seconds prints as `2 min 30 s`.",
+      "brief": "A stopwatch records a time in seconds. Input the number of seconds. Display the whole minutes and the remaining seconds in the format `<minutes> min <seconds> s`.\n\nFor example, 150 seconds prints as `2 min 30 s`.",
       "starter": "",
       "hints": ["// gives whole minutes (how many whole lots of 60 fit in). % gives the seconds left over.", "seconds = int(input()), mins = seconds // 60, secs = seconds % 60, then print(f\"{mins} min {secs} s\")"],
       "tests": [{ "stdin": "150", "expect": "2 min 30 s" }, { "stdin": "59", "expect": "0 min 59 s" }, { "stdin": "600", "expect": "10 min 0 s" }]
@@ -79,7 +79,7 @@
     {
       "slug": "gcse-sequencing-t2-02", "lesson": 2, "tier": 2, "difficulty": 2, "xp": 15,
       "title": "Average of three marks",
-      "brief": "A teacher records three test marks. Read the three marks, one per line. Display the mean of all three, rounded to 1 decimal place.\n\nFor example, marks of 10, 11 and 12 give a mean of 11.0.",
+      "brief": "A teacher records three test marks. Input the three marks, one per line. Display the mean of all three, rounded to 1 decimal place.\n\nFor example, marks of 10, 11 and 12 give a mean of 11.0.",
       "starter": "",
       "hints": ["Add the three marks together, then divide the total by 3.", "total = a + b + c, then print(round(total / 3, 1))"],
       "tests": [{ "stdin": "10\n11\n12", "expect": "11.0" }, { "stdin": "7\n8\n10", "expect": "8.3" }]
@@ -87,7 +87,7 @@
     {
       "slug": "gcse-sequencing-t2-03", "lesson": 2, "tier": 2, "difficulty": 2, "xp": 15,
       "title": "Change from a note",
-      "brief": "A customer pays with a £10 note. Read the cost of the item as a decimal. Display the change, rounded to 2 decimal places.\n\nFor example, an item costing 3.5 gives change of 6.5.",
+      "brief": "A customer pays with a £10 note. Input the cost of the item as a decimal. Display the change, rounded to 2 decimal places.\n\nFor example, an item costing 3.5 gives change of 6.5.",
       "starter": "",
       "hints": ["float(input()) reads a decimal value. Change is 10 minus the cost.", "cost = float(input()), then print(round(10 - cost, 2))"],
       "tests": [{ "stdin": "3.5", "expect": "6.5" }, { "stdin": "9.99", "expect": "0.01" }]
@@ -95,7 +95,7 @@
     {
       "slug": "gcse-sequencing-t2-04", "lesson": 2, "tier": 2, "difficulty": 3, "xp": 20,
       "title": "Perimeter and area",
-      "brief": "Read the width, then the height, of a rectangle — both whole numbers. Display the area on the first line. Display the perimeter on the second line.\n\nFor example, a width of 3 and height of 4 give an area of 12 and a perimeter of 14.",
+      "brief": "Input the width, then the height, of a rectangle — both whole numbers. Display the area on the first line. Display the perimeter on the second line.\n\nFor example, a width of 3 and height of 4 give an area of 12 and a perimeter of 14.",
       "starter": "",
       "hints": ["Area is width times height. Perimeter is 2 * (width + height).", "width = int(input()), height = int(input()), then print(width * height) followed by print(2 * (width + height))"],
       "tests": [{ "stdin": "3\n4", "expect": "12\n14" }, { "stdin": "5\n5", "expect": "25\n20" }]

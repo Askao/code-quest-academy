@@ -31,7 +31,7 @@
     {
       "slug": "gcse-iteration-t1-01", "lesson": 1, "tier": 1, "difficulty": 1, "xp": 10,
       "title": "Repeat a word",
-      "brief": "Read a word. Print it 3 times, one per line.",
+      "brief": "Input a word. Print it 3 times, one per line.",
       "starter": "",
       "hints": ["for i in range(3): repeats the line inside it 3 times.", "word = input(), for i in range(3): print(word)"],
       "tests": [{ "stdin": "hi", "expect": "hi\nhi\nhi" }, { "stdin": "loop", "expect": "loop\nloop\nloop" }]
@@ -39,7 +39,7 @@
     {
       "slug": "gcse-iteration-t1-02", "lesson": 1, "tier": 1, "difficulty": 1, "xp": 10,
       "title": "Count down",
-      "brief": "Read a whole number N. Print every number from N down to 1, one per line.",
+      "brief": "Input a whole number N. Print every number from N down to 1, one per line.",
       "starter": "",
       "hints": ["range(n, 0, -1) counts backwards from n down to (but not including) 0.", "n = int(input()), for i in range(n, 0, -1): print(i)"],
       "tests": [{ "stdin": "3", "expect": "3\n2\n1" }, { "stdin": "1", "expect": "1" }]
@@ -47,7 +47,7 @@
     {
       "slug": "gcse-iteration-t1-03", "lesson": 1, "tier": 1, "difficulty": 2, "xp": 15,
       "title": "Even numbers",
-      "brief": "Read a whole number N. Print every even number from 2 up to and including N, one per line. If there are none (N is less than 2), print nothing.",
+      "brief": "Input a whole number N. Print every even number from 2 up to and including N, one per line. If there are none (N is less than 2), print nothing.",
       "starter": "",
       "hints": ["range(2, n + 1, 2) starts at 2 and steps up in twos, stopping once it would pass n.", "n = int(input()), for i in range(2, n + 1, 2): print(i)"],
       "tests": [{ "stdin": "6", "expect": "2\n4\n6" }, { "stdin": "1", "expect": "" }]
@@ -63,7 +63,7 @@
     {
       "slug": "gcse-iteration-t2-01", "lesson": 2, "tier": 2, "difficulty": 2, "xp": 15,
       "title": "Five scores",
-      "brief": "A teacher enters 5 test scores, one per line. Display the total of the five scores.",
+      "brief": "A teacher wants to total up 5 test scores. Input the 5 scores, one per line. Display the total.",
       "starter": "",
       "hints": ["Set the total to 0 before the loop starts, then add each score to it inside the loop.", "total = 0, for i in range(5): total = total + int(input()), then print(total)"],
       "tests": [{ "stdin": "1\n2\n3\n4\n5", "expect": "15" }, { "stdin": "10\n10\n10\n10\n10", "expect": "50" }]
@@ -79,7 +79,7 @@
     {
       "slug": "gcse-iteration-t2-03", "lesson": 2, "tier": 2, "difficulty": 3, "xp": 20,
       "title": "Validate a mark",
-      "brief": "A program must only accept a mark between 0 and 100 inclusive. Keep reading whole numbers until a valid mark is entered. Display the valid mark in the format `Accepted: <mark>`.\n\nFor example, if 55 is the first (valid) number entered, print `Accepted: 55`.",
+      "brief": "A mark must be between 0 and 100 inclusive. Keep asking the user for a whole number until they enter a valid mark. Display the valid mark in the format `Accepted: <mark>`.\n\nFor example, if 55 is the first (valid) number entered, print `Accepted: 55`.",
       "starter": "",
       "hints": ["Read one value first, then loop while it's out of range, reading a replacement each time — same shape as the lesson's validation example.", "mark = int(input()), while mark < 0 or mark > 100: mark = int(input()), then print(f\"Accepted: {mark}\")"],
       "tests": [{ "stdin": "55", "expect": "Accepted: 55" }, { "stdin": "120\n-4\n0", "expect": "Accepted: 0" }]

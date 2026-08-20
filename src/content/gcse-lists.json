@@ -31,7 +31,7 @@
     {
       "slug": "gcse-lists-t1-01", "lesson": 1, "tier": 1, "difficulty": 1, "xp": 10,
       "title": "First and last",
-      "brief": "Read three words, one per line, into a list. Print the first item, then the last item, each on its own line.",
+      "brief": "Input three words, one per line, into a list. Print the first item, then the last item, each on its own line.",
       "starter": "",
       "hints": ["Index 0 is the first item. The last item's index is len(items) - 1.", "words = [], for i in range(3): words.append(input()), then print(words[0]) and print(words[-1])"],
       "tests": [{ "stdin": "a\nb\nc", "expect": "a\nc" }, { "stdin": "red\ngreen\nblue", "expect": "red\nblue" }]
@@ -39,7 +39,7 @@
     {
       "slug": "gcse-lists-t1-02", "lesson": 1, "tier": 1, "difficulty": 2, "xp": 15,
       "title": "List total",
-      "brief": "Read four whole numbers, one per line, into a list. Print the total of the list.",
+      "brief": "Input four whole numbers, one per line, into a list. Print the total of the list.",
       "starter": "",
       "hints": ["Python's built-in sum() adds up every item in a list for you.", "numbers = [], for i in range(4): numbers.append(int(input())), then print(sum(numbers))"],
       "tests": [{ "stdin": "1\n2\n3\n4", "expect": "10" }, { "stdin": "5\n5\n0\n0", "expect": "10" }]
@@ -47,7 +47,7 @@
     {
       "slug": "gcse-lists-t1-03", "lesson": 1, "tier": 1, "difficulty": 2, "xp": 15,
       "title": "Print in reverse",
-      "brief": "Read four words, one per line, into a list. Print them one per line, in the opposite order to how they were entered.",
+      "brief": "Input four words, one per line, into a list. Print them one per line, in the opposite order to how they were entered.",
       "starter": "",
       "hints": ["for item in reversed(words): loops through a list back to front.", "words = [], for i in range(4): words.append(input()), then for word in reversed(words): print(word)"],
       "tests": [{ "stdin": "a\nb\nc\nd", "expect": "d\nc\nb\na" }, { "stdin": "one\ntwo\nthree\nfour", "expect": "four\nthree\ntwo\none" }]

@@ -31,7 +31,7 @@
     {
       "slug": "gcse-selection-t1-01", "lesson": 1, "tier": 1, "difficulty": 1, "xp": 10,
       "title": "Positive or negative",
-      "brief": "Read a whole number. Print `Positive` if it is greater than 0. Otherwise print `Not positive`.",
+      "brief": "Input a whole number. Print `Positive` if it is greater than 0. Otherwise print `Not positive`.",
       "starter": "",
       "hints": ["Exactly one of the two branches runs — decide the condition first, then fill in what each branch prints.", "if n > 0: print(\"Positive\") else: print(\"Not positive\")"],
       "tests": [{ "stdin": "5", "expect": "Positive" }, { "stdin": "0", "expect": "Not positive" }, { "stdin": "-2", "expect": "Not positive" }]
@@ -39,7 +39,7 @@
     {
       "slug": "gcse-selection-t1-02", "lesson": 1, "tier": 1, "difficulty": 1, "xp": 10,
       "title": "Old enough to vote",
-      "brief": "Read an age. Print `Can vote` if the age is 18 or more. Otherwise print `Too young`.",
+      "brief": "Input an age. Print `Can vote` if the age is 18 or more. Otherwise print `Too young`.",
       "starter": "",
       "hints": ["\"18 or more\" includes exactly 18, so use >= rather than >.", "if age >= 18: print(\"Can vote\") else: print(\"Too young\")"],
       "tests": [{ "stdin": "18", "expect": "Can vote" }, { "stdin": "17", "expect": "Too young" }, { "stdin": "40", "expect": "Can vote" }]
@@ -47,7 +47,7 @@
     {
       "slug": "gcse-selection-t1-03", "lesson": 1, "tier": 1, "difficulty": 2, "xp": 15,
       "title": "Bigger of two",
-      "brief": "Read two whole numbers, one per line. Print the larger one. If they are equal, print `Equal` instead.",
+      "brief": "Input two whole numbers, one per line. Print the larger one. If they are equal, print `Equal` instead.",
       "starter": "",
       "hints": ["There are three possible outcomes here, not two — you need a third branch for the equal case.", "if a > b: print(a), elif b > a: print(b), else: print(\"Equal\")"],
       "tests": [{ "stdin": "3\n9", "expect": "9" }, { "stdin": "9\n3", "expect": "9" }, { "stdin": "4\n4", "expect": "Equal" }]
@@ -63,7 +63,7 @@
     {
       "slug": "gcse-selection-t2-01", "lesson": 2, "tier": 2, "difficulty": 2, "xp": 15,
       "title": "Traffic light",
-      "brief": "A program reads the colour of a traffic light. Print `Stop` for `red`, `Get ready` for `amber` and `Go` for `green`. For anything else, print `Broken`.",
+      "brief": "Input the colour of a traffic light. Print `Stop` for `red`, `Get ready` for `amber` and `Go` for `green`. For anything else, print `Broken`.",
       "starter": "",
       "hints": ["You have four possible outputs, so you need an if / elif / elif / else chain, not just if / else.", "String comparisons are case sensitive — \"red\" and \"Red\" are not equal"],
       "tests": [{ "stdin": "red", "expect": "Stop" }, { "stdin": "amber", "expect": "Get ready" }, { "stdin": "green", "expect": "Go" }, { "stdin": "blue", "expect": "Broken" }]
@@ -71,7 +71,7 @@
     {
       "slug": "gcse-selection-t2-02", "lesson": 2, "tier": 2, "difficulty": 3, "xp": 20,
       "title": "In range",
-      "brief": "Read a whole number. Print `In range` if it is between 10 and 20 inclusive — meaning 10 and 20 themselves both count as in range. Otherwise print `Out of range`.",
+      "brief": "Input a whole number. Print `In range` if it is between 10 and 20 inclusive — meaning 10 and 20 themselves both count as in range. Otherwise print `Out of range`.",
       "starter": "",
       "hints": ["Python lets you chain two comparisons in one condition: 10 <= n <= 20 is true exactly when n is between 10 and 20, inclusive.", "if 10 <= n <= 20: print(\"In range\") else: print(\"Out of range\")"],
       "tests": [{ "stdin": "10", "expect": "In range" }, { "stdin": "20", "expect": "In range" }, { "stdin": "21", "expect": "Out of range" }, { "stdin": "9", "expect": "Out of range" }]
@@ -79,7 +79,7 @@
     {
       "slug": "gcse-selection-t2-03", "lesson": 2, "tier": 2, "difficulty": 3, "xp": 20,
       "title": "Login with two checks",
-      "brief": "Read a username, then a password, one per line. Print `Welcome` only if the username is exactly `admin` and the password is exactly `hcode`. Otherwise print `Rejected`.",
+      "brief": "Input a username, then a password, one per line. Print `Welcome` only if the username is exactly `admin` and the password is exactly `hcode`. Otherwise print `Rejected`.",
       "starter": "",
       "hints": ["Both checks must be true at once, so join the two conditions with and.", "if username == \"admin\" and password == \"hcode\": print(\"Welcome\") else: print(\"Rejected\")"],
       "tests": [{ "stdin": "admin\nhcode", "expect": "Welcome" }, { "stdin": "admin\nwrong", "expect": "Rejected" }, { "stdin": "guest\nhcode", "expect": "Rejected" }]
