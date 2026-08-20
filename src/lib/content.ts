@@ -168,6 +168,31 @@ export function isTopicComplete(
 }
 
 /**
+ * The task slugs a student is actually allowed to see in Practice/Recap:
+ * every task (required or stretch) belonging to a lesson they've already
+ * completed, across every topic in the track. Practice and Recap exist to
+ * reinforce material already covered, not to surprise a student with
+ * content from a lesson they haven't reached yet.
+ */
+export function completedTaskSlugs(
+  track: TrackKey,
+  passedTaskSlugs: Set<string>,
+  quizPassedLessonSlugs: Set<string>,
+): Set<string> {
+  const result = new Set<string>();
+  for (const topic of topicsWithLessons(track)) {
+    for (const lesson of lessonsForTopic(track, topic)) {
+      if (isLessonComplete(lesson.slug, passedTaskSlugs, quizPassedLessonSlugs)) {
+        for (const task of tasksForLesson(lesson.slug)) {
+          result.add(task.slug);
+        }
+      }
+    }
+  }
+  return result;
+}
+
+/**
  * Students who belong to a class (any `class_members` row) get a
  * teacher-controlled gate on top of the mastery gate above: a lesson stays
  * locked until their teacher has assigned it, even once they'd otherwise be

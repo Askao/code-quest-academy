@@ -11,7 +11,8 @@ import { BADGES, topicLabel, type TrackKey } from "@/lib/game";
 import { checkSyntax, getPyodide, runTests, type RunOutcome } from "@/lib/python-runner";
 import { highlightErrorLine, pythonEditorExtensions } from "@/lib/python-lint";
 import { pickChallenge, recordAttempt, type Challenge } from "@/lib/progress";
-import { tasksForLesson, tasksInGroup, withContent } from "@/lib/content";
+import { completedTaskSlugs, tasksForLesson, tasksInGroup, withContent } from "@/lib/content";
+import { inline } from "@/lib/markdown";
 
 type Search = {
   mode: "practice" | "boss" | "duel" | "homework" | "recap";
@@ -83,6 +84,32 @@ function Play() {
         .maybeSingle();
       if (error) throw error;
       return data ? withContent(data as unknown as Challenge) : null;
+    },
+  });
+
+  // Restricts the "Next challenge" fallback (when not following a lesson's
+  // own task order) to material the student has actually covered, same as
+  // Practice/Recap - see completedTaskSlugs in content.ts. A-level has no
+  // lesson content yet, so this only meaningfully restricts GCSE.
+  const { data: onlySlugs } = useQuery({
+    queryKey: ["completed-task-slugs", user?.id, challenge?.track],
+    enabled: !!user && !!challenge,
+    queryFn: async () => {
+      const [passedRes, quizRes] = await Promise.all([
+        supabase
+          .from("attempts")
+          .select("passed, challenges!inner(slug)")
+          .eq("user_id", user!.id)
+          .eq("passed", true),
+        supabase.from("quiz_attempts").select("lesson_slug").eq("user_id", user!.id).eq("passed", true),
+      ]);
+      const passedSlugs = new Set(
+        ((passedRes.data ?? []) as unknown as { challenges: { slug: string } }[]).map(
+          (r) => r.challenges.slug,
+        ),
+      );
+      const quizPassed = new Set((quizRes.data ?? []).map((r) => r.lesson_slug));
+      return completedTaskSlugs(challenge!.track, passedSlugs, quizPassed);
     },
   });
 
@@ -220,6 +247,7 @@ function Play() {
         : {}),
       level: challenge.difficulty,
       excludeIds: [challenge.id],
+      ...(onlySlugs ? { onlySlugs } : {}),
     });
     if (!next) {
       toast.error("No more challenges here yet");
@@ -288,7 +316,9 @@ function Play() {
         <div className="space-y-4">
           <div className="panel p-5">
             <h1 className="text-2xl font-bold">{challenge.title}</h1>
-            <p className="mt-3 whitespace-pre-wrap text-muted-foreground">{challenge.brief}</p>
+            <p className="mt-3 whitespace-pre-wrap text-muted-foreground">
+              {inline(challenge.brief)}
+            </p>
           </div>
 
           <div className="panel p-5">
@@ -305,7 +335,7 @@ function Play() {
             </div>
             <ul className="mt-3 space-y-2 text-sm text-muted-foreground">
               {challenge.hints.slice(0, hintsShown).map((h, i) => (
-                <li key={i}>💡 {h}</li>
+                <li key={i}>💡 {inline(h)}</li>
               ))}
               {hintsShown === 0 ? <li>Have a go first — hints reduce your first-try bonus.</li> : null}
             </ul>
@@ -338,10 +368,10 @@ function Play() {
         </div>
 
         <div className="space-y-3">
-          <div className="overflow-hidden rounded-xl border border-border">
+          <div className="h-[20rem] overflow-hidden rounded-xl border border-border sm:h-[26rem]">
             <CodeMirror
               value={code}
-              height="26rem"
+              height="100%"
               theme="dark"
               extensions={pythonEditorExtensions}
               onChange={(value) => {

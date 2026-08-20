@@ -244,10 +244,10 @@ function Ide() {
 
       <div className="grid gap-6 lg:grid-cols-[minmax(0,1.2fr)_minmax(0,1fr)]">
         <div className="space-y-3">
-          <div className="overflow-hidden rounded-xl border border-border">
+          <div className="h-[20rem] overflow-hidden rounded-xl border border-border sm:h-[26rem]">
             <CodeMirror
               value={code}
-              height="26rem"
+              height="100%"
               theme="dark"
               extensions={pythonEditorExtensions}
               onChange={(value) => {

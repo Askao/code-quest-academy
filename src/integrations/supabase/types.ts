@@ -497,6 +497,7 @@ export type Database = {
       skills: {
         Row: {
           attempts: number
+          consecutive_fails: number
           id: string
           level: number
           passes: number
@@ -508,6 +509,7 @@ export type Database = {
         }
         Insert: {
           attempts?: number
+          consecutive_fails?: number
           id?: string
           level?: number
           passes?: number
@@ -519,6 +521,7 @@ export type Database = {
         }
         Update: {
           attempts?: number
+          consecutive_fails?: number
           id?: string
           level?: number
           passes?: number

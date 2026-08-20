@@ -6,7 +6,7 @@ import { useAuth } from "@/hooks/useAuth";
 import { Button } from "@/components/ui/button";
 import { topicLabel } from "@/lib/game";
 import { pickRecapChallenge } from "@/lib/progress";
-import { QUIZZES } from "@/lib/content";
+import { completedTaskSlugs, QUIZZES } from "@/lib/content";
 
 export const Route = createFileRoute("/_authenticated/recap")({
   head: () => ({
@@ -39,7 +39,7 @@ function Recap() {
     enabled: !!user,
     queryFn: async () => {
       const uid = user!.id;
-      const [doneToday, recentAttempts, quizPassed] = await Promise.all([
+      const [doneToday, recentAttempts, quizPassed, passedRes] = await Promise.all([
         supabase
           .from("attempts")
           .select("id", { count: "exact", head: true })
@@ -53,12 +53,26 @@ function Recap() {
           .order("created_at", { ascending: false })
           .limit(10),
         supabase.from("quiz_attempts").select("lesson_slug").eq("user_id", uid).eq("passed", true),
+        supabase
+          .from("attempts")
+          .select("passed, challenges!inner(slug)")
+          .eq("user_id", uid)
+          .eq("passed", true),
       ]);
 
-      const excludeIds = (recentAttempts.data ?? []).map((a) => a.challenge_id);
-      const challenge = await pickRecapChallenge({ userId: uid, track: "gcse", excludeIds });
-
       const coveredLessons = new Set((quizPassed.data ?? []).map((r) => r.lesson_slug));
+      const passedSlugs = new Set(
+        ((passedRes.data ?? []) as unknown as { challenges: { slug: string } }[]).map(
+          (r) => r.challenges.slug,
+        ),
+      );
+      const onlySlugs = completedTaskSlugs("gcse", passedSlugs, coveredLessons);
+
+      const excludeIds = (recentAttempts.data ?? []).map((a) => a.challenge_id);
+      const challenge = onlySlugs.size
+        ? await pickRecapChallenge({ userId: uid, track: "gcse", excludeIds, onlySlugs })
+        : null;
+
       const eligibleQuiz = QUIZZES.filter((q) => coveredLessons.has(q.lessonSlug));
       const quiz = eligibleQuiz.length
         ? eligibleQuiz[Math.floor(Math.random() * eligibleQuiz.length)]!

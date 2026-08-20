@@ -72,7 +72,21 @@ export async function recordAttempt(opts: {
 
   const current = Number(existingSkill?.level ?? 1);
   const stretch = Math.max(0, challenge.difficulty - current);
-  const delta = outcome.passed ? 0.15 + 0.12 * stretch : -0.12;
+  const priorFails = existingSkill?.consecutive_fails ?? 0;
+
+  // Three fails in a row on a topic is treated as a stronger signal than one
+  // fail in isolation - drop further so the next pickChallenge() call lands
+  // on a visibly easier tier, not just a marginally easier one. A pass that
+  // took a long time still counts as a pass, but doesn't earn the full
+  // stretch bonus a fast pass would - the student clearly hasn't mastered
+  // that difficulty yet even though they got there in the end.
+  const consecutiveFails = outcome.passed ? 0 : priorFails + 1;
+  const slowPass = outcome.passed && outcome.durationMs > 4 * 60 * 1000;
+  const delta = outcome.passed
+    ? (0.15 + 0.12 * stretch) * (slowPass ? 0.5 : 1)
+    : consecutiveFails >= 3
+      ? -0.27
+      : -0.12;
   const newSkillLevel = Math.min(5, Math.max(1, Number((current + delta).toFixed(2))));
 
   await supabase.from("skills").upsert(
@@ -83,6 +97,7 @@ export async function recordAttempt(opts: {
       level: newSkillLevel,
       attempts: (existingSkill?.attempts ?? 0) + 1,
       passes: (existingSkill?.passes ?? 0) + (outcome.passed ? 1 : 0),
+      consecutive_fails: consecutiveFails,
       updated_at: new Date().toISOString(),
     },
     { onConflict: "user_id,track,topic" },
@@ -144,22 +159,34 @@ export async function recordAttempt(opts: {
   return { xpAwarded, newBadges, newSkillLevel };
 }
 
-/** Pick a challenge matched to the student's current skill level, avoiding repeats. */
+/**
+ * Pick a challenge matched to the student's current skill level, avoiding
+ * repeats. When `onlySlugs` is given, the candidate pool is restricted to
+ * those slugs first - used by Practice/Recap to stay within material the
+ * student has actually covered (see `completedTaskSlugs` in content.ts).
+ */
 export async function pickChallenge(opts: {
   track: TrackKey;
   topic?: string;
   level: number;
   excludeIds?: string[];
+  onlySlugs?: Set<string>;
 }): Promise<Challenge | null> {
   let query = supabase.from("challenges").select("*").eq("track", opts.track);
   if (opts.topic) query = query.eq("topic", opts.topic);
   const { data } = await query;
   if (!data || data.length === 0) return null;
 
+  let candidates = data;
+  if (opts.onlySlugs) {
+    candidates = candidates.filter((c) => opts.onlySlugs!.has(c.slug));
+    if (candidates.length === 0) return null;
+  }
+
   const exclude = new Set(opts.excludeIds ?? []);
   const target = Math.round(opts.level);
-  const fresh = data.filter((c) => !exclude.has(c.id));
-  const pool = fresh.length ? fresh : data;
+  const fresh = candidates.filter((c) => !exclude.has(c.id));
+  const pool = fresh.length ? fresh : candidates;
 
   // prefer challenges within one difficulty band of the student's level
   const near = pool.filter((c) => Math.abs(c.difficulty - target) <= 1);
@@ -194,6 +221,7 @@ export async function pickRecapChallenge(opts: {
   userId: string;
   track: TrackKey;
   excludeIds?: string[];
+  onlySlugs?: Set<string>;
 }): Promise<Challenge | null> {
   const { data: skills } = await supabase
     .from("skills")
@@ -202,11 +230,19 @@ export async function pickRecapChallenge(opts: {
     .eq("track", opts.track);
   if (!skills || skills.length === 0) return null;
 
-  const weakest = [...skills].sort((a, b) => Number(a.level) - Number(b.level))[0]!;
-  return pickChallenge({
-    track: opts.track,
-    topic: weakest.topic,
-    level: Number(weakest.level),
-    excludeIds: opts.excludeIds ?? [],
-  });
+  // Try topics weakest-first, but a topic only counts if it actually has
+  // something in onlySlugs - a weak topic with no completed lessons yet
+  // has nothing eligible to recap.
+  const sorted = [...skills].sort((a, b) => Number(a.level) - Number(b.level));
+  for (const s of sorted) {
+    const result = await pickChallenge({
+      track: opts.track,
+      topic: s.topic,
+      level: Number(s.level),
+      excludeIds: opts.excludeIds ?? [],
+      ...(opts.onlySlugs ? { onlySlugs: opts.onlySlugs } : {}),
+    });
+    if (result) return result;
+  }
+  return null;
 }

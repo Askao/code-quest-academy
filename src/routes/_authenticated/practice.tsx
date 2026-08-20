@@ -8,6 +8,7 @@ import { Button } from "@/components/ui/button";
 import { Progress } from "@/components/ui/progress";
 import { pickChallenge } from "@/lib/progress";
 import { skillLabel, skillPercent, topicsFor, type TrackKey } from "@/lib/game";
+import { completedTaskSlugs, isLessonComplete, lessonsForTopic } from "@/lib/content";
 
 export const Route = createFileRoute("/_authenticated/practice")({
   head: () => ({
@@ -37,7 +38,7 @@ function Practice() {
     enabled: !!user,
     queryFn: async () => {
       const uid = user!.id;
-      const [skills, memberships, attempts] = await Promise.all([
+      const [skills, memberships, attempts, passedRes, quizRes] = await Promise.all([
         supabase.from("skills").select("*").eq("user_id", uid),
         supabase.from("class_members").select("classes(track)").eq("student_id", uid),
         supabase
@@ -47,17 +48,48 @@ function Practice() {
           .eq("passed", true)
           .order("created_at", { ascending: false })
           .limit(15),
+        supabase
+          .from("attempts")
+          .select("passed, challenges!inner(slug)")
+          .eq("user_id", uid)
+          .eq("passed", true),
+        supabase.from("quiz_attempts").select("lesson_slug").eq("user_id", uid).eq("passed", true),
       ]);
+      const passedSlugs = new Set(
+        ((passedRes.data ?? []) as unknown as { challenges: { slug: string } }[]).map(
+          (r) => r.challenges.slug,
+        ),
+      );
+      const quizPassed = new Set((quizRes.data ?? []).map((r) => r.lesson_slug));
       return {
         skills: skills.data ?? [],
         allowAlevel: (memberships.data ?? []).some((m) => m.classes?.track === "alevel"),
         recent: (attempts.data ?? []).map((a) => a.challenge_id),
+        passedSlugs,
+        quizPassed,
       };
     },
   });
 
   const levelFor = (topic: string) =>
     Number(data?.skills.find((s) => s.topic === topic && s.track === track)?.level ?? 1);
+
+  // GCSE topics stay locked in Practice until at least one of their lessons
+  // is complete - practising unfamiliar wording/content is exactly what
+  // confused students. A-level has no lesson content yet, so it's exempt.
+  const topicUnlocked = (topic: string) => {
+    if (track !== "gcse") return true;
+    const lessons = lessonsForTopic(track, topic);
+    return (
+      lessons.length === 0 ||
+      lessons.some((l) => isLessonComplete(l.slug, data?.passedSlugs ?? new Set(), data?.quizPassed ?? new Set()))
+    );
+  };
+
+  const onlySlugs =
+    track === "gcse" && data
+      ? completedTaskSlugs(track, data.passedSlugs, data.quizPassed)
+      : undefined;
 
   const start = async (topic: string | undefined, mode: "practice" | "boss") => {
     const level = topic ? levelFor(topic) : 2;
@@ -66,9 +98,14 @@ function Practice() {
       ...(topic ? { topic } : {}),
       level,
       excludeIds: data?.recent ?? [],
+      ...(onlySlugs ? { onlySlugs } : {}),
     });
     if (!challenge) {
-      toast.error("No challenges available for that topic yet");
+      toast.error(
+        track === "gcse"
+          ? "Finish a lesson in this topic first — Practice only covers material you've learned."
+          : "No challenges available for that topic yet",
+      );
       return;
     }
     if (mode === "boss") {
@@ -113,9 +150,10 @@ function Practice() {
         <Button
           variant="secondary"
           onClick={() => {
-            const topics = topicsFor(track);
+            const topics = topicsFor(track).filter((t) => topicUnlocked(t.key));
             const pick = topics[Math.floor(Math.random() * topics.length)];
             if (pick) void start(pick.key, "practice");
+            else toast.error("Finish a lesson first — nothing unlocked to surprise you with yet");
           }}
         >
           🎲 Surprise me
@@ -132,6 +170,17 @@ function Practice() {
       <div className="grid gap-4 sm:grid-cols-2 lg:grid-cols-3">
         {topicsFor(track).map((t) => {
           const lvl = levelFor(t.key);
+          const unlocked = topicUnlocked(t.key);
+          if (!unlocked) {
+            return (
+              <div key={t.key} className="panel flex flex-col p-5 opacity-50">
+                <p className="font-semibold">🔒 {t.label}</p>
+                <p className="mt-1 text-sm text-muted-foreground">
+                  Finish a lesson in this topic to unlock practice.
+                </p>
+              </div>
+            );
+          }
           return (
             <div key={t.key} className="panel flex flex-col p-5">
               <p className="font-semibold">{t.label}</p>
