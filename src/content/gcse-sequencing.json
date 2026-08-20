@@ -27,6 +27,17 @@
       "worked_example_note": "Adding 20% is the same as multiplying by 1.2. Rounding happens last, after the maths."
     }
   ],
+  "quiz": [
+    { "lessonSlug": "gcse-sequencing-1", "question": "What does input() always return?", "options": ["A string, always", "An integer if the user types a number", "A float", "It depends on what's typed"], "answer": "A string, always", "explanation": "input() always returns text, even if the user types digits — you must cast it explicitly to use it as a number." },
+    { "lessonSlug": "gcse-sequencing-1", "question": "Which OCR exam words usually mean input()?", "options": ["read, accept, ask the user", "display, output, report", "calculate, work out", "declare, initialise"], "answer": "read, accept, ask the user", "explanation": "\"Display\", \"output\" and \"report\" describe print() instead." },
+    { "lessonSlug": "gcse-sequencing-1", "question": "What does the line name = input() do, exactly?", "options": ["Pauses for the user to type something, then stores it under name", "Prints the word name", "Deletes the variable name", "Converts name to a number"], "answer": "Pauses for the user to type something, then stores it under name" },
+    { "lessonSlug": "gcse-sequencing-2", "question": "What does 7 // 2 evaluate to?", "options": ["3", "3.5", "1", "4"], "answer": "3", "explanation": "// is integer division — it drops the decimal part rather than rounding." },
+    { "lessonSlug": "gcse-sequencing-2", "question": "What does 7 % 2 evaluate to?", "options": ["1", "3", "3.5", "0"], "answer": "1", "explanation": "% gives the remainder after dividing — 7 divided by 2 is 3 remainder 1." },
+    { "lessonSlug": "gcse-sequencing-2", "question": "What does round(3.14159, 2) return?", "options": ["3.14", "3.1", "3", "3.15"], "answer": "3.14", "explanation": "round(value, 2) rounds to 2 decimal places." },
+    { "lessonSlug": "gcse-sequencing-3", "question": "An exam question shows one example of correct output. What does that tell you?", "options": ["The exact format your output must match — spacing, capitals and units all count", "That your program only needs to work for that one example", "That you can ignore the format shown", "Nothing important"], "answer": "The exact format your output must match — spacing, capitals and units all count" },
+    { "lessonSlug": "gcse-sequencing-3", "question": "Before writing any code for a scenario question, what's the first step?", "options": ["Work out exactly what must be read in and what must be output", "Guess the answer", "Start typing print statements", "Look for a for loop"], "answer": "Work out exactly what must be read in and what must be output" },
+    { "lessonSlug": "gcse-sequencing-3", "question": "A question shows one example input/output pair. Should your program only work for that exact example?", "options": ["No — it must work for any valid input, the example is just a check", "Yes, only that example needs to work", "It depends on the wording", "Only if told to"], "answer": "No — it must work for any valid input, the example is just a check" }
+  ],
   "tasks": [
     {
       "slug": "gcse-sequencing-t1-01", "lesson": 1, "tier": 1, "difficulty": 1, "xp": 10,

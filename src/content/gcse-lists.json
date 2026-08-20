@@ -27,6 +27,17 @@
       "worked_example_note": "Build first, then process. Keeping the two loops separate makes the logic easier to follow and to mark."
     }
   ],
+  "quiz": [
+    { "lessonSlug": "gcse-lists-1", "question": "For scores = [10, 20, 30], what does scores[0] give?", "options": ["10", "20", "0", "An error"], "answer": "10", "explanation": "List indexing starts at 0, so scores[0] is the first item." },
+    { "lessonSlug": "gcse-lists-1", "question": "What does scores.append(40) do?", "options": ["Adds 40 to the end of the list", "Replaces the first item with 40", "Removes 40 from the list", "Prints 40"], "answer": "Adds 40 to the end of the list" },
+    { "lessonSlug": "gcse-lists-1", "question": "For a list called items, what does len(items) - 1 give you?", "options": ["The index of the last item", "The number of items", "The first item", "An error"], "answer": "The index of the last item", "explanation": "Since indexing starts at 0, the last valid index is always one less than the list's length." },
+    { "lessonSlug": "gcse-lists-2", "question": "What does a linear search do?", "options": ["Checks each item in turn until it finds the target (or reaches the end)", "Jumps straight to the middle of the list", "Sorts the list first", "Only works on numbers"], "answer": "Checks each item in turn until it finds the target (or reaches the end)" },
+    { "lessonSlug": "gcse-lists-2", "question": "For grid = [[1, 2], [3, 4]], what does grid[1][0] give?", "options": ["3", "1", "2", "4"], "answer": "3", "explanation": "grid[1] is the second row ([3, 4]), and [0] takes its first item, 3." },
+    { "lessonSlug": "gcse-lists-2", "question": "Which built-in function tells you where a value is in a list?", "options": [".index()", ".append()", "len()", "sum()"], "answer": ".index()", "explanation": ".index(value) reports the position of the first match; len() just counts how many items there are." },
+    { "lessonSlug": "gcse-lists-3", "question": "Which of these is NOT one of the four typical list-question jobs?", "options": ["Sort the code alphabetically", "Build", "Search", "Aggregate"], "answer": "Sort the code alphabetically" },
+    { "lessonSlug": "gcse-lists-3", "question": "Why keep a \"build\" loop and a \"process\" loop separate, rather than combining them into one loop?", "options": ["It makes the logic easier to follow and to mark", "Python doesn't allow combining them", "It runs faster", "It uses less memory"], "answer": "It makes the logic easier to follow and to mark" },
+    { "lessonSlug": "gcse-lists-3", "question": "A question asks for both a value AND its position in a list. What must your output include?", "options": ["Both the value and the position, whichever format is asked for", "Just the value", "Just the position", "Neither, just a count"], "answer": "Both the value and the position, whichever format is asked for" }
+  ],
   "tasks": [
     {
       "slug": "gcse-lists-t1-01", "lesson": 1, "tier": 1, "difficulty": 1, "xp": 10,
