@@ -238,7 +238,7 @@ function RecapCheck({ pool, onPassed }: { pool: QuizQuestion[]; onPassed: () => 
 
 function LessonPage() {
   const { lessonSlug } = Route.useParams();
-  const { user } = useAuth();
+  const { user, isTeacher } = useAuth();
   const lesson = getLesson(lessonSlug);
 
   const { data: passed = new Set<string>() } = useQuery({
@@ -271,10 +271,13 @@ function LessonPage() {
   // A student who belongs to a class gets a teacher-controlled gate on top
   // of the mastery gate below - lessons stay locked until assigned. A
   // self-signed-up user with no class rows has an empty classIds array and
-  // skips this check entirely (see the `locked` computation).
+  // skips this check entirely (see the `locked` computation). Teachers and
+  // admins always see everything unlocked, regardless of class membership -
+  // they need to freely browse/preview any lesson, not progress through it
+  // like a student.
   const { data: classIds = [] } = useQuery({
     queryKey: ["class-ids", user?.id],
-    enabled: !!user,
+    enabled: !!user && !isTeacher,
     queryFn: async () => {
       const { data } = await supabase
         .from("class_members")
@@ -287,7 +290,7 @@ function LessonPage() {
 
   const { data: assignedSlugs = new Set<string>() } = useQuery({
     queryKey: ["assigned-lesson-slugs", classIds],
-    enabled: enrolled,
+    enabled: enrolled && !isTeacher,
     queryFn: async () => {
       const { data } = await supabase
         .from("lesson_assignments")
@@ -337,7 +340,7 @@ function LessonPage() {
     !previousSibling || isLessonComplete(previousSibling.slug, passed, quizPassed);
   const masteryLocked = !previousTopicComplete || !previousLessonComplete;
   const notAssigned = enrolled && !isLessonAssigned(lesson.slug, assignedSlugs);
-  const locked = masteryLocked || notAssigned;
+  const locked = !isTeacher && (masteryLocked || notAssigned);
 
   if (locked) {
     return (

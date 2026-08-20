@@ -33,7 +33,7 @@ export const Route = createFileRoute("/_authenticated/learn/")({
 });
 
 function LearnIndex() {
-  const { user } = useAuth();
+  const { user, isTeacher } = useAuth();
 
   const { data: passed = new Set<string>() } = useQuery({
     queryKey: ["passed-slugs", user?.id],
@@ -64,9 +64,11 @@ function LearnIndex() {
 
   // Mirrors learn.$lessonSlug.tsx: an enrolled student's lessons stay
   // locked until their teacher assigns them, on top of the mastery gate.
+  // Teachers/admins are exempt (see isTeacher use below) - they need to
+  // freely browse every lesson, not progress through it like a student.
   const { data: classIds = [] } = useQuery({
     queryKey: ["class-ids", user?.id],
-    enabled: !!user,
+    enabled: !!user && !isTeacher,
     queryFn: async () => {
       const { data } = await supabase
         .from("class_members")
@@ -79,7 +81,7 @@ function LearnIndex() {
 
   const { data: assignedSlugs = new Set<string>() } = useQuery({
     queryKey: ["assigned-lesson-slugs", classIds],
-    enabled: enrolled,
+    enabled: enrolled && !isTeacher,
     queryFn: async () => {
       const { data } = await supabase
         .from("lesson_assignments")
@@ -93,7 +95,7 @@ function LearnIndex() {
   const roadmap: RoadmapTopic[] = topics.map((topic, i) => {
     const complete = isTopicComplete("gcse", topic, passed, quizPassed);
     const prevComplete =
-      i === 0 || isTopicComplete("gcse", topics[i - 1]!, passed, quizPassed);
+      isTeacher || i === 0 || isTopicComplete("gcse", topics[i - 1]!, passed, quizPassed);
     return {
       key: topic,
       label: topicLabel(topic),
@@ -155,7 +157,7 @@ function LearnIndex() {
                       lessonIndex > 0 &&
                       !isLessonComplete(lessons[lessonIndex - 1]!.slug, passed, quizPassed);
                     const notAssigned = enrolled && !isLessonAssigned(lesson.slug, assignedSlugs);
-                    const lessonLocked = masteryLocked || notAssigned;
+                    const lessonLocked = !isTeacher && (masteryLocked || notAssigned);
                     return (
                       <li key={lesson.slug}>
                         {lessonLocked ? (
