@@ -477,7 +477,7 @@ function ClassDetail() {
               <p className="mt-3 text-xs text-muted-foreground">
                 Average skill level {skillPercent(s.avg)}%
                 {s.lastActive
-                  ? ` · last active ${new Date(s.lastActive).toLocaleDateString()}`
+                  ? ` · last active ${new Date(s.lastActive).toLocaleDateString("en-GB")}`
                   : " · not started yet"}
               </p>
             </div>
@@ -502,7 +502,7 @@ function ClassDetail() {
                   <span className="flex-1 font-medium">{h.title}</span>
                   <span className="font-mono text-xs text-muted-foreground">
                     {perStudentCount} challenges each
-                    {h.due_at ? ` · due ${new Date(h.due_at).toLocaleDateString()}` : ""}
+                    {h.due_at ? ` · due ${new Date(h.due_at).toLocaleDateString("en-GB")}` : ""}
                   </span>
                   <Button
                     size="sm"

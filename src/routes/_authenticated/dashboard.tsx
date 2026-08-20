@@ -149,7 +149,7 @@ function Dashboard() {
                   <p className="font-medium">{hw.title}</p>
                   <p className="text-sm text-muted-foreground">
                     {hw.instructions || "Complete the set challenges."}
-                    {hw.due_at ? ` · Due ${new Date(hw.due_at).toLocaleDateString()}` : ""}
+                    {hw.due_at ? ` · Due ${new Date(hw.due_at).toLocaleDateString("en-GB")}` : ""}
                   </p>
                 </div>
                 <Button asChild size="sm">

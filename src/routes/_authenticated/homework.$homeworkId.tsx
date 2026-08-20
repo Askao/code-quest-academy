@@ -62,7 +62,7 @@ function HomeworkPage() {
         <h1 className="text-3xl font-bold">{data.hw.title}</h1>
         <p className="mt-1 text-muted-foreground">
           {data.hw.classes?.name}
-          {data.hw.due_at ? ` · due ${new Date(data.hw.due_at).toLocaleString()}` : ""}
+          {data.hw.due_at ? ` · due ${new Date(data.hw.due_at).toLocaleString("en-GB")}` : ""}
         </p>
         {data.hw.instructions ? <p className="mt-3">{data.hw.instructions}</p> : null}
         <p className="mt-3 font-mono text-sm text-primary">
