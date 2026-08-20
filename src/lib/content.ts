@@ -6,6 +6,7 @@
 import files from "@/content/gcse-files.json";
 import fundamentals from "@/content/gcse-fundamentals.json";
 import functions from "@/content/gcse-functions.json";
+import gettingStarted from "@/content/gcse-getting-started.json";
 import iteration from "@/content/gcse-iteration.json";
 import lists from "@/content/gcse-lists.json";
 import selection from "@/content/gcse-selection.json";
@@ -63,6 +64,7 @@ type RawTopic = {
 };
 
 const RAW = [
+  gettingStarted,
   fundamentals,
   sequencing,
   selection,
