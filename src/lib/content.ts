@@ -3,11 +3,14 @@
  * edited, reviewed and self-hosted without touching the database. The database only
  * stores the identity and metadata of each lesson/task plus student progress.
  */
+import files from "@/content/gcse-files.json";
 import fundamentals from "@/content/gcse-fundamentals.json";
+import functions from "@/content/gcse-functions.json";
 import iteration from "@/content/gcse-iteration.json";
 import lists from "@/content/gcse-lists.json";
 import selection from "@/content/gcse-selection.json";
 import sequencing from "@/content/gcse-sequencing.json";
+import strings from "@/content/gcse-strings.json";
 import { GCSE_TOPICS, type TrackKey } from "@/lib/game";
 
 export type LessonContent = {
@@ -59,7 +62,16 @@ type RawTopic = {
   quiz?: QuizQuestion[];
 };
 
-const RAW = [fundamentals, sequencing, selection, iteration, lists] as unknown as RawTopic[];
+const RAW = [
+  fundamentals,
+  sequencing,
+  selection,
+  iteration,
+  lists,
+  strings,
+  functions,
+  files,
+] as unknown as RawTopic[];
 
 export const LESSONS: LessonContent[] = RAW.flatMap((t) =>
   t.lessons.map((l, i) => ({
