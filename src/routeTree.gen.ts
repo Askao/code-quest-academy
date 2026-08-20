@@ -19,6 +19,7 @@ import { Route as AuthenticatedIdeRouteImport } from './routes/_authenticated/id
 import { Route as AuthenticatedLeaderboardRouteImport } from './routes/_authenticated/leaderboard'
 import { Route as AuthenticatedPracticeRouteImport } from './routes/_authenticated/practice'
 import { Route as AuthenticatedRecapRouteImport } from './routes/_authenticated/recap'
+import { Route as JoinCodeRouteImport } from './routes/join.$code'
 import { Route as AuthenticatedHomeworkHomeworkIdRouteImport } from './routes/_authenticated/homework.$homeworkId'
 import { Route as AuthenticatedLearnIndexRouteImport } from './routes/_authenticated/learn.index'
 import { Route as AuthenticatedLearnLessonSlugRouteImport } from './routes/_authenticated/learn.$lessonSlug'
@@ -76,6 +77,11 @@ const AuthenticatedRecapRoute = AuthenticatedRecapRouteImport.update({
   path: '/recap',
   getParentRoute: () => AuthenticatedRouteRoute,
 } as any)
+const JoinCodeRoute = JoinCodeRouteImport.update({
+  id: '/join/$code',
+  path: '/join/$code',
+  getParentRoute: () => rootRouteImport,
+} as any)
 const AuthenticatedHomeworkHomeworkIdRoute =
   AuthenticatedHomeworkHomeworkIdRouteImport.update({
     id: '/homework/$homeworkId',
@@ -121,6 +127,7 @@ export interface FileRoutesByFullPath {
   '/leaderboard': typeof AuthenticatedLeaderboardRoute
   '/practice': typeof AuthenticatedPracticeRoute
   '/recap': typeof AuthenticatedRecapRoute
+  '/join/$code': typeof JoinCodeRoute
   '/homework/$homeworkId': typeof AuthenticatedHomeworkHomeworkIdRoute
   '/learn/$lessonSlug': typeof AuthenticatedLearnLessonSlugRoute
   '/play/$slug': typeof AuthenticatedPlaySlugRoute
@@ -138,6 +145,7 @@ export interface FileRoutesByTo {
   '/leaderboard': typeof AuthenticatedLeaderboardRoute
   '/practice': typeof AuthenticatedPracticeRoute
   '/recap': typeof AuthenticatedRecapRoute
+  '/join/$code': typeof JoinCodeRoute
   '/homework/$homeworkId': typeof AuthenticatedHomeworkHomeworkIdRoute
   '/learn/$lessonSlug': typeof AuthenticatedLearnLessonSlugRoute
   '/play/$slug': typeof AuthenticatedPlaySlugRoute
@@ -157,6 +165,7 @@ export interface FileRoutesById {
   '/_authenticated/leaderboard': typeof AuthenticatedLeaderboardRoute
   '/_authenticated/practice': typeof AuthenticatedPracticeRoute
   '/_authenticated/recap': typeof AuthenticatedRecapRoute
+  '/join/$code': typeof JoinCodeRoute
   '/_authenticated/homework/$homeworkId': typeof AuthenticatedHomeworkHomeworkIdRoute
   '/_authenticated/learn/$lessonSlug': typeof AuthenticatedLearnLessonSlugRoute
   '/_authenticated/play/$slug': typeof AuthenticatedPlaySlugRoute
@@ -176,6 +185,7 @@ export interface FileRouteTypes {
     | '/leaderboard'
     | '/practice'
     | '/recap'
+    | '/join/$code'
     | '/homework/$homeworkId'
     | '/learn/$lessonSlug'
     | '/play/$slug'
@@ -193,6 +203,7 @@ export interface FileRouteTypes {
     | '/leaderboard'
     | '/practice'
     | '/recap'
+    | '/join/$code'
     | '/homework/$homeworkId'
     | '/learn/$lessonSlug'
     | '/play/$slug'
@@ -211,6 +222,7 @@ export interface FileRouteTypes {
     | '/_authenticated/leaderboard'
     | '/_authenticated/practice'
     | '/_authenticated/recap'
+    | '/join/$code'
     | '/_authenticated/homework/$homeworkId'
     | '/_authenticated/learn/$lessonSlug'
     | '/_authenticated/play/$slug'
@@ -223,6 +235,7 @@ export interface RootRouteChildren {
   IndexRoute: typeof IndexRoute
   AuthenticatedRouteRoute: typeof AuthenticatedRouteRouteWithChildren
   AuthRoute: typeof AuthRoute
+  JoinCodeRoute: typeof JoinCodeRoute
 }
 
 declare module '@tanstack/react-router' {
@@ -296,6 +309,13 @@ declare module '@tanstack/react-router' {
       fullPath: '/recap'
       preLoaderRoute: typeof AuthenticatedRecapRouteImport
       parentRoute: typeof AuthenticatedRouteRoute
+    }
+    '/join/$code': {
+      id: '/join/$code'
+      path: '/join/$code'
+      fullPath: '/join/$code'
+      preLoaderRoute: typeof JoinCodeRouteImport
+      parentRoute: typeof rootRouteImport
     }
     '/_authenticated/homework/$homeworkId': {
       id: '/_authenticated/homework/$homeworkId'
@@ -381,6 +401,7 @@ const rootRouteChildren: RootRouteChildren = {
   IndexRoute: IndexRoute,
   AuthenticatedRouteRoute: AuthenticatedRouteRouteWithChildren,
   AuthRoute: AuthRoute,
+  JoinCodeRoute: JoinCodeRoute,
 }
 export const routeTree = rootRouteImport
   ._addFileChildren(rootRouteChildren)

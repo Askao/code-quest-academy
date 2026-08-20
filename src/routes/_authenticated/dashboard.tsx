@@ -1,11 +1,8 @@
 import { createFileRoute, Link } from "@tanstack/react-router";
-import { useQuery, useQueryClient } from "@tanstack/react-query";
-import { useState } from "react";
-import { toast } from "sonner";
+import { useQuery } from "@tanstack/react-query";
 import { supabase } from "@/integrations/supabase/client";
 import { useAuth } from "@/hooks/useAuth";
 import { Button } from "@/components/ui/button";
-import { Input } from "@/components/ui/input";
 import { Progress } from "@/components/ui/progress";
 import { BADGES, levelFromXp, skillLabel, skillPercent, topicLabel, topicsFor } from "@/lib/game";
 
@@ -23,8 +20,6 @@ export const Route = createFileRoute("/_authenticated/dashboard")({
 
 function Dashboard() {
   const { user, fullName } = useAuth();
-  const qc = useQueryClient();
-  const [joinCode, setJoinCode] = useState("");
 
   const { data } = useQuery({
     queryKey: ["dashboard", user?.id],
@@ -62,29 +57,6 @@ function Dashboard() {
       };
     },
   });
-
-  const join = async () => {
-    const code = joinCode.trim().toUpperCase();
-    if (!code) return;
-    const { data: cls } = await supabase
-      .from("classes")
-      .select("id")
-      .eq("join_code", code)
-      .maybeSingle();
-    if (!cls) {
-      toast.error("No class found with that code");
-      return;
-    }
-    const { error } = await supabase
-      .from("class_members")
-      .insert({ class_id: cls.id, student_id: user!.id });
-    if (error) toast.error(error.message);
-    else {
-      toast.success("Joined the class");
-      setJoinCode("");
-      void qc.invalidateQueries({ queryKey: ["dashboard"] });
-    }
-  };
 
   const xp = data?.stats?.xp ?? 0;
   const { level, intoLevel, needed } = levelFromXp(xp);
@@ -212,18 +184,10 @@ function Dashboard() {
             ))}
             {(data?.classes ?? []).length === 0 ? (
               <li className="text-muted-foreground">
-                You're not in a class yet — ask your teacher for a join code.
+                You're not in a class — practise freely at your own pace.
               </li>
             ) : null}
           </ul>
-          <div className="mt-4 flex gap-2">
-            <Input
-              placeholder="Join code"
-              value={joinCode}
-              onChange={(e) => setJoinCode(e.target.value)}
-            />
-            <Button onClick={join}>Join</Button>
-          </div>
         </div>
 
         <div className="panel p-5">

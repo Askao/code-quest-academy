@@ -584,6 +584,14 @@ export type Database = {
         Args: { _target: string; _viewer: string }
         Returns: boolean
       }
+      class_for_join_code: {
+        Args: { _code: string }
+        Returns: { id: string; name: string; track: Database["public"]["Enums"]["track"] }[]
+      }
+      delete_class: {
+        Args: { _class_id: string }
+        Returns: undefined
+      }
       has_role: {
         Args: {
           _role: Database["public"]["Enums"]["app_role"]

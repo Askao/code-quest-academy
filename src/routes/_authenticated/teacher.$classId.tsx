@@ -1,10 +1,11 @@
-import { createFileRoute } from "@tanstack/react-router";
+import { createFileRoute, useNavigate } from "@tanstack/react-router";
 import { useQuery, useQueryClient } from "@tanstack/react-query";
 import { useState } from "react";
 import { toast } from "sonner";
 import { supabase } from "@/integrations/supabase/client";
 import { Button } from "@/components/ui/button";
 import { Input } from "@/components/ui/input";
+import { Label } from "@/components/ui/label";
 import { Progress } from "@/components/ui/progress";
 import { levelFromXp, skillPercent, topicLabel, topicsFor, type TrackKey } from "@/lib/game";
 import { pickHomeworkSet } from "@/lib/progress";
@@ -31,6 +32,7 @@ export const Route = createFileRoute("/_authenticated/teacher/$classId")({
 
 function ClassDetail() {
   const { classId } = Route.useParams();
+  const navigate = useNavigate();
   const qc = useQueryClient();
   const [title, setTitle] = useState("");
   const [instructions, setInstructions] = useState("");
@@ -39,6 +41,9 @@ function ClassDetail() {
   const [effort, setEffort] = useState("medium");
   const [assignTopic, setAssignTopic] = useState("");
   const [assignLessonSlug, setAssignLessonSlug] = useState("");
+  const [showDeleteConfirm, setShowDeleteConfirm] = useState(false);
+  const [deleteConfirmText, setDeleteConfirmText] = useState("");
+  const [deleting, setDeleting] = useState(false);
 
   const { data } = useQuery({
     queryKey: ["class", classId],
@@ -298,13 +303,54 @@ function ClassDetail() {
     document.getElementById("set-homework")?.scrollIntoView({ behavior: "smooth" });
   };
 
+  const joinLink =
+    typeof window !== "undefined" && data?.cls?.join_code
+      ? `${window.location.origin}/join/${data.cls.join_code}`
+      : "";
+
+  const copyJoinLink = async () => {
+    if (!joinLink) return;
+    await navigator.clipboard.writeText(joinLink);
+    toast.success("Join link copied");
+  };
+
+  const deleteClass = async () => {
+    if (!data?.cls || deleteConfirmText.trim() !== data.cls.name) return;
+    setDeleting(true);
+    const { error } = await supabase.rpc("delete_class", { _class_id: classId });
+    setDeleting(false);
+    if (error) {
+      toast.error(error.message);
+      return;
+    }
+    toast.success(
+      `Class deleted — ${data.students.length} student account${data.students.length === 1 ? "" : "s"} removed`,
+    );
+    void navigate({ to: "/teacher" });
+  };
+
   return (
     <div className="space-y-8">
       <div>
         <h1 className="text-3xl font-bold">{data?.cls?.name ?? "Class"}</h1>
         <p className="mt-1 font-mono text-sm text-muted-foreground">
-          {track === "gcse" ? "GCSE · OCR" : "A LEVEL"} · join code{" "}
+          {track === "gcse" ? "GCSE · OCR" : "A LEVEL"} · code{" "}
           <span className="text-primary">{data?.cls?.join_code}</span>
+        </p>
+        {joinLink ? (
+          <div className="mt-2 flex flex-wrap items-center gap-2">
+            <span className="rounded-md border border-border bg-secondary/40 px-2 py-1 font-mono text-xs text-muted-foreground">
+              {joinLink}
+            </span>
+            <Button size="sm" variant="secondary" onClick={copyJoinLink}>
+              Copy join link
+            </Button>
+          </div>
+        ) : null}
+        <p className="mt-2 max-w-xl text-xs text-muted-foreground">
+          Share this link with your students — it's the only way they can join this class and
+          become a student here. Signing up separately at h-code.up.railway.app doesn't enroll
+          them in anything.
         </p>
       </div>
 
@@ -484,7 +530,7 @@ function ClassDetail() {
           ))}
           {(data?.students ?? []).length === 0 ? (
             <p className="text-muted-foreground">
-              No students yet — share the join code above with your class.
+              No students yet — share the join link above with your class.
             </p>
           ) : null}
         </div>
@@ -538,6 +584,60 @@ function ClassDetail() {
             <p className="text-muted-foreground">No homework set yet.</p>
           ) : null}
         </div>
+      </section>
+
+      <section className="panel space-y-3 border-destructive/40 p-5">
+        <h2 className="text-lg font-semibold text-destructive">Danger zone</h2>
+        {!showDeleteConfirm ? (
+          <>
+            <p className="text-sm text-muted-foreground">
+              Permanently delete this class and every student account in it — not just their
+              membership, the accounts themselves. This can't be undone.
+            </p>
+            <Button variant="destructive" onClick={() => setShowDeleteConfirm(true)}>
+              Delete class
+            </Button>
+          </>
+        ) : (
+          <div className="space-y-3 rounded-lg border border-destructive/40 bg-destructive/5 p-4">
+            <p className="text-sm">
+              This will permanently delete <strong>{data?.cls?.name}</strong> and{" "}
+              <strong>
+                {data?.students.length ?? 0} student account
+                {(data?.students.length ?? 0) === 1 ? "" : "s"}
+              </strong>{" "}
+              — their profiles, progress, and logins are gone for good, not just unenrolled.
+            </p>
+            <div className="space-y-2">
+              <Label htmlFor="confirm-class-name">
+                Type <strong>{data?.cls?.name}</strong> to confirm
+              </Label>
+              <Input
+                id="confirm-class-name"
+                value={deleteConfirmText}
+                onChange={(e) => setDeleteConfirmText(e.target.value)}
+              />
+            </div>
+            <div className="flex gap-2">
+              <Button
+                variant="destructive"
+                disabled={deleting || deleteConfirmText.trim() !== data?.cls?.name}
+                onClick={deleteClass}
+              >
+                {deleting ? "Deleting…" : "Permanently delete"}
+              </Button>
+              <Button
+                variant="secondary"
+                onClick={() => {
+                  setShowDeleteConfirm(false);
+                  setDeleteConfirmText("");
+                }}
+              >
+                Cancel
+              </Button>
+            </div>
+          </div>
+        )}
       </section>
     </div>
   );
