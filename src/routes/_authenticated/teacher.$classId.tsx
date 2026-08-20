@@ -1,6 +1,6 @@
 import { createFileRoute, useNavigate, Link } from "@tanstack/react-router";
 import { useQuery, useQueryClient } from "@tanstack/react-query";
-import { useState } from "react";
+import { Fragment, useState } from "react";
 import { toast } from "sonner";
 import { supabase } from "@/integrations/supabase/client";
 import { useAuth } from "@/hooks/useAuth";
@@ -8,8 +8,10 @@ import { Button } from "@/components/ui/button";
 import { Input } from "@/components/ui/input";
 import { Label } from "@/components/ui/label";
 import { Progress } from "@/components/ui/progress";
+import { Tabs, TabsContent, TabsList, TabsTrigger } from "@/components/ui/tabs";
 import { levelFromXp, skillPercent, topicLabel, topicsFor, type TrackKey } from "@/lib/game";
 import { pickHomeworkSet } from "@/lib/progress";
+import { downloadCsv } from "@/lib/csv";
 import {
   getLesson,
   isLessonComplete,
@@ -18,6 +20,7 @@ import {
 } from "@/lib/content";
 
 const EFFORT_COUNT: Record<string, number> = { low: 2, medium: 4, high: 6 };
+const STRUGGLING_THRESHOLD = 3;
 
 export const Route = createFileRoute("/_authenticated/teacher/$classId")({
   head: () => ({
@@ -46,6 +49,10 @@ function ClassDetail() {
   const [showDeleteConfirm, setShowDeleteConfirm] = useState(false);
   const [deleteConfirmText, setDeleteConfirmText] = useState("");
   const [deleting, setDeleting] = useState(false);
+  const [activeTab, setActiveTab] = useState("overview");
+  const [expandedStudent, setExpandedStudent] = useState<string | null>(null);
+  const [expandedLesson, setExpandedLesson] = useState<string | null>(null);
+  const [expandedHomework, setExpandedHomework] = useState<string | null>(null);
 
   const { data } = useQuery({
     queryKey: ["class", classId],
@@ -132,6 +139,10 @@ function ClassDetail() {
         const accuracy = mineAttempts.length
           ? Math.round((mineAttempts.filter((a) => a.passed).length / mineAttempts.length) * 100)
           : 0;
+        // Automatic struggling detection: three fails in a row on any topic
+        // (see consecutive_fails in src/lib/progress.ts) - surfaced here
+        // instead of relying on a student to self-report being stuck.
+        const struggling = mine.some((k) => (k.consecutive_fails ?? 0) >= STRUGGLING_THRESHOLD);
         return {
           id: p.id,
           name: p.full_name ?? p.email ?? "Student",
@@ -141,6 +152,7 @@ function ClassDetail() {
           accuracy,
           lastActive: s?.last_active,
           skills: mine,
+          struggling,
         };
       });
 
@@ -183,6 +195,24 @@ function ClassDetail() {
         (passedForHomework.data ?? []).map((a) => `${a.user_id}:${a.challenge_id}`),
       );
 
+      // "I'm stuck" flags a student can leave against a specific homework
+      // (see homework.$homeworkId.tsx) - only shown to them once they've
+      // genuinely attempted and failed something, not on first load.
+      const helpRequestsRes = homeworkIds.length
+        ? await supabase
+            .from("homework_help_requests")
+            .select("*")
+            .in("homework_id", homeworkIds)
+            .order("created_at", { ascending: false })
+        : { data: [] };
+      const nameById = new Map(students.map((s) => [s.id, s.name]));
+      const helpRequestsByHomework = new Map<string, typeof helpRequestsRes.data>();
+      for (const r of helpRequestsRes.data ?? []) {
+        const list = helpRequestsByHomework.get(r.homework_id) ?? [];
+        list.push(r);
+        helpRequestsByHomework.set(r.homework_id, list);
+      }
+
       return {
         cls: cls.data,
         students,
@@ -212,6 +242,15 @@ function ClassDetail() {
               total: challengeIds.length,
             };
           }),
+          helpRequests: (helpRequestsByHomework.get(h.id) ?? []).map((r) => ({
+            id: r.id,
+            studentName: nameById.get(r.student_id) ?? "Student",
+            message: r.message,
+            tasksDone: r.tasks_done_at_request,
+            tasksTotal: r.tasks_total_at_request,
+            resolved: r.resolved,
+            createdAt: r.created_at,
+          })),
         })),
       };
     },
@@ -309,7 +348,15 @@ function ClassDetail() {
 
   const jumpToHomeworkFor = (lessonTopic: string) => {
     setTopic(lessonTopic);
-    document.getElementById("set-homework")?.scrollIntoView({ behavior: "smooth" });
+    setActiveTab("homework");
+    requestAnimationFrame(() => {
+      document.getElementById("set-homework")?.scrollIntoView({ behavior: "smooth" });
+    });
+  };
+
+  const resolveHelpRequest = async (id: string) => {
+    await supabase.from("homework_help_requests").update({ resolved: true }).eq("id", id);
+    void qc.invalidateQueries({ queryKey: ["class", classId] });
   };
 
   const joinLink =
@@ -336,6 +383,61 @@ function ClassDetail() {
       `Class deleted — ${data.students.length} student account${data.students.length === 1 ? "" : "s"} removed`,
     );
     void navigate({ to: "/teacher" });
+  };
+
+  const exportRoster = () => {
+    const students = data?.students ?? [];
+    const topics = topicsFor(track);
+    const rows = [
+      [
+        "Name",
+        "Level",
+        "XP",
+        "Streak",
+        "Accuracy %",
+        ...topics.map((t) => `${t.label} %`),
+        "Average skill %",
+        "Last active",
+      ],
+      ...students.map((s) => [
+        s.name,
+        String(levelFromXp(s.xp).level),
+        String(s.xp),
+        String(s.streak),
+        String(s.accuracy),
+        ...topics.map((t) => {
+          const lvl = Number(s.skills.find((k) => k.topic === t.key && k.track === track)?.level ?? 1);
+          return String(skillPercent(lvl));
+        }),
+        String(skillPercent(s.avg)),
+        s.lastActive ? new Date(s.lastActive).toLocaleDateString("en-GB") : "Not started",
+      ]),
+    ];
+    downloadCsv(`${data?.cls?.name ?? "class"}-roster.csv`, rows);
+  };
+
+  const exportHomework = (h: NonNullable<typeof data>["homework"][number]) => {
+    const rows = [
+      ["Name", "Done", "Total", "Completion %"],
+      ...h.completion.map((c) => [
+        c.name,
+        String(c.done),
+        String(c.total),
+        c.total ? String(Math.round((c.done / c.total) * 100)) : "0",
+      ]),
+    ];
+    downloadCsv(`${h.title}.csv`, rows);
+  };
+
+  const exportLesson = (
+    a: NonNullable<typeof data>["lessonAssignments"][number],
+    lessonTitle: string,
+  ) => {
+    const rows = [
+      ["Name", "Complete"],
+      ...a.completion.map((c) => [c.name, c.complete ? "Yes" : "No"]),
+    ];
+    downloadCsv(`${lessonTitle}.csv`, rows);
   };
 
   if (data && !isOwner) {
@@ -377,237 +479,338 @@ function ClassDetail() {
         </p>
       </div>
 
-      <section className="panel space-y-3 p-5">
-        <h2 className="text-lg font-semibold">Assign a lesson</h2>
-        <p className="text-sm text-muted-foreground">
-          Students in this class see a lesson in their Learn path only once you've assigned it here
-          — practice mode stays open regardless.
-        </p>
-        <div className="grid gap-2 sm:grid-cols-2">
-          <select
-            className="rounded-md border border-border bg-card px-3 py-2 text-sm"
-            value={assignTopic}
-            onChange={(e) => {
-              setAssignTopic(e.target.value);
-              setAssignLessonSlug("");
-            }}
-          >
-            <option value="">Choose a topic…</option>
-            {topicsWithLessons(track).map((t) => (
-              <option key={t} value={t}>
-                {topicLabel(t)}
-              </option>
-            ))}
-          </select>
-          <select
-            className="rounded-md border border-border bg-card px-3 py-2 text-sm"
-            value={assignLessonSlug}
-            onChange={(e) => setAssignLessonSlug(e.target.value)}
-            disabled={!assignTopic}
-          >
-            <option value="">Choose a lesson…</option>
-            {lessonsForTopic(track, assignTopic).map((l) => (
-              <option key={l.slug} value={l.slug}>
-                Lesson {l.order} — {l.title}
-              </option>
-            ))}
-          </select>
-        </div>
-        <Button onClick={assignLesson}>Assign lesson</Button>
-      </section>
+      <Tabs value={activeTab} onValueChange={setActiveTab}>
+        <TabsList>
+          <TabsTrigger value="overview">Overview</TabsTrigger>
+          <TabsTrigger value="lessons">Lessons</TabsTrigger>
+          <TabsTrigger value="homework">Homework</TabsTrigger>
+        </TabsList>
 
-      <section>
-        <h2 className="mb-3 text-xl font-semibold">Lessons assigned</h2>
-        <div className="space-y-3">
-          {(data?.lessonAssignments ?? []).map((a) => {
-            const lesson = getLesson(a.lessonSlug);
-            const doneCount = a.completion.filter((c) => c.complete).length;
-            return (
-              <div key={a.id} className="panel p-4 text-sm">
-                <div className="flex flex-wrap items-center gap-3">
-                  <span className="flex-1 font-medium">
-                    {lesson ? `${topicLabel(lesson.topic)} · Lesson ${lesson.order} — ${lesson.title}` : a.lessonSlug}
-                  </span>
-                  <span className="font-mono text-xs text-muted-foreground">
-                    {doneCount}/{a.completion.length} complete
-                  </span>
-                  {lesson ? (
-                    <Button
-                      size="sm"
-                      variant="secondary"
-                      onClick={() => jumpToHomeworkFor(lesson.topic)}
+        <TabsContent value="overview" className="space-y-4 pt-4">
+          <div className="flex items-center justify-between">
+            <h2 className="text-xl font-semibold">Students</h2>
+            {(data?.students.length ?? 0) > 0 ? (
+              <Button size="sm" variant="secondary" onClick={exportRoster}>
+                Export roster (CSV)
+              </Button>
+            ) : null}
+          </div>
+          <div className="panel overflow-x-auto">
+            <table className="w-full text-sm">
+              <thead className="border-b border-border text-left font-mono text-xs text-muted-foreground">
+                <tr>
+                  <th className="p-3">Name</th>
+                  <th className="p-3">Level</th>
+                  <th className="p-3">Accuracy</th>
+                  <th className="p-3">Avg skill</th>
+                  <th className="p-3">Last active</th>
+                  <th className="p-3"></th>
+                </tr>
+              </thead>
+              <tbody>
+                {(data?.students ?? []).map((s) => (
+                  <Fragment key={s.id}>
+                    <tr
+                      className="cursor-pointer border-b border-border/60 hover:bg-secondary/30"
+                      onClick={() => setExpandedStudent(expandedStudent === s.id ? null : s.id)}
                     >
-                      Set homework for this
-                    </Button>
-                  ) : null}
-                  <Button
-                    size="sm"
-                    variant="secondary"
-                    onClick={async () => {
-                      await supabase.from("lesson_assignments").delete().eq("id", a.id);
-                      void qc.invalidateQueries({ queryKey: ["class", classId] });
-                    }}
-                  >
-                    Unassign
-                  </Button>
-                </div>
-                {a.completion.length > 0 ? (
-                  <div className="mt-3 grid gap-1.5 border-t border-border pt-3 sm:grid-cols-2 lg:grid-cols-3">
-                    {a.completion.map((c) => (
-                      <div key={c.id} className="flex items-center justify-between gap-2 text-xs">
-                        <span className={c.complete ? "text-success" : ""}>
-                          {c.complete ? "✓" : "○"} {c.name}
-                        </span>
-                      </div>
-                    ))}
-                  </div>
-                ) : null}
-              </div>
-            );
-          })}
-          {(data?.lessonAssignments ?? []).length === 0 ? (
-            <p className="text-muted-foreground">No lessons assigned yet.</p>
-          ) : null}
-        </div>
-      </section>
-
-      <section id="set-homework" className="panel space-y-3 p-5">
-        <h2 className="text-lg font-semibold">Set homework</h2>
-        <p className="text-sm text-muted-foreground">
-          Each student gets their own set of challenges, picked at their own skill level for this
-          topic — not the same list for the whole class.
-        </p>
-        <div className="grid gap-2 sm:grid-cols-2">
-          <Input placeholder="Title" value={title} onChange={(e) => setTitle(e.target.value)} />
-          <Input
-            type="datetime-local"
-            value={dueAt}
-            onChange={(e) => setDueAt(e.target.value)}
-          />
-          <select
-            className="rounded-md border border-border bg-card px-3 py-2 text-sm"
-            value={topic}
-            onChange={(e) => setTopic(e.target.value)}
-          >
-            <option value="all">All topics</option>
-            {topicsFor(track).map((t) => (
-              <option key={t.key} value={t.key}>
-                {t.label}
-              </option>
-            ))}
-          </select>
-          <select
-            className="rounded-md border border-border bg-card px-3 py-2 text-sm"
-            value={effort}
-            onChange={(e) => setEffort(e.target.value)}
-          >
-            <option value="low">Low effort — {EFFORT_COUNT.low} challenges each</option>
-            <option value="medium">Medium effort — {EFFORT_COUNT.medium} challenges each</option>
-            <option value="high">High effort — {EFFORT_COUNT.high} challenges each</option>
-          </select>
-        </div>
-        <Input
-          placeholder="Instructions (optional)"
-          value={instructions}
-          onChange={(e) => setInstructions(e.target.value)}
-        />
-        <Button onClick={setHomework}>Set homework</Button>
-      </section>
-
-      <section>
-        <h2 className="mb-3 text-xl font-semibold">Students</h2>
-        <div className="space-y-3">
-          {(data?.students ?? []).map((s) => (
-            <div key={s.id} className="panel p-5">
-              <div className="flex flex-wrap items-center gap-4">
-                <p className="flex-1 font-semibold">{s.name}</p>
-                <span className="font-mono text-xs text-muted-foreground">
-                  Level {levelFromXp(s.xp).level} · {s.xp} XP · {s.streak}🔥 · {s.accuracy}% accuracy
-                </span>
-              </div>
-              <div className="mt-4 grid gap-3 sm:grid-cols-2 lg:grid-cols-3">
-                {topicsFor(track).map((t) => {
-                  const lvl = Number(
-                    s.skills.find((k) => k.topic === t.key && k.track === track)?.level ?? 1,
-                  );
-                  return (
-                    <div key={t.key}>
-                      <div className="flex justify-between text-xs">
-                        <span>{t.label}</span>
-                        <span className="font-mono text-muted-foreground">
-                          {skillPercent(lvl)}%
-                        </span>
-                      </div>
-                      <Progress value={skillPercent(lvl)} className="mt-1" />
-                    </div>
-                  );
-                })}
-              </div>
-              <p className="mt-3 text-xs text-muted-foreground">
-                Average skill level {skillPercent(s.avg)}%
-                {s.lastActive
-                  ? ` · last active ${new Date(s.lastActive).toLocaleDateString("en-GB")}`
-                  : " · not started yet"}
+                      <td className="p-3 font-medium">
+                        {s.name}
+                        {s.struggling ? (
+                          <span className="ml-2 rounded-full bg-destructive/15 px-2 py-0.5 font-mono text-xs text-destructive">
+                            🔴 Struggling
+                          </span>
+                        ) : null}
+                      </td>
+                      <td className="p-3 font-mono text-xs">
+                        {levelFromXp(s.xp).level} · {s.xp} XP
+                      </td>
+                      <td className="p-3 font-mono text-xs">{s.accuracy}%</td>
+                      <td className="p-3 font-mono text-xs">{skillPercent(s.avg)}%</td>
+                      <td className="p-3 font-mono text-xs text-muted-foreground">
+                        {s.lastActive ? new Date(s.lastActive).toLocaleDateString("en-GB") : "—"}
+                      </td>
+                      <td className="p-3 text-right font-mono text-xs text-muted-foreground">
+                        {expandedStudent === s.id ? "▲" : "▼"}
+                      </td>
+                    </tr>
+                    {expandedStudent === s.id ? (
+                      <tr className="border-b border-border/60 bg-secondary/10">
+                        <td colSpan={6} className="p-4">
+                          <div className="grid gap-3 sm:grid-cols-2 lg:grid-cols-3">
+                            {topicsFor(track).map((t) => {
+                              const lvl = Number(
+                                s.skills.find((k) => k.topic === t.key && k.track === track)?.level ?? 1,
+                              );
+                              return (
+                                <div key={t.key}>
+                                  <div className="flex justify-between text-xs">
+                                    <span>{t.label}</span>
+                                    <span className="font-mono text-muted-foreground">
+                                      {skillPercent(lvl)}%
+                                    </span>
+                                  </div>
+                                  <Progress value={skillPercent(lvl)} className="mt-1" />
+                                </div>
+                              );
+                            })}
+                          </div>
+                        </td>
+                      </tr>
+                    ) : null}
+                  </Fragment>
+                ))}
+              </tbody>
+            </table>
+            {(data?.students ?? []).length === 0 ? (
+              <p className="p-4 text-muted-foreground">
+                No students yet — share the join link above with your class.
               </p>
-            </div>
-          ))}
-          {(data?.students ?? []).length === 0 ? (
-            <p className="text-muted-foreground">
-              No students yet — share the join link above with your class.
-            </p>
-          ) : null}
-        </div>
-      </section>
+            ) : null}
+          </div>
+        </TabsContent>
 
-      <section>
-        <h2 className="mb-3 text-xl font-semibold">Homework set</h2>
-        <div className="space-y-3">
-          {(data?.homework ?? []).map((h) => {
-            const sorted = [...h.completion].sort((a, b) => a.done - b.done);
-            const perStudentCount = Math.max(0, ...sorted.map((c) => c.total));
-            return (
-              <div key={h.id} className="panel p-4 text-sm">
-                <div className="flex flex-wrap items-center gap-3">
-                  <span className="flex-1 font-medium">{h.title}</span>
-                  <span className="font-mono text-xs text-muted-foreground">
-                    {perStudentCount} challenges each
-                    {h.due_at ? ` · due ${new Date(h.due_at).toLocaleDateString("en-GB")}` : ""}
-                  </span>
-                  <Button
-                    size="sm"
-                    variant="secondary"
-                    onClick={async () => {
-                      await supabase.from("homework").delete().eq("id", h.id);
-                      void qc.invalidateQueries({ queryKey: ["class", classId] });
-                    }}
-                  >
-                    Delete
-                  </Button>
-                </div>
-                {sorted.length > 0 ? (
-                  <div className="mt-3 grid gap-1.5 border-t border-border pt-3 sm:grid-cols-2 lg:grid-cols-3">
-                    {sorted.map((c) => (
-                      <div key={c.id} className="flex items-center justify-between gap-2 text-xs">
-                        <span
-                          className={c.done === c.total && c.total > 0 ? "text-success" : ""}
+        <TabsContent value="lessons" className="space-y-6 pt-4">
+          <section className="panel space-y-3 p-5">
+            <h2 className="text-lg font-semibold">Assign a lesson</h2>
+            <p className="text-sm text-muted-foreground">
+              Students in this class see a lesson in their Learn path only once you've assigned it
+              here — practice mode stays open regardless.
+            </p>
+            <div className="grid gap-2 sm:grid-cols-2">
+              <select
+                className="rounded-md border border-border bg-card px-3 py-2 text-sm"
+                value={assignTopic}
+                onChange={(e) => {
+                  setAssignTopic(e.target.value);
+                  setAssignLessonSlug("");
+                }}
+              >
+                <option value="">Choose a topic…</option>
+                {topicsWithLessons(track).map((t) => (
+                  <option key={t} value={t}>
+                    {topicLabel(t)}
+                  </option>
+                ))}
+              </select>
+              <select
+                className="rounded-md border border-border bg-card px-3 py-2 text-sm"
+                value={assignLessonSlug}
+                onChange={(e) => setAssignLessonSlug(e.target.value)}
+                disabled={!assignTopic}
+              >
+                <option value="">Choose a lesson…</option>
+                {lessonsForTopic(track, assignTopic).map((l) => (
+                  <option key={l.slug} value={l.slug}>
+                    Lesson {l.order} — {l.title}
+                  </option>
+                ))}
+              </select>
+            </div>
+            <Button onClick={assignLesson}>Assign lesson</Button>
+          </section>
+
+          <section>
+            <h2 className="mb-3 text-xl font-semibold">Lessons assigned</h2>
+            <div className="space-y-3">
+              {(data?.lessonAssignments ?? []).map((a) => {
+                const lesson = getLesson(a.lessonSlug);
+                const doneCount = a.completion.filter((c) => c.complete).length;
+                const isExpanded = expandedLesson === a.id;
+                return (
+                  <div key={a.id} className="panel p-4 text-sm">
+                    <div className="flex flex-wrap items-center gap-3">
+                      <button
+                        className="flex-1 text-left font-medium"
+                        onClick={() => setExpandedLesson(isExpanded ? null : a.id)}
+                      >
+                        {isExpanded ? "▼ " : "▶ "}
+                        {lesson
+                          ? `${topicLabel(lesson.topic)} · Lesson ${lesson.order} — ${lesson.title}`
+                          : a.lessonSlug}
+                      </button>
+                      <span className="font-mono text-xs text-muted-foreground">
+                        {doneCount}/{a.completion.length} complete
+                      </span>
+                      {lesson ? (
+                        <Button
+                          size="sm"
+                          variant="secondary"
+                          onClick={() => exportLesson(a, lesson.title)}
                         >
-                          {c.done === c.total && c.total > 0 ? "✓" : "○"} {c.name}
-                        </span>
-                        <span className="font-mono text-muted-foreground">
-                          {c.done}/{c.total}
-                        </span>
+                          Export
+                        </Button>
+                      ) : null}
+                      {lesson ? (
+                        <Button
+                          size="sm"
+                          variant="secondary"
+                          onClick={() => jumpToHomeworkFor(lesson.topic)}
+                        >
+                          Set homework for this
+                        </Button>
+                      ) : null}
+                      <Button
+                        size="sm"
+                        variant="secondary"
+                        onClick={async () => {
+                          await supabase.from("lesson_assignments").delete().eq("id", a.id);
+                          void qc.invalidateQueries({ queryKey: ["class", classId] });
+                        }}
+                      >
+                        Unassign
+                      </Button>
+                    </div>
+                    {isExpanded && a.completion.length > 0 ? (
+                      <div className="mt-3 grid gap-1.5 border-t border-border pt-3 sm:grid-cols-2 lg:grid-cols-3">
+                        {a.completion.map((c) => (
+                          <div key={c.id} className="flex items-center justify-between gap-2 text-xs">
+                            <span className={c.complete ? "text-success" : ""}>
+                              {c.complete ? "✓" : "○"} {c.name}
+                            </span>
+                          </div>
+                        ))}
                       </div>
-                    ))}
+                    ) : null}
                   </div>
-                ) : null}
-              </div>
-            );
-          })}
-          {(data?.homework ?? []).length === 0 ? (
-            <p className="text-muted-foreground">No homework set yet.</p>
-          ) : null}
-        </div>
-      </section>
+                );
+              })}
+              {(data?.lessonAssignments ?? []).length === 0 ? (
+                <p className="text-muted-foreground">No lessons assigned yet.</p>
+              ) : null}
+            </div>
+          </section>
+        </TabsContent>
+
+        <TabsContent value="homework" className="space-y-6 pt-4">
+          <section id="set-homework" className="panel space-y-3 p-5">
+            <h2 className="text-lg font-semibold">Set homework</h2>
+            <p className="text-sm text-muted-foreground">
+              Each student gets their own set of challenges, picked at their own skill level for
+              this topic — not the same list for the whole class.
+            </p>
+            <div className="grid gap-2 sm:grid-cols-2">
+              <Input placeholder="Title" value={title} onChange={(e) => setTitle(e.target.value)} />
+              <Input type="datetime-local" value={dueAt} onChange={(e) => setDueAt(e.target.value)} />
+              <select
+                className="rounded-md border border-border bg-card px-3 py-2 text-sm"
+                value={topic}
+                onChange={(e) => setTopic(e.target.value)}
+              >
+                <option value="all">All topics</option>
+                {topicsFor(track).map((t) => (
+                  <option key={t.key} value={t.key}>
+                    {t.label}
+                  </option>
+                ))}
+              </select>
+              <select
+                className="rounded-md border border-border bg-card px-3 py-2 text-sm"
+                value={effort}
+                onChange={(e) => setEffort(e.target.value)}
+              >
+                <option value="low">Low effort — {EFFORT_COUNT["low"]} challenges each</option>
+                <option value="medium">Medium effort — {EFFORT_COUNT["medium"]} challenges each</option>
+                <option value="high">High effort — {EFFORT_COUNT["high"]} challenges each</option>
+              </select>
+            </div>
+            <Input
+              placeholder="Instructions (optional)"
+              value={instructions}
+              onChange={(e) => setInstructions(e.target.value)}
+            />
+            <Button onClick={setHomework}>Set homework</Button>
+          </section>
+
+          <section>
+            <h2 className="mb-3 text-xl font-semibold">Homework set</h2>
+            <div className="space-y-3">
+              {(data?.homework ?? []).map((h) => {
+                const sorted = [...h.completion].sort((a, b) => a.done - b.done);
+                const perStudentCount = Math.max(0, ...sorted.map((c) => c.total));
+                const doneCount = sorted.filter((c) => c.total > 0 && c.done === c.total).length;
+                const isExpanded = expandedHomework === h.id;
+                const openHelp = h.helpRequests.filter((r) => !r.resolved);
+                return (
+                  <div key={h.id} className="panel p-4 text-sm">
+                    <div className="flex flex-wrap items-center gap-3">
+                      <button
+                        className="flex-1 text-left font-medium"
+                        onClick={() => setExpandedHomework(isExpanded ? null : h.id)}
+                      >
+                        {isExpanded ? "▼ " : "▶ "}
+                        {h.title}
+                        {openHelp.length > 0 ? (
+                          <span className="ml-2 rounded-full bg-warning/15 px-2 py-0.5 font-mono text-xs text-warning">
+                            ✋ {openHelp.length} asked for help
+                          </span>
+                        ) : null}
+                      </button>
+                      <span className="font-mono text-xs text-muted-foreground">
+                        {doneCount}/{sorted.length} students done · {perStudentCount} challenges each
+                        {h.due_at ? ` · due ${new Date(h.due_at).toLocaleDateString("en-GB")}` : ""}
+                      </span>
+                      <Button size="sm" variant="secondary" onClick={() => exportHomework(h)}>
+                        Export
+                      </Button>
+                      <Button
+                        size="sm"
+                        variant="secondary"
+                        onClick={async () => {
+                          await supabase.from("homework").delete().eq("id", h.id);
+                          void qc.invalidateQueries({ queryKey: ["class", classId] });
+                        }}
+                      >
+                        Delete
+                      </Button>
+                    </div>
+                    {openHelp.length > 0 ? (
+                      <div className="mt-3 space-y-2 border-t border-border pt-3">
+                        {openHelp.map((r) => (
+                          <div
+                            key={r.id}
+                            className="flex flex-wrap items-center justify-between gap-2 rounded-md border border-warning/40 bg-warning/5 p-2 text-xs"
+                          >
+                            <div>
+                              <span className="font-medium">{r.studentName}</span>{" "}
+                              <span className="text-muted-foreground">
+                                ({r.tasksDone}/{r.tasksTotal} done when they asked)
+                              </span>
+                              {r.message ? (
+                                <p className="mt-1 text-muted-foreground">"{r.message}"</p>
+                              ) : null}
+                            </div>
+                            <Button size="sm" variant="secondary" onClick={() => resolveHelpRequest(r.id)}>
+                              Mark resolved
+                            </Button>
+                          </div>
+                        ))}
+                      </div>
+                    ) : null}
+                    {isExpanded && sorted.length > 0 ? (
+                      <div className="mt-3 grid gap-1.5 border-t border-border pt-3 sm:grid-cols-2 lg:grid-cols-3">
+                        {sorted.map((c) => (
+                          <div key={c.id} className="flex items-center justify-between gap-2 text-xs">
+                            <span className={c.done === c.total && c.total > 0 ? "text-success" : ""}>
+                              {c.done === c.total && c.total > 0 ? "✓" : "○"} {c.name}
+                            </span>
+                            <span className="font-mono text-muted-foreground">
+                              {c.done}/{c.total}
+                            </span>
+                          </div>
+                        ))}
+                      </div>
+                    ) : null}
+                  </div>
+                );
+              })}
+              {(data?.homework ?? []).length === 0 ? (
+                <p className="text-muted-foreground">No homework set yet.</p>
+              ) : null}
+            </div>
+          </section>
+        </TabsContent>
+      </Tabs>
 
       <section className="panel space-y-3 border-destructive/40 p-5">
         <h2 className="text-lg font-semibold text-destructive">Danger zone</h2>

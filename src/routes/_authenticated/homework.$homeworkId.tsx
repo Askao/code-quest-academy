@@ -1,8 +1,11 @@
 import { createFileRoute, Link } from "@tanstack/react-router";
-import { useQuery } from "@tanstack/react-query";
+import { useQuery, useQueryClient } from "@tanstack/react-query";
+import { useState } from "react";
+import { toast } from "sonner";
 import { supabase } from "@/integrations/supabase/client";
 import { useAuth } from "@/hooks/useAuth";
 import { Button } from "@/components/ui/button";
+import { Textarea } from "@/components/ui/textarea";
 import { topicLabel } from "@/lib/game";
 
 export const Route = createFileRoute("/_authenticated/homework/$homeworkId")({
@@ -20,6 +23,9 @@ export const Route = createFileRoute("/_authenticated/homework/$homeworkId")({
 function HomeworkPage() {
   const { homeworkId } = Route.useParams();
   const { user } = useAuth();
+  const qc = useQueryClient();
+  const [helpMessage, setHelpMessage] = useState("");
+  const [sendingHelp, setSendingHelp] = useState(false);
 
   const { data } = useQuery({
     queryKey: ["homework", homeworkId, user?.id],
@@ -27,7 +33,10 @@ function HomeworkPage() {
     queryFn: async () => {
       const [hw, attempts, assignment] = await Promise.all([
         supabase.from("homework").select("*, classes(name)").eq("id", homeworkId).maybeSingle(),
-        supabase.from("attempts").select("challenge_id").eq("user_id", user!.id).eq("passed", true),
+        supabase
+          .from("attempts")
+          .select("challenge_id, passed")
+          .eq("user_id", user!.id),
         supabase
           .from("homework_assignments")
           .select("challenge_ids")
@@ -42,19 +51,59 @@ function HomeworkPage() {
       const items = ids.length
         ? await supabase.from("challenges").select("*").in("id", ids)
         : { data: [] };
+      const idSet = new Set(ids);
+      const relevantAttempts = (attempts.data ?? []).filter((a) => idSet.has(a.challenge_id));
       return {
         hw: hw.data,
         items: items.data ?? [],
-        done: new Set((attempts.data ?? []).map((a) => a.challenge_id)),
+        done: new Set(relevantAttempts.filter((a) => a.passed).map((a) => a.challenge_id)),
+        // "Ask for help" only makes sense once a student has genuinely
+        // tried and failed something here, not on first load - otherwise
+        // it's a shortcut around actually attempting the work.
+        hasFailedAttempt: relevantAttempts.some((a) => !a.passed),
       };
     },
   });
 
+  const { data: helpRequest } = useQuery({
+    queryKey: ["homework-help-request", homeworkId, user?.id],
+    enabled: !!user,
+    queryFn: async () => {
+      const { data: row } = await supabase
+        .from("homework_help_requests")
+        .select("id, resolved")
+        .eq("homework_id", homeworkId)
+        .eq("student_id", user!.id)
+        .eq("resolved", false)
+        .maybeSingle();
+      return row ?? null;
+    },
+  });
 
   if (!data?.hw) return <p className="text-muted-foreground">Loading homework…</p>;
 
   const total = data.items.length;
   const completed = data.items.filter((c) => data.done.has(c!.id)).length;
+
+  const sendHelpRequest = async () => {
+    if (!user) return;
+    setSendingHelp(true);
+    const { error } = await supabase.from("homework_help_requests").insert({
+      homework_id: homeworkId,
+      student_id: user.id,
+      message: helpMessage.trim(),
+      tasks_done_at_request: completed,
+      tasks_total_at_request: total,
+    });
+    setSendingHelp(false);
+    if (error) {
+      toast.error(error.message);
+      return;
+    }
+    toast.success("Your teacher can see you've asked for help");
+    setHelpMessage("");
+    void qc.invalidateQueries({ queryKey: ["homework-help-request", homeworkId, user.id] });
+  };
 
   return (
     <div className="space-y-6">
@@ -69,6 +118,34 @@ function HomeworkPage() {
           {completed}/{total} complete
         </p>
       </div>
+
+      {data.hasFailedAttempt ? (
+        <div className="panel p-4">
+          {helpRequest ? (
+            <p className="text-sm text-muted-foreground">
+              ✋ You've asked for help on this homework — your teacher can see it.
+            </p>
+          ) : (
+            <>
+              <p className="text-sm font-medium">Stuck on something?</p>
+              <p className="mt-1 text-sm text-muted-foreground">
+                Optional — let your teacher know, with a note if you want. They'll see how far
+                you've got when you ask.
+              </p>
+              <Textarea
+                className="mt-2"
+                placeholder="What are you stuck on? (optional)"
+                value={helpMessage}
+                onChange={(e) => setHelpMessage(e.target.value)}
+                rows={2}
+              />
+              <Button size="sm" className="mt-2" onClick={sendHelpRequest} disabled={sendingHelp}>
+                {sendingHelp ? "Sending…" : "Ask for help"}
+              </Button>
+            </>
+          )}
+        </div>
+      ) : null}
 
       <div className="space-y-3">
         {data.items.map((c) => {

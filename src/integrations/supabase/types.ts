@@ -402,6 +402,47 @@ export type Database = {
           },
         ]
       }
+      homework_help_requests: {
+        Row: {
+          created_at: string
+          homework_id: string
+          id: string
+          message: string
+          resolved: boolean
+          student_id: string
+          tasks_done_at_request: number
+          tasks_total_at_request: number
+        }
+        Insert: {
+          created_at?: string
+          homework_id: string
+          id?: string
+          message?: string
+          resolved?: boolean
+          student_id: string
+          tasks_done_at_request?: number
+          tasks_total_at_request?: number
+        }
+        Update: {
+          created_at?: string
+          homework_id?: string
+          id?: string
+          message?: string
+          resolved?: boolean
+          student_id?: string
+          tasks_done_at_request?: number
+          tasks_total_at_request?: number
+        }
+        Relationships: [
+          {
+            foreignKeyName: "homework_help_requests_homework_id_fkey"
+            columns: ["homework_id"]
+            isOneToOne: false
+            referencedRelation: "homework"
+            referencedColumns: ["id"]
+          },
+        ]
+      }
       lesson_assignments: {
         Row: {
           class_id: string
