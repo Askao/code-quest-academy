@@ -42,7 +42,7 @@ function ClassDetail() {
   const [title, setTitle] = useState("");
   const [instructions, setInstructions] = useState("");
   const [dueAt, setDueAt] = useState("");
-  const [topic, setTopic] = useState("all");
+  const [selectedTopics, setSelectedTopics] = useState<string[]>([]);
   const [effort, setEffort] = useState("medium");
   const [assignTopic, setAssignTopic] = useState("");
   const [assignLessonSlug, setAssignLessonSlug] = useState("");
@@ -275,11 +275,11 @@ function ClassDetail() {
       toast.error("No students in this class yet");
       return;
     }
-    let query = supabase.from("challenges").select("id, difficulty").eq("track", track);
-    if (topic !== "all") query = query.eq("topic", topic);
+    let query = supabase.from("challenges").select("id, difficulty, topic").eq("track", track);
+    if (selectedTopics.length > 0) query = query.in("topic", selectedTopics);
     const { data: pool } = await query;
     if (!pool || pool.length === 0) {
-      toast.error("No challenges match that topic");
+      toast.error("No challenges match those topics");
       return;
     }
     const count = EFFORT_COUNT[effort] ?? 4;
@@ -300,13 +300,20 @@ function ClassDetail() {
       return;
     }
 
-    // Each student gets challenges picked at their own level for this
-    // topic (their overall average level when "all topics" is chosen) —
-    // not the same list for the whole class.
+    // Each student gets challenges picked at their own level for the
+    // selected topics (their overall average level when no topic is
+    // selected, meaning "all topics") — not the same list for the whole
+    // class. With several topics selected, level is the average of their
+    // skill across just those topics, and pickHomeworkSet draws a genuine
+    // mix across them rather than clumping in whichever topic scores
+    // closest on difficulty.
     const assignments = students.map((s) => {
       const level =
-        topic !== "all"
-          ? Number(s.skills.find((k) => k.topic === topic && k.track === track)?.level ?? 2)
+        selectedTopics.length > 0
+          ? selectedTopics.reduce(
+              (sum, t) => sum + Number(s.skills.find((k) => k.topic === t && k.track === track)?.level ?? 2),
+              0,
+            ) / selectedTopics.length
           : s.avg || 2;
       return {
         homework_id: hw.id,
@@ -324,6 +331,7 @@ function ClassDetail() {
     setTitle("");
     setInstructions("");
     setDueAt("");
+    setSelectedTopics([]);
     void qc.invalidateQueries({ queryKey: ["class", classId] });
   };
 
@@ -347,7 +355,7 @@ function ClassDetail() {
   };
 
   const jumpToHomeworkFor = (lessonTopic: string) => {
-    setTopic(lessonTopic);
+    setSelectedTopics([lessonTopic]);
     setActiveTab("homework");
     requestAnimationFrame(() => {
       document.getElementById("set-homework")?.scrollIntoView({ behavior: "smooth" });
@@ -687,33 +695,56 @@ function ClassDetail() {
             <h2 className="text-lg font-semibold">Set homework</h2>
             <p className="text-sm text-muted-foreground">
               Each student gets their own set of challenges, picked at their own skill level for
-              this topic — not the same list for the whole class.
+              the selected topics — not the same list for the whole class.
             </p>
             <div className="grid gap-2 sm:grid-cols-2">
               <Input placeholder="Title" value={title} onChange={(e) => setTitle(e.target.value)} />
               <Input type="datetime-local" value={dueAt} onChange={(e) => setDueAt(e.target.value)} />
-              <select
-                className="rounded-md border border-border bg-card px-3 py-2 text-sm"
-                value={topic}
-                onChange={(e) => setTopic(e.target.value)}
-              >
-                <option value="all">All topics</option>
-                {topicsFor(track).map((t) => (
-                  <option key={t.key} value={t.key}>
-                    {t.label}
-                  </option>
-                ))}
-              </select>
-              <select
-                className="rounded-md border border-border bg-card px-3 py-2 text-sm"
-                value={effort}
-                onChange={(e) => setEffort(e.target.value)}
-              >
-                <option value="low">Low effort — {EFFORT_COUNT["low"]} challenges each</option>
-                <option value="medium">Medium effort — {EFFORT_COUNT["medium"]} challenges each</option>
-                <option value="high">High effort — {EFFORT_COUNT["high"]} challenges each</option>
-              </select>
             </div>
+            <div className="space-y-1.5">
+              <Label>
+                Topics{" "}
+                <span className="font-normal text-muted-foreground">
+                  (none selected = all topics, mixed together)
+                </span>
+              </Label>
+              <div className="flex flex-wrap gap-2">
+                {topicsFor(track).map((t) => {
+                  const checked = selectedTopics.includes(t.key);
+                  return (
+                    <label
+                      key={t.key}
+                      className={`flex cursor-pointer items-center gap-1.5 rounded-md border px-2.5 py-1.5 text-sm transition-colors ${
+                        checked
+                          ? "border-primary/60 bg-primary/10 text-foreground"
+                          : "border-border text-muted-foreground hover:bg-secondary/30"
+                      }`}
+                    >
+                      <input
+                        type="checkbox"
+                        className="accent-primary"
+                        checked={checked}
+                        onChange={() =>
+                          setSelectedTopics((prev) =>
+                            checked ? prev.filter((k) => k !== t.key) : [...prev, t.key],
+                          )
+                        }
+                      />
+                      {t.label}
+                    </label>
+                  );
+                })}
+              </div>
+            </div>
+            <select
+              className="rounded-md border border-border bg-card px-3 py-2 text-sm"
+              value={effort}
+              onChange={(e) => setEffort(e.target.value)}
+            >
+              <option value="low">Low effort — {EFFORT_COUNT["low"]} challenges each</option>
+              <option value="medium">Medium effort — {EFFORT_COUNT["medium"]} challenges each</option>
+              <option value="high">High effort — {EFFORT_COUNT["high"]} challenges each</option>
+            </select>
             <Input
               placeholder="Instructions (optional)"
               value={instructions}

@@ -194,22 +194,55 @@ export async function pickChallenge(opts: {
   return chosenPool[Math.floor(Math.random() * chosenPool.length)] as unknown as Challenge;
 }
 
+function shuffled<T>(items: T[]): T[] {
+  return [...items].sort(() => Math.random() - 0.5);
+}
+
 /**
- * Pick up to `count` distinct challenges from a pool, closest to `level`
- * first. Naturally gives a spread (mostly at-level, a couple either side)
- * without a hand-built distribution - used to build one student's
- * personalized homework set.
+ * Pick up to `n` distinct challenge ids from `items`, favouring ones within
+ * one difficulty band of `target`, randomised rather than always the same
+ * closest set for a given level.
+ */
+function pickNear(items: { id: string; difficulty: number }[], target: number, n: number): string[] {
+  const near = items.filter((c) => Math.abs(c.difficulty - target) <= 1);
+  const source = near.length >= n ? near : items;
+  return shuffled(source)
+    .slice(0, n)
+    .map((c) => c.id);
+}
+
+/**
+ * Pick up to `count` distinct challenges from a pool, randomised and
+ * favouring difficulty near `level` - used to build one student's
+ * personalized homework set. When the pool spans more than one topic (a
+ * teacher selecting several topics at once), draws round-robin across
+ * those topics first so the set is a genuine mix rather than leaving
+ * variety to chance on a merged, difficulty-sorted pool.
  */
 export function pickHomeworkSet(
-  pool: { id: string; difficulty: number }[],
+  pool: { id: string; difficulty: number; topic?: string }[],
   level: number,
   count: number,
 ): string[] {
   const target = Math.round(level);
-  const sorted = [...pool].sort(
-    (a, b) => Math.abs(a.difficulty - target) - Math.abs(b.difficulty - target),
-  );
-  return sorted.slice(0, count).map((c) => c.id);
+  const topics = Array.from(new Set(pool.map((c) => c.topic).filter((t): t is string => !!t)));
+
+  if (topics.length <= 1) {
+    return pickNear(pool, target, count);
+  }
+
+  const perTopic = Math.ceil(count / topics.length);
+  const used = new Set<string>();
+  const picked: string[] = [];
+  for (const t of topics) {
+    const items = pool.filter((c) => c.topic === t && !used.has(c.id));
+    const ids = pickNear(items, target, perTopic);
+    ids.forEach((id) => used.add(id));
+    picked.push(...ids);
+  }
+  // Round-robin can slightly overshoot count - trim it down, shuffled so
+  // it isn't always the last topic in the list that loses a slot.
+  return shuffled(picked).slice(0, count);
 }
 
 /**

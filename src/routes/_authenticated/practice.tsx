@@ -74,6 +74,16 @@ function Practice() {
   const levelFor = (topic: string) =>
     Number(data?.skills.find((s) => s.topic === topic && s.track === track)?.level ?? 1);
 
+  // Average skill across every topic they've actually practised in this
+  // track - the mixed boss battle pulls from topics they've completed
+  // (via onlySlugs below), so it should reflect real ability, not a flat
+  // guess.
+  const overallLevel = () => {
+    const relevant = (data?.skills ?? []).filter((s) => s.track === track);
+    if (relevant.length === 0) return 2;
+    return relevant.reduce((sum, s) => sum + Number(s.level), 0) / relevant.length;
+  };
+
   // GCSE topics stay locked in Practice until at least one of their lessons
   // is complete - practising unfamiliar wording/content is exactly what
   // confused students. A-level has no lesson content yet, so it's exempt.
@@ -92,7 +102,10 @@ function Practice() {
       : undefined;
 
   const start = async (topic: string | undefined, mode: "practice" | "boss") => {
-    const level = topic ? levelFor(topic) : 2;
+    // Mixed boss battles (no single topic) pull from every topic they've
+    // completed at once - pitched a notch above their current average so
+    // it's a genuine stretch, not their everyday level.
+    const level = topic ? levelFor(topic) : Math.min(5, overallLevel() + 1);
     const challenge = await pickChallenge({
       track,
       ...(topic ? { topic } : {}),
