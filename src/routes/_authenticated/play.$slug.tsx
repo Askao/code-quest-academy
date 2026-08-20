@@ -226,6 +226,14 @@ function Play() {
     return <p className="text-muted-foreground">Loading challenge…</p>;
   }
 
+  // Came from a lesson's task list: show where this task sits in that
+  // lesson so it doesn't feel like an anonymous challenge dropped in
+  // isolation.
+  const lessonTasks = search.lesson ? tasksForLesson(search.lesson) : [];
+  const requiredLessonTasks = lessonTasks.filter((t) => !t.stretch);
+  const isStretchTask = lessonTasks.some((t) => t.slug === challenge.slug && t.stretch);
+  const taskPosition = requiredLessonTasks.findIndex((t) => t.slug === challenge.slug);
+
   return (
     <div className="space-y-6">
       <div className="flex flex-wrap items-center gap-3">
@@ -242,6 +250,15 @@ function Play() {
         {challenge.part ? (
           <span className="rounded-full bg-secondary px-3 py-1 font-mono text-xs text-foreground">
             Part {challenge.part}
+          </span>
+        ) : null}
+        {isStretchTask ? (
+          <span className="rounded-full bg-primary/15 px-3 py-1 font-mono text-xs text-primary">
+            ⭐ Extra challenge
+          </span>
+        ) : taskPosition >= 0 ? (
+          <span className="rounded-full bg-secondary px-3 py-1 font-mono text-xs text-foreground">
+            Task {taskPosition + 1} of {requiredLessonTasks.length}
           </span>
         ) : null}
         {search.mode === "boss" && remaining !== null ? (
