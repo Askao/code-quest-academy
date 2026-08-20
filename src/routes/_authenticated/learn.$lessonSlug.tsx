@@ -1,6 +1,6 @@
 import { createFileRoute, Link } from "@tanstack/react-router";
 import { useQuery, useQueryClient } from "@tanstack/react-query";
-import { useState } from "react";
+import { useEffect, useState } from "react";
 import { toast } from "sonner";
 import { supabase } from "@/integrations/supabase/client";
 import { useAuth } from "@/hooks/useAuth";
@@ -12,9 +12,11 @@ import {
   isLessonComplete,
   isTopicComplete,
   lessonsForTopic,
+  QUIZZES,
   quizForLesson,
   tasksForLesson,
   topicsWithLessons,
+  type QuizQuestion,
 } from "@/lib/content";
 
 const TIER_LABEL: Record<number, string> = {
@@ -155,6 +157,84 @@ function QuickCheck({ lessonSlug, alreadyPassed }: { lessonSlug: string; already
   );
 }
 
+/**
+ * A single question pulled from an earlier, already-passed lesson's quiz -
+ * shown once a lesson is otherwise complete, before "Next lesson" appears.
+ * Not persisted anywhere; the point is a light, low-stakes prompt each time
+ * a student reaches this point, not a permanent record.
+ */
+function RecapCheck({ pool, onPassed }: { pool: QuizQuestion[]; onPassed: () => void }) {
+  const [question] = useState(() => pool[Math.floor(Math.random() * pool.length)]!);
+  const [answer, setAnswer] = useState<string | null>(null);
+  const [submitted, setSubmitted] = useState(false);
+  const correct = answer === question.answer;
+
+  const submit = () => {
+    setSubmitted(true);
+    if (answer === question.answer) onPassed();
+  };
+
+  const retry = () => {
+    setAnswer(null);
+    setSubmitted(false);
+  };
+
+  return (
+    <div className="mt-5 rounded-lg border border-warning/40 bg-warning/5 p-4">
+      <p className="text-sm font-medium text-warning">↺ Quick recap</p>
+      <p className="mt-1 text-xs text-muted-foreground">
+        One question from something you've already covered, before you move on.
+      </p>
+      <p className="mt-3 text-sm font-medium">{question.question}</p>
+      <div className="mt-2 space-y-1.5">
+        {question.options.map((option) => {
+          const chosen = answer === option;
+          const isCorrect = option === question.answer;
+          return (
+            <label
+              key={option}
+              className={`flex cursor-pointer items-center gap-2 rounded-md border p-2 text-sm transition-colors ${
+                submitted
+                  ? isCorrect
+                    ? "border-success/50 bg-success/10"
+                    : chosen
+                      ? "border-destructive/50 bg-destructive/10"
+                      : "border-border"
+                  : chosen
+                    ? "border-primary/60 bg-secondary/40"
+                    : "border-border hover:bg-secondary/30"
+              }`}
+            >
+              <input
+                type="radio"
+                name="recap-check"
+                className="accent-primary"
+                disabled={submitted}
+                checked={chosen}
+                onChange={() => setAnswer(option)}
+              />
+              {option}
+            </label>
+          );
+        })}
+      </div>
+      {submitted ? (
+        <p className="mt-2 text-xs text-muted-foreground">{question.explanation}</p>
+      ) : null}
+      {submitted && !correct ? (
+        <Button size="sm" variant="secondary" className="mt-3" onClick={retry}>
+          Try again
+        </Button>
+      ) : null}
+      {!submitted ? (
+        <Button size="sm" className="mt-3" disabled={!answer} onClick={submit}>
+          Check
+        </Button>
+      ) : null}
+    </div>
+  );
+}
+
 function LessonPage() {
   const { lessonSlug } = Route.useParams();
   const { user } = useAuth();
@@ -207,6 +287,16 @@ function LessonPage() {
   const lessonQuiz = quizForLesson(lesson.slug);
   const quizGateOpen = lessonQuiz.length === 0 || quizPassed.has(lesson.slug);
   const allRequiredPassed = requiredTasks.every((t) => passed.has(t.slug));
+  const lessonComplete = allRequiredPassed && quizGateOpen;
+
+  // A quick question from an earlier, already-passed lesson - required
+  // once before "Next lesson" appears, so recap happens as part of moving
+  // through the material rather than only via the separate /recap page.
+  const recapPool = QUIZZES.filter(
+    (q) => q.lessonSlug !== lesson.slug && quizPassed.has(q.lessonSlug),
+  );
+  const [recapPassed, setRecapPassed] = useState(false);
+  useEffect(() => setRecapPassed(false), [lesson.slug]);
 
   const topicOrder = topicsWithLessons(lesson.track);
   const topicIndex = topicOrder.indexOf(lesson.topic);
@@ -385,7 +475,9 @@ function LessonPage() {
               )}
             </div>
           ) : null}
-          {next ? (
+          {lessonComplete && recapPool.length > 0 && !recapPassed ? (
+            <RecapCheck pool={recapPool} onPassed={() => setRecapPassed(true)} />
+          ) : next ? (
             <Button asChild variant="secondary" className="mt-5 w-full">
               <Link to="/learn/$lessonSlug" params={{ lessonSlug: next.slug }}>
                 Next: {next.title}
