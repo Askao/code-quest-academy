@@ -13,10 +13,10 @@
     {
       "slug": "gcse-fundamentals-2",
       "title": "Data types",
-      "summary": "The four data types OCR expects you to know, and how to check one.",
-      "notes": "Every value has a **data type**, which decides what kind of thing it is and what you can do with it. OCR's specification names four you need to know:\n\n| OCR name | Python type | Example |\n| --- | --- | --- |\n| Integer | `int` | `7`, `-3`, `0` — a whole number |\n| Real | `float` | `3.5`, `-0.2` — a number with a decimal point |\n| String | `str` | `\"hello\"` — text, in quotes |\n| Boolean | `bool` | `True` or `False` — exactly one of two values |\n\nUse the built-in `type()` function to check what type a value is: `type(7)` reports `int`.\n\n**Careful:** OCR's exam pseudocode also lists a *character* data type (a single letter). Python doesn't have a separate character type — a single character is just a string of length 1, e.g. `\"a\"`. If an OCR question asks for a character, a one-letter string is the Python answer.\n\nMixing types incorrectly causes errors: `\"Score: \" + 7` crashes, because Python won't silently join text and a number. You have to convert the number to a string first (the next lesson covers this).",
-      "worked_example": "# Check the type of a few different values\nprint(type(7))\nprint(type(3.5))\nprint(type(\"hello\"))\nprint(type(True))",
-      "worked_example_note": "`type()` is mainly a tool for checking your understanding while you learn — you won't normally need it in a finished program."
+      "summary": "The four data types OCR expects you to know, and how to pick the right one.",
+      "notes": "Every value has a **data type**, which decides what kind of thing it is and what you can do with it. OCR's specification names four you need to know:\n\n| OCR name | Python type | Example |\n| --- | --- | --- |\n| Integer | `int` | `7`, `-3`, `0` — a whole number |\n| Real | `float` | `3.5`, `-0.2` — a number with a decimal point |\n| String | `str` | `\"hello\"` — text, in quotes |\n| Boolean | `bool` | `True` or `False` — exactly one of two values |\n\nPicking the right type matters: a whole number like an age should be an integer, a measurement like a height should usually be a real number (it might have a decimal part), and text always needs to be a string, in quotes.\n\n**Careful:** OCR's exam pseudocode also lists a *character* data type (a single letter). Python doesn't have a separate character type — a single character is just a string of length 1, e.g. `\"a\"`. If an OCR question asks for a character, a one-letter string is the Python answer.\n\nMixing types incorrectly causes errors: `\"Score: \" + 7` crashes, because Python won't silently join text and a number. You have to convert the number to a string first (the next lesson covers this).",
+      "worked_example": "# Store a few different kinds of data, each in its correct type\nage = 15\nheight = 1.75\nname = \"Ada\"\nis_raining = True\nprint(age)\nprint(height)\nprint(name)\nprint(is_raining)",
+      "worked_example_note": "age is a whole number, so it's an integer. height has a decimal part, so it's a real number. name is text, so it needs quotes to be a string. is_raining is exactly True or False, so it's a Boolean."
     },
     {
       "slug": "gcse-fundamentals-3",
@@ -65,10 +65,10 @@
     },
     {
       "lessonSlug": "gcse-fundamentals-2",
-      "question": "What does calling type(True) report?",
-      "options": ["int", "str", "bool", "float"],
-      "answer": "bool",
-      "explanation": "True and False are Boolean values, Python's bool type."
+      "question": "Which OCR data type would you use for a value that is exactly True or False?",
+      "options": ["Boolean", "Integer", "String", "Real"],
+      "answer": "Boolean",
+      "explanation": "A value that can only ever be True or False is a Boolean — Python's bool type."
     },
     {
       "lessonSlug": "gcse-fundamentals-3",
@@ -119,10 +119,10 @@
       "starter": "", "hints": ["A common pattern: temp = a, then a = b, then b = temp. Work through what each line does to a, b and temp on paper first.", "a = int(input()), b = int(input()), temp = a, a = b, b = temp, then print(a) and print(b)"],
       "tests": [{ "stdin": "3\n9", "expect": "9\n3" }, { "stdin": "-1\n5", "expect": "5\n-1" }] },
     { "slug": "gcse-fundamentals-t2-01", "lesson": 2, "tier": 2, "difficulty": 1, "xp": 15,
-      "title": "Name that type",
-      "brief": "A program stores the value 42. Print the name of its Python data type using type().",
-      "starter": "", "hints": ["print(type(42))"],
-      "tests": [{ "expect": "<class 'int'>" }] },
+      "title": "Keep the decimal place",
+      "brief": "A weather app stores temperature readings, which may include decimal places. Input a temperature reading. Add 10 to it. Print the result.\n\nFor example, if 5.5 is entered, print 15.5.",
+      "starter": "", "hints": ["The reading may include decimals, so store it as a real number, not a whole number — otherwise any decimal part would be lost.", "reading = float(input()), then print(reading + 10)"],
+      "tests": [{ "stdin": "5.5", "expect": "15.5" }, { "stdin": "2.25", "expect": "12.25" }] },
     { "slug": "gcse-fundamentals-t2-02", "lesson": 2, "tier": 2, "difficulty": 2, "xp": 15,
       "title": "Pick the right type",
       "brief": "A school stores each student's exam score as a whole number, out of 100. Input a score. Store it as an integer, so any decimal point a teacher accidentally types is removed. Print the score.\n\nFor example, if 87 is entered, print 87.",
