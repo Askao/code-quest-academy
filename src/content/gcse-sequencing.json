@@ -44,7 +44,7 @@
       "title": "Print a message",
       "brief": "Input one line of text. Print it back exactly as it was typed.",
       "starter": "",
-      "hints": ["Reading and printing are two separate steps — store what you read before printing it.", "text = input(), then print(text)"],
+      "hints": ["Reading and printing are two separate steps — store what you read before printing it.", "Store the result of input() under a name, then print that same name."],
       "tests": [{ "stdin": "hello", "expect": "hello" }, { "stdin": "Computer Science", "expect": "Computer Science" }]
     },
     {
@@ -52,7 +52,7 @@
       "title": "Double a number",
       "brief": "Input a whole number. Print it multiplied by 2.\n\nFor example, if 5 is entered, print 10.",
       "starter": "",
-      "hints": ["Text can't be multiplied like a number — convert it with int() first.", "number = int(input()), then print(number * 2)"],
+      "hints": ["Text can't be multiplied like a number — convert it with int() first.", "Cast the input to a whole number, then multiply the stored value before printing it."],
       "tests": [{ "stdin": "5", "expect": "10" }, { "stdin": "0", "expect": "0" }, { "stdin": "-3", "expect": "-6" }]
     },
     {
@@ -60,7 +60,7 @@
       "title": "Add two numbers",
       "brief": "Input two whole numbers, one per line. Print their total.",
       "starter": "",
-      "hints": ["Call input() twice and store each value in its own variable before adding them.", "a = int(input()), b = int(input()), then print(a + b)"],
+      "hints": ["Call input() twice and store each value in its own variable before adding them.", "Cast both inputs to whole numbers, store each separately, then add the two variables together."],
       "tests": [{ "stdin": "3\n4", "expect": "7" }, { "stdin": "20\n-5", "expect": "15" }]
     },
     {
@@ -68,7 +68,7 @@
       "title": "Full name",
       "brief": "Input a first name, then a surname — two separate lines. Print them on one line, separated by a single space.\n\nFor example, Ada then Lovelace prints as `Ada Lovelace`.",
       "starter": "",
-      "hints": ["An f-string keeps the spacing easy to see and get right.", "first = input(), last = input(), then print(f\"{first} {last}\")"],
+      "hints": ["An f-string keeps the spacing easy to see and get right.", "An f-string like `f\"{a} {b}\"` places a literal space between two variables."],
       "tests": [{ "stdin": "Ada\nLovelace", "expect": "Ada Lovelace" }, { "stdin": "Alan\nTuring", "expect": "Alan Turing" }]
     },
     {
@@ -76,7 +76,7 @@
       "title": "Name, reversed",
       "brief": "Read a first name, then a surname — two separate lines, the same as before. This time print the surname first, then the first name, each on its own line (not on one line together).\n\nFor example, if the input is Ada then Lovelace, print Lovelace then Ada, each on its own line.",
       "starter": "",
-      "hints": ["You already have both values stored — this is about the order you print() them in, not about reading them differently.", "first = input(), last = input(), then print(last) followed by print(first)"],
+      "hints": ["You already have both values stored — this is about the order you print() them in, not about reading them differently.", "Store both values first — then you're free to print() them in whichever order is asked for."],
       "tests": [{ "stdin": "Ada\nLovelace", "expect": "Lovelace\nAda" }, { "stdin": "Alan\nTuring", "expect": "Turing\nAlan" }]
     },
     {
@@ -84,7 +84,7 @@
       "title": "Seconds to minutes",
       "brief": "A stopwatch records a time in seconds. Input the number of seconds. Display the whole minutes and the remaining seconds in the format `<minutes> min <seconds> s`.\n\nFor example, 150 seconds prints as `2 min 30 s`.",
       "starter": "",
-      "hints": ["// gives whole minutes (how many whole lots of 60 fit in). % gives the seconds left over.", "seconds = int(input()), mins = seconds // 60, secs = seconds % 60, then print(f\"{mins} min {secs} s\")"],
+      "hints": ["// gives whole minutes (how many whole lots of 60 fit in). % gives the seconds left over.", "Use // for the whole-minutes part and % for the remainder, then build the output with an f-string in the exact format shown."],
       "tests": [{ "stdin": "150", "expect": "2 min 30 s" }, { "stdin": "59", "expect": "0 min 59 s" }, { "stdin": "600", "expect": "10 min 0 s" }]
     },
     {
@@ -92,7 +92,7 @@
       "title": "Average of three marks",
       "brief": "A teacher records three test marks. Input the three marks, one per line. Display the mean of all three, rounded to 1 decimal place.\n\nFor example, marks of 10, 11 and 12 give a mean of 11.0.",
       "starter": "",
-      "hints": ["Add the three marks together, then divide the total by 3.", "total = a + b + c, then print(round(total / 3, 1))"],
+      "hints": ["Add the three marks together, then divide the total by 3.", "Add all three values together, divide by how many there are, then round() the result to the stated decimal places."],
       "tests": [{ "stdin": "10\n11\n12", "expect": "11.0" }, { "stdin": "7\n8\n10", "expect": "8.3" }]
     },
     {
@@ -100,7 +100,7 @@
       "title": "Change from a note",
       "brief": "A customer pays with a £10 note. Input the cost of the item as a decimal. Display the change, rounded to 2 decimal places.\n\nFor example, an item costing 3.5 gives change of 6.5.",
       "starter": "",
-      "hints": ["float(input()) reads a decimal value. Change is 10 minus the cost.", "cost = float(input()), then print(round(10 - cost, 2))"],
+      "hints": ["float(input()) reads a decimal value. Change is 10 minus the cost.", "Cast to a float, work out the difference from the fixed amount given, then round the result before printing."],
       "tests": [{ "stdin": "3.5", "expect": "6.5" }, { "stdin": "9.99", "expect": "0.01" }]
     },
     {
@@ -108,7 +108,7 @@
       "title": "Perimeter and area",
       "brief": "Input the width, then the height, of a rectangle — both whole numbers. Display the area on the first line. Display the perimeter on the second line.\n\nFor example, a width of 3 and height of 4 give an area of 12 and a perimeter of 14.",
       "starter": "",
-      "hints": ["Area is width times height. Perimeter is 2 * (width + height).", "width = int(input()), height = int(input()), then print(width * height) followed by print(2 * (width + height))"],
+      "hints": ["Area is width times height. Perimeter is 2 * (width + height).", "Cast both inputs, then print each calculated result on its own line, in the order asked for."],
       "tests": [{ "stdin": "3\n4", "expect": "12\n14" }, { "stdin": "5\n5", "expect": "25\n20" }]
     },
     {
@@ -116,7 +116,7 @@
       "title": "Tip, total and share",
       "brief": "A group of friends is splitting a restaurant bill.\n\nRead the bill amount as a decimal. Read the tip percentage as a whole number, for example 15 for 15%. Read the number of people splitting the bill as a whole number.\n\nCalculate the tip amount: bill × tip percentage ÷ 100. Calculate the total: bill plus tip. Calculate each person's share: total ÷ number of people.\n\nPrint three lines, all rounded to 2 decimal places, in the format:\n```\nTip: 6.0\nTotal: 46.0\nEach pays: 11.5\n```",
       "starter": "",
-      "hints": ["Work out tip, then total, then share, storing each in its own variable before you print anything.", "bill = float(input()), tip_percent = int(input()), people = int(input()), tip = round(bill * tip_percent / 100, 2), total = round(bill + tip, 2), share = round(total / people, 2)"],
+      "hints": ["Work out tip, then total, then share, storing each in its own variable before you print anything.", "Each value in the notes' formula depends on the one before it — round each as you go, not just at the very end."],
       "tests": [{ "stdin": "40\n15\n4", "expect": "Tip: 6.0\nTotal: 46.0\nEach pays: 11.5" }, { "stdin": "100\n20\n5", "expect": "Tip: 20.0\nTotal: 120.0\nEach pays: 24.0" }]
     },
     {
@@ -124,7 +124,7 @@
       "title": "Sponsored walk",
       "brief": "A student is doing a sponsored walk for charity. Sponsors pay a fixed amount for every complete kilometre walked.\n\nRead the distance walked in kilometres, a whole number. Read the amount paid per kilometre, a decimal. Report the total amount raised, rounded to 2 decimal places.\n\nFor example, walking 5 km at £2.50 per km raises £12.50.",
       "starter": "",
-      "hints": ["Read the distance first, then the rate per kilometre, in that order.", "distance = int(input()), rate = float(input()), then print(round(distance * rate, 2))"],
+      "hints": ["Read the distance first, then the rate per kilometre, in that order.", "Cast each input to the right type, multiply them together, then round the result before printing."],
       "tests": [{ "stdin": "5\n2.5", "expect": "12.5" }, { "stdin": "12\n1.75", "expect": "21.0" }]
     },
     {
@@ -132,7 +132,7 @@
       "title": "Cinema booking",
       "brief": "A cinema charges £7.50 per adult ticket and £4.25 per child ticket — these prices are fixed, so your program doesn't need to read them in.\n\nRead the number of adults. Read the number of children. Output the total cost of the booking, rounded to 2 decimal places.\n\nFor example, 2 adults and 3 children costs £27.75 in total.",
       "starter": "",
-      "hints": ["Work out the adult subtotal and the child subtotal separately, then add them together.", "adults = int(input()), children = int(input()), total = adults * 7.5 + children * 4.25, then print(round(total, 2))"],
+      "hints": ["Work out the adult subtotal and the child subtotal separately, then add them together.", "Multiply each count by its fixed price to get a subtotal, add the subtotals together, then round the result."],
       "tests": [{ "stdin": "2\n3", "expect": "27.75" }, { "stdin": "0\n4", "expect": "17.0" }]
     },
     {
@@ -140,7 +140,7 @@
       "title": "Fuel efficiency",
       "brief": "A driver wants to know how economical a journey was.\n\nRead the distance travelled in miles, a decimal. Read the litres of fuel used, a decimal. Report the miles travelled per litre, correct to 2 decimal places.\n\nFor example, travelling 100 miles using 8 litres gives 12.5 miles per litre.",
       "starter": "",
-      "hints": ["Divide distance by litres used. Round only right at the end, when you print the result.", "distance = float(input()), litres = float(input()), then print(round(distance / litres, 2))"],
+      "hints": ["Divide distance by litres used. Round only right at the end, when you print the result.", "Cast both values to floats, divide one by the other, then round only the final result."],
       "tests": [{ "stdin": "100\n8", "expect": "12.5" }, { "stdin": "250.5\n21.2", "expect": "11.82" }]
     },
     {
@@ -148,7 +148,7 @@
       "title": "Packing boxes",
       "brief": "A warehouse packs items into boxes that hold 12 items each.\n\nRead the number of items in stock. State how many full boxes can be packed, and how many items would be left unpacked, in the format `<boxes> full boxes, <items left> left over`.\n\nAlways write \"boxes\" even when the answer is 1 (don't worry about \"box\" vs \"boxes\" grammar).\n\nFor example, 51 items gives 4 full boxes, with 3 left over.",
       "starter": "",
-      "hints": ["Whole boxes uses //. Items left over uses %.", "items = int(input()), boxes = items // 12, left = items % 12, then print(f\"{boxes} full boxes, {left} left over\")"],
+      "hints": ["Whole boxes uses //. Items left over uses %.", "// gives the whole number of groups, % gives what's left over — build the final line with an f-string."],
       "tests": [{ "stdin": "51", "expect": "4 full boxes, 3 left over" }, { "stdin": "12", "expect": "1 full boxes, 0 left over" }, { "stdin": "7", "expect": "0 full boxes, 7 left over" }]
     },
     {
@@ -156,7 +156,7 @@
       "title": "Sports club membership",
       "brief": "A sports club is writing software to work out annual membership costs.\n\nMembership costs £25 per month. Members also pay a one-off joining fee of £15.\n\nWrite a program that:\n- reads the number of months a new member wishes to join for\n- calculates the total amount payable, including the joining fee\n- outputs the total in the format `Total: £<amount>`\n\nAssume the total is always a whole number of pounds. For example, 12 months costs £315 in total (12 × 25 + 15).",
       "starter": "",
-      "hints": ["Months × 25, then add the fixed joining fee of 15.", "months = int(input()), total = months * 25 + 15, then print(f\"Total: £{total}\")"],
+      "hints": ["Multiply the number of months by the monthly cost, then add the fixed one-off fee.", "Cast the input, work out the total with the formula from the notes, then print it in an f-string."],
       "tests": [{ "stdin": "12", "expect": "Total: £315" }, { "stdin": "1", "expect": "Total: £40" }]
     },
     {
@@ -164,7 +164,7 @@
       "title": "Temperature conversion utility",
       "brief": "A weather station stores temperatures in degrees Celsius but its display board works in degrees Fahrenheit.\n\nThe conversion is: Fahrenheit = Celsius × 1.8 + 32.\n\nRead a temperature in degrees Celsius, which may include a decimal part. Output both the original Celsius value and the converted Fahrenheit value, the Fahrenheit rounded to 1 decimal place, in the format `<celsius>C = <fahrenheit>F`.\n\nFor example, 21.5C converts to 70.7F.",
       "starter": "",
-      "hints": ["Store the Celsius value in its own variable so you still have it to print after working out Fahrenheit.", "c = float(input()), f = round(c * 1.8 + 32, 1), then print(f\"{c}C = {f}F\")"],
+      "hints": ["Store the Celsius value in its own variable so you still have it to print after working out Fahrenheit.", "Apply the conversion formula given in the notes to the cast input, round the result, then print both values in an f-string."],
       "tests": [{ "stdin": "21.5", "expect": "21.5C = 70.7F" }, { "stdin": "0", "expect": "0.0C = 32.0F" }]
     },
     {
@@ -172,7 +172,7 @@
       "title": "Payroll slip",
       "brief": "A small business needs a program to produce a simple pay summary.\n\nAn employee is paid an hourly rate for the hours they work. Tax of 20% is deducted from the gross pay.\n\nRead the hours worked, a whole number. Read the hourly rate, a decimal. Output three lines, all rounded to 2 decimal places, in the format:\n\n```\nGross: 300.0\nTax: 60.0\nNet: 240.0\n```\n\nGross pay is hours × rate. Tax is 20% of the gross pay. Net pay is gross pay minus tax.",
       "starter": "",
-      "hints": ["Work out gross, then tax, then net — each depends on the one before it, so store them in that order.", "gross = hours * rate, tax = gross * 0.2, net = gross - tax"],
+      "hints": ["Work out gross, then tax, then net — each depends on the one before it, so store them in that order.", "Gross is a multiplication, tax is a percentage of gross, net is gross minus tax — three variables, in that order."],
       "tests": [{ "stdin": "30\n10", "expect": "Gross: 300.0\nTax: 60.0\nNet: 240.0" }, { "stdin": "37\n11.5", "expect": "Gross: 425.5\nTax: 85.1\nNet: 340.4" }]
     },
     {
@@ -180,7 +180,7 @@
       "title": "Delivery charge calculator",
       "brief": "An online shop calculates delivery charges by parcel weight.\n\nThe charge is 50p per kilogram, plus a fixed handling fee of £2.99. The shop always rounds the final charge to 2 decimal places.\n\nRead the weight of a parcel in kilograms, a decimal value. Display the delivery charge in the format `Delivery: £<charge>`.\n\nFor example, a parcel weighing 5 kg costs £5.49 to deliver (5 × 0.50 + 2.99).",
       "starter": "",
-      "hints": ["50p is 0.5 in pounds. Add the fixed handling fee before rounding, not after.", "weight = float(input()), charge = round(weight * 0.5 + 2.99, 2), then print(f\"Delivery: £{charge}\")"],
+      "hints": ["50p is 0.5 in pounds. Add the fixed handling fee before rounding, not after.", "Multiply the weight by the per-kilogram rate, add the fixed fee, then round before printing in an f-string."],
       "tests": [{ "stdin": "5", "expect": "Delivery: £5.49" }, { "stdin": "2.5", "expect": "Delivery: £4.24" }]
     },
     {
@@ -188,7 +188,7 @@
       "title": "Simple loan estimate",
       "brief": "A bank offers simple-interest loans.\n\nRead the loan amount, a decimal. Read the annual interest rate as a whole percentage, for example 5 for 5%. Read the loan term in whole years.\n\nCalculate the total amount to repay: loan amount plus interest, where interest = loan amount × rate ÷ 100 × years.\n\nCalculate the monthly repayment: total ÷ (years × 12), rounded to 2 decimal places.\n\nPrint two lines, in the format:\n```\nTotal: 1320.0\nMonthly: 55.0\n```\n\nFor example, a loan of 1200 at 5% over 2 years gives a total of 1320.0 and monthly payments of 55.0.",
       "starter": "",
-      "hints": ["Work out interest first, then total, then monthly — each step depends on the one before it.", "amount = float(input()), rate = int(input()), years = int(input()), interest = amount * rate / 100 * years, total = amount + interest, monthly = round(total / (years * 12), 2)"],
+      "hints": ["Work out interest first, then total, then monthly — each step depends on the one before it.", "Cast all three inputs, then build each new variable from the ones before it, following the formulas in the brief."],
       "tests": [{ "stdin": "1200\n5\n2", "expect": "Total: 1320.0\nMonthly: 55.0" }, { "stdin": "2000\n10\n1", "expect": "Total: 2200.0\nMonthly: 183.33" }]
     }
   ]

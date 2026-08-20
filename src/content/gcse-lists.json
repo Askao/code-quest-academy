@@ -44,7 +44,7 @@
       "title": "First and last",
       "brief": "Input three words, one per line, into a list. Print the first item, then the last item, each on its own line.",
       "starter": "",
-      "hints": ["Index 0 is the first item. The last item's index is len(items) - 1.", "words = [], for i in range(3): words.append(input()), then print(words[0]) and print(words[-1])"],
+      "hints": ["Index 0 is the first item. The last item's index is len(items) - 1.", "Build the list first with .append() inside a loop, then use index 0 and index -1 to grab the first and last."],
       "tests": [{ "stdin": "a\nb\nc", "expect": "a\nc" }, { "stdin": "red\ngreen\nblue", "expect": "red\nblue" }]
     },
     {
@@ -52,7 +52,7 @@
       "title": "List total",
       "brief": "Input four whole numbers, one per line, into a list. Print the total of the list.",
       "starter": "",
-      "hints": ["Python's built-in sum() adds up every item in a list for you.", "numbers = [], for i in range(4): numbers.append(int(input())), then print(sum(numbers))"],
+      "hints": ["Python's built-in sum() adds up every item in a list for you.", "Build the list with .append() inside a loop, then pass the whole list into sum()."],
       "tests": [{ "stdin": "1\n2\n3\n4", "expect": "10" }, { "stdin": "5\n5\n0\n0", "expect": "10" }]
     },
     {
@@ -60,7 +60,7 @@
       "title": "Print in reverse",
       "brief": "Input four words, one per line, into a list. Print them one per line, in the opposite order to how they were entered.",
       "starter": "",
-      "hints": ["for item in reversed(words): loops through a list back to front.", "words = [], for i in range(4): words.append(input()), then for word in reversed(words): print(word)"],
+      "hints": ["for item in reversed(words): loops through a list back to front.", "Build the list first, then loop over the reversed list to go through it back to front."],
       "tests": [{ "stdin": "a\nb\nc\nd", "expect": "d\nc\nb\na" }, { "stdin": "one\ntwo\nthree\nfour", "expect": "four\nthree\ntwo\none" }]
     },
     {
@@ -68,7 +68,7 @@
       "title": "Middle word",
       "brief": "Read a whole number N (this will always be odd). Then read N words, one per line, into a list. Print the middle word — the one exactly in the centre of the list.\n\nFor example, if N is 5 and the words are a, b, c, d, e, the middle one is c (there are two words before it and two after).",
       "starter": "",
-      "hints": ["For a list with an odd number of items, the middle index is len(items) // 2 — integer division rounds down, which lands exactly in the centre for an odd-length list.", "n = int(input()), words = [], for i in range(n): words.append(input()), then print(words[n // 2])"],
+      "hints": ["For a list with an odd number of items, integer division on the length lands exactly in the centre.", "Build the list first, then use integer division on its length to find the middle index."],
       "tests": [{ "stdin": "5\na\nb\nc\nd\ne", "expect": "c" }, { "stdin": "3\nx\ny\nz", "expect": "y" }]
     },
     {
@@ -76,7 +76,7 @@
       "title": "Highest and lowest",
       "brief": "A shop records five daily sales figures, entered one per line. Display the highest figure on the first line. Display the lowest figure on the second line.",
       "starter": "",
-      "hints": ["Python's built-in max() and min() work directly on a list.", "sales = [], for i in range(5): sales.append(int(input())), then print(max(sales)) and print(min(sales))"],
+      "hints": ["Python's built-in max() and min() work directly on a list.", "Build the list with .append() inside a loop, then pass it into max() and min() directly."],
       "tests": [{ "stdin": "3\n9\n1\n7\n5", "expect": "9\n1" }, { "stdin": "4\n4\n4\n4\n4", "expect": "4\n4" }]
     },
     {
@@ -84,7 +84,7 @@
       "title": "Search a register",
       "brief": "Five names are entered, one per line, followed by a sixth line containing a name to search for. Display the position of that name in the list, counting from 1 (so the first name is position 1). If the name isn't in the list, display `Not found` instead.\n\nFor example, if the list is ada, alan, grace, lin, sam and the search name is grace, print 3 (grace is the third name).",
       "starter": "",
-      "hints": ["Python's list positions (indexes) count from 0, but this task wants positions counting from 1 — that's index + 1.", "names = [], for i in range(5): names.append(input()), target = input(), if target in names: print(names.index(target) + 1), else: print(\"Not found\")"],
+      "hints": ["Python's list positions (indexes) count from 0, but this task wants positions counting from 1 — that's index + 1.", "Check whether the target is `in` the list before looking up its `.index()`, so a missing item doesn't crash the program."],
       "tests": [{ "stdin": "ada\nalan\ngrace\nlin\nsam\ngrace", "expect": "3" }, { "stdin": "ada\nalan\ngrace\nlin\nsam\nbob", "expect": "Not found" }]
     },
     {
@@ -92,7 +92,7 @@
       "title": "Count above average",
       "brief": "Six whole numbers are entered, one per line. Display how many of them are strictly greater than the mean (average) of all six.\n\nFor example, 1, 2, 3, 4, 5, 6 has a mean of 3.5 — three of the numbers (4, 5, 6) are greater than that, so print 3.",
       "starter": "",
-      "hints": ["Work out the mean of the whole list first — you need it before you can compare anything to it. Then loop through the list a second time to count.", "numbers = [], for i in range(6): numbers.append(int(input())), mean = sum(numbers) / 6, count = 0, for n in numbers: if n > mean: count = count + 1"],
+      "hints": ["Work out the mean of the whole list first — you need it before you can compare anything to it. Then loop through the list a second time to count.", "Work out the mean from the whole list first, then loop through the list a second time, comparing each item against that stored mean."],
       "tests": [{ "stdin": "1\n2\n3\n4\n5\n6", "expect": "3" }, { "stdin": "10\n10\n10\n10\n10\n10", "expect": "0" }]
     },
     {
@@ -100,7 +100,7 @@
       "title": "Second highest",
       "brief": "Read five distinct whole numbers, one per line, into a list. Print the second highest value in the list — not the highest, the next one down.\n\nFor example, 3, 9, 1, 7, 5 has 9 as the highest and 7 as the second highest, so print 7.",
       "starter": "",
-      "hints": ["sorted(numbers, reverse=True) arranges a copy of the list from highest to lowest. The second highest is then sitting at index 1 (the highest is at index 0).", "numbers = [], for i in range(5): numbers.append(int(input())), ordered = sorted(numbers, reverse=True), print(ordered[1])"],
+      "hints": ["sorted(list, reverse=True) arranges a copy of a list from highest to lowest — think about which index the second-highest value ends up at.", "Sort a copy of the list in descending order, then index into the sorted copy rather than the original."],
       "tests": [{ "stdin": "3\n9\n1\n7\n5", "expect": "7" }, { "stdin": "10\n8\n6\n4\n2", "expect": "8" }]
     },
     {

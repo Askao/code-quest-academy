@@ -44,7 +44,7 @@
       "title": "Repeat a word",
       "brief": "Input a word. Print it 3 times, one per line.",
       "starter": "",
-      "hints": ["for i in range(3): repeats the line inside it 3 times.", "word = input(), for i in range(3): print(word)"],
+      "hints": ["for i in range(3): repeats the line inside it 3 times.", "A for loop repeating `range(n)` times can print the same stored value each time round."],
       "tests": [{ "stdin": "hi", "expect": "hi\nhi\nhi" }, { "stdin": "loop", "expect": "loop\nloop\nloop" }]
     },
     {
@@ -52,7 +52,7 @@
       "title": "Count down",
       "brief": "Input a whole number N. Print every number from N down to 1, one per line.",
       "starter": "",
-      "hints": ["range(n, 0, -1) counts backwards from n down to (but not including) 0.", "n = int(input()), for i in range(n, 0, -1): print(i)"],
+      "hints": ["Counting backwards needs a third argument in range() to step by -1 instead of the default +1.", "range() can count down as well as up when given a negative step as its third argument."],
       "tests": [{ "stdin": "3", "expect": "3\n2\n1" }, { "stdin": "1", "expect": "1" }]
     },
     {
@@ -60,7 +60,7 @@
       "title": "Even numbers",
       "brief": "Input a whole number N. Print every even number from 2 up to and including N, one per line. If there are none (N is less than 2), print nothing.",
       "starter": "",
-      "hints": ["range(2, n + 1, 2) starts at 2 and steps up in twos, stopping once it would pass n.", "n = int(input()), for i in range(2, n + 1, 2): print(i)"],
+      "hints": ["Stepping by more than 1 each time needs a third argument in range() — a start, a stop, and a step size.", "range() takes a start, a stop, and a step size as three arguments, in that order."],
       "tests": [{ "stdin": "6", "expect": "2\n4\n6" }, { "stdin": "1", "expect": "" }]
     },
     {
@@ -68,7 +68,7 @@
       "title": "Star triangle",
       "brief": "Read a whole number N. Print a triangle of asterisks (*): on row 1 print one asterisk, on row 2 print two, and so on up to row N, which has N asterisks. Each row is on its own line, with no spaces.\n\nFor example, if N is 4, print:\n```\n*\n**\n***\n****\n```",
       "starter": "",
-      "hints": ["Python can repeat a string with *: \"*\" * 3 gives \"***\". Loop a row number from 1 to N and print that many asterisks each time.", "n = int(input()), for row in range(1, n + 1): print(\"*\" * row)"],
+      "hints": ["Python can repeat a string with *: \"*\" * 3 gives \"***\". Loop a row number from 1 to N and print that many asterisks each time.", "Loop a row number upward, printing that many repeated characters each time round."],
       "tests": [{ "stdin": "4", "expect": "*\n**\n***\n****" }, { "stdin": "1", "expect": "*" }]
     },
     {
@@ -76,7 +76,7 @@
       "title": "Five scores",
       "brief": "A teacher wants to total up 5 test scores. Input the 5 scores, one per line. Display the total.",
       "starter": "",
-      "hints": ["Set the total to 0 before the loop starts, then add each score to it inside the loop.", "total = 0, for i in range(5): total = total + int(input()), then print(total)"],
+      "hints": ["Set the total to 0 before the loop starts, then add each score to it inside the loop.", "Start a running total at 0 before the loop, then add each new cast value to it inside the loop."],
       "tests": [{ "stdin": "1\n2\n3\n4\n5", "expect": "15" }, { "stdin": "10\n10\n10\n10\n10", "expect": "50" }]
     },
     {
@@ -84,7 +84,7 @@
       "title": "Password retry",
       "brief": "A system keeps asking for a password until the user types `open`. Once they do, display how many attempts were needed in total (including the successful one), in the format `<count> attempts`.\n\nAlways write \"attempts\" even for 1 (don't worry about \"attempt\" vs \"attempts\" grammar).\n\nFor example, if the correct password is entered on the third try, print `3 attempts`.",
       "starter": "",
-      "hints": ["Count every attempt, including the correct one that ends the loop. Read the next attempt at the bottom of the loop, same shape as the lesson's sentinel example.", "count = 0, attempt = input(), while attempt != \"open\": count = count + 1, attempt = input(), then count = count + 1 for the final successful try, then print(f\"{count} attempts\")"],
+      "hints": ["Count every attempt, including the correct one that ends the loop. Read the next attempt at the bottom of the loop, same shape as the lesson's sentinel example.", "Increment the counter both inside the loop and once more for the final successful attempt that ends it."],
       "tests": [{ "stdin": "open", "expect": "1 attempts" }, { "stdin": "no\nnope\nopen", "expect": "3 attempts" }]
     },
     {
@@ -92,7 +92,7 @@
       "title": "Validate a mark",
       "brief": "A mark must be between 0 and 100 inclusive. Keep asking the user for a whole number until they enter a valid mark. Display the valid mark in the format `Accepted: <mark>`.\n\nFor example, if 55 is the first (valid) number entered, print `Accepted: 55`.",
       "starter": "",
-      "hints": ["Read one value first, then loop while it's out of range, reading a replacement each time — same shape as the lesson's validation example.", "mark = int(input()), while mark < 0 or mark > 100: mark = int(input()), then print(f\"Accepted: {mark}\")"],
+      "hints": ["Read one value first, then loop while it's out of range, reading a replacement each time — same shape as the lesson's validation example.", "A while loop can keep re-reading a value for as long as it falls outside the accepted range."],
       "tests": [{ "stdin": "55", "expect": "Accepted: 55" }, { "stdin": "120\n-4\n0", "expect": "Accepted: 0" }]
     },
     {
@@ -100,7 +100,7 @@
       "title": "Count the even numbers",
       "brief": "Read whole numbers, one per line, until the sentinel value 0 is entered. The 0 itself is not counted.\n\nCount how many of the numbers read before the 0 are even. Print the count.\n\nFor example, 3, 4, 6, 7, 0 has two even numbers before the sentinel (4 and 6), so print 2.",
       "starter": "",
-      "hints": ["Use the same read-loop-read-again pattern as the lesson's sentinel example, but add a check inside the loop for whether the current value is even (divisible by 2 with no remainder) before reading the next one.", "count = 0, value = int(input()), while value != 0: if value % 2 == 0: count = count + 1, value = int(input()), then print(count)"],
+      "hints": ["Use the same read-loop-read-again pattern as the lesson's sentinel example, but add a check inside the loop for whether the current value is even (divisible by 2 with no remainder) before reading the next one.", "An if statement inside the loop can check a property of the current value before you move on to reading the next one."],
       "tests": [{ "stdin": "3\n4\n6\n7\n0", "expect": "2" }, { "stdin": "0", "expect": "0" }, { "stdin": "2\n0", "expect": "1" }]
     },
     {
@@ -140,7 +140,7 @@
       "title": "Times table tester",
       "brief": "A primary school wants a program that tests a pupil on the 5 times table.\n\nThe program asks 5 questions. For question number n, the correct answer is n × 5 — so the first correct answer is 5, the second is 10, and so on.\n\nRead the pupil's answer to each question as a whole number. After all 5 questions:\n- print one line per question, in the format `Q<n> correct` or `Q<n> wrong`\n- then print a final line, in the format `Score: <correct>/5`\n\nFor example, if all 5 answers are correct, the final line is `Score: 5/5`.",
       "starter": "",
-      "hints": ["for n in range(1, 6): gives you the question numbers 1 to 5. The correct answer for question n is n * 5.", "Print the feedback for each question inside the loop, and keep a running count of how many were correct so you can print the score after the loop ends"],
+      "hints": ["A for loop over the question numbers can compare the user's answer against each question's own expected result.", "Print the feedback for each question inside the loop, and keep a running count of how many were correct so you can print the score after the loop ends."],
       "tests": [{ "stdin": "5\n10\n15\n20\n25", "expect": "Q1 correct\nQ2 correct\nQ3 correct\nQ4 correct\nQ5 correct\nScore: 5/5" }, { "stdin": "5\n11\n15\n0\n25", "expect": "Q1 correct\nQ2 wrong\nQ3 correct\nQ4 wrong\nQ5 correct\nScore: 3/5" }]
     },
     {
@@ -156,7 +156,7 @@
       "title": "Temperature range",
       "brief": "A weather station takes 6 temperature readings in one day, entered one per line as whole numbers (which may be negative).\n\nReport the highest reading, the lowest reading, and the range (highest minus lowest), each on its own line, in the format:\n```\nHighest: 8\nLowest: -3\nRange: 11\n```",
       "starter": "",
-      "hints": ["Track a highest-so-far and a lowest-so-far at the same time, both starting at the first reading — the same idea as tracking one running value, just doubled.", "highest = lowest = int(input()), then loop the remaining 5 readings, updating highest when a value is bigger and lowest when a value is smaller"],
+      "hints": ["Track a highest-so-far and a lowest-so-far at the same time, both starting at the first reading — the same idea as tracking one running value, just doubled.", "Set both running values from the first reading before the loop starts, then update whichever one changes as each new reading comes in."],
       "tests": [{ "stdin": "2\n8\n-3\n0\n5\n1", "expect": "Highest: 8\nLowest: -3\nRange: 11" }, { "stdin": "5\n5\n5\n5\n5\n5", "expect": "Highest: 5\nLowest: 5\nRange: 0" }]
     }
   ]
