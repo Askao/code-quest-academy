@@ -5,6 +5,7 @@ import { useAuth } from "@/hooks/useAuth";
 import { topicLabel } from "@/lib/game";
 import {
   LESSONS,
+  isLessonAssigned,
   isLessonComplete,
   isTopicComplete,
   tasksForLesson,
@@ -57,6 +58,33 @@ function LearnIndex() {
         .select("lesson_slug")
         .eq("user_id", user!.id)
         .eq("passed", true);
+      return new Set((data ?? []).map((r) => r.lesson_slug));
+    },
+  });
+
+  // Mirrors learn.$lessonSlug.tsx: an enrolled student's lessons stay
+  // locked until their teacher assigns them, on top of the mastery gate.
+  const { data: classIds = [] } = useQuery({
+    queryKey: ["class-ids", user?.id],
+    enabled: !!user,
+    queryFn: async () => {
+      const { data } = await supabase
+        .from("class_members")
+        .select("class_id")
+        .eq("student_id", user!.id);
+      return (data ?? []).map((r) => r.class_id);
+    },
+  });
+  const enrolled = classIds.length > 0;
+
+  const { data: assignedSlugs = new Set<string>() } = useQuery({
+    queryKey: ["assigned-lesson-slugs", classIds],
+    enabled: enrolled,
+    queryFn: async () => {
+      const { data } = await supabase
+        .from("lesson_assignments")
+        .select("lesson_slug")
+        .in("class_id", classIds);
       return new Set((data ?? []).map((r) => r.lesson_slug));
     },
   });
@@ -123,9 +151,11 @@ function LearnIndex() {
                   {lessons.map((lesson, lessonIndex) => {
                     const tasks = tasksForLesson(lesson.slug);
                     const lessonDone = tasks.filter((t) => passed.has(t.slug)).length;
-                    const lessonLocked =
+                    const masteryLocked =
                       lessonIndex > 0 &&
                       !isLessonComplete(lessons[lessonIndex - 1]!.slug, passed, quizPassed);
+                    const notAssigned = enrolled && !isLessonAssigned(lesson.slug, assignedSlugs);
+                    const lessonLocked = masteryLocked || notAssigned;
                     return (
                       <li key={lesson.slug}>
                         {lessonLocked ? (
@@ -135,7 +165,9 @@ function LearnIndex() {
                             </span>
                             <h3 className="mt-1 font-medium">{lesson.title}</h3>
                             <p className="mt-1 text-xs text-muted-foreground">
-                              Complete lesson {lesson.order - 1} first
+                              {masteryLocked
+                                ? `Complete lesson ${lesson.order - 1} first`
+                                : "Your teacher hasn't set this lesson yet"}
                             </p>
                           </div>
                         ) : (

@@ -402,6 +402,35 @@ export type Database = {
           },
         ]
       }
+      lesson_assignments: {
+        Row: {
+          class_id: string
+          created_at: string
+          id: string
+          lesson_slug: string
+        }
+        Insert: {
+          class_id: string
+          created_at?: string
+          id?: string
+          lesson_slug: string
+        }
+        Update: {
+          class_id?: string
+          created_at?: string
+          id?: string
+          lesson_slug?: string
+        }
+        Relationships: [
+          {
+            foreignKeyName: "lesson_assignments_class_id_fkey"
+            columns: ["class_id"]
+            isOneToOne: false
+            referencedRelation: "classes"
+            referencedColumns: ["id"]
+          },
+        ]
+      }
       lessons: {
         Row: {
           created_at: string

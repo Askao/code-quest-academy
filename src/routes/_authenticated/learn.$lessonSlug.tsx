@@ -9,6 +9,7 @@ import { LessonNotes } from "@/components/LessonNotes";
 import { topicLabel } from "@/lib/game";
 import {
   getLesson,
+  isLessonAssigned,
   isLessonComplete,
   isTopicComplete,
   lessonsForTopic,
@@ -267,6 +268,35 @@ function LessonPage() {
     },
   });
 
+  // A student who belongs to a class gets a teacher-controlled gate on top
+  // of the mastery gate below - lessons stay locked until assigned. A
+  // self-signed-up user with no class rows has an empty classIds array and
+  // skips this check entirely (see the `locked` computation).
+  const { data: classIds = [] } = useQuery({
+    queryKey: ["class-ids", user?.id],
+    enabled: !!user,
+    queryFn: async () => {
+      const { data } = await supabase
+        .from("class_members")
+        .select("class_id")
+        .eq("student_id", user!.id);
+      return (data ?? []).map((r) => r.class_id);
+    },
+  });
+  const enrolled = classIds.length > 0;
+
+  const { data: assignedSlugs = new Set<string>() } = useQuery({
+    queryKey: ["assigned-lesson-slugs", classIds],
+    enabled: enrolled,
+    queryFn: async () => {
+      const { data } = await supabase
+        .from("lesson_assignments")
+        .select("lesson_slug")
+        .in("class_id", classIds);
+      return new Set((data ?? []).map((r) => r.lesson_slug));
+    },
+  });
+
   if (!lesson) {
     return (
       <div className="panel p-6">
@@ -305,7 +335,9 @@ function LessonPage() {
   const previousSibling = siblings.find((l) => l.order === lesson.order - 1);
   const previousLessonComplete =
     !previousSibling || isLessonComplete(previousSibling.slug, passed, quizPassed);
-  const locked = !previousTopicComplete || !previousLessonComplete;
+  const masteryLocked = !previousTopicComplete || !previousLessonComplete;
+  const notAssigned = enrolled && !isLessonAssigned(lesson.slug, assignedSlugs);
+  const locked = masteryLocked || notAssigned;
 
   if (locked) {
     return (
@@ -314,7 +346,9 @@ function LessonPage() {
         <p className="mt-2 text-sm text-muted-foreground">
           {!previousTopicComplete
             ? `Finish ${topicLabel(topicOrder[topicIndex - 1]!)} first.`
-            : `Finish "${previousSibling?.title}" first.`}
+            : !previousLessonComplete
+              ? `Finish "${previousSibling?.title}" first.`
+              : "Your teacher hasn't set this lesson yet."}
         </p>
         <Button asChild className="mt-4">
           <Link to="/learn">Back to lessons</Link>

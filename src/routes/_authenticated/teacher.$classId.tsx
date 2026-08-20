@@ -6,8 +6,14 @@ import { supabase } from "@/integrations/supabase/client";
 import { Button } from "@/components/ui/button";
 import { Input } from "@/components/ui/input";
 import { Progress } from "@/components/ui/progress";
-import { levelFromXp, skillPercent, topicsFor, type TrackKey } from "@/lib/game";
+import { levelFromXp, skillPercent, topicLabel, topicsFor, type TrackKey } from "@/lib/game";
 import { pickHomeworkSet } from "@/lib/progress";
+import {
+  getLesson,
+  isLessonComplete,
+  lessonsForTopic,
+  topicsWithLessons,
+} from "@/lib/content";
 
 const EFFORT_COUNT: Record<string, number> = { low: 2, medium: 4, high: 6 };
 
@@ -31,6 +37,8 @@ function ClassDetail() {
   const [dueAt, setDueAt] = useState("");
   const [topic, setTopic] = useState("all");
   const [effort, setEffort] = useState("medium");
+  const [assignTopic, setAssignTopic] = useState("");
+  const [assignLessonSlug, setAssignLessonSlug] = useState("");
 
   const { data } = useQuery({
     queryKey: ["class", classId],
@@ -65,6 +73,48 @@ function ClassDetail() {
           .eq("class_id", classId)
           .order("created_at", { ascending: false }),
       ]);
+      const lessonAssignmentsRes = await supabase
+        .from("lesson_assignments")
+        .select("id, lesson_slug, created_at")
+        .eq("class_id", classId)
+        .order("created_at", { ascending: false });
+      const assignedLessonSlugs = (lessonAssignmentsRes.data ?? []).map((a) => a.lesson_slug);
+
+      // Same `isLessonComplete` the student-facing gate uses, so this
+      // tracker and the actual unlock condition can never disagree about
+      // what "done" means. Scoped to only the lessons actually assigned,
+      // so classes with nothing assigned yet skip these fetches entirely.
+      const [passedTasksRes, quizPassedRes] = await Promise.all([
+        ids.length && assignedLessonSlugs.length
+          ? supabase
+              .from("attempts")
+              .select("user_id, challenges!inner(slug)")
+              .in("user_id", ids)
+              .eq("passed", true)
+          : Promise.resolve({ data: [] }),
+        ids.length && assignedLessonSlugs.length
+          ? supabase
+              .from("quiz_attempts")
+              .select("user_id, lesson_slug")
+              .in("user_id", ids)
+              .eq("passed", true)
+          : Promise.resolve({ data: [] }),
+      ]);
+      const passedTaskSlugsByUser = new Map<string, Set<string>>();
+      for (const row of (passedTasksRes.data ?? []) as unknown as {
+        user_id: string;
+        challenges: { slug: string };
+      }[]) {
+        const set = passedTaskSlugsByUser.get(row.user_id) ?? new Set<string>();
+        set.add(row.challenges.slug);
+        passedTaskSlugsByUser.set(row.user_id, set);
+      }
+      const quizPassedByUser = new Map<string, Set<string>>();
+      for (const row of (quizPassedRes.data ?? []) as { user_id: string; lesson_slug: string }[]) {
+        const set = quizPassedByUser.get(row.user_id) ?? new Set<string>();
+        set.add(row.lesson_slug);
+        quizPassedByUser.set(row.user_id, set);
+      }
       const students = (profiles.data ?? []).map((p) => {
         const s = (stats.data ?? []).find((x) => x.user_id === p.id);
         const mine = (skills.data ?? []).filter((k) => k.user_id === p.id);
@@ -129,6 +179,20 @@ function ClassDetail() {
       return {
         cls: cls.data,
         students,
+        lessonAssignments: (lessonAssignmentsRes.data ?? []).map((a) => ({
+          id: a.id,
+          lessonSlug: a.lesson_slug,
+          createdAt: a.created_at,
+          completion: students.map((s) => ({
+            id: s.id,
+            name: s.name,
+            complete: isLessonComplete(
+              a.lesson_slug,
+              passedTaskSlugsByUser.get(s.id) ?? new Set<string>(),
+              quizPassedByUser.get(s.id) ?? new Set<string>(),
+            ),
+          })),
+        })),
         homework: (homework.data ?? []).map((h) => ({
           ...h,
           completion: students.map((s) => {
@@ -210,6 +274,30 @@ function ClassDetail() {
     void qc.invalidateQueries({ queryKey: ["class", classId] });
   };
 
+  const assignLesson = async () => {
+    if (!assignLessonSlug) {
+      toast.error("Choose a lesson to assign");
+      return;
+    }
+    const { error } = await supabase
+      .from("lesson_assignments")
+      .insert({ class_id: classId, lesson_slug: assignLessonSlug });
+    if (error) {
+      toast.error(
+        error.code === "23505" ? "Already assigned to this class" : error.message,
+      );
+      return;
+    }
+    toast.success("Lesson assigned");
+    setAssignLessonSlug("");
+    void qc.invalidateQueries({ queryKey: ["class", classId] });
+  };
+
+  const jumpToHomeworkFor = (lessonTopic: string) => {
+    setTopic(lessonTopic);
+    document.getElementById("set-homework")?.scrollIntoView({ behavior: "smooth" });
+  };
+
   return (
     <div className="space-y-8">
       <div>
@@ -221,6 +309,100 @@ function ClassDetail() {
       </div>
 
       <section className="panel space-y-3 p-5">
+        <h2 className="text-lg font-semibold">Assign a lesson</h2>
+        <p className="text-sm text-muted-foreground">
+          Students in this class see a lesson in their Learn path only once you've assigned it here
+          — practice mode stays open regardless.
+        </p>
+        <div className="grid gap-2 sm:grid-cols-2">
+          <select
+            className="rounded-md border border-border bg-card px-3 py-2 text-sm"
+            value={assignTopic}
+            onChange={(e) => {
+              setAssignTopic(e.target.value);
+              setAssignLessonSlug("");
+            }}
+          >
+            <option value="">Choose a topic…</option>
+            {topicsWithLessons(track).map((t) => (
+              <option key={t} value={t}>
+                {topicLabel(t)}
+              </option>
+            ))}
+          </select>
+          <select
+            className="rounded-md border border-border bg-card px-3 py-2 text-sm"
+            value={assignLessonSlug}
+            onChange={(e) => setAssignLessonSlug(e.target.value)}
+            disabled={!assignTopic}
+          >
+            <option value="">Choose a lesson…</option>
+            {lessonsForTopic(track, assignTopic).map((l) => (
+              <option key={l.slug} value={l.slug}>
+                Lesson {l.order} — {l.title}
+              </option>
+            ))}
+          </select>
+        </div>
+        <Button onClick={assignLesson}>Assign lesson</Button>
+      </section>
+
+      <section>
+        <h2 className="mb-3 text-xl font-semibold">Lessons assigned</h2>
+        <div className="space-y-3">
+          {(data?.lessonAssignments ?? []).map((a) => {
+            const lesson = getLesson(a.lessonSlug);
+            const doneCount = a.completion.filter((c) => c.complete).length;
+            return (
+              <div key={a.id} className="panel p-4 text-sm">
+                <div className="flex flex-wrap items-center gap-3">
+                  <span className="flex-1 font-medium">
+                    {lesson ? `${topicLabel(lesson.topic)} · Lesson ${lesson.order} — ${lesson.title}` : a.lessonSlug}
+                  </span>
+                  <span className="font-mono text-xs text-muted-foreground">
+                    {doneCount}/{a.completion.length} complete
+                  </span>
+                  {lesson ? (
+                    <Button
+                      size="sm"
+                      variant="secondary"
+                      onClick={() => jumpToHomeworkFor(lesson.topic)}
+                    >
+                      Set homework for this
+                    </Button>
+                  ) : null}
+                  <Button
+                    size="sm"
+                    variant="secondary"
+                    onClick={async () => {
+                      await supabase.from("lesson_assignments").delete().eq("id", a.id);
+                      void qc.invalidateQueries({ queryKey: ["class", classId] });
+                    }}
+                  >
+                    Unassign
+                  </Button>
+                </div>
+                {a.completion.length > 0 ? (
+                  <div className="mt-3 grid gap-1.5 border-t border-border pt-3 sm:grid-cols-2 lg:grid-cols-3">
+                    {a.completion.map((c) => (
+                      <div key={c.id} className="flex items-center justify-between gap-2 text-xs">
+                        <span className={c.complete ? "text-success" : ""}>
+                          {c.complete ? "✓" : "○"} {c.name}
+                        </span>
+                      </div>
+                    ))}
+                  </div>
+                ) : null}
+              </div>
+            );
+          })}
+          {(data?.lessonAssignments ?? []).length === 0 ? (
+            <p className="text-muted-foreground">No lessons assigned yet.</p>
+          ) : null}
+        </div>
+      </section>
+
+      <section id="set-homework" className="panel space-y-3 p-5">
         <h2 className="text-lg font-semibold">Set homework</h2>
         <p className="text-sm text-muted-foreground">
           Each student gets their own set of challenges, picked at their own skill level for this

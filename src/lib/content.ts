@@ -165,6 +165,16 @@ export function isTopicComplete(
   );
 }
 
+/**
+ * Students who belong to a class (any `class_members` row) get a
+ * teacher-controlled gate on top of the mastery gate above: a lesson stays
+ * locked until their teacher has assigned it, even once they'd otherwise be
+ * ready. Self-signed-up users with no class rows skip this check entirely.
+ */
+export function isLessonAssigned(lessonSlug: string, assignedSlugs: Set<string>): boolean {
+  return assignedSlugs.has(lessonSlug);
+}
+
 /** Merge repository content over a database challenge row. */
 export function withContent<T extends { slug: string }>(row: T): T {
   const c = taskBySlug.get(row.slug);
