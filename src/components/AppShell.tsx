@@ -17,7 +17,7 @@ function NavLink({ to, children }: { to: string; children: ReactNode }) {
 }
 
 export function AppShell({ children }: { children: ReactNode }) {
-  const { isTeacher, isAdmin, fullName } = useAuth();
+  const { user, isTeacher, isAdmin, fullName } = useAuth();
   const navigate = useNavigate();
 
   const signOut = async () => {
@@ -44,10 +44,18 @@ export function AppShell({ children }: { children: ReactNode }) {
             {isAdmin ? <NavLink to="/admin">Admin</NavLink> : null}
           </nav>
           <div className="ml-auto flex items-center gap-3">
-            <span className="hidden text-sm text-muted-foreground sm:inline">{fullName}</span>
-            <Button variant="secondary" size="sm" onClick={signOut}>
-              Sign out
-            </Button>
+            {user ? (
+              <>
+                <span className="hidden text-sm text-muted-foreground sm:inline">{fullName}</span>
+                <Button variant="secondary" size="sm" onClick={signOut}>
+                  Sign out
+                </Button>
+              </>
+            ) : (
+              <Button asChild variant="secondary" size="sm">
+                <Link to="/auth">Sign in</Link>
+              </Button>
+            )}
           </div>
         </div>
       </header>

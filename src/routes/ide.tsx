@@ -1,4 +1,4 @@
-import { createFileRoute } from "@tanstack/react-router";
+import { createFileRoute, Link } from "@tanstack/react-router";
 import { useQuery, useQueryClient } from "@tanstack/react-query";
 import { useEffect, useRef, useState } from "react";
 import { toast } from "sonner";
@@ -6,12 +6,14 @@ import CodeMirror from "@uiw/react-codemirror";
 import type { EditorView } from "@codemirror/view";
 import { supabase } from "@/integrations/supabase/client";
 import { useAuth } from "@/hooks/useAuth";
+import { AppShell } from "@/components/AppShell";
 import { Button } from "@/components/ui/button";
 import { Input } from "@/components/ui/input";
 import { checkSyntax, getPyodide, runInteractive } from "@/lib/python-runner";
 import { highlightErrorLine, pythonEditorExtensions } from "@/lib/python-lint";
 
-export const Route = createFileRoute("/_authenticated/ide")({
+export const Route = createFileRoute("/ide")({
+  ssr: false,
   head: () => ({
     meta: [
       { title: "IDE — H-Code" },
@@ -23,7 +25,11 @@ export const Route = createFileRoute("/_authenticated/ide")({
       },
     ],
   }),
-  component: Ide,
+  component: () => (
+    <AppShell>
+      <Ide />
+    </AppShell>
+  ),
 });
 
 const DRAFT_KEY = "hcode-ide-draft";
@@ -190,39 +196,51 @@ function Ide() {
         </p>
       </div>
 
-      <div className="panel flex flex-wrap items-center gap-2 p-4">
-        <select
-          className="rounded-md border border-border bg-card px-3 py-2 text-sm"
-          value={currentId ?? ""}
-          onChange={(e) => {
-            if (e.target.value) void loadProgram(e.target.value);
-          }}
-        >
-          <option value="">My programs…</option>
-          {(programs ?? []).map((p) => (
-            <option key={p.id} value={p.id}>
-              {p.name}
-            </option>
-          ))}
-        </select>
-        <Input
-          className="max-w-[12rem]"
-          placeholder="Program name"
-          value={currentName}
-          onChange={(e) => setCurrentName(e.target.value)}
-        />
-        <Button size="sm" onClick={saveProgram} disabled={saving}>
-          {saving ? "Saving…" : "Save"}
-        </Button>
-        <Button size="sm" variant="secondary" onClick={reset}>
-          New
-        </Button>
-        {currentId ? (
-          <Button size="sm" variant="ghost" onClick={() => void deleteProgram(currentId)}>
-            Delete
+      {user ? (
+        <div className="panel flex flex-wrap items-center gap-2 p-4">
+          <select
+            className="rounded-md border border-border bg-card px-3 py-2 text-sm"
+            value={currentId ?? ""}
+            onChange={(e) => {
+              if (e.target.value) void loadProgram(e.target.value);
+            }}
+          >
+            <option value="">My programs…</option>
+            {(programs ?? []).map((p) => (
+              <option key={p.id} value={p.id}>
+                {p.name}
+              </option>
+            ))}
+          </select>
+          <Input
+            className="max-w-[12rem]"
+            placeholder="Program name"
+            value={currentName}
+            onChange={(e) => setCurrentName(e.target.value)}
+          />
+          <Button size="sm" onClick={saveProgram} disabled={saving}>
+            {saving ? "Saving…" : "Save"}
           </Button>
-        ) : null}
-      </div>
+          <Button size="sm" variant="secondary" onClick={reset}>
+            New
+          </Button>
+          {currentId ? (
+            <Button size="sm" variant="ghost" onClick={() => void deleteProgram(currentId)}>
+              Delete
+            </Button>
+          ) : null}
+        </div>
+      ) : (
+        <div className="panel flex flex-wrap items-center justify-between gap-3 p-4">
+          <p className="text-sm text-muted-foreground">
+            You're not logged in — your code runs fine, but it won't be saved anywhere. Log in to
+            save and come back to your programs later.
+          </p>
+          <Button asChild size="sm">
+            <Link to="/auth">Log in</Link>
+          </Button>
+        </div>
+      )}
 
       <div className="grid gap-6 lg:grid-cols-[minmax(0,1.2fr)_minmax(0,1fr)]">
         <div className="space-y-3">

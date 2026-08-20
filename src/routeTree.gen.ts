@@ -12,10 +12,10 @@ import { Route as rootRouteImport } from './routes/__root'
 import { Route as IndexRouteImport } from './routes/index'
 import { Route as AuthenticatedRouteRouteImport } from './routes/_authenticated/route'
 import { Route as AuthRouteImport } from './routes/auth'
+import { Route as IdeRouteImport } from './routes/ide'
 import { Route as AuthenticatedAdminRouteImport } from './routes/_authenticated/admin'
 import { Route as AuthenticatedDashboardRouteImport } from './routes/_authenticated/dashboard'
 import { Route as AuthenticatedDuelsRouteImport } from './routes/_authenticated/duels'
-import { Route as AuthenticatedIdeRouteImport } from './routes/_authenticated/ide'
 import { Route as AuthenticatedLeaderboardRouteImport } from './routes/_authenticated/leaderboard'
 import { Route as AuthenticatedPracticeRouteImport } from './routes/_authenticated/practice'
 import { Route as AuthenticatedRecapRouteImport } from './routes/_authenticated/recap'
@@ -41,6 +41,11 @@ const AuthRoute = AuthRouteImport.update({
   path: '/auth',
   getParentRoute: () => rootRouteImport,
 } as any)
+const IdeRoute = IdeRouteImport.update({
+  id: '/ide',
+  path: '/ide',
+  getParentRoute: () => rootRouteImport,
+} as any)
 const AuthenticatedAdminRoute = AuthenticatedAdminRouteImport.update({
   id: '/admin',
   path: '/admin',
@@ -54,11 +59,6 @@ const AuthenticatedDashboardRoute = AuthenticatedDashboardRouteImport.update({
 const AuthenticatedDuelsRoute = AuthenticatedDuelsRouteImport.update({
   id: '/duels',
   path: '/duels',
-  getParentRoute: () => AuthenticatedRouteRoute,
-} as any)
-const AuthenticatedIdeRoute = AuthenticatedIdeRouteImport.update({
-  id: '/ide',
-  path: '/ide',
   getParentRoute: () => AuthenticatedRouteRoute,
 } as any)
 const AuthenticatedLeaderboardRoute =
@@ -120,10 +120,10 @@ const AuthenticatedTeacherClassIdRoute =
 export interface FileRoutesByFullPath {
   '/': typeof IndexRoute
   '/auth': typeof AuthRoute
+  '/ide': typeof IdeRoute
   '/admin': typeof AuthenticatedAdminRoute
   '/dashboard': typeof AuthenticatedDashboardRoute
   '/duels': typeof AuthenticatedDuelsRoute
-  '/ide': typeof AuthenticatedIdeRoute
   '/leaderboard': typeof AuthenticatedLeaderboardRoute
   '/practice': typeof AuthenticatedPracticeRoute
   '/recap': typeof AuthenticatedRecapRoute
@@ -138,10 +138,10 @@ export interface FileRoutesByFullPath {
 export interface FileRoutesByTo {
   '/': typeof IndexRoute
   '/auth': typeof AuthRoute
+  '/ide': typeof IdeRoute
   '/admin': typeof AuthenticatedAdminRoute
   '/dashboard': typeof AuthenticatedDashboardRoute
   '/duels': typeof AuthenticatedDuelsRoute
-  '/ide': typeof AuthenticatedIdeRoute
   '/leaderboard': typeof AuthenticatedLeaderboardRoute
   '/practice': typeof AuthenticatedPracticeRoute
   '/recap': typeof AuthenticatedRecapRoute
@@ -158,10 +158,10 @@ export interface FileRoutesById {
   '/': typeof IndexRoute
   '/_authenticated': typeof AuthenticatedRouteRouteWithChildren
   '/auth': typeof AuthRoute
+  '/ide': typeof IdeRoute
   '/_authenticated/admin': typeof AuthenticatedAdminRoute
   '/_authenticated/dashboard': typeof AuthenticatedDashboardRoute
   '/_authenticated/duels': typeof AuthenticatedDuelsRoute
-  '/_authenticated/ide': typeof AuthenticatedIdeRoute
   '/_authenticated/leaderboard': typeof AuthenticatedLeaderboardRoute
   '/_authenticated/practice': typeof AuthenticatedPracticeRoute
   '/_authenticated/recap': typeof AuthenticatedRecapRoute
@@ -178,10 +178,10 @@ export interface FileRouteTypes {
   fullPaths:
     | '/'
     | '/auth'
+    | '/ide'
     | '/admin'
     | '/dashboard'
     | '/duels'
-    | '/ide'
     | '/leaderboard'
     | '/practice'
     | '/recap'
@@ -196,10 +196,10 @@ export interface FileRouteTypes {
   to:
     | '/'
     | '/auth'
+    | '/ide'
     | '/admin'
     | '/dashboard'
     | '/duels'
-    | '/ide'
     | '/leaderboard'
     | '/practice'
     | '/recap'
@@ -215,10 +215,10 @@ export interface FileRouteTypes {
     | '/'
     | '/_authenticated'
     | '/auth'
+    | '/ide'
     | '/_authenticated/admin'
     | '/_authenticated/dashboard'
     | '/_authenticated/duels'
-    | '/_authenticated/ide'
     | '/_authenticated/leaderboard'
     | '/_authenticated/practice'
     | '/_authenticated/recap'
@@ -235,6 +235,7 @@ export interface RootRouteChildren {
   IndexRoute: typeof IndexRoute
   AuthenticatedRouteRoute: typeof AuthenticatedRouteRouteWithChildren
   AuthRoute: typeof AuthRoute
+  IdeRoute: typeof IdeRoute
   JoinCodeRoute: typeof JoinCodeRoute
 }
 
@@ -261,6 +262,13 @@ declare module '@tanstack/react-router' {
       preLoaderRoute: typeof AuthRouteImport
       parentRoute: typeof rootRouteImport
     }
+    '/ide': {
+      id: '/ide'
+      path: '/ide'
+      fullPath: '/ide'
+      preLoaderRoute: typeof IdeRouteImport
+      parentRoute: typeof rootRouteImport
+    }
     '/_authenticated/admin': {
       id: '/_authenticated/admin'
       path: '/admin'
@@ -280,13 +288,6 @@ declare module '@tanstack/react-router' {
       path: '/duels'
       fullPath: '/duels'
       preLoaderRoute: typeof AuthenticatedDuelsRouteImport
-      parentRoute: typeof AuthenticatedRouteRoute
-    }
-    '/_authenticated/ide': {
-      id: '/_authenticated/ide'
-      path: '/ide'
-      fullPath: '/ide'
-      preLoaderRoute: typeof AuthenticatedIdeRouteImport
       parentRoute: typeof AuthenticatedRouteRoute
     }
     '/_authenticated/leaderboard': {
@@ -366,7 +367,6 @@ interface AuthenticatedRouteRouteChildren {
   AuthenticatedAdminRoute: typeof AuthenticatedAdminRoute
   AuthenticatedDashboardRoute: typeof AuthenticatedDashboardRoute
   AuthenticatedDuelsRoute: typeof AuthenticatedDuelsRoute
-  AuthenticatedIdeRoute: typeof AuthenticatedIdeRoute
   AuthenticatedLeaderboardRoute: typeof AuthenticatedLeaderboardRoute
   AuthenticatedPracticeRoute: typeof AuthenticatedPracticeRoute
   AuthenticatedRecapRoute: typeof AuthenticatedRecapRoute
@@ -382,7 +382,6 @@ const AuthenticatedRouteRouteChildren: AuthenticatedRouteRouteChildren = {
   AuthenticatedAdminRoute: AuthenticatedAdminRoute,
   AuthenticatedDashboardRoute: AuthenticatedDashboardRoute,
   AuthenticatedDuelsRoute: AuthenticatedDuelsRoute,
-  AuthenticatedIdeRoute: AuthenticatedIdeRoute,
   AuthenticatedLeaderboardRoute: AuthenticatedLeaderboardRoute,
   AuthenticatedPracticeRoute: AuthenticatedPracticeRoute,
   AuthenticatedRecapRoute: AuthenticatedRecapRoute,
@@ -401,6 +400,7 @@ const rootRouteChildren: RootRouteChildren = {
   IndexRoute: IndexRoute,
   AuthenticatedRouteRoute: AuthenticatedRouteRouteWithChildren,
   AuthRoute: AuthRoute,
+  IdeRoute: IdeRoute,
   JoinCodeRoute: JoinCodeRoute,
 }
 export const routeTree = rootRouteImport
