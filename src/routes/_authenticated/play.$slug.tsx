@@ -184,15 +184,21 @@ function Play() {
     if (!challenge) return;
 
     // Came from a lesson's task list: follow that lesson's task order
-    // rather than picking something random from the whole topic.
+    // rather than picking something random from the whole topic. Once
+    // there's nothing left in the lesson (including the stretch task),
+    // go back to the lesson page instead of falling through to a random
+    // challenge from the whole topic - staying "in lesson mode" is what
+    // the student expects, not a topic-wide grab bag.
     if (search.lesson) {
       const lessonTasks = tasksForLesson(search.lesson);
       const myIndex = lessonTasks.findIndex((t) => t.slug === challenge.slug);
       const nextTask = lessonTasks[myIndex + 1];
       if (nextTask) {
         void navigate({ to: "/play/$slug", params: { slug: nextTask.slug }, search });
-        return;
+      } else {
+        void navigate({ to: "/learn/$lessonSlug", params: { lessonSlug: search.lesson } });
       }
+      return;
     }
 
     // Multi-part problems: once this part is passed, go straight to the

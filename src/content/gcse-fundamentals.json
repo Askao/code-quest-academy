@@ -14,15 +14,15 @@
       "slug": "gcse-fundamentals-2",
       "title": "Data types",
       "summary": "The four data types OCR expects you to know, and how to pick the right one.",
-      "notes": "Every value has a **data type**, which decides what kind of thing it is and what you can do with it. OCR's specification names four you need to know:\n\n| OCR name | Python type | Example |\n| --- | --- | --- |\n| Integer | `int` | `7`, `-3`, `0` — a whole number |\n| Real | `float` | `3.5`, `-0.2` — a number with a decimal point |\n| String | `str` | `\"hello\"` — text, in quotes |\n| Boolean | `bool` | `True` or `False` — exactly one of two values |\n\nPicking the right type matters: a whole number like an age should be an integer, a measurement like a height should usually be a real number (it might have a decimal part), and text always needs to be a string, in quotes.\n\n**Careful:** OCR's exam pseudocode also lists a *character* data type (a single letter). Python doesn't have a separate character type — a single character is just a string of length 1, e.g. `\"a\"`. If an OCR question asks for a character, a one-letter string is the Python answer.\n\nMixing types incorrectly causes errors: `\"Score: \" + 7` crashes, because Python won't silently join text and a number. You have to convert the number to a string first (the next lesson covers this).",
+      "notes": "Every value has a **data type**, which decides what kind of thing it is and what you can do with it. OCR's specification names four you need to know:\n\n| OCR name | Python type | Example |\n| --- | --- | --- |\n| Integer | `int` | `7`, `-3`, `0` — a whole number |\n| Float | `float` | `3.5`, `-0.2` — a number with a decimal point |\n| String | `str` | `\"hello\"` — text, in quotes |\n| Boolean | `bool` | `True` or `False` — exactly one of two values |\n\nPicking the right type matters: a whole number like an age should be an integer, a measurement like a height should usually be a float (it might have a decimal part), and text always needs to be a string, in quotes.\n\n**Careful:** OCR's exam pseudocode also lists a *character* data type (a single letter). Python doesn't have a separate character type — a single character is just a string of length 1, e.g. `\"a\"`. If an OCR question asks for a character, a one-letter string is the Python answer.\n\nMixing types incorrectly causes errors: `\"Score: \" + 7` crashes, because Python won't silently join text and a number. You have to convert the number to a string first (the next lesson covers this).",
       "worked_example": "# Store a few different kinds of data, each in its correct type\nage = 15\nheight = 1.75\nname = \"Ada\"\nis_raining = True\nprint(age)\nprint(height)\nprint(name)\nprint(is_raining)",
-      "worked_example_note": "age is a whole number, so it's an integer. height has a decimal part, so it's a real number. name is text, so it needs quotes to be a string. is_raining is exactly True or False, so it's a Boolean."
+      "worked_example_note": "age is a whole number, so it's an integer. height has a decimal part, so it's a float. name is text, so it needs quotes to be a string. is_raining is exactly True or False, so it's a Boolean."
     },
     {
       "slug": "gcse-fundamentals-3",
       "title": "Casting, input and output",
       "summary": "input() always gives you text — converting it to the type you actually need.",
-      "notes": "`input()` reads whatever the user typed and always hands it back as a **string**, even if they typed a number. If you try to do maths with it directly, Python either crashes or does the wrong thing: `\"3\" + \"4\"` gives `\"34\"`, not `7`, because it's joining two pieces of text, not adding two numbers.\n\n**Casting** converts a value from one data type to another:\n\n- `int(\"3\")` → the integer `3`\n- `float(\"3.5\")` → the real number `3.5`\n- `str(3)` → the string `\"3\"` (needed to join a number onto text with `+`)\n\nThe usual pattern is to cast the moment you read input: `age = int(input())`.\n\nOCR exam wording tells you which function to use even when it doesn't say \"input\" or \"print\" directly:\n\n| Wording in the question | What it means |\n| --- | --- |\n| *read*, *accept*, *ask the user for* | `input()` |\n| *display*, *output*, *report* | `print()` |\n\nAn f-string (`f\"...\"`) lets you drop variables straight into text you print, without manually casting them with `str()` first: `print(f\"Age: {age}\")` works even though `age` is an integer.",
+      "notes": "`input()` reads whatever the user typed and always hands it back as a **string**, even if they typed a number. If you try to do maths with it directly, Python either crashes or does the wrong thing: `\"3\" + \"4\"` gives `\"34\"`, not `7`, because it's joining two pieces of text, not adding two numbers.\n\n**Casting** converts a value from one data type to another:\n\n- `int(\"3\")` → the integer `3`\n- `float(\"3.5\")` → the float `3.5`\n- `str(3)` → the string `\"3\"` (needed to join a number onto text with `+`)\n\nThe usual pattern is to cast the moment you read input: `age = int(input())`.\n\nOCR exam wording tells you which function to use even when it doesn't say \"input\" or \"print\" directly:\n\n| Wording in the question | What it means |\n| --- | --- |\n| *read*, *accept*, *ask the user for* | `input()` |\n| *display*, *output*, *report* | `print()` |\n\nAn f-string (`f\"...\"`) lets you drop variables straight into text you print, without manually casting them with `str()` first: `print(f\"Age: {age}\")` works even though `age` is an integer.",
       "worked_example": "# Accept two numbers as text, cast them, then report the total\nfirst_text = input()\nsecond_text = input()\nfirst = int(first_text)\nsecond = int(second_text)\nprint(f\"Total: {first + second}\")",
       "worked_example_note": "Casting can happen in one step too: `first = int(input())`. Splitting it here just shows what's actually happening underneath."
     }
@@ -52,9 +52,9 @@
     {
       "lessonSlug": "gcse-fundamentals-2",
       "question": "Which OCR data type would you use to store a person's height in metres, e.g. 1.75?",
-      "options": ["Integer", "Real", "String", "Boolean"],
-      "answer": "Real",
-      "explanation": "A value with a decimal part is a real number (Python's float). Integer is for whole numbers only."
+      "options": ["Integer", "Float", "String", "Boolean"],
+      "answer": "Float",
+      "explanation": "A value with a decimal part is a float. Integer is for whole numbers only."
     },
     {
       "lessonSlug": "gcse-fundamentals-2",
@@ -66,14 +66,14 @@
     {
       "lessonSlug": "gcse-fundamentals-2",
       "question": "Which OCR data type would you use for a value that is exactly True or False?",
-      "options": ["Boolean", "Integer", "String", "Real"],
+      "options": ["Boolean", "Integer", "String", "Float"],
       "answer": "Boolean",
       "explanation": "A value that can only ever be True or False is a Boolean — Python's bool type."
     },
     {
       "lessonSlug": "gcse-fundamentals-3",
       "question": "What data type does input() always return, no matter what the user types?",
-      "options": ["Integer", "Real", "String", "Boolean"],
+      "options": ["Integer", "Float", "String", "Boolean"],
       "answer": "String",
       "explanation": "input() always hands back text. You must cast it with int() or float() before doing maths with it."
     },
@@ -121,7 +121,7 @@
     { "slug": "gcse-fundamentals-t2-01", "lesson": 2, "tier": 2, "difficulty": 1, "xp": 15,
       "title": "Keep the decimal place",
       "brief": "A weather app stores temperature readings, which may include decimal places. Input a temperature reading. Add 10 to it. Print the result.\n\nFor example, if 5.5 is entered, print 15.5.",
-      "starter": "", "hints": ["The reading may include decimals, so store it as a real number, not a whole number — otherwise any decimal part would be lost.", "reading = float(input()), then print(reading + 10)"],
+      "starter": "", "hints": ["The reading may include decimals, so store it as a float, not a whole number — otherwise any decimal part would be lost.", "reading = float(input()), then print(reading + 10)"],
       "tests": [{ "stdin": "5.5", "expect": "15.5" }, { "stdin": "2.25", "expect": "12.25" }] },
     { "slug": "gcse-fundamentals-t2-02", "lesson": 2, "tier": 2, "difficulty": 2, "xp": 15,
       "title": "Pick the right type",
@@ -150,7 +150,7 @@
       "tests": [{ "stdin": "12", "expect": "Next year you will be 13" }, { "stdin": "15", "expect": "Next year you will be 16" }] },
     { "slug": "gcse-fundamentals-t3-02", "lesson": 3, "tier": 3, "difficulty": 3, "xp": 25,
       "title": "Product price",
-      "brief": "A till system accepts the price of an item, which may include pence. The till always receives this as text, so it must be converted to a real number before use.\n\nRead the price and convert it to a float. Print it in the format `Price: £<price>`, where `<price>` is the number that was read in.\n\nFor example, if 3.5 is entered, print `Price: £3.5`.",
+      "brief": "A till system accepts the price of an item, which may include pence. The till always receives this as text, so it must be converted to a float before use.\n\nRead the price and convert it to a float. Print it in the format `Price: £<price>`, where `<price>` is the number that was read in.\n\nFor example, if 3.5 is entered, print `Price: £3.5`.",
       "starter": "", "hints": ["price = float(input()), then build the output with an f-string.", "print(f\"Price: £{price}\")"],
       "tests": [{ "stdin": "3.5", "expect": "Price: £3.5" }, { "stdin": "10", "expect": "Price: £10.0" }] },
     { "slug": "gcse-fundamentals-t3-03", "lesson": 3, "tier": 3, "difficulty": 3, "xp": 25,
