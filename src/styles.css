@@ -147,3 +147,14 @@
   backdrop-filter: blur(6px);
   box-shadow: 0 1px 0 0 color-mix(in oklab, var(--color-foreground) 6%, transparent) inset;
 }
+
+/* Scrollable but no visible scrollbar - used where fade edges + arrow
+   buttons already signal there's more content, so the raw OS/browser
+   scrollbar bar would just look like visual noise underneath. */
+@utility scrollbar-none {
+  scrollbar-width: none;
+  -ms-overflow-style: none;
+  &::-webkit-scrollbar {
+    display: none;
+  }
+}
