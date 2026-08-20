@@ -22,7 +22,7 @@
       "slug": "gcse-iteration-3",
       "title": "Exam-style iteration problems",
       "summary": "Choosing the right loop and tracking several values at once.",
-      "notes": "Ask one question to choose your loop: **do I know how many times?**\n\n- Yes → `for`\n- No, it depends on the data → `while`\n\nLonger questions often need more than one variable tracked through the loop, for example a total *and* a count *and* the largest so far. Set them all up before the loop and update each one inside it.\n\nWhen the question says *keep asking until*, that is a `while` with a sentinel. When it says *for each of the 10 readings*, that is a `for`.",
+      "notes": "Ask one question to choose your loop: **do I know how many times?**\n\n- Yes → `for`\n- No, it depends on the data → `while`\n\nLonger questions often need more than one variable tracked through the loop — for example a total *and* a count *and* the largest so far. Set them all up before the loop starts, and update each one inside it.\n\nWhen the question says *keep asking until*, that is a `while` with a sentinel. When it says *for each of the 10 readings*, that is a `for`.",
       "worked_example": "# Read 5 numbers and report the largest\nlargest = int(input())\nfor i in range(4):\n    value = int(input())\n    if value > largest:\n        largest = value\nprint(largest)",
       "worked_example_note": "Starting `largest` at the first real value avoids guessing a starting number that might be too big."
     }
@@ -31,98 +31,122 @@
     {
       "slug": "gcse-iteration-t1-01", "lesson": 1, "tier": 1, "difficulty": 1, "xp": 10,
       "title": "Repeat a word",
-      "brief": "Read a word, then print it 3 times, one per line.",
+      "brief": "Read a word. Print it 3 times, one per line.",
       "starter": "",
-      "hints": ["`for i in range(3):`"],
+      "hints": ["for i in range(3): repeats the line inside it 3 times.", "word = input(), for i in range(3): print(word)"],
       "tests": [{ "stdin": "hi", "expect": "hi\nhi\nhi" }, { "stdin": "loop", "expect": "loop\nloop\nloop" }]
     },
     {
       "slug": "gcse-iteration-t1-02", "lesson": 1, "tier": 1, "difficulty": 1, "xp": 10,
       "title": "Count down",
-      "brief": "Read a whole number N and print every number from N down to 1, one per line.",
+      "brief": "Read a whole number N. Print every number from N down to 1, one per line.",
       "starter": "",
-      "hints": ["`range(n, 0, -1)` counts backwards"],
+      "hints": ["range(n, 0, -1) counts backwards from n down to (but not including) 0.", "n = int(input()), for i in range(n, 0, -1): print(i)"],
       "tests": [{ "stdin": "3", "expect": "3\n2\n1" }, { "stdin": "1", "expect": "1" }]
     },
     {
       "slug": "gcse-iteration-t1-03", "lesson": 1, "tier": 1, "difficulty": 2, "xp": 15,
       "title": "Even numbers",
-      "brief": "Read a whole number N and print every even number from 2 up to and including N, one per line. If there are none, print nothing.",
+      "brief": "Read a whole number N. Print every even number from 2 up to and including N, one per line. If there are none (N is less than 2), print nothing.",
       "starter": "",
-      "hints": ["`range(2, n + 1, 2)` steps in twos"],
+      "hints": ["range(2, n + 1, 2) starts at 2 and steps up in twos, stopping once it would pass n.", "n = int(input()), for i in range(2, n + 1, 2): print(i)"],
       "tests": [{ "stdin": "6", "expect": "2\n4\n6" }, { "stdin": "1", "expect": "" }]
+    },
+    {
+      "slug": "gcse-iteration-t1-stretch", "lesson": 1, "tier": 4, "difficulty": 5, "xp": 40, "stretch": true,
+      "title": "Star triangle",
+      "brief": "Read a whole number N. Print a triangle of asterisks (*): on row 1 print one asterisk, on row 2 print two, and so on up to row N, which has N asterisks. Each row is on its own line, with no spaces.\n\nFor example, if N is 4, print:\n```\n*\n**\n***\n****\n```",
+      "starter": "",
+      "hints": ["Python can repeat a string with *: \"*\" * 3 gives \"***\". Loop a row number from 1 to N and print that many asterisks each time.", "n = int(input()), for row in range(1, n + 1): print(\"*\" * row)"],
+      "tests": [{ "stdin": "4", "expect": "*\n**\n***\n****" }, { "stdin": "1", "expect": "*" }]
     },
     {
       "slug": "gcse-iteration-t2-01", "lesson": 2, "tier": 2, "difficulty": 2, "xp": 15,
       "title": "Five scores",
       "brief": "A teacher enters 5 test scores, one per line. Display the total of the five scores.",
       "starter": "",
-      "hints": ["Set the total to 0 before the loop", "`for i in range(5):`"],
+      "hints": ["Set the total to 0 before the loop starts, then add each score to it inside the loop.", "total = 0, for i in range(5): total = total + int(input()), then print(total)"],
       "tests": [{ "stdin": "1\n2\n3\n4\n5", "expect": "15" }, { "stdin": "10\n10\n10\n10\n10", "expect": "50" }]
     },
     {
       "slug": "gcse-iteration-t2-02", "lesson": 2, "tier": 2, "difficulty": 3, "xp": 20,
       "title": "Password retry",
-      "brief": "A system keeps asking for a password until the user types `open`. Once they do, display how many attempts were needed in total, for example `3 attempts`.",
+      "brief": "A system keeps asking for a password until the user types `open`. Once they do, display how many attempts were needed in total (including the successful one), in the format `<count> attempts`.\n\nAlways write \"attempts\" even for 1 (don't worry about \"attempt\" vs \"attempts\" grammar).\n\nFor example, if the correct password is entered on the third try, print `3 attempts`.",
       "starter": "",
-      "hints": ["Count every attempt, including the correct one", "Read the next attempt at the bottom of the loop"],
+      "hints": ["Count every attempt, including the correct one that ends the loop. Read the next attempt at the bottom of the loop, same shape as the lesson's sentinel example.", "count = 0, attempt = input(), while attempt != \"open\": count = count + 1, attempt = input(), then count = count + 1 for the final successful try, then print(f\"{count} attempts\")"],
       "tests": [{ "stdin": "open", "expect": "1 attempts" }, { "stdin": "no\nnope\nopen", "expect": "3 attempts" }]
     },
     {
       "slug": "gcse-iteration-t2-03", "lesson": 2, "tier": 2, "difficulty": 3, "xp": 20,
       "title": "Validate a mark",
-      "brief": "A program must only accept a mark between 0 and 100 inclusive. Keep reading whole numbers until a valid mark is entered, then display `Accepted: 55` using the valid mark.",
+      "brief": "A program must only accept a mark between 0 and 100 inclusive. Keep reading whole numbers until a valid mark is entered. Display the valid mark in the format `Accepted: <mark>`.\n\nFor example, if 55 is the first (valid) number entered, print `Accepted: 55`.",
       "starter": "",
-      "hints": ["Read once, then loop while the value is out of range"],
+      "hints": ["Read one value first, then loop while it's out of range, reading a replacement each time — same shape as the lesson's validation example.", "mark = int(input()), while mark < 0 or mark > 100: mark = int(input()), then print(f\"Accepted: {mark}\")"],
       "tests": [{ "stdin": "55", "expect": "Accepted: 55" }, { "stdin": "120\n-4\n0", "expect": "Accepted: 0" }]
+    },
+    {
+      "slug": "gcse-iteration-t2-stretch", "lesson": 2, "tier": 4, "difficulty": 5, "xp": 40, "stretch": true,
+      "title": "Count the even numbers",
+      "brief": "Read whole numbers, one per line, until the sentinel value 0 is entered. The 0 itself is not counted.\n\nCount how many of the numbers read before the 0 are even. Print the count.\n\nFor example, 3, 4, 6, 7, 0 has two even numbers before the sentinel (4 and 6), so print 2.",
+      "starter": "",
+      "hints": ["Use the same read-loop-read-again pattern as the lesson's sentinel example, but add a check inside the loop for whether the current value is even (divisible by 2 with no remainder) before reading the next one.", "count = 0, value = int(input()), while value != 0: if value % 2 == 0: count = count + 1, value = int(input()), then print(count)"],
+      "tests": [{ "stdin": "3\n4\n6\n7\n0", "expect": "2" }, { "stdin": "0", "expect": "0" }, { "stdin": "2\n0", "expect": "1" }]
     },
     {
       "slug": "gcse-iteration-t3-01", "lesson": 3, "tier": 3, "difficulty": 3, "xp": 25,
       "title": "Rainfall readings",
-      "brief": "A weather station takes 7 daily rainfall readings in millimetres, entered one per line as whole numbers. The program should report the total rainfall for the week on the first line and the highest single reading on the second line.",
+      "brief": "A weather station takes 7 daily rainfall readings in millimetres, entered one per line as whole numbers. Report the total rainfall for the week on the first line. Report the highest single reading on the second line.",
       "starter": "",
-      "hints": ["Track a total and a highest-so-far in the same loop", "Start the highest at the first reading, or at 0 since rainfall cannot be negative"],
+      "hints": ["Track a total and a highest-so-far in the same loop, updating both each time a reading is read.", "Start the highest at 0, since rainfall readings can't be negative"],
       "tests": [{ "stdin": "1\n2\n3\n4\n5\n6\n7", "expect": "28\n7" }, { "stdin": "0\n0\n12\n0\n3\n0\n0", "expect": "15\n12" }]
     },
     {
       "slug": "gcse-iteration-t3-02", "lesson": 3, "tier": 3, "difficulty": 4, "xp": 30,
       "title": "Class average until done",
-      "brief": "A teacher enters marks one at a time and types `-1` when there are no more marks to enter. The program should display how many marks were entered, then the average of those marks rounded to 1 decimal place. If no marks were entered at all, display `No marks` instead.",
+      "brief": "A teacher enters marks one at a time and types `-1` when there are no more marks to enter — this sentinel is not itself a mark.\n\nDisplay how many marks were entered, then the average of those marks rounded to 1 decimal place, each on its own line. If no marks were entered at all (the very first input is `-1`), display `No marks` instead and nothing else.",
       "starter": "",
-      "hints": ["Guard against dividing by zero", "The sentinel -1 must not be counted or added"],
+      "hints": ["Guard against dividing by zero: if the count ends up as 0, skip the average and print No marks instead.", "The sentinel -1 must not be counted towards the total or the count"],
       "tests": [{ "stdin": "-1", "expect": "No marks" }, { "stdin": "10\n20\n-1", "expect": "2\n15.0" }, { "stdin": "7\n8\n10\n-1", "expect": "3\n8.3" }]
     },
     {
       "slug": "gcse-iteration-t3-03", "lesson": 3, "tier": 3, "difficulty": 4, "xp": 30,
       "title": "Savings target",
-      "brief": "A saver puts a fixed amount into an account every month. The program takes the monthly amount (a whole number of pounds) followed by a savings target, then reports how many whole months it takes for the balance to reach or pass the target, in the form `7 months`.",
+      "brief": "A saver puts a fixed amount into an account every month. Read the monthly amount (a whole number of pounds), then a savings target (a whole number of pounds). Report how many whole months it takes for the balance to reach or pass the target, in the format `<months> months`.",
       "starter": "",
-      "hints": ["Use a while loop that keeps adding until the balance reaches the target", "Count the months as you go"],
+      "hints": ["You don't know in advance how many months this will take, so use a while loop that keeps adding the monthly amount until the balance reaches the target.", "Count the months as you go, in the same loop that adds the balance"],
       "tests": [{ "stdin": "50\n300", "expect": "6 months" }, { "stdin": "40\n100", "expect": "3 months" }]
     },
     {
       "slug": "gcse-iteration-t4-01", "lesson": 3, "tier": 4, "difficulty": 4, "xp": 35,
       "title": "Turnstile counter",
-      "brief": "A stadium turnstile logs each person as they pass through.\n\nFor every person the operator types `in` or `out`. When the shift ends the operator types `end`.\n\nWrite a program that processes the log and outputs the number of people still inside at the end of the shift, in the form `Inside: 4`.\n\nThe count starts at 0 and can never go below 0 — if an `out` is logged while the count is already 0, it should be ignored.",
+      "brief": "A stadium turnstile logs each person as they pass through.\n\n- for every person, the operator types `in` or `out`\n- when the shift ends, the operator types `end`\n- the count starts at 0 and can never go below 0 — if `out` is logged while the count is already 0, ignore it\n\nProcess the log and output the number of people still inside at the end of the shift, in the format `Inside: <count>`.\n\nFor example, `in`, `in`, `out`, `in`, `end` leaves 2 people inside, so print `Inside: 2`.",
       "starter": "",
-      "hints": ["A while loop with the sentinel `end`", "Only subtract when the count is above 0"],
+      "hints": ["This is a while loop with the sentinel end, reading one log entry at a time.", "Only subtract on out when the count is currently above 0 — check that before subtracting"],
       "tests": [{ "stdin": "in\nin\nout\nin\nend", "expect": "Inside: 2" }, { "stdin": "out\nout\nin\nend", "expect": "Inside: 1" }, { "stdin": "end", "expect": "Inside: 0" }]
     },
     {
       "slug": "gcse-iteration-t4-02", "lesson": 3, "tier": 4, "difficulty": 5, "xp": 40,
       "title": "Times table tester",
-      "brief": "A primary school wants a program that tests a pupil on the 5 times table.\n\nThe program asks 5 questions. For question number *n* the correct answer is *n* × 5, so the first answer is 5, the second is 10, and so on.\n\nThe pupil's answer to each question is read as a whole number. After all 5 questions the program outputs one line per question in the form `Q1 correct` or `Q2 wrong`, followed by a final line `Score: 4/5`.",
+      "brief": "A primary school wants a program that tests a pupil on the 5 times table.\n\nThe program asks 5 questions. For question number n, the correct answer is n × 5 — so the first correct answer is 5, the second is 10, and so on.\n\nRead the pupil's answer to each question as a whole number. After all 5 questions:\n- print one line per question, in the format `Q<n> correct` or `Q<n> wrong`\n- then print a final line, in the format `Score: <correct>/5`\n\nFor example, if all 5 answers are correct, the final line is `Score: 5/5`.",
       "starter": "",
-      "hints": ["`for n in range(1, 6):` gives the question numbers", "Print the feedback inside the loop, the score after it"],
+      "hints": ["for n in range(1, 6): gives you the question numbers 1 to 5. The correct answer for question n is n * 5.", "Print the feedback for each question inside the loop, and keep a running count of how many were correct so you can print the score after the loop ends"],
       "tests": [{ "stdin": "5\n10\n15\n20\n25", "expect": "Q1 correct\nQ2 correct\nQ3 correct\nQ4 correct\nQ5 correct\nScore: 5/5" }, { "stdin": "5\n11\n15\n0\n25", "expect": "Q1 correct\nQ2 wrong\nQ3 correct\nQ4 wrong\nQ5 correct\nScore: 3/5" }]
     },
     {
       "slug": "gcse-iteration-t4-03", "lesson": 3, "tier": 4, "difficulty": 5, "xp": 40,
       "title": "Energy meter report",
-      "brief": "A smart meter records the electricity used each day of a month.\n\nThe program reads readings in kilowatt hours (whole numbers), one per line, until the value `-1` is entered to show there are no more readings.\n\nIt must then produce a report of exactly three lines:\n\n```\nDays: 3\nTotal: 24\nHighest day: 12\n```\n\nIf no readings are entered, output `No readings` and nothing else.",
+      "brief": "A smart meter records the electricity used each day of a month.\n\nRead readings in kilowatt hours (whole numbers), one per line, until the value -1 is entered to show there are no more readings. If no readings are entered at all (the first value is -1), output `No readings` and nothing else.\n\nOtherwise, produce a report of exactly three lines, in the format:\n```\nDays: 3\nTotal: 24\nHighest day: 12\n```",
       "starter": "",
-      "hints": ["Track count, total and highest together", "Check for the empty case before printing the report"],
+      "hints": ["Track a count, a total and a highest-so-far together, all updated inside the same loop.", "Check for the empty case (first value is -1) before trying to print any report lines"],
       "tests": [{ "stdin": "-1", "expect": "No readings" }, { "stdin": "5\n12\n7\n-1", "expect": "Days: 3\nTotal: 24\nHighest day: 12" }, { "stdin": "9\n-1", "expect": "Days: 1\nTotal: 9\nHighest day: 9" }]
+    },
+    {
+      "slug": "gcse-iteration-t3-stretch", "lesson": 3, "tier": 4, "difficulty": 5, "xp": 40, "stretch": true,
+      "title": "Temperature range",
+      "brief": "A weather station takes 6 temperature readings in one day, entered one per line as whole numbers (which may be negative).\n\nReport the highest reading, the lowest reading, and the range (highest minus lowest), each on its own line, in the format:\n```\nHighest: 8\nLowest: -3\nRange: 11\n```",
+      "starter": "",
+      "hints": ["Track a highest-so-far and a lowest-so-far at the same time, both starting at the first reading — the same idea as tracking one running value, just doubled.", "highest = lowest = int(input()), then loop the remaining 5 readings, updating highest when a value is bigger and lowest when a value is smaller"],
+      "tests": [{ "stdin": "2\n8\n-3\n0\n5\n1", "expect": "Highest: 8\nLowest: -3\nRange: 11" }, { "stdin": "5\n5\n5\n5\n5\n5", "expect": "Highest: 5\nLowest: 5\nRange: 0" }]
     }
   ]
 }

@@ -31,98 +31,122 @@
     {
       "slug": "gcse-selection-t1-01", "lesson": 1, "tier": 1, "difficulty": 1, "xp": 10,
       "title": "Positive or negative",
-      "brief": "Read a whole number. Print `Positive` if it is greater than 0, otherwise print `Not positive`.",
+      "brief": "Read a whole number. Print `Positive` if it is greater than 0. Otherwise print `Not positive`.",
       "starter": "",
-      "hints": ["Use `if n > 0:` and `else:`"],
+      "hints": ["Exactly one of the two branches runs — decide the condition first, then fill in what each branch prints.", "if n > 0: print(\"Positive\") else: print(\"Not positive\")"],
       "tests": [{ "stdin": "5", "expect": "Positive" }, { "stdin": "0", "expect": "Not positive" }, { "stdin": "-2", "expect": "Not positive" }]
     },
     {
       "slug": "gcse-selection-t1-02", "lesson": 1, "tier": 1, "difficulty": 1, "xp": 10,
       "title": "Old enough to vote",
-      "brief": "Read an age. Print `Can vote` if the age is 18 or more, otherwise print `Too young`.",
+      "brief": "Read an age. Print `Can vote` if the age is 18 or more. Otherwise print `Too young`.",
       "starter": "",
-      "hints": ["18 or more means `>= 18`"],
+      "hints": ["\"18 or more\" includes exactly 18, so use >= rather than >.", "if age >= 18: print(\"Can vote\") else: print(\"Too young\")"],
       "tests": [{ "stdin": "18", "expect": "Can vote" }, { "stdin": "17", "expect": "Too young" }, { "stdin": "40", "expect": "Can vote" }]
     },
     {
       "slug": "gcse-selection-t1-03", "lesson": 1, "tier": 1, "difficulty": 2, "xp": 15,
       "title": "Bigger of two",
-      "brief": "Read two whole numbers on separate lines. Print the larger one. If they are equal, print `Equal`.",
+      "brief": "Read two whole numbers, one per line. Print the larger one. If they are equal, print `Equal` instead.",
       "starter": "",
-      "hints": ["Check the equal case with `elif a == b:`"],
+      "hints": ["There are three possible outcomes here, not two — you need a third branch for the equal case.", "if a > b: print(a), elif b > a: print(b), else: print(\"Equal\")"],
       "tests": [{ "stdin": "3\n9", "expect": "9" }, { "stdin": "9\n3", "expect": "9" }, { "stdin": "4\n4", "expect": "Equal" }]
+    },
+    {
+      "slug": "gcse-selection-t1-stretch", "lesson": 1, "tier": 4, "difficulty": 5, "xp": 40, "stretch": true,
+      "title": "Largest of three",
+      "brief": "Read three whole numbers, one per line. Print the largest of the three. If two or more of them are tied for the largest, print `Tie` instead.\n\nFor example, 3, 9 and 5 prints 9. 7, 7 and 2 prints Tie.",
+      "starter": "",
+      "hints": ["Python's built-in max() finds the largest of several values for you: max(a, b, c). Once you have it, count how many of a, b and c equal it.", "largest = max(a, b, c), count = (a == largest) + (b == largest) + (c == largest), then print(\"Tie\") if count > 1 else print(largest)"],
+      "tests": [{ "stdin": "3\n9\n5", "expect": "9" }, { "stdin": "7\n7\n2", "expect": "Tie" }]
     },
     {
       "slug": "gcse-selection-t2-01", "lesson": 2, "tier": 2, "difficulty": 2, "xp": 15,
       "title": "Traffic light",
-      "brief": "A program reads the colour of a traffic light. Print `Stop` for `red`, `Get ready` for `amber` and `Go` for `green`. For anything else print `Broken`.",
+      "brief": "A program reads the colour of a traffic light. Print `Stop` for `red`, `Get ready` for `amber` and `Go` for `green`. For anything else, print `Broken`.",
       "starter": "",
-      "hints": ["An if / elif / elif / else chain", "Compare the string exactly"],
+      "hints": ["You have four possible outputs, so you need an if / elif / elif / else chain, not just if / else.", "String comparisons are case sensitive — \"red\" and \"Red\" are not equal"],
       "tests": [{ "stdin": "red", "expect": "Stop" }, { "stdin": "amber", "expect": "Get ready" }, { "stdin": "green", "expect": "Go" }, { "stdin": "blue", "expect": "Broken" }]
     },
     {
       "slug": "gcse-selection-t2-02", "lesson": 2, "tier": 2, "difficulty": 3, "xp": 20,
       "title": "In range",
-      "brief": "Read a whole number. Print `In range` if it is between 10 and 20 inclusive, otherwise print `Out of range`.",
+      "brief": "Read a whole number. Print `In range` if it is between 10 and 20 inclusive — meaning 10 and 20 themselves both count as in range. Otherwise print `Out of range`.",
       "starter": "",
-      "hints": ["Inclusive means 10 and 20 both count", "`10 <= n <= 20` works in Python"],
+      "hints": ["Python lets you chain two comparisons in one condition: 10 <= n <= 20 is true exactly when n is between 10 and 20, inclusive.", "if 10 <= n <= 20: print(\"In range\") else: print(\"Out of range\")"],
       "tests": [{ "stdin": "10", "expect": "In range" }, { "stdin": "20", "expect": "In range" }, { "stdin": "21", "expect": "Out of range" }, { "stdin": "9", "expect": "Out of range" }]
     },
     {
       "slug": "gcse-selection-t2-03", "lesson": 2, "tier": 2, "difficulty": 3, "xp": 20,
       "title": "Login with two checks",
-      "brief": "Read a username then a password. Print `Welcome` only if the username is `admin` and the password is `hcode`. Otherwise print `Rejected`.",
+      "brief": "Read a username, then a password, one per line. Print `Welcome` only if the username is exactly `admin` and the password is exactly `hcode`. Otherwise print `Rejected`.",
       "starter": "",
-      "hints": ["Join the two conditions with `and`"],
+      "hints": ["Both checks must be true at once, so join the two conditions with and.", "if username == \"admin\" and password == \"hcode\": print(\"Welcome\") else: print(\"Rejected\")"],
       "tests": [{ "stdin": "admin\nhcode", "expect": "Welcome" }, { "stdin": "admin\nwrong", "expect": "Rejected" }, { "stdin": "guest\nhcode", "expect": "Rejected" }]
+    },
+    {
+      "slug": "gcse-selection-t2-stretch", "lesson": 2, "tier": 4, "difficulty": 5, "xp": 40, "stretch": true,
+      "title": "VIP eligibility",
+      "brief": "A loyalty scheme grants VIP status under either of two rules:\n\n- the customer is 18 or older AND has been a member for at least 2 years, OR\n- the customer has been a member for at least 5 years, whatever their age\n\nRead the customer's age, then the number of years they've been a member, one per line. Print `VIP` if either rule applies, otherwise print `Not VIP`.\n\nFor example, age 20 with 3 years membership is VIP (meets the first rule). Age 16 with 6 years membership is also VIP (meets the second rule — age doesn't matter there).",
+      "starter": "",
+      "hints": ["Write the two rules as two separate conditions first, then join them with or: (age >= 18 and years >= 2) or years >= 5.", "age = int(input()), years = int(input()), if (age >= 18 and years >= 2) or years >= 5: print(\"VIP\") else: print(\"Not VIP\")"],
+      "tests": [{ "stdin": "20\n3", "expect": "VIP" }, { "stdin": "16\n6", "expect": "VIP" }, { "stdin": "16\n1", "expect": "Not VIP" }]
     },
     {
       "slug": "gcse-selection-t3-01", "lesson": 3, "tier": 3, "difficulty": 3, "xp": 25,
       "title": "Swimming pool entry",
-      "brief": "A swimming pool charges different prices by age. Children under 5 swim free, anyone under 16 pays £2, adults pay £4 and anyone aged 65 or over pays £2. The program should accept a person's age and display the price they pay as a whole number of pounds, for example `2`.",
+      "brief": "A swimming pool charges different prices by age:\n\n- under 5: free\n- 5 to 15: £2\n- 16 to 64 (adult): £4\n- 65 or over: £2\n\nRead a person's age. Display the price they pay, as a whole number of pounds.\n\nFor example, age 30 pays £4, so print `4`.",
       "starter": "",
-      "hints": ["Deal with the youngest ages first", "Remember the over-65 case comes before the adult case, or check it separately"],
+      "hints": ["Build the branches in age order, from youngest to oldest, checking the strictest boundary first. There are four price groups, not two, so you'll need an elif chain.", "if age < 5: price = 0, elif age < 16: price = 2, elif age < 65: price = 4, else: price = 2 — the last two branches both give 2, they're just different age groups"],
       "tests": [{ "stdin": "3", "expect": "0" }, { "stdin": "15", "expect": "2" }, { "stdin": "30", "expect": "4" }, { "stdin": "70", "expect": "2" }]
     },
     {
       "slug": "gcse-selection-t3-02", "lesson": 3, "tier": 3, "difficulty": 4, "xp": 30,
       "title": "Parcel size checker",
-      "brief": "A courier classifies parcels by weight in kilograms. Parcels up to and including 2 kg are `Small`, over 2 kg and up to 10 kg are `Medium`, and anything heavier is `Large`. Parcels weighing more than 30 kg are refused and should display `Refused` instead. Read the weight as a decimal and display the classification.",
+      "brief": "A courier classifies parcels by weight in kilograms:\n\n- up to and including 2 kg: `Small`\n- over 2 kg, up to and including 10 kg: `Medium`\n- over 10 kg, up to and including 30 kg: `Large`\n- over 30 kg: `Refused`\n\nRead the weight as a decimal. Display the classification.",
       "starter": "",
-      "hints": ["Check the refusal case before the Large case", "Watch the boundaries: exactly 2 and exactly 10"],
+      "hints": ["Check the Refused case and the Large case before the smaller ones, so the boundaries at exactly 2, 10 and 30 land in the right group.", "if weight > 30: print(\"Refused\"), elif weight > 10: print(\"Large\"), elif weight > 2: print(\"Medium\"), else: print(\"Small\")"],
       "tests": [{ "stdin": "1.5", "expect": "Small" }, { "stdin": "2", "expect": "Small" }, { "stdin": "9.9", "expect": "Medium" }, { "stdin": "12", "expect": "Large" }, { "stdin": "31", "expect": "Refused" }]
     },
     {
       "slug": "gcse-selection-t3-03", "lesson": 3, "tier": 3, "difficulty": 4, "xp": 30,
       "title": "Quiz feedback",
-      "brief": "A quiz is marked out of 20. The program should take the mark scored and report a comment: `Excellent` for 18 or more, `Good` for 14 to 17, `Pass` for 10 to 13 and `Revise this topic` for anything lower. Marks outside the range 0 to 20 should display `Invalid mark`.",
+      "brief": "A quiz is marked out of 20:\n\n- 18 or more: `Excellent`\n- 14 to 17: `Good`\n- 10 to 13: `Pass`\n- below 10: `Revise this topic`\n\nA mark outside the range 0 to 20 is invalid and should display `Invalid mark` instead of any of the above.\n\nRead the mark scored. Display the appropriate result.",
       "starter": "",
-      "hints": ["Validate the mark first, before grading it", "Order the grade boundaries from highest down"],
+      "hints": ["Check whether the mark is invalid (below 0 or above 20) before checking any of the grade boundaries.", "Order the grade boundaries from highest down, same pattern as the lesson's elif example"],
       "tests": [{ "stdin": "20", "expect": "Excellent" }, { "stdin": "14", "expect": "Good" }, { "stdin": "10", "expect": "Pass" }, { "stdin": "3", "expect": "Revise this topic" }, { "stdin": "25", "expect": "Invalid mark" }]
     },
     {
       "slug": "gcse-selection-t4-01", "lesson": 3, "tier": 4, "difficulty": 4, "xp": 35,
       "title": "Theme park ride restrictions",
-      "brief": "A theme park needs software to check whether a visitor may ride a rollercoaster.\n\nA visitor may ride if they are at least 140 cm tall **and** aged 12 or over. Visitors who are tall enough but too young may ride if they are accompanied by an adult.\n\nThe program accepts three lines of input: the height in centimetres (whole number), the age (whole number), and then `yes` or `no` to say whether an adult is with them.\n\nIt must output one of:\n- `Ride allowed`\n- `Ride allowed with adult`\n- `Ride refused`",
+      "brief": "A theme park needs software to check whether a visitor may ride a rollercoaster.\n\n- A visitor may ride if they are at least 140 cm tall AND aged 12 or over.\n- A visitor who is tall enough (140 cm or more) but under 12 may still ride if an adult is with them.\n- Anyone under 140 cm may never ride, whatever their age or whether an adult is with them.\n\nRead three lines of input: height in centimetres (whole number), age (whole number), then `yes` or `no` for whether an adult is with them.\n\nOutput exactly one of:\n- `Ride allowed`\n- `Ride allowed with adult`\n- `Ride refused`",
       "starter": "",
-      "hints": ["Deal with the height rule first — too short is always refused", "Then split on age, then on the adult answer"],
+      "hints": ["Deal with the height rule first — anyone under 140 cm is refused no matter what the other answers are.", "Then, among those tall enough, split on age, then on the adult answer"],
       "tests": [{ "stdin": "150\n14\nno", "expect": "Ride allowed" }, { "stdin": "150\n10\nyes", "expect": "Ride allowed with adult" }, { "stdin": "150\n10\nno", "expect": "Ride refused" }, { "stdin": "120\n30\nyes", "expect": "Ride refused" }]
     },
     {
       "slug": "gcse-selection-t4-02", "lesson": 3, "tier": 4, "difficulty": 5, "xp": 40,
       "title": "Broadband billing",
-      "brief": "An internet provider bills customers monthly.\n\nThe standard package costs £25 per month and includes 100 GB of data. Any data used above the 100 GB allowance is charged at £1.50 per whole gigabyte over the limit.\n\nCustomers who have been with the provider for 24 months or more receive a 10% discount on the **whole** bill.\n\nWrite a program that accepts the gigabytes used (a whole number) followed by the number of months the customer has been with the provider, then outputs the final bill rounded to 2 decimal places, for example `Bill: £32.50`.",
+      "brief": "An internet provider bills customers monthly:\n\n- The standard package costs £25 per month and includes 100 GB of data.\n- Data used above the 100 GB allowance costs £1.50 per whole gigabyte over the limit.\n- Customers who have been with the provider for 24 months or more get a 10% discount on the whole bill, applied after any excess data charge has been added.\n\nRead the gigabytes used (a whole number), then the number of months the customer has been with the provider (a whole number). Output the final bill, rounded to 2 decimal places, in the format `Bill: £<amount>`.\n\nFor example, 80 GB used over 5 months (no excess, no discount) gives `Bill: £25.0`.",
       "starter": "",
-      "hints": ["Excess data is only charged when usage is above 100", "Apply the loyalty discount after adding the excess charge"],
+      "hints": ["Excess data only applies when usage is above 100 — work that out first and add it to the base £25.", "Apply the loyalty discount last, to the total bill so far, not just to the excess charge"],
       "tests": [{ "stdin": "80\n5", "expect": "Bill: £25.0" }, { "stdin": "105\n5", "expect": "Bill: £32.5" }, { "stdin": "105\n30", "expect": "Bill: £29.25" }]
     },
     {
       "slug": "gcse-selection-t4-03", "lesson": 3, "tier": 4, "difficulty": 5, "xp": 40,
       "title": "Library fine system",
-      "brief": "A school library charges fines for late books.\n\nBooks returned up to 3 days late are not fined. From day 4 onwards the fine is 20p per day late, counting **all** the days late, not just those after day 3. The fine is capped at £5.00 no matter how late the book is.\n\nStudents in Year 7 are never fined.\n\nThe program accepts the number of days late (a whole number) then the student's year group (a whole number), and outputs the fine in pounds to 2 decimal places, for example `Fine: £1.0`.",
+      "brief": "A school library charges fines for late books:\n\n- returned up to 3 days late: no fine\n- from day 4 onwards: 20p per day late, counting all the days late, not just the days after day 3\n- the fine is capped at £5.00, however late the book is\n- students in Year 7 are never fined, whatever the rules above say\n\nRead the number of days late (a whole number), then the student's year group (a whole number). Output the fine, in pounds, to 2 decimal places, in the format `Fine: £<amount>`.",
       "starter": "",
-      "hints": ["Check the Year 7 rule first — it overrides everything", "Cap with something like `if fine > 5: fine = 5`"],
+      "hints": ["Check the Year 7 rule first — it overrides every other rule, so it should be the very first thing you check.", "Work out the uncapped fine, then cap it: if fine > 5: fine = 5"],
       "tests": [{ "stdin": "2\n9", "expect": "Fine: £0.0" }, { "stdin": "5\n9", "expect": "Fine: £1.0" }, { "stdin": "40\n11", "expect": "Fine: £5.0" }, { "stdin": "40\n7", "expect": "Fine: £0.0" }]
+    },
+    {
+      "slug": "gcse-selection-t3-stretch", "lesson": 3, "tier": 4, "difficulty": 5, "xp": 40, "stretch": true,
+      "title": "Exam retake eligibility",
+      "brief": "An exam board decides whether a student may retake an exam:\n\n- if the mark is 40 or above, the student has passed and does not need a retake, however many attempts they've had\n- if the mark is below 40, the student may retake the exam if they have had fewer than 3 previous attempts\n- if the mark is below 40 and they have already had 3 or more attempts, no more retakes are allowed\n\nRead the mark (whole number), then the number of previous attempts (whole number). Print exactly one of `Passed`, `Retake allowed` or `No more attempts`.",
+      "starter": "",
+      "hints": ["Check the pass condition first — if it's true, the number of attempts doesn't matter at all, so nothing else needs checking.", "if mark >= 40: print(\"Passed\"), elif attempts < 3: print(\"Retake allowed\"), else: print(\"No more attempts\")"],
+      "tests": [{ "stdin": "30\n1", "expect": "Retake allowed" }, { "stdin": "30\n3", "expect": "No more attempts" }, { "stdin": "45\n5", "expect": "Passed" }]
     }
   ]
 }

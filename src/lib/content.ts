@@ -39,6 +39,8 @@ export type TaskContent = {
   /** Multi-part problems: tasks sharing a group are steps of one bigger scenario. */
   group?: string;
   part?: string;
+  /** Optional bonus task for fast finishers - never required to complete the lesson. */
+  stretch?: boolean;
 };
 
 export type QuizQuestion = {
@@ -121,16 +123,17 @@ export function topicsWithLessons(track: TrackKey) {
 }
 
 /**
- * A lesson is complete once every one of its tasks has a passed attempt and
- * (if it has a quiz) the quiz has been passed at least once. Used both to
- * show progress and to decide what's locked in /learn.
+ * A lesson is complete once every one of its *required* tasks has a passed
+ * attempt (stretch tasks are optional fast-finisher content and never block
+ * completion) and, if it has a quiz, the quiz has been passed at least once.
+ * Used both to show progress and to decide what's locked in /learn.
  */
 export function isLessonComplete(
   lessonSlug: string,
   passedTaskSlugs: Set<string>,
   quizPassedLessonSlugs: Set<string>,
 ): boolean {
-  const tasks = tasksForLesson(lessonSlug);
+  const tasks = tasksForLesson(lessonSlug).filter((t) => !t.stretch);
   const allTasksPassed = tasks.length > 0 && tasks.every((t) => passedTaskSlugs.has(t.slug));
   const quiz = quizForLesson(lessonSlug);
   const quizOk = quiz.length === 0 || quizPassedLessonSlugs.has(lessonSlug);

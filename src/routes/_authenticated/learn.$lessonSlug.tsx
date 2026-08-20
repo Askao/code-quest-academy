@@ -199,11 +199,14 @@ function LessonPage() {
   }
 
   const tasks = tasksForLesson(lesson.slug);
+  const requiredTasks = tasks.filter((t) => !t.stretch);
+  const stretchTasks = tasks.filter((t) => t.stretch);
   const siblings = lessonsForTopic(lesson.track, lesson.topic);
   const next = siblings.find((l) => l.order === lesson.order + 1);
   const done = tasks.filter((t) => passed.has(t.slug)).length;
   const lessonQuiz = quizForLesson(lesson.slug);
   const quizGateOpen = lessonQuiz.length === 0 || quizPassed.has(lesson.slug);
+  const allRequiredPassed = requiredTasks.every((t) => passed.has(t.slug));
 
   const topicOrder = topicsWithLessons(lesson.track);
   const topicIndex = topicOrder.indexOf(lesson.topic);
@@ -280,8 +283,8 @@ function LessonPage() {
             </div>
           ) : (
             <ol className="mt-4 space-y-2">
-              {tasks.map((task, i) => {
-                const taskLocked = i > 0 && !passed.has(tasks[i - 1]!.slug);
+              {requiredTasks.map((task, i) => {
+                const taskLocked = i > 0 && !passed.has(requiredTasks[i - 1]!.slug);
                 if (taskLocked) {
                   return (
                     <li key={task.slug} className="rounded-lg border border-border p-3 opacity-50">
@@ -334,6 +337,54 @@ function LessonPage() {
               })}
             </ol>
           )}
+          {quizGateOpen && stretchTasks.length > 0 ? (
+            <div className="mt-5 border-t border-border pt-4">
+              <p className="text-sm font-medium text-primary">⭐ Extra challenge</p>
+              <p className="mt-1 text-xs text-muted-foreground">
+                Optional — harder than you need for this lesson. Skip it or come back later.
+              </p>
+              {!allRequiredPassed ? (
+                <div className="mt-3 rounded-lg border border-border p-3 opacity-50">
+                  <span className="flex items-start gap-3">
+                    <span className="text-muted-foreground">🔒</span>
+                    <span className="text-sm text-muted-foreground">
+                      Complete the practice tasks above first
+                    </span>
+                  </span>
+                </div>
+              ) : (
+                <ol className="mt-3 space-y-2">
+                  {stretchTasks.map((task) => (
+                    <li key={task.slug}>
+                      <Link
+                        to="/play/$slug"
+                        params={{ slug: task.slug }}
+                        search={{
+                          mode: "practice" as const,
+                          track: task.track,
+                          topic: task.topic,
+                          lesson: lesson.slug,
+                        }}
+                        className="flex items-start gap-3 rounded-lg border border-primary/40 bg-primary/5 p-3 transition-colors hover:border-primary/70"
+                      >
+                        <span
+                          className={passed.has(task.slug) ? "text-primary" : "text-muted-foreground"}
+                        >
+                          {passed.has(task.slug) ? "✓" : "⭐"}
+                        </span>
+                        <span className="min-w-0">
+                          <span className="block font-medium">{task.title}</span>
+                          <span className="mt-0.5 block font-mono text-xs text-muted-foreground">
+                            difficulty {task.difficulty}/5 · {task.xp} XP
+                          </span>
+                        </span>
+                      </Link>
+                    </li>
+                  ))}
+                </ol>
+              )}
+            </div>
+          ) : null}
           {next ? (
             <Button asChild variant="secondary" className="mt-5 w-full">
               <Link to="/learn/$lessonSlug" params={{ lessonSlug: next.slug }}>

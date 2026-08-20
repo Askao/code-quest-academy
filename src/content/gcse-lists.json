@@ -22,7 +22,7 @@
       "slug": "gcse-lists-3",
       "title": "Exam-style list problems",
       "summary": "Building, filtering and reporting on data sets.",
-      "notes": "Most list questions are a variation of four jobs:\n\n1. **Build** — read values into a list\n2. **Search** — find one value or its position\n3. **Aggregate** — total, average, biggest, smallest, count how many match\n4. **Report** — print the results in a stated format\n\nDecide which jobs the question needs, then write them one after another. Be careful with output order and whether the question wants the value, the position, or both.",
+      "notes": "Most list questions are a variation of four jobs:\n\n1. **Build** — read values into a list\n2. **Search** — find one value or its position\n3. **Aggregate** — total, average, biggest, smallest, count how many match\n4. **Report** — print the results in a stated format\n\nDecide which jobs the question needs, then write them one after another. Be careful with output order, and whether the question wants the value, the position, or both.",
       "worked_example": "# Read 5 marks and report how many were at least 40\nmarks = []\nfor i in range(5):\n    marks.append(int(input()))\npassed = 0\nfor mark in marks:\n    if mark >= 40:\n        passed = passed + 1\nprint(f\"{passed} passed out of {len(marks)}\")",
       "worked_example_note": "Build first, then process. Keeping the two loops separate makes the logic easier to follow and to mark."
     }
@@ -31,98 +31,122 @@
     {
       "slug": "gcse-lists-t1-01", "lesson": 1, "tier": 1, "difficulty": 1, "xp": 10,
       "title": "First and last",
-      "brief": "Read three words on separate lines into a list. Print the first item, then the last item, on separate lines.",
+      "brief": "Read three words, one per line, into a list. Print the first item, then the last item, each on its own line.",
       "starter": "",
-      "hints": ["Index 0 is first", "The last index is `len(items) - 1`"],
+      "hints": ["Index 0 is the first item. The last item's index is len(items) - 1.", "words = [], for i in range(3): words.append(input()), then print(words[0]) and print(words[-1])"],
       "tests": [{ "stdin": "a\nb\nc", "expect": "a\nc" }, { "stdin": "red\ngreen\nblue", "expect": "red\nblue" }]
     },
     {
       "slug": "gcse-lists-t1-02", "lesson": 1, "tier": 1, "difficulty": 2, "xp": 15,
       "title": "List total",
-      "brief": "Read four whole numbers on separate lines into a list, then print the total of the list.",
+      "brief": "Read four whole numbers, one per line, into a list. Print the total of the list.",
       "starter": "",
-      "hints": ["`sum(numbers)` totals a list"],
+      "hints": ["Python's built-in sum() adds up every item in a list for you.", "numbers = [], for i in range(4): numbers.append(int(input())), then print(sum(numbers))"],
       "tests": [{ "stdin": "1\n2\n3\n4", "expect": "10" }, { "stdin": "5\n5\n0\n0", "expect": "10" }]
     },
     {
       "slug": "gcse-lists-t1-03", "lesson": 1, "tier": 1, "difficulty": 2, "xp": 15,
       "title": "Print in reverse",
-      "brief": "Read four words on separate lines into a list. Print them one per line in the opposite order to how they were entered.",
+      "brief": "Read four words, one per line, into a list. Print them one per line, in the opposite order to how they were entered.",
       "starter": "",
-      "hints": ["`for item in reversed(items):` or loop the indexes backwards"],
+      "hints": ["for item in reversed(words): loops through a list back to front.", "words = [], for i in range(4): words.append(input()), then for word in reversed(words): print(word)"],
       "tests": [{ "stdin": "a\nb\nc\nd", "expect": "d\nc\nb\na" }, { "stdin": "one\ntwo\nthree\nfour", "expect": "four\nthree\ntwo\none" }]
+    },
+    {
+      "slug": "gcse-lists-t1-stretch", "lesson": 1, "tier": 4, "difficulty": 5, "xp": 40, "stretch": true,
+      "title": "Middle word",
+      "brief": "Read a whole number N (this will always be odd). Then read N words, one per line, into a list. Print the middle word — the one exactly in the centre of the list.\n\nFor example, if N is 5 and the words are a, b, c, d, e, the middle one is c (there are two words before it and two after).",
+      "starter": "",
+      "hints": ["For a list with an odd number of items, the middle index is len(items) // 2 — integer division rounds down, which lands exactly in the centre for an odd-length list.", "n = int(input()), words = [], for i in range(n): words.append(input()), then print(words[n // 2])"],
+      "tests": [{ "stdin": "5\na\nb\nc\nd\ne", "expect": "c" }, { "stdin": "3\nx\ny\nz", "expect": "y" }]
     },
     {
       "slug": "gcse-lists-t2-01", "lesson": 2, "tier": 2, "difficulty": 2, "xp": 15,
       "title": "Highest and lowest",
-      "brief": "A shop records five daily sales figures, entered one per line. Display the highest figure on the first line and the lowest on the second.",
+      "brief": "A shop records five daily sales figures, entered one per line. Display the highest figure on the first line. Display the lowest figure on the second line.",
       "starter": "",
-      "hints": ["`max()` and `min()` work on a list"],
+      "hints": ["Python's built-in max() and min() work directly on a list.", "sales = [], for i in range(5): sales.append(int(input())), then print(max(sales)) and print(min(sales))"],
       "tests": [{ "stdin": "3\n9\n1\n7\n5", "expect": "9\n1" }, { "stdin": "4\n4\n4\n4\n4", "expect": "4\n4" }]
     },
     {
       "slug": "gcse-lists-t2-02", "lesson": 2, "tier": 2, "difficulty": 3, "xp": 20,
       "title": "Search a register",
-      "brief": "Five names are entered one per line, followed by a sixth line containing a name to search for. Display the position of that name in the list counting from 1 (so the first name is position 1), or `Not found` if it is not there.",
+      "brief": "Five names are entered, one per line, followed by a sixth line containing a name to search for. Display the position of that name in the list, counting from 1 (so the first name is position 1). If the name isn't in the list, display `Not found` instead.\n\nFor example, if the list is ada, alan, grace, lin, sam and the search name is grace, print 3 (grace is the third name).",
       "starter": "",
-      "hints": ["Positions counting from 1 are index + 1", "Handle the missing case with an else"],
+      "hints": ["Python's list positions (indexes) count from 0, but this task wants positions counting from 1 — that's index + 1.", "names = [], for i in range(5): names.append(input()), target = input(), if target in names: print(names.index(target) + 1), else: print(\"Not found\")"],
       "tests": [{ "stdin": "ada\nalan\ngrace\nlin\nsam\ngrace", "expect": "3" }, { "stdin": "ada\nalan\ngrace\nlin\nsam\nbob", "expect": "Not found" }]
     },
     {
       "slug": "gcse-lists-t2-03", "lesson": 2, "tier": 2, "difficulty": 3, "xp": 20,
       "title": "Count above average",
-      "brief": "Six whole numbers are entered, one per line. Display how many of them are strictly greater than the mean of all six.",
+      "brief": "Six whole numbers are entered, one per line. Display how many of them are strictly greater than the mean (average) of all six.\n\nFor example, 1, 2, 3, 4, 5, 6 has a mean of 3.5 — three of the numbers (4, 5, 6) are greater than that, so print 3.",
       "starter": "",
-      "hints": ["Work out the mean first, then loop again to count"],
+      "hints": ["Work out the mean of the whole list first — you need it before you can compare anything to it. Then loop through the list a second time to count.", "numbers = [], for i in range(6): numbers.append(int(input())), mean = sum(numbers) / 6, count = 0, for n in numbers: if n > mean: count = count + 1"],
       "tests": [{ "stdin": "1\n2\n3\n4\n5\n6", "expect": "3" }, { "stdin": "10\n10\n10\n10\n10\n10", "expect": "0" }]
+    },
+    {
+      "slug": "gcse-lists-t2-stretch", "lesson": 2, "tier": 4, "difficulty": 5, "xp": 40, "stretch": true,
+      "title": "Second highest",
+      "brief": "Read five distinct whole numbers, one per line, into a list. Print the second highest value in the list — not the highest, the next one down.\n\nFor example, 3, 9, 1, 7, 5 has 9 as the highest and 7 as the second highest, so print 7.",
+      "starter": "",
+      "hints": ["sorted(numbers, reverse=True) arranges a copy of the list from highest to lowest. The second highest is then sitting at index 1 (the highest is at index 0).", "numbers = [], for i in range(5): numbers.append(int(input())), ordered = sorted(numbers, reverse=True), print(ordered[1])"],
+      "tests": [{ "stdin": "3\n9\n1\n7\n5", "expect": "7" }, { "stdin": "10\n8\n6\n4\n2", "expect": "8" }]
     },
     {
       "slug": "gcse-lists-t3-01", "lesson": 3, "tier": 3, "difficulty": 3, "xp": 25,
       "title": "Sorted scoreboard",
-      "brief": "A games console stores the last five scores achieved by a player. The scores are entered one per line. The program should display the scores in order from highest to lowest, one per line, followed by a final line showing the average score rounded to 1 decimal place.",
+      "brief": "A games console stores the last five scores achieved by a player, entered one per line. Display the scores in order from highest to lowest, one per line. Then display a final line showing the average score, rounded to 1 decimal place.",
       "starter": "",
-      "hints": ["`sorted(scores, reverse=True)` sorts high to low", "Average is the total divided by how many"],
+      "hints": ["sorted(scores, reverse=True) sorts a list from highest to lowest in one step.", "Average is the total of the list divided by how many items are in it — sum(scores) / len(scores)"],
       "tests": [{ "stdin": "10\n40\n30\n20\n50", "expect": "50\n40\n30\n20\n10\n30.0" }, { "stdin": "1\n1\n1\n1\n2", "expect": "2\n1\n1\n1\n1\n1.2" }]
     },
     {
       "slug": "gcse-lists-t3-02", "lesson": 3, "tier": 3, "difficulty": 4, "xp": 30,
       "title": "Stock check",
-      "brief": "A shop stores the quantity in stock of six products, entered one per line as whole numbers. Any product with fewer than 5 items in stock needs reordering. The program should list the position of each product that needs reordering (counting from 1), one per line, and then display the number needing reorder in the form `2 to reorder`.",
+      "brief": "A shop stores the quantity in stock of six products, entered one per line as whole numbers. Any product with fewer than 5 items in stock needs reordering.\n\nList the position (counting from 1) of each product that needs reordering, one per line. Then display the total number needing reorder, in the format `<count> to reorder`.\n\nFor example, if products 2 and 4 need reordering, print their positions (2, then 4), then print `2 to reorder`.",
       "starter": "",
-      "hints": ["Loop by index so you can print the position", "Count the matches as you go"],
+      "hints": ["Loop by index (using range(len(stock))) rather than by item, so you have the position available to print.", "Count the matches in the same loop that checks and prints each low-stock position"],
       "tests": [{ "stdin": "10\n2\n7\n0\n5\n9", "expect": "2\n4\n2 to reorder" }, { "stdin": "5\n5\n5\n5\n5\n5", "expect": "0 to reorder" }]
     },
     {
       "slug": "gcse-lists-t3-03", "lesson": 3, "tier": 3, "difficulty": 4, "xp": 30,
       "title": "Seating grid",
-      "brief": "A small cinema has 3 rows of 4 seats, stored as a 2D list. The program reads 12 values, one per line, reading across row 1 first then row 2 then row 3. Each value is `X` for a taken seat or `-` for a free one. Display the number of free seats in each row, one row per line, in the form `Row 1: 2 free`.",
+      "brief": "A small cinema has 3 rows of 4 seats, stored as a 2D list. Read 12 values, one per line, reading across row 1 first, then row 2, then row 3. Each value is `X` for a taken seat or `-` for a free one.\n\nDisplay the number of free seats in each row, one row per line, in the format `Row <n>: <count> free`.\n\nFor example, if row 1 has two free seats, print `Row 1: 2 free`.",
       "starter": "",
-      "hints": ["Build the rows with a loop inside a loop", "Count the `-` values in each row"],
+      "hints": ["Build the 2D list with a loop inside a loop: an outer loop for each of the 3 rows, an inner loop reading 4 seats into that row.", "For each row, count how many entries equal \"-\""],
       "tests": [{ "stdin": "X\nX\n-\n-\nX\nX\nX\nX\n-\n-\n-\n-", "expect": "Row 1: 2 free\nRow 2: 0 free\nRow 3: 4 free" }, { "stdin": "-\n-\n-\n-\n-\n-\n-\n-\n-\n-\n-\n-", "expect": "Row 1: 4 free\nRow 2: 4 free\nRow 3: 4 free" }]
     },
     {
       "slug": "gcse-lists-t4-01", "lesson": 3, "tier": 4, "difficulty": 4, "xp": 35,
       "title": "Sports day results",
-      "brief": "A school records the times of eight runners in a race.\n\nEach time is entered on its own line as a whole number of seconds.\n\nThe program must produce a results summary of exactly three lines:\n\n```\nWinner time: 42\nSlowest time: 61\nUnder 50: 3\n```\n\nwhere `Under 50` is the number of runners whose time was less than 50 seconds.",
+      "brief": "A school records the times of eight runners in a race. Each time is entered on its own line, as a whole number of seconds.\n\nProduce a results summary of exactly three lines, in the format:\n\n```\nWinner time: 42\nSlowest time: 61\nUnder 50: 3\n```\n\n`Under 50` is the number of runners whose time was less than 50 seconds.",
       "starter": "",
-      "hints": ["Read all eight into a list first", "`min()`, `max()` and a counting loop give the three figures"],
+      "hints": ["Read all eight times into a list first, before working out any of the three results.", "min() and max() give the winner and slowest times directly; a counting loop gives the Under 50 figure"],
       "tests": [{ "stdin": "55\n42\n61\n49\n50\n47\n58\n60", "expect": "Winner time: 42\nSlowest time: 61\nUnder 50: 3" }, { "stdin": "50\n50\n50\n50\n50\n50\n50\n50", "expect": "Winner time: 50\nSlowest time: 50\nUnder 50: 0" }]
     },
     {
       "slug": "gcse-lists-t4-02", "lesson": 3, "tier": 4, "difficulty": 5, "xp": 40,
       "title": "Club membership search",
-      "brief": "A club stores its members' names and their ages in two separate lists that share the same positions, so position 0 of each list refers to the same person.\n\nThe program reads 4 names, each followed on the next line by that member's age, so the input alternates name, age, name, age, and so on.\n\nAfter the data has been read, one more line is entered containing a name to look up. The program must output either the age of that member in the form `Grace is 24` or, if the name is not in the list, the line `Not a member`.\n\nThe search must be case sensitive and must report the **first** match if a name appears twice.",
+      "brief": "A club stores its members' names and ages in two separate lists that share the same positions — position 0 of each list refers to the same person.\n\nRead 4 names, each followed on the next line by that member's age — the input alternates name, age, name, age, and so on.\n\nAfter the data has been read, one more line is entered: a name to look up. Output either the age of that member, in the format `<name> is <age>`, or — if the name isn't in the list — the line `Not a member`.\n\nThe search is case sensitive (\"Grace\" and \"grace\" are different), and if a name appears twice, report the **first** match.\n\nFor example, searching for Grace after Grace was entered with age 24 prints `Grace is 24`.",
       "starter": "",
-      "hints": ["Append to two lists inside one loop", "Find the index in the names list, then use the same index in the ages list"],
+      "hints": ["Append to two separate lists, names and ages, inside the same reading loop — one append to each list per pair of lines read.", "Find the search name's index in the names list, then use that same index to look up the matching age"],
       "tests": [{ "stdin": "Ada\n36\nGrace\n24\nAlan\n41\nLin\n19\nGrace", "expect": "Grace is 24" }, { "stdin": "Ada\n36\nGrace\n24\nAlan\n41\nLin\n19\ngrace", "expect": "Not a member" }]
     },
     {
       "slug": "gcse-lists-t4-03", "lesson": 3, "tier": 4, "difficulty": 5, "xp": 40,
       "title": "Tuck shop takings",
-      "brief": "A school tuck shop records how many items it sold of each of five products, along with the price of each product.\n\nThe program reads five lines, each containing the quantity sold, then five more lines each containing the matching price as a decimal.\n\nIt must output:\n- the total takings for the day, rounded to 2 decimal places, in the form `Takings: 24.5`\n- the position (counting from 1) of the product that earned the most, in the form `Best seller: 3`\n\nIf two products earn exactly the same amount, report the earlier position.",
+      "brief": "A school tuck shop records how many items it sold of each of five products, along with the price of each product.\n\nRead five lines, each containing the quantity sold. Then read five more lines, each containing the matching price, as a decimal.\n\nOutput two lines:\n- the total takings for the day, rounded to 2 decimal places, in the format `Takings: <amount>`\n- the position (counting from 1) of the product that earned the most, in the format `Best seller: <position>`\n\nIf two products earn exactly the same amount, report the earlier position.",
       "starter": "",
-      "hints": ["Read the quantities into one list and the prices into another", "The takings for a product is quantity × price"],
+      "hints": ["Read the quantities into one list and the prices into a second list — position 0 of each list refers to the same product.", "Each product's takings is its quantity multiplied by its price; work these out into a third list, then use it to find both the total and the best seller"],
       "tests": [{ "stdin": "2\n0\n5\n1\n3\n1.0\n2.0\n3.0\n4.0\n0.5", "expect": "Takings: 22.5\nBest seller: 3" }, { "stdin": "1\n1\n1\n1\n1\n1.0\n1.0\n1.0\n1.0\n1.0", "expect": "Takings: 5.0\nBest seller: 1" }]
+    },
+    {
+      "slug": "gcse-lists-t3-stretch", "lesson": 3, "tier": 4, "difficulty": 5, "xp": 40, "stretch": true,
+      "title": "Class test averages",
+      "brief": "A teacher records the scores of 3 students, each of whom sat 3 tests — 9 values in total, read one per line, all of student 1's scores first, then all of student 2's, then all of student 3's.\n\nFor each student, print their average score rounded to 1 decimal place, in the format `Student <n>: <average>`. After all three, print which student had the highest average, in the format `Best: <n>`.\n\nFor example, if student 1 averages 60.0, student 2 averages 90.0, and student 3 averages 45.0, student 2 has the highest average.",
+      "starter": "",
+      "hints": ["Build a 2D list: an outer loop for each of the 3 students, an inner loop reading that student's 3 scores into their own row.", "Loop over the rows to print each average, keeping track of the highest average seen so far and which student it belongs to as you go"],
+      "tests": [{ "stdin": "50\n60\n70\n90\n80\n100\n40\n50\n45", "expect": "Student 1: 60.0\nStudent 2: 90.0\nStudent 3: 45.0\nBest: 2" }, { "stdin": "10\n20\n30\n100\n100\n100\n5\n5\n5", "expect": "Student 1: 20.0\nStudent 2: 100.0\nStudent 3: 5.0\nBest: 2" }]
     }
   ]
 }
