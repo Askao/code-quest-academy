@@ -358,36 +358,44 @@ function Play() {
                         {r.stdin ? <p>input: {r.stdin.replace(/\n/g, " ⏎ ")}</p> : null}
                         {(() => {
                           const { expectedParts, actualParts } = diffStrings(r.expected, r.actual);
+                          // A highlighted run that's just a space or two renders as an
+                          // invisible sliver otherwise - browsers collapse whitespace by
+                          // default, and even with that off, a lone space with only a
+                          // background tint is easy to miss entirely. Swap spaces for a
+                          // visible middle dot inside highlighted runs only, so a missing
+                          // or extra space is as obvious as a wrong letter.
+                          const plain = (text: string) => text.replace(/\n/g, " ⏎ ");
+                          const marked = (text: string) => plain(text).replace(/ /g, "·");
                           return (
                             <>
-                              <p>
+                              <p className="whitespace-pre-wrap">
                                 expected:{" "}
                                 {expectedParts.map((part, pi) =>
                                   part.type === "removed" ? (
                                     <span
                                       key={pi}
-                                      className="rounded-sm bg-warning/30 text-warning underline decoration-warning decoration-2"
+                                      className="rounded-sm bg-warning/30 px-0.5 text-warning underline decoration-warning decoration-2"
                                     >
-                                      {part.text.replace(/\n/g, " ⏎ ")}
+                                      {marked(part.text)}
                                     </span>
                                   ) : (
-                                    <span key={pi}>{part.text.replace(/\n/g, " ⏎ ")}</span>
+                                    <span key={pi}>{plain(part.text)}</span>
                                   ),
                                 )}
                               </p>
-                              <p>
+                              <p className="whitespace-pre-wrap">
                                 you gave:{" "}
                                 {r.actual ? (
                                   actualParts.map((part, pi) =>
                                     part.type === "added" ? (
                                       <span
                                         key={pi}
-                                        className="rounded-sm bg-destructive/30 text-destructive underline decoration-destructive decoration-2"
+                                        className="rounded-sm bg-destructive/30 px-0.5 text-destructive underline decoration-destructive decoration-2"
                                       >
-                                        {part.text.replace(/\n/g, " ⏎ ")}
+                                        {marked(part.text)}
                                       </span>
                                     ) : (
-                                      <span key={pi}>{part.text.replace(/\n/g, " ⏎ ")}</span>
+                                      <span key={pi}>{plain(part.text)}</span>
                                     ),
                                   )
                                 ) : (
@@ -396,10 +404,11 @@ function Play() {
                               </p>
                               {r.actual && r.expected !== r.actual ? (
                                 <p className="text-muted-foreground">
-                                  Highlighted = where they don't match — {" "}
+                                  Highlighted = where they don't match —{" "}
                                   <span className="text-warning">amber</span> is what should be
                                   there, <span className="text-destructive">red</span> is what you
-                                  wrote instead. Check spelling, capitals and spacing closely.
+                                  wrote instead ({"·"} marks a space, so a missing or extra one is
+                                  easy to spot). Check spelling, capitals and spacing closely.
                                 </p>
                               ) : null}
                             </>
