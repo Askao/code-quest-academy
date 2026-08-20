@@ -592,6 +592,10 @@ export type Database = {
         Args: { _class_id: string }
         Returns: undefined
       }
+      delete_user_account: {
+        Args: { _user_id: string }
+        Returns: undefined
+      }
       has_role: {
         Args: {
           _role: Database["public"]["Enums"]["app_role"]

@@ -6,6 +6,16 @@ import { supabase } from "@/integrations/supabase/client";
 import { useAuth } from "@/hooks/useAuth";
 import { Button } from "@/components/ui/button";
 import { Input } from "@/components/ui/input";
+import {
+  AlertDialog,
+  AlertDialogAction,
+  AlertDialogCancel,
+  AlertDialogContent,
+  AlertDialogDescription,
+  AlertDialogFooter,
+  AlertDialogHeader,
+  AlertDialogTitle,
+} from "@/components/ui/alert-dialog";
 
 export const Route = createFileRoute("/_authenticated/admin")({
   head: () => ({
@@ -22,9 +32,12 @@ export const Route = createFileRoute("/_authenticated/admin")({
 type RoleKey = "student" | "teacher" | "admin";
 
 function Admin() {
-  const { isAdmin } = useAuth();
+  const { user, isAdmin } = useAuth();
   const qc = useQueryClient();
   const [settings, setSettings] = useState<Record<string, string>>({});
+  const [deleteTarget, setDeleteTarget] = useState<{ id: string; email: string } | null>(null);
+  const [confirmEmail, setConfirmEmail] = useState("");
+  const [deleting, setDeleting] = useState(false);
 
   const { data } = useQuery({
     queryKey: ["admin"],
@@ -59,6 +72,21 @@ function Admin() {
       toast.success(`Role set to ${role}`);
       void qc.invalidateQueries({ queryKey: ["admin"] });
     }
+  };
+
+  const deleteUser = async () => {
+    if (!deleteTarget || confirmEmail.trim() !== deleteTarget.email) return;
+    setDeleting(true);
+    const { error } = await supabase.rpc("delete_user_account", { _user_id: deleteTarget.id });
+    setDeleting(false);
+    if (error) {
+      toast.error(error.message);
+      return;
+    }
+    toast.success(`${deleteTarget.email} deleted`);
+    setDeleteTarget(null);
+    setConfirmEmail("");
+    void qc.invalidateQueries({ queryKey: ["admin"] });
   };
 
   const saveSetting = async (key: string) => {
@@ -145,6 +173,7 @@ function Admin() {
                 <th className="p-3">Name</th>
                 <th className="p-3">Email</th>
                 <th className="p-3">Role</th>
+                <th className="p-3"></th>
               </tr>
             </thead>
             <tbody>
@@ -163,12 +192,65 @@ function Admin() {
                       <option value="admin">admin</option>
                     </select>
                   </td>
+                  <td className="p-3 text-right">
+                    {p.id !== user?.id ? (
+                      <Button
+                        size="sm"
+                        variant="destructive"
+                        onClick={() => {
+                          setDeleteTarget({ id: p.id, email: p.email ?? "" });
+                          setConfirmEmail("");
+                        }}
+                      >
+                        Delete
+                      </Button>
+                    ) : null}
+                  </td>
                 </tr>
               ))}
             </tbody>
           </table>
         </div>
       </section>
+
+      <AlertDialog
+        open={!!deleteTarget}
+        onOpenChange={(open) => {
+          if (!open) {
+            setDeleteTarget(null);
+            setConfirmEmail("");
+          }
+        }}
+      >
+        <AlertDialogContent>
+          <AlertDialogHeader>
+            <AlertDialogTitle>Delete this account?</AlertDialogTitle>
+            <AlertDialogDescription>
+              This permanently deletes <strong>{deleteTarget?.email}</strong> — their profile,
+              progress, class membership and login are gone for good. This can't be undone.
+            </AlertDialogDescription>
+          </AlertDialogHeader>
+          <div className="space-y-2">
+            <label className="text-sm">
+              Type <strong>{deleteTarget?.email}</strong> to confirm
+            </label>
+            <Input value={confirmEmail} onChange={(e) => setConfirmEmail(e.target.value)} />
+          </div>
+          <AlertDialogFooter>
+            <AlertDialogCancel>Cancel</AlertDialogCancel>
+            <AlertDialogAction
+              className="bg-destructive text-destructive-foreground hover:bg-destructive/90"
+              disabled={deleting || confirmEmail.trim() !== deleteTarget?.email}
+              onClick={(e) => {
+                e.preventDefault();
+                void deleteUser();
+              }}
+            >
+              {deleting ? "Deleting…" : "Permanently delete"}
+            </AlertDialogAction>
+          </AlertDialogFooter>
+        </AlertDialogContent>
+      </AlertDialog>
     </div>
   );
 }
