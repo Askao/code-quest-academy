@@ -13,6 +13,7 @@ import { highlightErrorLine, pythonEditorExtensions } from "@/lib/python-lint";
 import { pickChallenge, recordAttempt, type Challenge } from "@/lib/progress";
 import { completedTaskSlugs, tasksForLesson, tasksInGroup, withContent } from "@/lib/content";
 import { inline } from "@/lib/markdown";
+import { diffStrings } from "@/lib/diff";
 
 type Search = {
   mode: "practice" | "boss" | "duel" | "homework" | "recap";
@@ -355,8 +356,55 @@ function Play() {
                     {!r.passed ? (
                       <div className="mt-2 space-y-1 font-mono text-xs">
                         {r.stdin ? <p>input: {r.stdin.replace(/\n/g, " ⏎ ")}</p> : null}
-                        <p>expected: {r.expected.replace(/\n/g, " ⏎ ")}</p>
-                        <p>you gave: {r.actual.replace(/\n/g, " ⏎ ") || "(nothing)"}</p>
+                        {(() => {
+                          const { expectedParts, actualParts } = diffStrings(r.expected, r.actual);
+                          return (
+                            <>
+                              <p>
+                                expected:{" "}
+                                {expectedParts.map((part, pi) =>
+                                  part.type === "removed" ? (
+                                    <span
+                                      key={pi}
+                                      className="rounded-sm bg-warning/30 text-warning underline decoration-warning decoration-2"
+                                    >
+                                      {part.text.replace(/\n/g, " ⏎ ")}
+                                    </span>
+                                  ) : (
+                                    <span key={pi}>{part.text.replace(/\n/g, " ⏎ ")}</span>
+                                  ),
+                                )}
+                              </p>
+                              <p>
+                                you gave:{" "}
+                                {r.actual ? (
+                                  actualParts.map((part, pi) =>
+                                    part.type === "added" ? (
+                                      <span
+                                        key={pi}
+                                        className="rounded-sm bg-destructive/30 text-destructive underline decoration-destructive decoration-2"
+                                      >
+                                        {part.text.replace(/\n/g, " ⏎ ")}
+                                      </span>
+                                    ) : (
+                                      <span key={pi}>{part.text.replace(/\n/g, " ⏎ ")}</span>
+                                    ),
+                                  )
+                                ) : (
+                                  <span className="text-destructive">(nothing)</span>
+                                )}
+                              </p>
+                              {r.actual && r.expected !== r.actual ? (
+                                <p className="text-muted-foreground">
+                                  Highlighted = where they don't match — {" "}
+                                  <span className="text-warning">amber</span> is what should be
+                                  there, <span className="text-destructive">red</span> is what you
+                                  wrote instead. Check spelling, capitals and spacing closely.
+                                </p>
+                              ) : null}
+                            </>
+                          );
+                        })()}
                         {r.error ? <p className="text-destructive">{r.error}</p> : null}
                       </div>
                     ) : null}
