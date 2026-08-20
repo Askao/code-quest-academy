@@ -1,8 +1,9 @@
-import { createFileRoute, useNavigate } from "@tanstack/react-router";
+import { createFileRoute, useNavigate, Link } from "@tanstack/react-router";
 import { useQuery, useQueryClient } from "@tanstack/react-query";
 import { useState } from "react";
 import { toast } from "sonner";
 import { supabase } from "@/integrations/supabase/client";
+import { useAuth } from "@/hooks/useAuth";
 import { Button } from "@/components/ui/button";
 import { Input } from "@/components/ui/input";
 import { Label } from "@/components/ui/label";
@@ -32,6 +33,7 @@ export const Route = createFileRoute("/_authenticated/teacher/$classId")({
 
 function ClassDetail() {
   const { classId } = Route.useParams();
+  const { user, isAdmin } = useAuth();
   const navigate = useNavigate();
   const qc = useQueryClient();
   const [title, setTitle] = useState("");
@@ -217,6 +219,13 @@ function ClassDetail() {
 
   const track = (data?.cls?.track ?? "gcse") as TrackKey;
 
+  // classes SELECT RLS allows the teacher, class members, AND admins to read
+  // a class row (members need that to check assignment/homework gates on
+  // their own /learn page) - so it doesn't by itself keep a student out of
+  // this teacher-only management page. Gate it here explicitly: only the
+  // owning teacher or an admin gets the roster/homework/danger-zone view.
+  const isOwner = !!data?.cls && (data.cls.teacher_id === user?.id || isAdmin);
+
   const setHomework = async () => {
     if (!title.trim()) {
       toast.error("Give the homework a title");
@@ -328,6 +337,20 @@ function ClassDetail() {
     );
     void navigate({ to: "/teacher" });
   };
+
+  if (data && !isOwner) {
+    return (
+      <div className="panel p-6">
+        <p className="font-medium">🔒 You don't have access to this page.</p>
+        <p className="mt-2 text-sm text-muted-foreground">
+          Only this class's own teacher (or an admin) can view it.
+        </p>
+        <Button asChild className="mt-4">
+          <Link to="/dashboard">Back to dashboard</Link>
+        </Button>
+      </div>
+    );
+  }
 
   return (
     <div className="space-y-8">
