@@ -4,9 +4,9 @@
   "lessons": [
     {
       "slug": "gcse-fundamentals-1",
-      "title": "Variables and assignment",
-      "summary": "What a variable actually is, and how to store a value in one.",
-      "notes": "A **variable** is a named location in memory that holds a value while a program runs. Think of it as a labelled box: the label is the variable's name, and whatever is currently inside is its value.\n\nIn Python you create a variable and give it a value with the **assignment operator**, `=`:\n\n```\nscore = 10\n```\n\nThis does not mean \"score equals 10\" the way it would in maths. It means \"put the value 10 in the box labelled `score`\". You can change what's in the box later by assigning to it again: `score = 15` replaces the old value.\n\nVariable naming rules Python enforces: a name must start with a letter or underscore, can only contain letters, numbers and underscores, and is case-sensitive (`total` and `Total` are different variables). OCR exam questions use the words *declare*, *assign* and *initialise* — they all mean \"create a variable and give it a starting value\".",
+      "title": "Variables and assignment (part 2)",
+      "summary": "The naming rules and exam vocabulary OCR expects you to know about variables.",
+      "notes": "You already met variables in Getting started: a **variable** is a named box that holds a value, created with `=`. This lesson covers the rules and vocabulary OCR expects you to know precisely.\n\n**Naming rules** Python enforces: a name must start with a letter or underscore, can only contain letters, numbers and underscores, and is case-sensitive (`total` and `Total` are different variables).\n\n**OCR exam vocabulary**: exam questions use the words *declare*, *assign* and *initialise* — they all mean \"create a variable and give it a starting value\". You might also see *update* or *reassign* for changing a variable's value later:\n\n```\nscore = 10\nprint(score)\nscore = score + 5\nprint(score)\n```",
       "worked_example": "# Store a player's score, then update it after they earn bonus points\nscore = 10\nprint(score)\nscore = score + 5\nprint(score)",
       "worked_example_note": "`score = score + 5` reads the current value out of the box, adds 5, then puts the result back in the same box. The right-hand side is always worked out first."
     },
