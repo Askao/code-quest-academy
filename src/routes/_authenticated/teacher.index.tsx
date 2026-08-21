@@ -33,17 +33,30 @@ function Teacher() {
   const qc = useQueryClient();
   const [name, setName] = useState("");
   const [track, setTrack] = useState<TrackKey>("gcse");
+  const [improvedWindowDays, setImprovedWindowDays] = useState(7);
 
   const { data: classes } = useQuery({
     queryKey: ["teacher-classes", user?.id],
     enabled: !!user,
     queryFn: async () => {
-      const { data } = await supabase
-        .from("classes")
-        .select("*, class_members(count)")
-        .eq("teacher_id", user!.id)
-        .order("created_at", { ascending: false });
-      return data ?? [];
+      const [owned, coTaught] = await Promise.all([
+        supabase
+          .from("classes")
+          .select("*, class_members(count)")
+          .eq("teacher_id", user!.id)
+          .order("created_at", { ascending: false }),
+        supabase
+          .from("class_co_teachers")
+          .select("classes(*, class_members(count))")
+          .eq("teacher_id", user!.id),
+      ]);
+      const mine = (owned.data ?? []).map((c) => ({ ...c, shared: false }));
+      const shared = (coTaught.data ?? [])
+        .map((r) => r.classes)
+        .filter((c): c is NonNullable<typeof c> => !!c)
+        .map((c) => ({ ...c, shared: true }));
+      const seen = new Set(mine.map((c) => c.id));
+      return [...mine, ...shared.filter((c) => !seen.has(c.id))];
     },
   });
 
@@ -54,6 +67,7 @@ function Teacher() {
       track,
       teacher_id: user!.id,
       join_code: makeCode(),
+      improved_window_days: improvedWindowDays,
     });
     if (error) toast.error(error.message);
     else {
@@ -93,22 +107,42 @@ function Teacher() {
             <option value="gcse">GCSE (OCR)</option>
             <option value="alevel">A level</option>
           </select>
+          <select
+            className="rounded-md border border-border bg-card px-3 py-2 text-sm"
+            value={improvedWindowDays}
+            onChange={(e) => setImprovedWindowDays(Number(e.target.value))}
+          >
+            <option value={7}>Most improved: last 7 days</option>
+            <option value={14}>Most improved: last 14 days</option>
+            <option value={30}>Most improved: last 30 days</option>
+          </select>
           <Button onClick={createClass}>Create class</Button>
         </div>
+        <p className="text-xs text-muted-foreground">
+          The "most improved" window sets how far back that class's leaderboard looks for XP gained
+          — pick whatever fits how often you want it to reset.
+        </p>
       </div>
 
       <div className="grid gap-4 sm:grid-cols-2 lg:grid-cols-3">
         {(classes ?? []).map((c) => (
           <div key={c.id} className="panel p-5">
-            <div className="flex items-start justify-between">
+            <div className="flex items-start justify-between gap-2">
               <p className="font-semibold">{c.name}</p>
-              <span
-                className={`rounded-full px-2 py-0.5 font-mono text-xs ${
-                  c.track === "gcse" ? "bg-gcse/15 text-gcse" : "bg-alevel/15 text-alevel"
-                }`}
-              >
-                {c.track === "gcse" ? "GCSE" : "A LEVEL"}
-              </span>
+              <div className="flex shrink-0 flex-wrap justify-end gap-1.5">
+                {c.shared ? (
+                  <span className="rounded-full bg-secondary px-2 py-0.5 font-mono text-xs text-muted-foreground">
+                    Shared with you
+                  </span>
+                ) : null}
+                <span
+                  className={`rounded-full px-2 py-0.5 font-mono text-xs ${
+                    c.track === "gcse" ? "bg-gcse/15 text-gcse" : "bg-alevel/15 text-alevel"
+                  }`}
+                >
+                  {c.track === "gcse" ? "GCSE" : "A LEVEL"}
+                </span>
+              </div>
             </div>
             <p className="mt-3 font-mono text-sm">
               Join code: <span className="text-primary">{c.join_code}</span>

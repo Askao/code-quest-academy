@@ -54,11 +54,29 @@ function ClassDetail() {
   const [expandedStudent, setExpandedStudent] = useState<string | null>(null);
   const [expandedLesson, setExpandedLesson] = useState<string | null>(null);
   const [expandedHomework, setExpandedHomework] = useState<string | null>(null);
+  const [coTeacherEmail, setCoTeacherEmail] = useState("");
+  const [addingCoTeacher, setAddingCoTeacher] = useState(false);
 
   const { data } = useQuery({
     queryKey: ["class", classId],
     queryFn: async () => {
       const cls = await supabase.from("classes").select("*").eq("id", classId).maybeSingle();
+      const coTeachersRes = await supabase
+        .from("class_co_teachers")
+        .select("id, teacher_id")
+        .eq("class_id", classId);
+      const coTeacherIds = (coTeachersRes.data ?? []).map((c) => c.teacher_id);
+      const coTeacherProfilesRes = coTeacherIds.length
+        ? await supabase.from("profiles").select("id, full_name, email").in("id", coTeacherIds)
+        : { data: [] };
+      const coTeachers = (coTeachersRes.data ?? []).map((c) => ({
+        id: c.id,
+        teacherId: c.teacher_id,
+        name:
+          (coTeacherProfilesRes.data ?? []).find((p) => p.id === c.teacher_id)?.full_name ??
+          "Teacher",
+        email: (coTeacherProfilesRes.data ?? []).find((p) => p.id === c.teacher_id)?.email ?? "",
+      }));
       const members = await supabase
         .from("class_members")
         .select("student_id")
@@ -133,9 +151,7 @@ function ClassDetail() {
       const students = (profiles.data ?? []).map((p) => {
         const s = (stats.data ?? []).find((x) => x.user_id === p.id);
         const mine = (skills.data ?? []).filter((k) => k.user_id === p.id);
-        const avg = mine.length
-          ? mine.reduce((a, b) => a + Number(b.level), 0) / mine.length
-          : 1;
+        const avg = mine.length ? mine.reduce((a, b) => a + Number(b.level), 0) / mine.length : 1;
         const mineAttempts = (attempts.data ?? []).filter((a) => a.user_id === p.id);
         const accuracy = mineAttempts.length
           ? Math.round((mineAttempts.filter((a) => a.passed).length / mineAttempts.length) * 100)
@@ -227,6 +243,7 @@ function ClassDetail() {
 
       return {
         cls: cls.data,
+        coTeachers,
         students,
         lessonAssignments: (lessonAssignmentsRes.data ?? []).map((a) => {
           // Every student sees the same tasks for a given lesson (unlike
@@ -300,7 +317,9 @@ function ClassDetail() {
       .map((s) => s.skills.find((k) => k.topic === t.key && k.track === track))
       .filter((k): k is NonNullable<typeof k> => !!k);
     const avgPercent = levels.length
-      ? Math.round(levels.reduce((sum, k) => sum + skillPercent(Number(k.level)), 0) / levels.length)
+      ? Math.round(
+          levels.reduce((sum, k) => sum + skillPercent(Number(k.level)), 0) / levels.length,
+        )
       : null;
     const strugglingCount = levels.filter(
       (k) => (k.consecutive_fails ?? 0) >= STRUGGLING_THRESHOLD,
@@ -311,9 +330,15 @@ function ClassDetail() {
   // classes SELECT RLS allows the teacher, class members, AND admins to read
   // a class row (members need that to check assignment/homework gates on
   // their own /learn page) - so it doesn't by itself keep a student out of
-  // this teacher-only management page. Gate it here explicitly: only the
-  // owning teacher or an admin gets the roster/homework/danger-zone view.
-  const isOwner = !!data?.cls && (data.cls.teacher_id === user?.id || isAdmin);
+  // this teacher-only management page. Gate it here explicitly.
+  // isPrimaryOwner: the original owner or an admin - gates Danger Zone and
+  // adding/removing co-teachers, so a colleague covering the class can't
+  // remove the owner's access or delete it.
+  // hasAccess: owner, admin, OR a co-teacher - gates the rest of the page
+  // (roster, homework, lessons), the actual "cover this class" access.
+  const isPrimaryOwner = !!data?.cls && (data.cls.teacher_id === user?.id || isAdmin);
+  const isCoTeacher = (data?.coTeachers ?? []).some((t) => t.teacherId === user?.id);
+  const hasAccess = isPrimaryOwner || isCoTeacher;
 
   const setHomework = async () => {
     if (!title.trim()) {
@@ -368,7 +393,8 @@ function ClassDetail() {
       const level =
         selectedTopics.length > 0
           ? selectedTopics.reduce(
-              (sum, t) => sum + Number(s.skills.find((k) => k.topic === t && k.track === track)?.level ?? 2),
+              (sum, t) =>
+                sum + Number(s.skills.find((k) => k.topic === t && k.track === track)?.level ?? 2),
               0,
             ) / selectedTopics.length
           : s.avg || 2;
@@ -401,9 +427,7 @@ function ClassDetail() {
       .from("lesson_assignments")
       .insert({ class_id: classId, lesson_slug: assignLessonSlug });
     if (error) {
-      toast.error(
-        error.code === "23505" ? "Already assigned to this class" : error.message,
-      );
+      toast.error(error.code === "23505" ? "Already assigned to this class" : error.message);
       return;
     }
     toast.success("Lesson assigned");
@@ -433,6 +457,33 @@ function ClassDetail() {
     if (!joinLink) return;
     await navigator.clipboard.writeText(joinLink);
     toast.success("Join link copied");
+  };
+
+  const addCoTeacher = async () => {
+    if (!coTeacherEmail.trim()) return;
+    setAddingCoTeacher(true);
+    const { error } = await supabase.rpc("add_class_co_teacher", {
+      _class_id: classId,
+      _email: coTeacherEmail.trim(),
+    });
+    setAddingCoTeacher(false);
+    if (error) {
+      toast.error(error.message);
+      return;
+    }
+    toast.success("Co-teacher added — they now have full access to this class");
+    setCoTeacherEmail("");
+    void qc.invalidateQueries({ queryKey: ["class", classId] });
+  };
+
+  const removeCoTeacher = async (id: string) => {
+    const { error } = await supabase.from("class_co_teachers").delete().eq("id", id);
+    if (error) {
+      toast.error(error.message);
+      return;
+    }
+    toast.success("Co-teacher removed");
+    void qc.invalidateQueries({ queryKey: ["class", classId] });
   };
 
   const deleteClass = async () => {
@@ -471,7 +522,9 @@ function ClassDetail() {
         String(s.streak),
         String(s.accuracy),
         ...topics.map((t) => {
-          const lvl = Number(s.skills.find((k) => k.topic === t.key && k.track === track)?.level ?? 1);
+          const lvl = Number(
+            s.skills.find((k) => k.topic === t.key && k.track === track)?.level ?? 1,
+          );
           return String(skillPercent(lvl));
         }),
         String(skillPercent(s.avg)),
@@ -505,7 +558,7 @@ function ClassDetail() {
     downloadCsv(`${lessonTitle}.csv`, rows);
   };
 
-  if (data && !isOwner) {
+  if (data && !hasAccess) {
     return (
       <div className="panel p-6">
         <p className="font-medium">🔒 You don't have access to this page.</p>
@@ -538,10 +591,59 @@ function ClassDetail() {
           </div>
         ) : null}
         <p className="mt-2 max-w-xl text-xs text-muted-foreground">
-          Share this link with your students — it's the only way they can join this class and
-          become a student here. Signing up separately at h-code.up.railway.app doesn't enroll
-          them in anything.
+          Share this link with your students — it's the only way they can join this class and become
+          a student here. Signing up separately at h-code.up.railway.app doesn't enroll them in
+          anything.
         </p>
+      </div>
+
+      <div className="panel space-y-3 p-5">
+        <h2 className="text-lg font-semibold">Teachers on this class</h2>
+        <p className="text-sm text-muted-foreground">
+          Co-teachers get the same day-to-day access as you — roster, homework, lessons, progress —
+          for cover or shared classes. Only you can add or remove them, or delete the class.
+        </p>
+        <ul className="space-y-1.5 text-sm">
+          <li className="flex items-center justify-between gap-2 rounded-md border border-border px-3 py-2">
+            <span>
+              {data?.cls?.teacher_id === user?.id ? "You" : "Owner"}
+              <span className="ml-2 rounded-full bg-secondary px-2 py-0.5 font-mono text-xs text-muted-foreground">
+                Owner
+              </span>
+            </span>
+          </li>
+          {(data?.coTeachers ?? []).map((t) => (
+            <li
+              key={t.id}
+              className="flex items-center justify-between gap-2 rounded-md border border-border px-3 py-2"
+            >
+              <span>
+                {t.teacherId === user?.id ? "You" : t.name}
+                {t.email ? (
+                  <span className="ml-2 font-mono text-xs text-muted-foreground">{t.email}</span>
+                ) : null}
+              </span>
+              {isPrimaryOwner ? (
+                <Button size="sm" variant="secondary" onClick={() => removeCoTeacher(t.id)}>
+                  Remove
+                </Button>
+              ) : null}
+            </li>
+          ))}
+        </ul>
+        {isPrimaryOwner ? (
+          <div className="flex flex-wrap gap-2">
+            <Input
+              className="max-w-xs"
+              placeholder="colleague@school.example"
+              value={coTeacherEmail}
+              onChange={(e) => setCoTeacherEmail(e.target.value)}
+            />
+            <Button onClick={addCoTeacher} disabled={addingCoTeacher}>
+              {addingCoTeacher ? "Adding…" : "Add teacher"}
+            </Button>
+          </div>
+        ) : null}
       </div>
 
       <Tabs value={activeTab} onValueChange={setActiveTab}>
@@ -634,7 +736,8 @@ function ClassDetail() {
                           <div className="grid gap-3 sm:grid-cols-2 lg:grid-cols-3">
                             {topicsFor(track).map((t) => {
                               const lvl = Number(
-                                s.skills.find((k) => k.topic === t.key && k.track === track)?.level ?? 1,
+                                s.skills.find((k) => k.topic === t.key && k.track === track)
+                                  ?.level ?? 1,
                               );
                               return (
                                 <div key={t.key}>
@@ -811,12 +914,16 @@ function ClassDetail() {
           <section id="set-homework" className="panel space-y-3 p-5">
             <h2 className="text-lg font-semibold">Set homework</h2>
             <p className="text-sm text-muted-foreground">
-              Each student gets their own set of challenges, picked at their own skill level for
-              the selected topics — not the same list for the whole class.
+              Each student gets their own set of challenges, picked at their own skill level for the
+              selected topics — not the same list for the whole class.
             </p>
             <div className="grid gap-2 sm:grid-cols-2">
               <Input placeholder="Title" value={title} onChange={(e) => setTitle(e.target.value)} />
-              <Input type="datetime-local" value={dueAt} onChange={(e) => setDueAt(e.target.value)} />
+              <Input
+                type="datetime-local"
+                value={dueAt}
+                onChange={(e) => setDueAt(e.target.value)}
+              />
             </div>
             <div className="space-y-1.5">
               <Label>
@@ -859,7 +966,9 @@ function ClassDetail() {
               onChange={(e) => setEffort(e.target.value)}
             >
               <option value="low">Low effort — {EFFORT_COUNT["low"]} challenges each</option>
-              <option value="medium">Medium effort — {EFFORT_COUNT["medium"]} challenges each</option>
+              <option value="medium">
+                Medium effort — {EFFORT_COUNT["medium"]} challenges each
+              </option>
               <option value="high">High effort — {EFFORT_COUNT["high"]} challenges each</option>
             </select>
             <Input
@@ -895,7 +1004,8 @@ function ClassDetail() {
                         ) : null}
                       </button>
                       <span className="font-mono text-xs text-muted-foreground">
-                        {doneCount}/{sorted.length} students done · {perStudentCount} challenges each
+                        {doneCount}/{sorted.length} students done · {perStudentCount} challenges
+                        each
                         {h.due_at ? ` · due ${new Date(h.due_at).toLocaleDateString("en-GB")}` : ""}
                       </span>
                       <Button size="sm" variant="secondary" onClick={() => exportHomework(h)}>
@@ -928,7 +1038,11 @@ function ClassDetail() {
                                 <p className="mt-1 text-muted-foreground">"{r.message}"</p>
                               ) : null}
                             </div>
-                            <Button size="sm" variant="secondary" onClick={() => resolveHelpRequest(r.id)}>
+                            <Button
+                              size="sm"
+                              variant="secondary"
+                              onClick={() => resolveHelpRequest(r.id)}
+                            >
                               Mark resolved
                             </Button>
                           </div>
@@ -958,7 +1072,10 @@ function ClassDetail() {
                           </thead>
                           <tbody>
                             {sorted.map((c) => (
-                              <tr key={c.id} className="border-t border-border/60 hover:bg-secondary/20">
+                              <tr
+                                key={c.id}
+                                className="border-t border-border/60 hover:bg-secondary/20"
+                              >
                                 <td className="p-1.5 whitespace-nowrap font-medium">{c.name}</td>
                                 {Array.from({ length: perStudentCount }, (_, i) => {
                                   const t = c.tasks[i];
@@ -982,8 +1099,8 @@ function ClassDetail() {
                           </tbody>
                         </table>
                         <p className="mt-2 text-xs text-muted-foreground">
-                          Each student's homework is personalised, so column N isn't the same task for
-                          everyone — hover a cell to see which task it is.
+                          Each student's homework is personalised, so column N isn't the same task
+                          for everyone — hover a cell to see which task it is.
                         </p>
                       </div>
                     ) : null}
@@ -998,59 +1115,61 @@ function ClassDetail() {
         </TabsContent>
       </Tabs>
 
-      <section className="panel space-y-3 border-destructive/40 p-5">
-        <h2 className="text-lg font-semibold text-destructive">Danger zone</h2>
-        {!showDeleteConfirm ? (
-          <>
-            <p className="text-sm text-muted-foreground">
-              Permanently delete this class and every student account in it — not just their
-              membership, the accounts themselves. This can't be undone.
-            </p>
-            <Button variant="destructive" onClick={() => setShowDeleteConfirm(true)}>
-              Delete class
-            </Button>
-          </>
-        ) : (
-          <div className="space-y-3 rounded-lg border border-destructive/40 bg-destructive/5 p-4">
-            <p className="text-sm">
-              This will permanently delete <strong>{data?.cls?.name}</strong> and{" "}
-              <strong>
-                {data?.students.length ?? 0} student account
-                {(data?.students.length ?? 0) === 1 ? "" : "s"}
-              </strong>{" "}
-              — their profiles, progress, and logins are gone for good, not just unenrolled.
-            </p>
-            <div className="space-y-2">
-              <Label htmlFor="confirm-class-name">
-                Type <strong>{data?.cls?.name}</strong> to confirm
-              </Label>
-              <Input
-                id="confirm-class-name"
-                value={deleteConfirmText}
-                onChange={(e) => setDeleteConfirmText(e.target.value)}
-              />
-            </div>
-            <div className="flex gap-2">
-              <Button
-                variant="destructive"
-                disabled={deleting || deleteConfirmText.trim() !== data?.cls?.name}
-                onClick={deleteClass}
-              >
-                {deleting ? "Deleting…" : "Permanently delete"}
+      {isPrimaryOwner ? (
+        <section className="panel space-y-3 border-destructive/40 p-5">
+          <h2 className="text-lg font-semibold text-destructive">Danger zone</h2>
+          {!showDeleteConfirm ? (
+            <>
+              <p className="text-sm text-muted-foreground">
+                Permanently delete this class and every student account in it — not just their
+                membership, the accounts themselves. This can't be undone.
+              </p>
+              <Button variant="destructive" onClick={() => setShowDeleteConfirm(true)}>
+                Delete class
               </Button>
-              <Button
-                variant="secondary"
-                onClick={() => {
-                  setShowDeleteConfirm(false);
-                  setDeleteConfirmText("");
-                }}
-              >
-                Cancel
-              </Button>
+            </>
+          ) : (
+            <div className="space-y-3 rounded-lg border border-destructive/40 bg-destructive/5 p-4">
+              <p className="text-sm">
+                This will permanently delete <strong>{data?.cls?.name}</strong> and{" "}
+                <strong>
+                  {data?.students.length ?? 0} student account
+                  {(data?.students.length ?? 0) === 1 ? "" : "s"}
+                </strong>{" "}
+                — their profiles, progress, and logins are gone for good, not just unenrolled.
+              </p>
+              <div className="space-y-2">
+                <Label htmlFor="confirm-class-name">
+                  Type <strong>{data?.cls?.name}</strong> to confirm
+                </Label>
+                <Input
+                  id="confirm-class-name"
+                  value={deleteConfirmText}
+                  onChange={(e) => setDeleteConfirmText(e.target.value)}
+                />
+              </div>
+              <div className="flex gap-2">
+                <Button
+                  variant="destructive"
+                  disabled={deleting || deleteConfirmText.trim() !== data?.cls?.name}
+                  onClick={deleteClass}
+                >
+                  {deleting ? "Deleting…" : "Permanently delete"}
+                </Button>
+                <Button
+                  variant="secondary"
+                  onClick={() => {
+                    setShowDeleteConfirm(false);
+                    setDeleteConfirmText("");
+                  }}
+                >
+                  Cancel
+                </Button>
+              </div>
             </div>
-          </div>
-        )}
-      </section>
+          )}
+        </section>
+      ) : null}
     </div>
   );
 }

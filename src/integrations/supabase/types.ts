@@ -204,6 +204,7 @@ export type Database = {
         Row: {
           created_at: string
           id: string
+          improved_window_days: number
           join_code: string
           name: string
           teacher_id: string
@@ -212,6 +213,7 @@ export type Database = {
         Insert: {
           created_at?: string
           id?: string
+          improved_window_days?: number
           join_code: string
           name: string
           teacher_id: string
@@ -220,12 +222,45 @@ export type Database = {
         Update: {
           created_at?: string
           id?: string
+          improved_window_days?: number
           join_code?: string
           name?: string
           teacher_id?: string
           track?: Database["public"]["Enums"]["track"]
         }
         Relationships: []
+      }
+      class_co_teachers: {
+        Row: {
+          added_by: string
+          class_id: string
+          created_at: string
+          id: string
+          teacher_id: string
+        }
+        Insert: {
+          added_by: string
+          class_id: string
+          created_at?: string
+          id?: string
+          teacher_id: string
+        }
+        Update: {
+          added_by?: string
+          class_id?: string
+          created_at?: string
+          id?: string
+          teacher_id?: string
+        }
+        Relationships: [
+          {
+            foreignKeyName: "class_co_teachers_class_id_fkey"
+            columns: ["class_id"]
+            isOneToOne: false
+            referencedRelation: "classes"
+            referencedColumns: ["id"]
+          },
+        ]
       }
       ide_programs: {
         Row: {
@@ -630,6 +665,16 @@ export type Database = {
       [_ in never]: never
     }
     Functions: {
+      add_class_co_teacher: {
+        Args: { _class_id: string; _email: string }
+        Returns: {
+          added_by: string
+          class_id: string
+          created_at: string
+          id: string
+          teacher_id: string
+        }
+      }
       can_view_user: {
         Args: { _target: string; _viewer: string }
         Returns: boolean
@@ -660,6 +705,22 @@ export type Database = {
       is_class_teacher: {
         Args: { _class_id: string; _user_id: string }
         Returns: boolean
+      }
+      leaderboard_most_improved: {
+        Args: {
+          _class_id?: string | null
+          _limit?: number
+          _track?: Database["public"]["Enums"]["track"] | null
+        }
+        Returns: { id: string; name: string; xp_gained: number }[]
+      }
+      leaderboard_top_xp: {
+        Args: {
+          _class_id?: string | null
+          _limit?: number
+          _track?: Database["public"]["Enums"]["track"] | null
+        }
+        Returns: { id: string; name: string; xp: number; streak_days: number }[]
       }
     }
     Enums: {
