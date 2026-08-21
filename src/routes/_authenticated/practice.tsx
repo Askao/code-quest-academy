@@ -1,4 +1,4 @@
-import { createFileRoute, useNavigate } from "@tanstack/react-router";
+import { createFileRoute, useNavigate, Link } from "@tanstack/react-router";
 import { useQuery } from "@tanstack/react-query";
 import { useState } from "react";
 import { toast } from "sonner";
@@ -6,9 +6,15 @@ import { supabase } from "@/integrations/supabase/client";
 import { useAuth } from "@/hooks/useAuth";
 import { Button } from "@/components/ui/button";
 import { Progress } from "@/components/ui/progress";
-import { pickChallenge } from "@/lib/progress";
-import { skillLabel, skillPercent, topicsFor, type TrackKey } from "@/lib/game";
-import { completedTaskSlugs, isLessonComplete, lessonsForTopic } from "@/lib/content";
+import { pickChallenge, pickRecapChallenge } from "@/lib/progress";
+import { skillLabel, skillPercent, topicLabel, topicsFor, type TrackKey } from "@/lib/game";
+import {
+  completedTaskSlugs,
+  isLessonComplete,
+  lessonsForTopic,
+  projectsForTopic,
+  QUIZZES,
+} from "@/lib/content";
 
 export const Route = createFileRoute("/_authenticated/practice")({
   head: () => ({
@@ -16,22 +22,27 @@ export const Route = createFileRoute("/_authenticated/practice")({
       { title: "Practise — H-Code" },
       {
         name: "description",
-        content: "Pick a topic and get a fresh Python challenge matched to your level.",
+        content: "Daily recap, adaptive practice, projects and boss battles, all in one place.",
       },
       { property: "og:title", content: "Practise — H-Code" },
       {
         property: "og:description",
-        content: "Pick a topic and get a fresh Python challenge matched to your level.",
+        content: "Daily recap, adaptive practice, projects and boss battles, all in one place.",
       },
     ],
   }),
   component: Practice,
 });
 
+function todayStart() {
+  return new Date().toISOString().slice(0, 10) + "T00:00:00.000Z";
+}
+
 function Practice() {
-  const { user } = useAuth();
+  const { user, isTeacher } = useAuth();
   const navigate = useNavigate();
   const [track, setTrack] = useState<TrackKey>("gcse");
+  const [quizAnswer, setQuizAnswer] = useState<string | null>(null);
 
   const { data } = useQuery({
     queryKey: ["practice-context", user?.id],
@@ -71,6 +82,60 @@ function Practice() {
     },
   });
 
+  const { data: recap } = useQuery({
+    queryKey: ["recap", user?.id, data?.passedSlugs, data?.quizPassed, isTeacher],
+    enabled: !!user && !!data,
+    queryFn: async () => {
+      const uid = user!.id;
+      const [doneToday, recentAttempts] = await Promise.all([
+        supabase
+          .from("attempts")
+          .select("id", { count: "exact", head: true })
+          .eq("user_id", uid)
+          .eq("mode", "recap")
+          .gte("created_at", todayStart()),
+        supabase
+          .from("attempts")
+          .select("challenge_id")
+          .eq("user_id", uid)
+          .order("created_at", { ascending: false })
+          .limit(10),
+      ]);
+
+      const onlySlugs = completedTaskSlugs("gcse", data!.passedSlugs, data!.quizPassed);
+      const excludeIds = (recentAttempts.data ?? []).map((a) => a.challenge_id);
+      // Admins/teachers reviewing content have no real progress to recap from -
+      // fall back to any challenge/quiz so they can preview the feature rather
+      // than always seeing the "practise a topic first" empty state.
+      const challenge = onlySlugs.size
+        ? await pickRecapChallenge({ userId: uid, track: "gcse", excludeIds, onlySlugs })
+        : isTeacher
+          ? await pickChallenge({ track: "gcse", level: 3, excludeIds })
+          : null;
+
+      const eligibleQuiz = isTeacher
+        ? QUIZZES
+        : QUIZZES.filter((q) => data!.quizPassed.has(q.lessonSlug));
+      const quiz = eligibleQuiz.length
+        ? eligibleQuiz[Math.floor(Math.random() * eligibleQuiz.length)]!
+        : null;
+
+      return { doneToday: (doneToday.count ?? 0) > 0, challenge, quiz };
+    },
+  });
+
+  const { data: seededProjectSlugs } = useQuery({
+    queryKey: ["seeded-project-slugs"],
+    queryFn: async () => {
+      const { data: rows } = await supabase
+        .from("challenges")
+        .select("slug")
+        .eq("track", "gcse")
+        .eq("is_project", true);
+      return new Set((rows ?? []).map((r) => r.slug));
+    },
+  });
+
   const levelFor = (topic: string) =>
     Number(data?.skills.find((s) => s.topic === topic && s.track === track)?.level ?? 1);
 
@@ -87,7 +152,10 @@ function Practice() {
   // GCSE topics stay locked in Practice until at least one of their lessons
   // is complete - practising unfamiliar wording/content is exactly what
   // confused students. A-level has no lesson content yet, so it's exempt.
+  // Admins/teachers skip this entirely so they can review any topic without
+  // needing to fake their way through lessons first.
   const topicUnlocked = (topic: string) => {
+    if (isTeacher) return true;
     if (track !== "gcse") return true;
     const lessons = lessonsForTopic(track, topic);
     return (
@@ -111,7 +179,7 @@ function Practice() {
       ...(topic ? { topic } : {}),
       level,
       excludeIds: data?.recent ?? [],
-      ...(onlySlugs ? { onlySlugs } : {}),
+      ...(onlySlugs && !isTeacher ? { onlySlugs } : {}),
     });
     if (!challenge) {
       toast.error(
@@ -139,7 +207,11 @@ function Practice() {
     });
   };
 
-  const alevelLocked = track === "alevel" && !data?.allowAlevel;
+  const alevelLocked = track === "alevel" && !data?.allowAlevel && !isTeacher;
+
+  const topicsWithProjects = topicsFor("gcse")
+    .map((t) => ({ ...t, projects: projectsForTopic("gcse", t.key) }))
+    .filter((t) => t.projects.some((p) => seededProjectSlugs?.has(p.slug)));
 
   return (
     <div className="space-y-8">
@@ -149,6 +221,87 @@ function Practice() {
           Every session pulls a different challenge, chosen from your current level in that topic.
         </p>
       </div>
+
+      <section className="panel p-5">
+        <h2 className="text-lg font-semibold">Today's recap</h2>
+        {recap?.doneToday ? (
+          <p className="mt-2 text-sm text-muted-foreground">
+            ✓ Done for today — come back tomorrow for the next one.
+          </p>
+        ) : (
+          <div className="mt-3 grid gap-6 md:grid-cols-2">
+            <div>
+              <h3 className="text-sm font-semibold text-muted-foreground">Quick task</h3>
+              {recap?.challenge ? (
+                <>
+                  <p className="mt-1 text-sm text-muted-foreground">
+                    {topicLabel(recap.challenge.topic)} · difficulty {recap.challenge.difficulty}/5
+                  </p>
+                  <Button asChild size="sm" className="mt-3">
+                    <Link
+                      to="/play/$slug"
+                      params={{ slug: recap.challenge.slug }}
+                      search={{ mode: "recap" as const }}
+                    >
+                      Start
+                    </Link>
+                  </Button>
+                </>
+              ) : (
+                <p className="mt-2 text-sm text-muted-foreground">
+                  Practise a topic first — recap picks from what you've already covered.
+                </p>
+              )}
+            </div>
+
+            <div>
+              <h3 className="text-sm font-semibold text-muted-foreground">Quick question</h3>
+              {recap?.quiz ? (
+                <>
+                  <p className="mt-2 text-sm font-medium">{recap.quiz.question}</p>
+                  <div className="mt-3 space-y-1.5">
+                    {recap.quiz.options.map((option) => {
+                      const chosen = quizAnswer === option;
+                      const isCorrect = option === recap.quiz!.answer;
+                      return (
+                        <label
+                          key={option}
+                          className={`flex cursor-pointer items-center gap-2 rounded-md border p-2 text-sm ${
+                            quizAnswer
+                              ? isCorrect
+                                ? "border-success/50 bg-success/10"
+                                : chosen
+                                  ? "border-destructive/50 bg-destructive/10"
+                                  : "border-border"
+                              : "border-border hover:bg-secondary/30"
+                          }`}
+                        >
+                          <input
+                            type="radio"
+                            name="recap-quiz"
+                            className="accent-primary"
+                            disabled={!!quizAnswer}
+                            checked={chosen}
+                            onChange={() => setQuizAnswer(option)}
+                          />
+                          {option}
+                        </label>
+                      );
+                    })}
+                  </div>
+                  {quizAnswer ? (
+                    <p className="mt-2 text-xs text-muted-foreground">{recap.quiz.explanation}</p>
+                  ) : null}
+                </>
+              ) : (
+                <p className="mt-2 text-sm text-muted-foreground">
+                  Pass a lesson quiz first — recap picks from questions you've already seen.
+                </p>
+              )}
+            </div>
+          </div>
+        )}
+      </section>
 
       <div className="flex flex-wrap gap-2">
         {(["gcse", "alevel"] as const).map((t) => (
@@ -219,6 +372,68 @@ function Practice() {
           );
         })}
       </div>
+
+      {topicsWithProjects.length > 0 ? (
+        <section>
+          <h2 className="mb-1 text-xl font-semibold">Projects</h2>
+          <p className="mb-3 text-sm text-muted-foreground">
+            Longer, harder programs that pull together everything you've learned in a topic — a
+            real test, not a quick drill.
+          </p>
+          <div className="space-y-6">
+            {topicsWithProjects.map((t) => {
+              const unlocked = topicUnlocked(t.key);
+              if (!unlocked) {
+                return (
+                  <div key={t.key} className="panel p-5 opacity-50">
+                    <p className="font-semibold">🔒 {t.label}</p>
+                    <p className="mt-1 text-sm text-muted-foreground">
+                      Finish a lesson in this topic to unlock its projects.
+                    </p>
+                  </div>
+                );
+              }
+              return (
+                <div key={t.key}>
+                  <p className="mb-2 text-sm font-semibold text-muted-foreground">{t.label}</p>
+                  <div className="space-y-3">
+                    {t.projects
+                      .filter((p) => seededProjectSlugs?.has(p.slug))
+                      .map((p) => {
+                        const done = data?.passedSlugs.has(p.slug) ?? false;
+                        return (
+                          <div
+                            key={p.slug}
+                            className="panel flex flex-wrap items-center gap-3 p-4"
+                          >
+                            <span className={done ? "text-success" : "text-muted-foreground"}>
+                              {done ? "✓" : "🏗"}
+                            </span>
+                            <div className="flex-1">
+                              <p className="font-medium">{p.title}</p>
+                              <p className="font-mono text-xs text-muted-foreground">
+                                difficulty {p.difficulty}/5 · {p.xp} XP
+                              </p>
+                            </div>
+                            <Button asChild size="sm" variant={done ? "secondary" : "default"}>
+                              <Link
+                                to="/play/$slug"
+                                params={{ slug: p.slug }}
+                                search={{ mode: "project", track: "gcse", topic: t.key }}
+                              >
+                                {done ? "Redo" : "Start"}
+                              </Link>
+                            </Button>
+                          </div>
+                        );
+                      })}
+                  </div>
+                </div>
+              );
+            })}
+          </div>
+        </section>
+      ) : null}
 
       <div className="panel flex flex-wrap items-center gap-4 p-5">
         <div className="flex-1">

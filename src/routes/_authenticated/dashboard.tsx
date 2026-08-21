@@ -107,7 +107,7 @@ function Dashboard() {
           </p>
         </div>
         <Button asChild variant={data?.recapDoneToday ? "secondary" : "default"}>
-          <Link to="/recap">{data?.recapDoneToday ? "Do it again" : "Start recap"}</Link>
+          <Link to="/practice">{data?.recapDoneToday ? "Do it again" : "Start recap"}</Link>
         </Button>
       </div>
 

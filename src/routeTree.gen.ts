@@ -19,8 +19,6 @@ import { Route as AuthenticatedDashboardRouteImport } from './routes/_authentica
 import { Route as AuthenticatedDuelsRouteImport } from './routes/_authenticated/duels'
 import { Route as AuthenticatedLeaderboardRouteImport } from './routes/_authenticated/leaderboard'
 import { Route as AuthenticatedPracticeRouteImport } from './routes/_authenticated/practice'
-import { Route as AuthenticatedProjectsRouteImport } from './routes/_authenticated/projects'
-import { Route as AuthenticatedRecapRouteImport } from './routes/_authenticated/recap'
 import { Route as JoinCodeRouteImport } from './routes/join.$code'
 import { Route as AuthenticatedHomeworkHomeworkIdRouteImport } from './routes/_authenticated/homework.$homeworkId'
 import { Route as AuthenticatedLearnIndexRouteImport } from './routes/_authenticated/learn.index'
@@ -79,16 +77,6 @@ const AuthenticatedPracticeRoute = AuthenticatedPracticeRouteImport.update({
   path: '/practice',
   getParentRoute: () => AuthenticatedRouteRoute,
 } as any)
-const AuthenticatedProjectsRoute = AuthenticatedProjectsRouteImport.update({
-  id: '/projects',
-  path: '/projects',
-  getParentRoute: () => AuthenticatedRouteRoute,
-} as any)
-const AuthenticatedRecapRoute = AuthenticatedRecapRouteImport.update({
-  id: '/recap',
-  path: '/recap',
-  getParentRoute: () => AuthenticatedRouteRoute,
-} as any)
 const JoinCodeRoute = JoinCodeRouteImport.update({
   id: '/join/$code',
   path: '/join/$code',
@@ -139,8 +127,6 @@ export interface FileRoutesByFullPath {
   '/duels': typeof AuthenticatedDuelsRoute
   '/leaderboard': typeof AuthenticatedLeaderboardRoute
   '/practice': typeof AuthenticatedPracticeRoute
-  '/projects': typeof AuthenticatedProjectsRoute
-  '/recap': typeof AuthenticatedRecapRoute
   '/join/$code': typeof JoinCodeRoute
   '/homework/$homeworkId': typeof AuthenticatedHomeworkHomeworkIdRoute
   '/learn/$lessonSlug': typeof AuthenticatedLearnLessonSlugRoute
@@ -159,8 +145,6 @@ export interface FileRoutesByTo {
   '/duels': typeof AuthenticatedDuelsRoute
   '/leaderboard': typeof AuthenticatedLeaderboardRoute
   '/practice': typeof AuthenticatedPracticeRoute
-  '/projects': typeof AuthenticatedProjectsRoute
-  '/recap': typeof AuthenticatedRecapRoute
   '/join/$code': typeof JoinCodeRoute
   '/homework/$homeworkId': typeof AuthenticatedHomeworkHomeworkIdRoute
   '/learn/$lessonSlug': typeof AuthenticatedLearnLessonSlugRoute
@@ -181,8 +165,6 @@ export interface FileRoutesById {
   '/_authenticated/duels': typeof AuthenticatedDuelsRoute
   '/_authenticated/leaderboard': typeof AuthenticatedLeaderboardRoute
   '/_authenticated/practice': typeof AuthenticatedPracticeRoute
-  '/_authenticated/projects': typeof AuthenticatedProjectsRoute
-  '/_authenticated/recap': typeof AuthenticatedRecapRoute
   '/join/$code': typeof JoinCodeRoute
   '/_authenticated/homework/$homeworkId': typeof AuthenticatedHomeworkHomeworkIdRoute
   '/_authenticated/learn/$lessonSlug': typeof AuthenticatedLearnLessonSlugRoute
@@ -203,8 +185,6 @@ export interface FileRouteTypes {
     | '/duels'
     | '/leaderboard'
     | '/practice'
-    | '/projects'
-    | '/recap'
     | '/join/$code'
     | '/homework/$homeworkId'
     | '/learn/$lessonSlug'
@@ -223,8 +203,6 @@ export interface FileRouteTypes {
     | '/duels'
     | '/leaderboard'
     | '/practice'
-    | '/projects'
-    | '/recap'
     | '/join/$code'
     | '/homework/$homeworkId'
     | '/learn/$lessonSlug'
@@ -244,8 +222,6 @@ export interface FileRouteTypes {
     | '/_authenticated/duels'
     | '/_authenticated/leaderboard'
     | '/_authenticated/practice'
-    | '/_authenticated/projects'
-    | '/_authenticated/recap'
     | '/join/$code'
     | '/_authenticated/homework/$homeworkId'
     | '/_authenticated/learn/$lessonSlug'
@@ -335,20 +311,6 @@ declare module '@tanstack/react-router' {
       preLoaderRoute: typeof AuthenticatedPracticeRouteImport
       parentRoute: typeof AuthenticatedRouteRoute
     }
-    '/_authenticated/projects': {
-      id: '/_authenticated/projects'
-      path: '/projects'
-      fullPath: '/projects'
-      preLoaderRoute: typeof AuthenticatedProjectsRouteImport
-      parentRoute: typeof AuthenticatedRouteRoute
-    }
-    '/_authenticated/recap': {
-      id: '/_authenticated/recap'
-      path: '/recap'
-      fullPath: '/recap'
-      preLoaderRoute: typeof AuthenticatedRecapRouteImport
-      parentRoute: typeof AuthenticatedRouteRoute
-    }
     '/join/$code': {
       id: '/join/$code'
       path: '/join/$code'
@@ -408,8 +370,6 @@ interface AuthenticatedRouteRouteChildren {
   AuthenticatedDuelsRoute: typeof AuthenticatedDuelsRoute
   AuthenticatedLeaderboardRoute: typeof AuthenticatedLeaderboardRoute
   AuthenticatedPracticeRoute: typeof AuthenticatedPracticeRoute
-  AuthenticatedProjectsRoute: typeof AuthenticatedProjectsRoute
-  AuthenticatedRecapRoute: typeof AuthenticatedRecapRoute
   AuthenticatedHomeworkHomeworkIdRoute: typeof AuthenticatedHomeworkHomeworkIdRoute
   AuthenticatedLearnLessonSlugRoute: typeof AuthenticatedLearnLessonSlugRoute
   AuthenticatedPlaySlugRoute: typeof AuthenticatedPlaySlugRoute
@@ -425,8 +385,6 @@ const AuthenticatedRouteRouteChildren: AuthenticatedRouteRouteChildren = {
   AuthenticatedDuelsRoute: AuthenticatedDuelsRoute,
   AuthenticatedLeaderboardRoute: AuthenticatedLeaderboardRoute,
   AuthenticatedPracticeRoute: AuthenticatedPracticeRoute,
-  AuthenticatedProjectsRoute: AuthenticatedProjectsRoute,
-  AuthenticatedRecapRoute: AuthenticatedRecapRoute,
   AuthenticatedHomeworkHomeworkIdRoute: AuthenticatedHomeworkHomeworkIdRoute,
   AuthenticatedLearnLessonSlugRoute: AuthenticatedLearnLessonSlugRoute,
   AuthenticatedPlaySlugRoute: AuthenticatedPlaySlugRoute,

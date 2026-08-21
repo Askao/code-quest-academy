@@ -222,7 +222,7 @@ function Play() {
     // Projects are a fixed, difficulty-ordered list per topic (see
     // projectsForTopic in content.ts), not something pickChallenge() should
     // ever pick at random - move to the next one in that order, or back to
-    // the projects page once they're all done.
+    // the Projects section on Practice once they're all done.
     if (search.mode === "project") {
       const projects = projectsForTopic(challenge.track, challenge.topic);
       const myIndex = projects.findIndex((p) => p.slug === challenge.slug);
@@ -230,7 +230,7 @@ function Play() {
       if (nextProject) {
         void navigate({ to: "/play/$slug", params: { slug: nextProject.slug }, search });
       } else {
-        void navigate({ to: "/projects" });
+        void navigate({ to: "/practice" });
       }
       return;
     }

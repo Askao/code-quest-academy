@@ -1,11 +1,9 @@
 import { Link, useNavigate } from "@tanstack/react-router";
-import { useQuery } from "@tanstack/react-query";
 import { useState, type ReactNode } from "react";
 import { Menu, X, UserRound } from "lucide-react";
 import { supabase } from "@/integrations/supabase/client";
 import { useAuth } from "@/hooks/useAuth";
 import { Button } from "@/components/ui/button";
-import { completedTaskSlugs } from "@/lib/content";
 
 function NavLink({ to, children, onClick }: { to: string; children: ReactNode; onClick?: () => void }) {
   return (
@@ -25,31 +23,6 @@ export function AppShell({ children }: { children: ReactNode }) {
   const navigate = useNavigate();
   const [menuOpen, setMenuOpen] = useState(false);
 
-  // Recap only has anything eligible once at least one lesson is complete -
-  // for a brand new account it would otherwise be an empty, confusing page.
-  const { data: hasRecap = false } = useQuery({
-    queryKey: ["has-recap-material", user?.id],
-    enabled: !!user,
-    queryFn: async () => {
-      const uid = user!.id;
-      const [passedRes, quizRes] = await Promise.all([
-        supabase
-          .from("attempts")
-          .select("passed, challenges!inner(slug)")
-          .eq("user_id", uid)
-          .eq("passed", true),
-        supabase.from("quiz_attempts").select("lesson_slug").eq("user_id", uid).eq("passed", true),
-      ]);
-      const passedSlugs = new Set(
-        ((passedRes.data ?? []) as unknown as { challenges: { slug: string } }[]).map(
-          (r) => r.challenges.slug,
-        ),
-      );
-      const quizPassed = new Set((quizRes.data ?? []).map((r) => r.lesson_slug));
-      return completedTaskSlugs("gcse", passedSlugs, quizPassed).size > 0;
-    },
-  });
-
   const signOut = async () => {
     await supabase.auth.signOut();
     void navigate({ to: "/" });
@@ -68,14 +41,6 @@ export function AppShell({ children }: { children: ReactNode }) {
       <NavLink to="/practice" onClick={closeMenu}>
         Practise
       </NavLink>
-      <NavLink to="/projects" onClick={closeMenu}>
-        Projects
-      </NavLink>
-      {hasRecap ? (
-        <NavLink to="/recap" onClick={closeMenu}>
-          Recap
-        </NavLink>
-      ) : null}
       <NavLink to="/ide" onClick={closeMenu}>
         IDE
       </NavLink>
