@@ -258,6 +258,24 @@ function ClassDetail() {
 
   const track = (data?.cls?.track ?? "gcse") as TrackKey;
 
+  // A student-by-student skill breakdown already exists below, but it only
+  // answers "how is this one student doing" - a teacher deciding what to
+  // re-teach next needs the other lens: "how is the class doing on this
+  // topic". Computed client-side from the same skills rows already fetched
+  // above, so it costs nothing extra to query.
+  const topicSummary = topicsFor(track).map((t) => {
+    const levels = (data?.students ?? [])
+      .map((s) => s.skills.find((k) => k.topic === t.key && k.track === track))
+      .filter((k): k is NonNullable<typeof k> => !!k);
+    const avgPercent = levels.length
+      ? Math.round(levels.reduce((sum, k) => sum + skillPercent(Number(k.level)), 0) / levels.length)
+      : null;
+    const strugglingCount = levels.filter(
+      (k) => (k.consecutive_fails ?? 0) >= STRUGGLING_THRESHOLD,
+    ).length;
+    return { key: t.key, label: t.label, avgPercent, strugglingCount };
+  });
+
   // classes SELECT RLS allows the teacher, class members, AND admins to read
   // a class row (members need that to check assignment/homework gates on
   // their own /learn page) - so it doesn't by itself keep a student out of
@@ -502,6 +520,35 @@ function ClassDetail() {
         </TabsList>
 
         <TabsContent value="overview" className="space-y-4 pt-4">
+          {topicSummary.some((t) => t.avgPercent !== null) ? (
+            <div>
+              <h2 className="text-xl font-semibold">Class strength by topic</h2>
+              <p className="mt-1 text-sm text-muted-foreground">
+                Where the class as a whole stands — useful for deciding what to re-teach next.
+              </p>
+              <div className="mt-3 grid gap-3 sm:grid-cols-2 lg:grid-cols-3">
+                {topicSummary
+                  .filter((t) => t.avgPercent !== null)
+                  .map((t) => (
+                    <div key={t.key} className="panel p-4">
+                      <div className="flex items-center justify-between">
+                        <p className="font-medium">{t.label}</p>
+                        <span className="font-mono text-xs text-muted-foreground">
+                          {t.avgPercent}%
+                        </span>
+                      </div>
+                      <Progress value={t.avgPercent ?? 0} className="mt-2" />
+                      {t.strugglingCount > 0 ? (
+                        <p className="mt-2 font-mono text-xs text-destructive">
+                          🔴 {t.strugglingCount} struggling here
+                        </p>
+                      ) : null}
+                    </div>
+                  ))}
+              </div>
+            </div>
+          ) : null}
+
           <div className="flex items-center justify-between">
             <h2 className="text-xl font-semibold">Students</h2>
             {(data?.students.length ?? 0) > 0 ? (

@@ -76,14 +76,27 @@ export async function recordAttempt(opts: {
 
   // Three fails in a row on a topic is treated as a stronger signal than one
   // fail in isolation - drop further so the next pickChallenge() call lands
-  // on a visibly easier tier, not just a marginally easier one. A pass that
-  // took a long time still counts as a pass, but doesn't earn the full
-  // stretch bonus a fast pass would - the student clearly hasn't mastered
-  // that difficulty yet even though they got there in the end.
+  // on a visibly easier tier, not just a marginally easier one. A single
+  // fail stays gentle on purpose: overreacting to one slip ("premature
+  // abandonment") is a known failure mode in adaptive difficulty systems -
+  // it takes a genuine pattern, not one wrong answer, to push someone down.
+  //
+  // Speed cuts the other way too: a pass that took a long time still counts,
+  // but doesn't earn the full stretch bonus a fast one would - the student
+  // clearly hasn't mastered that difficulty yet even though they got there
+  // in the end. A clean, quick, first-try pass earns *more* than the base
+  // bonus, so a student breezing through gets pushed to harder material
+  // faster instead of drilling the same level indefinitely. Only Test
+  // clicks call recordAttempt at all (see play.$slug.tsx's split between
+  // the free "Run" console and "Test") - casual runs while still debugging
+  // never reach here, so this speed isn't measuring "how fast did they
+  // fumble their way to something that ran", only genuine attempts.
   const consecutiveFails = outcome.passed ? 0 : priorFails + 1;
+  const fastPass = outcome.passed && firstTry && outcome.durationMs < 60 * 1000;
   const slowPass = outcome.passed && outcome.durationMs > 4 * 60 * 1000;
+  const speedMultiplier = fastPass ? 1.3 : slowPass ? 0.5 : 1;
   const delta = outcome.passed
-    ? (0.15 + 0.12 * stretch) * (slowPass ? 0.5 : 1)
+    ? (0.15 + 0.12 * stretch) * speedMultiplier
     : consecutiveFails >= 3
       ? -0.27
       : -0.12;

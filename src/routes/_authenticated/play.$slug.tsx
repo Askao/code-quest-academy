@@ -8,7 +8,7 @@ import { supabase } from "@/integrations/supabase/client";
 import { useAuth } from "@/hooks/useAuth";
 import { Button } from "@/components/ui/button";
 import { BADGES, topicLabel, type TrackKey } from "@/lib/game";
-import { checkSyntax, getPyodide, runTests, type RunOutcome } from "@/lib/python-runner";
+import { checkSyntax, getPyodide, runInteractive, runTests, type RunOutcome } from "@/lib/python-runner";
 import { highlightErrorLine, pythonEditorExtensions } from "@/lib/python-lint";
 import { pickChallenge, recordAttempt, type Challenge } from "@/lib/progress";
 import {
@@ -80,8 +80,15 @@ function Play() {
   const [solved, setSolved] = useState(false);
   const [remaining, setRemaining] = useState<number | null>(null);
   const [syntaxError, setSyntaxError] = useState<{ line: number; message: string } | null>(null);
+  const [consoleOutput, setConsoleOutput] = useState<string | null>(null);
+  const [consoleError, setConsoleError] = useState<string | null>(null);
+  const [consoleAnswers, setConsoleAnswers] = useState<string[]>([]);
+  const [waitingForInput, setWaitingForInput] = useState(false);
+  const [pendingAnswer, setPendingAnswer] = useState("");
+  const [consoleRunning, setConsoleRunning] = useState(false);
   const startedAt = useRef(Date.now());
   const editorViewRef = useRef<EditorView | null>(null);
+  const inputFieldRef = useRef<HTMLInputElement | null>(null);
 
   const { data: challenge } = useQuery({
     queryKey: ["challenge", slug],
@@ -130,6 +137,11 @@ function Play() {
       setTries(0);
       setHintsShown(0);
       setSyntaxError(null);
+      setConsoleOutput(null);
+      setConsoleError(null);
+      setConsoleAnswers([]);
+      setWaitingForInput(false);
+      setPendingAnswer("");
       startedAt.current = Date.now();
     }
   }, [challenge]);
@@ -158,6 +170,45 @@ function Play() {
     const id = setInterval(tick, 1000);
     return () => clearInterval(id);
   }, [search.mode, navigate]);
+
+  // Free-form "Run": lets a student try their own input and see real output,
+  // as many times as they like, without it counting as an attempt - keeps
+  // the adaptive skill signal clean (see recordAttempt in progress.ts),
+  // since "still debugging" and "I think I'm done, check me" are very
+  // different signals that used to get conflated into one button.
+  const executeConsole = async (nextAnswers: string[]) => {
+    setConsoleRunning(true);
+    try {
+      const result = await runInteractive(code, nextAnswers);
+      setConsoleOutput(result.output);
+      setConsoleError(result.error ?? null);
+      setWaitingForInput(result.waiting);
+      if (result.waiting) {
+        setPendingAnswer("");
+        requestAnimationFrame(() => inputFieldRef.current?.focus());
+      }
+    } catch (err) {
+      toast.error(err instanceof Error ? err.message : "Run failed");
+    } finally {
+      setConsoleRunning(false);
+    }
+  };
+
+  const runConsole = async () => {
+    const syntaxIssue = await checkSyntax(code);
+    setSyntaxError(syntaxIssue);
+    if (editorViewRef.current) {
+      highlightErrorLine(editorViewRef.current, syntaxIssue?.line ?? null);
+    }
+    setConsoleAnswers([]);
+    await executeConsole([]);
+  };
+
+  const submitConsoleAnswer = async () => {
+    const next = [...consoleAnswers, pendingAnswer];
+    setConsoleAnswers(next);
+    await executeConsole(next);
+  };
 
   const run = async () => {
     if (!challenge || !user) return;
@@ -514,6 +565,7 @@ function Play() {
               onChange={(value) => {
                 setCode(value);
                 setSyntaxError(null);
+                setWaitingForInput(false);
               }}
               onCreateEditor={(view) => {
                 editorViewRef.current = view;
@@ -528,8 +580,20 @@ function Play() {
             </div>
           ) : null}
           <div className="flex flex-wrap gap-2">
-            <Button onClick={run} disabled={running || !engineReady}>
-              {!engineReady ? "Starting Python…" : running ? "Running…" : "Run tests"}
+            <Button
+              variant="secondary"
+              onClick={runConsole}
+              disabled={consoleRunning || !engineReady}
+              title="Try it out and see what it prints — doesn't count as an attempt"
+            >
+              {!engineReady ? "Starting Python…" : consoleRunning ? "Running…" : "▶ Run"}
+            </Button>
+            <Button
+              onClick={run}
+              disabled={running || !engineReady}
+              title="Check your answer against the real tests"
+            >
+              {!engineReady ? "Starting Python…" : running ? "Testing…" : "✅ Test"}
             </Button>
             <Button variant="secondary" onClick={() => setCode(challenge.starter_code || "")}>
               Reset
@@ -543,6 +607,41 @@ function Play() {
               <Link to="/practice">Back to topics</Link>
             </Button>
           </div>
+          <p className="text-xs text-muted-foreground">
+            <strong>Run</strong> lets you try your own input and see what happens.{" "}
+            <strong>Test</strong> checks your answer for real, once you think you're done.
+          </p>
+
+          {consoleOutput != null || consoleError != null || waitingForInput ? (
+            <div className="panel p-4">
+              <p className="text-sm font-semibold">Console</p>
+              <div className="mt-2 space-y-1 font-mono text-xs">
+                {consoleOutput ? <pre className="whitespace-pre-wrap">{consoleOutput}</pre> : null}
+                {waitingForInput ? (
+                  <div className="flex items-center gap-1">
+                    <span className="text-primary">›</span>
+                    <input
+                      ref={inputFieldRef}
+                      className="flex-1 border-none bg-transparent font-mono text-xs text-foreground outline-none"
+                      value={pendingAnswer}
+                      onChange={(e) => setPendingAnswer(e.target.value)}
+                      onKeyDown={(e) => {
+                        if (e.key === "Enter") void submitConsoleAnswer();
+                      }}
+                      autoFocus
+                    />
+                  </div>
+                ) : null}
+                {consoleError ? (
+                  <pre className="whitespace-pre-wrap text-destructive">{consoleError}</pre>
+                ) : null}
+                {!consoleOutput && !consoleError && !waitingForInput ? (
+                  <p className="text-muted-foreground">(no output)</p>
+                ) : null}
+              </div>
+            </div>
+          ) : null}
+
           <p className="font-mono text-xs text-muted-foreground">
             Python runs entirely in your browser — nothing is executed on the server.
           </p>
