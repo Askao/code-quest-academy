@@ -278,44 +278,6 @@ function Landing() {
         </div>
       </section>
 
-      <section className="mx-auto max-w-6xl px-4 pb-16">
-        <p className="font-mono text-xs tracking-[0.2em] text-muted-foreground uppercase">
-          Not in a class?
-        </p>
-        <h2 className="mt-2 max-w-xl text-3xl font-semibold text-balance">
-          H-Code is built for classrooms first — but you don't need one.
-        </h2>
-        <p className="mt-3 max-w-2xl text-sm text-muted-foreground">
-          Every lesson path, adaptive challenge and the free IDE work exactly the same on an
-          account with no teacher or class attached to it — sign up, pick GCSE or A level, and go.
-        </p>
-        <div className="mt-6 grid gap-4 sm:grid-cols-3">
-          {[
-            {
-              icon: Compass,
-              t: "Self-learners",
-              d: "Working through GCSE or A level Python on your own timeline, with a structured path instead of a random tutorial.",
-            },
-            {
-              icon: Heart,
-              t: "Parents & tutors",
-              d: "Helping with homework or filling in gaps between lessons, without needing to be enrolled in the class yourself.",
-            },
-            {
-              icon: Code2,
-              t: "Curious developers",
-              d: "Already know some code and just want a free, no-signup Python sandbox — the IDE needs no account at all.",
-            },
-          ].map((c) => (
-            <div key={c.t} className="panel p-5">
-              <c.icon className="h-5 w-5 text-primary" strokeWidth={1.75} />
-              <h3 className="mt-3 font-semibold">{c.t}</h3>
-              <p className="mt-1 text-sm text-muted-foreground">{c.d}</p>
-            </div>
-          ))}
-        </div>
-      </section>
-
       <section className="border-y border-border bg-secondary/20 py-16">
         <div className="mx-auto max-w-6xl px-4">
           <p className="font-mono text-xs tracking-[0.2em] text-muted-foreground uppercase">
@@ -369,6 +331,44 @@ function Landing() {
           <LessonMock />
           <ProjectMock />
           <TeacherMock />
+        </div>
+      </section>
+
+      <section className="mx-auto max-w-6xl px-4 pb-16">
+        <p className="font-mono text-xs tracking-[0.2em] text-muted-foreground uppercase">
+          Not in a class?
+        </p>
+        <h2 className="mt-2 max-w-xl text-3xl font-semibold text-balance">
+          H-Code is built for classrooms first — but you don't need one.
+        </h2>
+        <p className="mt-3 max-w-2xl text-sm text-muted-foreground">
+          Every lesson path, adaptive challenge and the free IDE work exactly the same on an
+          account with no teacher or class attached to it — sign up, pick GCSE or A level, and go.
+        </p>
+        <div className="mt-6 grid gap-4 sm:grid-cols-3">
+          {[
+            {
+              icon: Compass,
+              t: "Self-learners",
+              d: "Working through GCSE or A level Python on your own timeline, with a structured path instead of a random tutorial.",
+            },
+            {
+              icon: Heart,
+              t: "Parents & tutors",
+              d: "Helping with homework or filling in gaps between lessons, without needing to be enrolled in the class yourself.",
+            },
+            {
+              icon: Code2,
+              t: "Curious developers",
+              d: "Already know some code and just want a free, no-signup Python sandbox — the IDE needs no account at all.",
+            },
+          ].map((c) => (
+            <div key={c.t} className="panel p-5">
+              <c.icon className="h-5 w-5 text-primary" strokeWidth={1.75} />
+              <h3 className="mt-3 font-semibold">{c.t}</h3>
+              <p className="mt-1 text-sm text-muted-foreground">{c.d}</p>
+            </div>
+          ))}
         </div>
       </section>
 
