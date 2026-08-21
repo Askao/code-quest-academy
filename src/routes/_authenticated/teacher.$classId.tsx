@@ -66,9 +66,12 @@ function ClassDetail() {
         .select("id, teacher_id")
         .eq("class_id", classId);
       const coTeacherIds = (coTeachersRes.data ?? []).map((c) => c.teacher_id);
-      const coTeacherProfilesRes = coTeacherIds.length
-        ? await supabase.from("profiles").select("id, full_name, email").in("id", coTeacherIds)
+      const ownerId = cls.data?.teacher_id;
+      const profileLookupIds = [...coTeacherIds, ...(ownerId ? [ownerId] : [])];
+      const coTeacherProfilesRes = profileLookupIds.length
+        ? await supabase.from("profiles").select("id, full_name, email").in("id", profileLookupIds)
         : { data: [] };
+      const ownerName = (coTeacherProfilesRes.data ?? []).find((p) => p.id === ownerId)?.full_name;
       const coTeachers = (coTeachersRes.data ?? []).map((c) => ({
         id: c.id,
         teacherId: c.teacher_id,
@@ -244,6 +247,7 @@ function ClassDetail() {
       return {
         cls: cls.data,
         coTeachers,
+        ownerName,
         students,
         lessonAssignments: (lessonAssignmentsRes.data ?? []).map((a) => {
           // Every student sees the same tasks for a given lesson (unlike
@@ -617,7 +621,7 @@ function ClassDetail() {
         <ul className="space-y-1.5 text-sm">
           <li className="flex items-center justify-between gap-2 rounded-md border border-border px-3 py-2">
             <span>
-              {data?.cls?.teacher_id === user?.id ? "You" : "Owner"}
+              {data?.cls?.teacher_id === user?.id ? "You" : (data?.ownerName ?? "Owner")}
               <span className="ml-2 rounded-full bg-secondary px-2 py-0.5 font-mono text-xs text-muted-foreground">
                 Owner
               </span>
