@@ -8,6 +8,7 @@ type AuthState = {
   user: User | null;
   roles: Role[];
   fullName: string;
+  schoolId: string | null;
   loading: boolean;
   isTeacher: boolean;
   isAdmin: boolean;
@@ -18,6 +19,7 @@ const AuthContext = createContext<AuthState>({
   user: null,
   roles: [],
   fullName: "",
+  schoolId: null,
   loading: true,
   isTeacher: false,
   isAdmin: false,
@@ -28,15 +30,17 @@ export function AuthProvider({ children }: { children: ReactNode }) {
   const [user, setUser] = useState<User | null>(null);
   const [roles, setRoles] = useState<Role[]>([]);
   const [fullName, setFullName] = useState("");
+  const [schoolId, setSchoolId] = useState<string | null>(null);
   const [loading, setLoading] = useState(true);
 
   const loadProfile = async (id: string) => {
     const [{ data: roleRows }, { data: profile }] = await Promise.all([
       supabase.from("user_roles").select("role").eq("user_id", id),
-      supabase.from("profiles").select("full_name").eq("id", id).maybeSingle(),
+      supabase.from("profiles").select("full_name, school_id").eq("id", id).maybeSingle(),
     ]);
     setRoles(((roleRows ?? []).map((r) => r.role) as Role[]) ?? []);
     setFullName(profile?.full_name ?? "");
+    setSchoolId(profile?.school_id ?? null);
   };
 
   const refresh = async () => {
@@ -46,6 +50,7 @@ export function AuthProvider({ children }: { children: ReactNode }) {
     else {
       setRoles([]);
       setFullName("");
+      setSchoolId(null);
     }
     setLoading(false);
   };
@@ -56,6 +61,7 @@ export function AuthProvider({ children }: { children: ReactNode }) {
         setUser(null);
         setRoles([]);
         setFullName("");
+        setSchoolId(null);
         setLoading(false);
         return;
       }
@@ -75,6 +81,7 @@ export function AuthProvider({ children }: { children: ReactNode }) {
         user,
         roles,
         fullName,
+        schoolId,
         loading,
         isTeacher: roles.includes("teacher") || roles.includes("admin"),
         isAdmin: roles.includes("admin"),

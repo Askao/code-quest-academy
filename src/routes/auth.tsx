@@ -5,6 +5,7 @@ import { supabase } from "@/integrations/supabase/client";
 import { Button } from "@/components/ui/button";
 import { Input } from "@/components/ui/input";
 import { Label } from "@/components/ui/label";
+import { createSchool, joinSchool } from "@/lib/school";
 
 type Search = { mode?: "signin" | "signup"; role?: "student" | "teacher" };
 
@@ -32,6 +33,9 @@ function AuthPage() {
   const [email, setEmail] = useState("");
   const [password, setPassword] = useState("");
   const [name, setName] = useState("");
+  const [schoolMode, setSchoolMode] = useState<"skip" | "create" | "join">("skip");
+  const [schoolName, setSchoolName] = useState("");
+  const [schoolCode, setSchoolCode] = useState("");
   const [busy, setBusy] = useState(false);
 
   useEffect(() => {
@@ -55,6 +59,19 @@ function AuthPage() {
         });
         if (error) throw error;
         if (data.session) {
+          // Only possible with an immediate session (no email confirmation
+          // step in the way) - otherwise there's no signed-in user yet to
+          // attach a school to. The Teacher area offers this same create/join
+          // action any time later, so skipping it here isn't a dead end.
+          if (role === "teacher" && schoolMode !== "skip" && data.user) {
+            const result =
+              schoolMode === "create"
+                ? await createSchool(data.user.id, schoolName)
+                : await joinSchool(data.user.id, schoolCode);
+            if (!result.ok) {
+              toast.error(`Account created, but couldn't set up your school: ${result.error}`);
+            }
+          }
           void navigate({ to: "/dashboard" });
         } else {
           toast.success("Account created — check your email to confirm, then sign in.");
@@ -110,6 +127,50 @@ function AuthPage() {
                   ))}
                 </div>
               </div>
+              {role === "teacher" ? (
+                <div className="space-y-2">
+                  <Label>
+                    School{" "}
+                    <span className="font-normal text-muted-foreground">
+                      (optional — can do this later)
+                    </span>
+                  </Label>
+                  <div className="flex gap-2">
+                    {(
+                      [
+                        { key: "skip", label: "Skip" },
+                        { key: "create", label: "Create" },
+                        { key: "join", label: "Join" },
+                      ] as const
+                    ).map((opt) => (
+                      <Button
+                        key={opt.key}
+                        type="button"
+                        variant={schoolMode === opt.key ? "default" : "secondary"}
+                        size="sm"
+                        className="flex-1"
+                        onClick={() => setSchoolMode(opt.key)}
+                      >
+                        {opt.label}
+                      </Button>
+                    ))}
+                  </div>
+                  {schoolMode === "create" ? (
+                    <Input
+                      placeholder="e.g. Riverside Academy"
+                      value={schoolName}
+                      onChange={(e) => setSchoolName(e.target.value)}
+                    />
+                  ) : null}
+                  {schoolMode === "join" ? (
+                    <Input
+                      placeholder="Join code from a colleague"
+                      value={schoolCode}
+                      onChange={(e) => setSchoolCode(e.target.value)}
+                    />
+                  ) : null}
+                </div>
+              ) : null}
             </>
           ) : null}
           <div className="space-y-2">

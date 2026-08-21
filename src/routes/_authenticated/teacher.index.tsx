@@ -6,6 +6,7 @@ import { supabase } from "@/integrations/supabase/client";
 import { useAuth } from "@/hooks/useAuth";
 import { Button } from "@/components/ui/button";
 import { Input } from "@/components/ui/input";
+import { createSchool, joinSchool, makeJoinCode } from "@/lib/school";
 import type { TrackKey } from "@/lib/game";
 
 export const Route = createFileRoute("/_authenticated/teacher/")({
@@ -23,17 +24,18 @@ export const Route = createFileRoute("/_authenticated/teacher/")({
   component: Teacher,
 });
 
-function makeCode() {
-  const chars = "ABCDEFGHJKMNPQRSTUVWXYZ23456789";
-  return Array.from({ length: 6 }, () => chars[Math.floor(Math.random() * chars.length)]).join("");
-}
+const CLASS_CAP = 25;
+const CLASS_COOLDOWN_MS = 60_000;
 
 function Teacher() {
-  const { user, isTeacher } = useAuth();
+  const { user, isTeacher, schoolId, refresh } = useAuth();
   const qc = useQueryClient();
   const [name, setName] = useState("");
   const [track, setTrack] = useState<TrackKey>("gcse");
   const [improvedWindowDays, setImprovedWindowDays] = useState(7);
+  const [schoolName, setSchoolName] = useState("");
+  const [schoolCode, setSchoolCode] = useState("");
+  const [schoolBusy, setSchoolBusy] = useState(false);
 
   const { data: classes } = useQuery({
     queryKey: ["teacher-classes", user?.id],
@@ -60,14 +62,43 @@ function Teacher() {
     },
   });
 
+  const { data: school } = useQuery({
+    queryKey: ["teacher-school", schoolId],
+    enabled: !!schoolId,
+    queryFn: async () => {
+      const { data } = await supabase
+        .from("schools")
+        .select("name, join_code")
+        .eq("id", schoolId!)
+        .maybeSingle();
+      return data;
+    },
+  });
+
+  // Owned classes only - a colleague covering someone else's class
+  // shouldn't be blocked by that class's owner's own creation history.
+  const ownedClasses = (classes ?? []).filter((c) => !c.shared);
+
   const createClass = async () => {
     if (!name.trim()) return;
+    if (ownedClasses.length >= CLASS_CAP) {
+      toast.error(
+        `You've hit the ${CLASS_CAP}-class limit — delete an old class first, or ask an admin for more.`,
+      );
+      return;
+    }
+    const lastCreated = ownedClasses[0]?.created_at ? new Date(ownedClasses[0].created_at) : null;
+    if (lastCreated && Date.now() - lastCreated.getTime() < CLASS_COOLDOWN_MS) {
+      toast.error("Give it a moment — you can only create one class per minute.");
+      return;
+    }
     const { error } = await supabase.from("classes").insert({
       name: name.trim(),
       track,
       teacher_id: user!.id,
-      join_code: makeCode(),
+      join_code: makeJoinCode(),
       improved_window_days: improvedWindowDays,
+      ...(schoolId ? { school_id: schoolId } : {}),
     });
     if (error) toast.error(error.message);
     else {
@@ -75,6 +106,42 @@ function Teacher() {
       setName("");
       void qc.invalidateQueries({ queryKey: ["teacher-classes"] });
     }
+  };
+
+  const handleCreateSchool = async () => {
+    if (!user) return;
+    setSchoolBusy(true);
+    const result = await createSchool(user.id, schoolName);
+    setSchoolBusy(false);
+    if (!result.ok) {
+      toast.error(result.error);
+      return;
+    }
+    toast.success(`${result.schoolName} created — share its join code with colleagues`);
+    setSchoolName("");
+    await refresh();
+    void qc.invalidateQueries({ queryKey: ["teacher-classes"] });
+  };
+
+  const handleJoinSchool = async () => {
+    if (!user) return;
+    setSchoolBusy(true);
+    const result = await joinSchool(user.id, schoolCode);
+    setSchoolBusy(false);
+    if (!result.ok) {
+      toast.error(result.error);
+      return;
+    }
+    toast.success(`Joined ${result.schoolName}`);
+    setSchoolCode("");
+    await refresh();
+    void qc.invalidateQueries({ queryKey: ["teacher-classes"] });
+  };
+
+  const copySchoolCode = async () => {
+    if (!school?.join_code) return;
+    await navigator.clipboard.writeText(school.join_code);
+    toast.success("School join code copied");
   };
 
   if (!isTeacher) {
@@ -88,6 +155,56 @@ function Teacher() {
         <p className="mt-1 text-muted-foreground">
           Create a class, share the join code, then set homework and watch progress.
         </p>
+      </div>
+
+      <div className="panel space-y-3 p-5">
+        <h2 className="text-lg font-semibold">Your school</h2>
+        {schoolId ? (
+          <>
+            <p className="text-sm text-muted-foreground">
+              You're part of <span className="text-foreground font-medium">{school?.name}</span>.
+              Share its join code so colleagues can create or attach their own classes here too.
+            </p>
+            <div className="flex flex-wrap items-center gap-2">
+              <span className="rounded-md border border-border bg-secondary/40 px-2 py-1 font-mono text-xs text-muted-foreground">
+                {school?.join_code}
+              </span>
+              <Button size="sm" variant="secondary" onClick={copySchoolCode}>
+                Copy code
+              </Button>
+            </div>
+          </>
+        ) : (
+          <>
+            <p className="text-sm text-muted-foreground">
+              Not everyone using H-Code is from the same school. Create a school (or join a
+              colleague's with their code) to keep your leaderboards and classes scoped to your own
+              — any classes you already own get attached automatically.
+            </p>
+            <div className="grid gap-3 sm:grid-cols-2">
+              <div className="flex gap-2">
+                <Input
+                  placeholder="e.g. Riverside Academy"
+                  value={schoolName}
+                  onChange={(e) => setSchoolName(e.target.value)}
+                />
+                <Button onClick={handleCreateSchool} disabled={schoolBusy}>
+                  Create
+                </Button>
+              </div>
+              <div className="flex gap-2">
+                <Input
+                  placeholder="Join code"
+                  value={schoolCode}
+                  onChange={(e) => setSchoolCode(e.target.value)}
+                />
+                <Button variant="secondary" onClick={handleJoinSchool} disabled={schoolBusy}>
+                  Join
+                </Button>
+              </div>
+            </div>
+          </>
+        )}
       </div>
 
       <div className="panel space-y-3 p-5">

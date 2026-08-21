@@ -1,4 +1,4 @@
-import { createFileRoute } from "@tanstack/react-router";
+import { createFileRoute, Link } from "@tanstack/react-router";
 import { useQuery } from "@tanstack/react-query";
 import { useState, type ReactNode } from "react";
 import { supabase } from "@/integrations/supabase/client";
@@ -81,7 +81,7 @@ function LeaderboardTable({
 }
 
 function Leaderboard() {
-  const { user } = useAuth();
+  const { user, schoolId } = useAuth();
   const [scope, setScope] = useState<"class" | "school">("class");
   const [classId, setClassId] = useState<string | null>(null);
   const [schoolTrack, setSchoolTrack] = useState<TrackKey>("gcse");
@@ -94,19 +94,22 @@ function Leaderboard() {
       const [asStudent, owned, coTaught] = await Promise.all([
         supabase
           .from("class_members")
-          .select("classes(id, name, improved_window_days)")
+          .select("classes(id, name, improved_window_days, school_id)")
           .eq("student_id", uid),
-        supabase.from("classes").select("id, name, improved_window_days").eq("teacher_id", uid),
+        supabase
+          .from("classes")
+          .select("id, name, improved_window_days, school_id")
+          .eq("teacher_id", uid),
         supabase
           .from("class_co_teachers")
-          .select("classes(id, name, improved_window_days)")
+          .select("classes(id, name, improved_window_days, school_id)")
           .eq("teacher_id", uid),
       ]);
       const list = [
         ...(asStudent.data ?? []).map((m) => m.classes).filter(Boolean),
         ...(owned.data ?? []),
         ...(coTaught.data ?? []).map((m) => m.classes).filter(Boolean),
-      ] as { id: string; name: string; improved_window_days: number }[];
+      ] as { id: string; name: string; improved_window_days: number; school_id: string | null }[];
       const seen = new Set<string>();
       return list.filter((c) => (seen.has(c.id) ? false : (seen.add(c.id), true)));
     },
@@ -114,6 +117,25 @@ function Leaderboard() {
 
   const activeClassId = classId ?? myClasses?.[0]?.id ?? null;
   const activeClass = myClasses?.find((c) => c.id === activeClassId);
+
+  // A teacher's school comes straight off their profile; a student never
+  // has profiles.school_id set directly, so fall back to whichever of
+  // their classes has one - purely for display here, the leaderboard RPCs
+  // re-resolve this authoritatively server-side regardless.
+  const resolvedSchoolId = schoolId ?? myClasses?.find((c) => c.school_id)?.school_id ?? null;
+
+  const { data: mySchool } = useQuery({
+    queryKey: ["leaderboard-school", resolvedSchoolId],
+    enabled: !!resolvedSchoolId,
+    queryFn: async () => {
+      const { data } = await supabase
+        .from("schools")
+        .select("name")
+        .eq("id", resolvedSchoolId!)
+        .maybeSingle();
+      return data;
+    },
+  });
 
   const { data: classBoard } = useQuery({
     queryKey: ["class-leaderboard", activeClassId],
@@ -195,7 +217,7 @@ function Leaderboard() {
 
   const { data: schoolBoard } = useQuery({
     queryKey: ["school-leaderboard", schoolTrack],
-    enabled: scope === "school",
+    enabled: scope === "school" && !!resolvedSchoolId,
     queryFn: async () => {
       const [topXp, improved] = await Promise.all([
         supabase.rpc("leaderboard_top_xp", { _class_id: null, _track: schoolTrack, _limit: TOP_N }),
@@ -301,47 +323,61 @@ function Leaderboard() {
         </TabsContent>
 
         <TabsContent value="school" className="space-y-6 pt-4">
-          <div className="flex gap-2">
-            <Button
-              size="sm"
-              variant={schoolTrack === "gcse" ? "default" : "secondary"}
-              onClick={() => setSchoolTrack("gcse")}
-            >
-              GCSE
-            </Button>
-            <Button
-              size="sm"
-              variant={schoolTrack === "alevel" ? "default" : "secondary"}
-              onClick={() => setSchoolTrack("alevel")}
-            >
-              A level
-            </Button>
-          </div>
-          <div>
-            <h2 className="text-lg font-semibold">Top XP — whole school</h2>
-            <div className="mt-2">
-              <LeaderboardTable
-                rows={schoolBoard?.topXp ?? []}
-                columns={["Level", "XP", "Streak"]}
-                currentUserId={user?.id}
-                emptyMessage="No students on this track yet."
-              />
-            </div>
-          </div>
-          <div>
-            <h2 className="text-lg font-semibold">
-              Most improved{" "}
-              <span className="text-sm font-normal text-muted-foreground">(last 7 days)</span>
-            </h2>
-            <div className="mt-2">
-              <LeaderboardTable
-                rows={schoolBoard?.improved ?? []}
-                columns={["XP gained"]}
-                currentUserId={user?.id}
-                emptyMessage="Nobody's earned XP this week yet."
-              />
-            </div>
-          </div>
+          {!resolvedSchoolId ? (
+            <p className="text-muted-foreground">
+              You're not part of a school yet — set one up (or join a colleague's) from the{" "}
+              <Link to="/teacher" className="text-primary underline">
+                Teacher area
+              </Link>
+              .
+            </p>
+          ) : (
+            <>
+              <div className="flex gap-2">
+                <Button
+                  size="sm"
+                  variant={schoolTrack === "gcse" ? "default" : "secondary"}
+                  onClick={() => setSchoolTrack("gcse")}
+                >
+                  GCSE
+                </Button>
+                <Button
+                  size="sm"
+                  variant={schoolTrack === "alevel" ? "default" : "secondary"}
+                  onClick={() => setSchoolTrack("alevel")}
+                >
+                  A level
+                </Button>
+              </div>
+              <div>
+                <h2 className="text-lg font-semibold">
+                  Top XP{mySchool?.name ? ` — ${mySchool.name}` : ""}
+                </h2>
+                <div className="mt-2">
+                  <LeaderboardTable
+                    rows={schoolBoard?.topXp ?? []}
+                    columns={["Level", "XP", "Streak"]}
+                    currentUserId={user?.id}
+                    emptyMessage="No students on this track yet."
+                  />
+                </div>
+              </div>
+              <div>
+                <h2 className="text-lg font-semibold">
+                  Most improved{" "}
+                  <span className="text-sm font-normal text-muted-foreground">(last 7 days)</span>
+                </h2>
+                <div className="mt-2">
+                  <LeaderboardTable
+                    rows={schoolBoard?.improved ?? []}
+                    columns={["XP gained"]}
+                    currentUserId={user?.id}
+                    emptyMessage="Nobody's earned XP this week yet."
+                  />
+                </div>
+              </div>
+            </>
+          )}
         </TabsContent>
       </Tabs>
     </div>

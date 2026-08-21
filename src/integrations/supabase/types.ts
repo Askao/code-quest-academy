@@ -207,6 +207,7 @@ export type Database = {
           improved_window_days: number
           join_code: string
           name: string
+          school_id: string | null
           teacher_id: string
           track: Database["public"]["Enums"]["track"]
         }
@@ -216,6 +217,7 @@ export type Database = {
           improved_window_days?: number
           join_code: string
           name: string
+          school_id?: string | null
           teacher_id: string
           track?: Database["public"]["Enums"]["track"]
         }
@@ -225,10 +227,19 @@ export type Database = {
           improved_window_days?: number
           join_code?: string
           name?: string
+          school_id?: string | null
           teacher_id?: string
           track?: Database["public"]["Enums"]["track"]
         }
-        Relationships: []
+        Relationships: [
+          {
+            foreignKeyName: "classes_school_id_fkey"
+            columns: ["school_id"]
+            isOneToOne: false
+            referencedRelation: "schools"
+            referencedColumns: ["id"]
+          },
+        ]
       }
       class_co_teachers: {
         Row: {
@@ -561,18 +572,53 @@ export type Database = {
           email: string | null
           full_name: string
           id: string
+          school_id: string | null
         }
         Insert: {
           created_at?: string
           email?: string | null
           full_name?: string
           id: string
+          school_id?: string | null
         }
         Update: {
           created_at?: string
           email?: string | null
           full_name?: string
           id?: string
+          school_id?: string | null
+        }
+        Relationships: [
+          {
+            foreignKeyName: "profiles_school_id_fkey"
+            columns: ["school_id"]
+            isOneToOne: false
+            referencedRelation: "schools"
+            referencedColumns: ["id"]
+          },
+        ]
+      }
+      schools: {
+        Row: {
+          created_at: string
+          created_by: string
+          id: string
+          join_code: string
+          name: string
+        }
+        Insert: {
+          created_at?: string
+          created_by: string
+          id?: string
+          join_code: string
+          name: string
+        }
+        Update: {
+          created_at?: string
+          created_by?: string
+          id?: string
+          join_code?: string
+          name?: string
         }
         Relationships: []
       }
@@ -721,6 +767,10 @@ export type Database = {
           _track?: Database["public"]["Enums"]["track"] | null
         }
         Returns: { id: string; name: string; xp: number; streak_days: number }[]
+      }
+      school_for_join_code: {
+        Args: { _code: string }
+        Returns: { id: string; name: string }[]
       }
     }
     Enums: {
