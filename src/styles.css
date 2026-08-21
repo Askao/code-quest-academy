@@ -189,8 +189,16 @@
     color: var(--color-foreground);
     font-family: var(--font-sans);
     background-image:
-      radial-gradient(70rem 45rem at 12% -12%, oklch(0.82 0.075 88 / 0.06), transparent 62%),
-      radial-gradient(55rem 38rem at 100% 0%, oklch(0.72 0.03 230 / 0.05), transparent 60%);
+      radial-gradient(
+        70rem 45rem at 12% -12%,
+        color-mix(in oklab, var(--color-primary) 14%, transparent),
+        transparent 62%
+      ),
+      radial-gradient(
+        55rem 38rem at 100% 0%,
+        color-mix(in oklab, var(--color-accent) 12%, transparent),
+        transparent 60%
+      );
     background-attachment: fixed;
   }
 
@@ -216,6 +224,18 @@
   border-radius: var(--radius-xl);
   border: 1px solid var(--color-border);
   background-color: color-mix(in oklab, var(--color-card) 85%, transparent);
+  backdrop-filter: blur(6px);
+  box-shadow: 0 1px 0 0 color-mix(in oklab, var(--color-foreground) 6%, transparent) inset;
+}
+
+/* Same shell as `panel` but with no background colour of its own, so a
+ * tint utility (e.g. bg-primary/8) layered alongside it wins predictably -
+ * a plain white/near-white `panel` in light mode reads as barely
+ * distinguishable from the page background, so cards that should carry an
+ * accent colour use this instead. */
+@utility panel-tint {
+  border-radius: var(--radius-xl);
+  border: 1px solid var(--color-border);
   backdrop-filter: blur(6px);
   box-shadow: 0 1px 0 0 color-mix(in oklab, var(--color-foreground) 6%, transparent) inset;
 }

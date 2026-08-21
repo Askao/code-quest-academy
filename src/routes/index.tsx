@@ -47,11 +47,42 @@ export const Route = createFileRoute("/")({
 
 type Tint = "primary" | "accent" | "success" | "warning";
 
-const tintClasses: Record<Tint, { bg: string; text: string; ring: string; dot: string }> = {
-  primary: { bg: "bg-primary/15", text: "text-primary", ring: "ring-primary/25", dot: "bg-primary" },
-  accent: { bg: "bg-accent/15", text: "text-accent", ring: "ring-accent/25", dot: "bg-accent" },
-  success: { bg: "bg-success/15", text: "text-success", ring: "ring-success/25", dot: "bg-success" },
-  warning: { bg: "bg-warning/15", text: "text-warning", ring: "ring-warning/25", dot: "bg-warning" },
+const tintClasses: Record<
+  Tint,
+  { bg: string; text: string; ring: string; dot: string; wash: string; border: string }
+> = {
+  primary: {
+    bg: "bg-primary/15",
+    text: "text-primary",
+    ring: "ring-primary/25",
+    dot: "bg-primary",
+    wash: "bg-primary/[0.07]",
+    border: "border-primary/25",
+  },
+  accent: {
+    bg: "bg-accent/15",
+    text: "text-accent",
+    ring: "ring-accent/25",
+    dot: "bg-accent",
+    wash: "bg-accent/[0.07]",
+    border: "border-accent/25",
+  },
+  success: {
+    bg: "bg-success/15",
+    text: "text-success",
+    ring: "ring-success/25",
+    dot: "bg-success",
+    wash: "bg-success/[0.07]",
+    border: "border-success/25",
+  },
+  warning: {
+    bg: "bg-warning/15",
+    text: "text-warning",
+    ring: "ring-warning/25",
+    dot: "bg-warning",
+    wash: "bg-warning/[0.08]",
+    border: "border-warning/25",
+  },
 };
 
 function IconBadge({
@@ -104,8 +135,11 @@ function FeatureCard({
   desc: string;
   idle?: "wiggle" | "pulse" | undefined;
 }) {
+  const c = tintClasses[tint];
   return (
-    <div className="panel group p-5 transition-transform hover:-translate-y-0.5">
+    <div
+      className={`panel-tint group p-5 transition-transform hover:-translate-y-0.5 ${c.wash} ${c.border}`}
+    >
       <IconBadge icon={icon} tint={tint} idle={idle} />
       <h3 className="mt-3.5 font-semibold">{title}</h3>
       <p className="mt-1 text-sm text-muted-foreground">{desc}</p>
@@ -116,7 +150,7 @@ function FeatureCard({
 function StatCard({ n, label, tint }: { n: string; label: string; tint: Tint }) {
   const c = tintClasses[tint];
   return (
-    <div className="panel p-5 text-center">
+    <div className={`panel-tint p-5 text-center ${c.wash} ${c.border}`}>
       <p className={`font-display text-3xl font-semibold sm:text-4xl ${c.text}`}>{n}</p>
       <p className="mt-1 text-xs text-muted-foreground sm:text-sm">{label}</p>
     </div>
@@ -410,13 +444,13 @@ function Landing() {
           <span className="font-display absolute -top-8 -left-6 text-[7rem] leading-none font-semibold text-foreground/[0.03] select-none sm:-top-16 sm:-left-10 sm:text-[16rem]">
             &gt;_
           </span>
-          <div className="absolute -top-24 left-[8%] h-72 w-72 rounded-full bg-primary/25 blur-3xl motion-safe:animate-float" />
+          <div className="absolute -top-24 left-[8%] h-72 w-72 rounded-full bg-primary/40 blur-3xl motion-safe:animate-float" />
           <div
-            className="absolute top-10 right-[10%] h-80 w-80 rounded-full bg-accent/20 blur-3xl motion-safe:animate-float"
+            className="absolute top-10 right-[10%] h-80 w-80 rounded-full bg-accent/35 blur-3xl motion-safe:animate-float"
             style={{ animationDelay: "-2.5s" }}
           />
           <div
-            className="absolute top-56 left-[40%] h-56 w-56 rounded-full bg-success/15 blur-3xl motion-safe:animate-float"
+            className="absolute top-56 left-[40%] h-56 w-56 rounded-full bg-success/25 blur-3xl motion-safe:animate-float"
             style={{ animationDelay: "-5s" }}
           />
         </div>
@@ -520,7 +554,7 @@ function Landing() {
       </section>
 
       {/* How a lesson works */}
-      <section className="border-y border-border bg-secondary/20 py-16">
+      <section className="border-y border-accent/15 bg-accent/[0.04] py-16">
         <div className="mx-auto max-w-6xl px-4">
           <Eyebrow tint="accent">How a lesson works</Eyebrow>
           <h2 className="mt-3 max-w-xl text-3xl font-semibold text-balance">
@@ -537,7 +571,7 @@ function Landing() {
             ).map((s, i) => {
               const c = tintClasses[s.tint];
               return (
-                <div key={s.t} className="relative panel p-5">
+                <div key={s.t} className={`panel-tint relative p-5 ${c.wash} ${c.border}`}>
                   <span
                     className={`flex h-8 w-8 items-center justify-center rounded-full ${c.bg} font-mono text-sm font-semibold ${c.text}`}
                   >
@@ -779,40 +813,47 @@ function Landing() {
           What you don't get from a generic platform.
         </h2>
         <div className="mt-6 grid grid-cols-2 gap-4 lg:grid-cols-4">
-          <div className="panel p-5">
-            <p className="font-display text-3xl font-semibold text-primary">£0</p>
-            <p className="mt-1.5 text-sm text-muted-foreground">
-              Free to set up, self-hosted on your own server — no per-seat pricing.
-            </p>
-          </div>
-          <div className="panel p-5">
-            <p className="font-display text-3xl font-semibold text-accent">OCR</p>
-            <p className="mt-1.5 text-sm text-muted-foreground">
-              Built to the exact GCSE spec your students sit, not a generic "learn to code"
-              curriculum.
-            </p>
-          </div>
-          <div className="panel p-5">
-            <p className="font-display text-3xl font-semibold text-success">You</p>
-            <p className="mt-1.5 text-sm text-muted-foreground">
-              Your department owns the data and the pacing — lessons unlock when you say so.
-            </p>
-          </div>
-          <div className="panel p-5">
-            <p className="font-display text-3xl font-semibold text-warning">Open</p>
-            <p className="mt-1.5 text-sm text-muted-foreground">
-              The adaptive engine's logic is shown on the page, not hidden behind "AI-powered."
-            </p>
-          </div>
+          {(
+            [
+              {
+                n: "£0",
+                d: "Free to set up, self-hosted on your own server — no per-seat pricing.",
+                tint: "primary",
+              },
+              {
+                n: "OCR",
+                d: 'Built to the exact GCSE spec your students sit, not a generic "learn to code" curriculum.',
+                tint: "accent",
+              },
+              {
+                n: "You",
+                d: "Your department owns the data and the pacing — lessons unlock when you say so.",
+                tint: "success",
+              },
+              {
+                n: "Open",
+                d: 'The adaptive engine\'s logic is shown on the page, not hidden behind "AI-powered."',
+                tint: "warning",
+              },
+            ] as { n: string; d: string; tint: Tint }[]
+          ).map((card) => {
+            const c = tintClasses[card.tint];
+            return (
+              <div key={card.n} className={`panel-tint p-5 ${c.wash} ${c.border}`}>
+                <p className={`font-display text-3xl font-semibold ${c.text}`}>{card.n}</p>
+                <p className="mt-1.5 text-sm text-muted-foreground">{card.d}</p>
+              </div>
+            );
+          })}
         </div>
       </section>
 
       {/* Final CTA */}
       <section className="mx-auto max-w-6xl px-4 pb-20">
-        <div className="relative overflow-hidden rounded-2xl border border-border bg-secondary/20 p-8 text-center sm:p-12">
+        <div className="relative overflow-hidden rounded-2xl border border-primary/20 bg-primary/[0.04] p-8 text-center sm:p-12">
           <div
             aria-hidden
-            className="pointer-events-none absolute inset-0 -z-10 bg-[radial-gradient(45rem_20rem_at_50%_0%,oklch(0.82_0.075_88/0.12),transparent_65%)]"
+            className="pointer-events-none absolute inset-0 -z-10 bg-[radial-gradient(45rem_20rem_at_50%_0%,color-mix(in_oklab,var(--color-primary)_22%,transparent),transparent_65%)]"
           />
           <Eyebrow tint="primary">
             <Server className="h-3.5 w-3.5" strokeWidth={2} />
