@@ -5,6 +5,7 @@ import {
   FlaskConical,
   Gauge,
   GraduationCap,
+  Hammer,
   Link as LinkIcon,
   ListChecks,
   Swords,
@@ -21,13 +22,13 @@ export const Route = createFileRoute("/")({
       {
         name: "description",
         content:
-          "Structured Python lesson paths, an adaptive task bank and a free in-browser IDE for GCSE OCR and A level, with teacher-paced classes, homework and leaderboards.",
+          "Structured Python lesson paths, per-topic adaptive skill tracking, longer assessment projects and a free in-browser IDE for GCSE OCR and A level — with teacher-paced classes, personalised homework and class-wide analytics.",
       },
       { property: "og:title", content: "H-Code — free Python practice for GCSE & A level" },
       {
         property: "og:description",
         content:
-          "Lesson paths, adaptive practice, teacher classes and a free browser IDE for computer science students.",
+          "Lesson paths, a real adaptive engine, projects, teacher classes and a free browser IDE for computer science students.",
       },
     ],
   }),
@@ -59,6 +60,40 @@ function CodeMock() {
       </pre>
       <div className="border-t border-border bg-background/60 px-4 py-2.5 font-mono text-xs text-success">
         ✓ 3/3 tests passed · +25 XP
+      </div>
+    </div>
+  );
+}
+
+function SkillMock() {
+  return (
+    <div className="panel p-5 shadow-glow">
+      <p className="font-mono text-xs text-muted-foreground">ITERATION · CLASS SKILL LEVEL</p>
+      <div className="mt-3 h-2 overflow-hidden rounded-full bg-secondary">
+        <div className="h-full w-[58%] rounded-full bg-primary" />
+      </div>
+      <p className="mt-1.5 font-mono text-xs text-muted-foreground">58% — up from 42% this week</p>
+      <div className="mt-4 space-y-2.5 text-sm">
+        <div className="flex items-start gap-2">
+          <span className="text-success">✓</span>
+          <span className="text-muted-foreground">
+            Fast, first-try pass — <span className="text-foreground">bigger bump</span>, not a
+            flat +1
+          </span>
+        </div>
+        <div className="flex items-start gap-2">
+          <span className="text-warning">•</span>
+          <span className="text-muted-foreground">
+            One wrong answer — <span className="text-foreground">gentle −12%</span>, never a reset
+          </span>
+        </div>
+        <div className="flex items-start gap-2">
+          <span className="text-destructive">✗</span>
+          <span className="text-muted-foreground">
+            Three wrong in a row — <span className="text-foreground">that's</span> when it actually
+            steps down a level
+          </span>
+        </div>
       </div>
     </div>
   );
@@ -196,8 +231,8 @@ function Landing() {
             },
             {
               icon: FlaskConical,
-              t: "Real progress, not guesswork",
-              d: "See exactly who's held back by mastery vs. who's just waiting on the next lesson to be set.",
+              t: "Class-wide topic strength",
+              d: "See which topic the whole class needs re-taught, not just how one student is doing.",
             },
           ].map((c) => (
             <div key={c.t} className="panel p-5">
@@ -207,6 +242,29 @@ function Landing() {
             </div>
           ))}
         </div>
+
+        <div className="mt-6 grid items-center gap-10 rounded-2xl border border-border bg-secondary/10 p-6 lg:grid-cols-[1fr_0.9fr] lg:p-8">
+          <div>
+            <p className="font-mono text-xs text-primary">not a black box</p>
+            <h3 className="mt-2 text-2xl font-semibold text-balance">
+              A real adaptive engine, tuned to not overreact.
+            </h3>
+            <p className="mt-3 text-sm text-muted-foreground">
+              Most "adaptive" tools just count right vs. wrong. H-Code tracks a live skill level
+              per student, per topic — and it's built around a known failure mode in adaptive
+              difficulty design: overreacting to one bad answer. A single mistake barely moves the
+              needle; it takes a genuine pattern (three wrong in a row) before the difficulty
+              actually steps down. A fast, clean, first-try pass earns more than a slow one, so
+              confident students get pushed harder instead of drilling the same level on repeat.
+            </p>
+            <p className="mt-3 text-sm text-muted-foreground">
+              Every one of those signals rolls up to a class-wide view — not "Ada got 60%", but
+              "this class needs Iteration re-taught."
+            </p>
+          </div>
+          <SkillMock />
+        </div>
+
         <Button asChild className="mt-6" variant="secondary">
           <Link to="/auth" search={{ mode: "signup", role: "teacher" }}>
             Set up a class
@@ -250,9 +308,14 @@ function Landing() {
         <p className="font-mono text-xs tracking-[0.2em] text-muted-foreground uppercase">
           Stay motivated
         </p>
-        <div className="mt-4 grid gap-4 sm:grid-cols-2 lg:grid-cols-4">
+        <div className="mt-4 grid gap-4 sm:grid-cols-2 lg:grid-cols-5">
           {[
             { icon: Gauge, t: "Adaptive practice", d: "Challenges chosen from your live skill level." },
+            {
+              icon: Hammer,
+              t: "Projects",
+              d: "Longer assessments per topic that pull everything together.",
+            },
             { icon: FlaskConical, t: "Boss battles", d: "Timed rapid-fire runs for XP multipliers." },
             { icon: Swords, t: "Duels", d: "Race a classmate on the same challenge." },
             { icon: Trophy, t: "Class leaderboards", d: "XP, streaks and badges per class." },
