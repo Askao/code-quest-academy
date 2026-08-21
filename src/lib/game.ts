@@ -1,6 +1,18 @@
+/** The exam board a GCSE class or self-learner is working to. Only GCSE has
+ * more than one board in H-Code - A level has no board concept at all. */
+export type Board = "ocr" | "aqa";
+
 export const GCSE_TOPICS = [
-  { key: "getting-started", label: "Getting started", blurb: "Using the IDE, print(), input() and joining text" },
-  { key: "fundamentals", label: "Data types & variables", blurb: "Variables, data types, casting, input and output" },
+  {
+    key: "getting-started",
+    label: "Getting started",
+    blurb: "Using the IDE, print(), input() and joining text",
+  },
+  {
+    key: "fundamentals",
+    label: "Data types & variables",
+    blurb: "Variables, data types, casting, input and output",
+  },
   { key: "sequencing", label: "Sequencing", blurb: "Input, output, variables, arithmetic" },
   { key: "selection", label: "Selection", blurb: "if / elif / else and conditions" },
   { key: "iteration", label: "Iteration", blurb: "for and while loops" },
@@ -19,6 +31,16 @@ export const GCSE_TOPICS = [
   { key: "strings", label: "Strings", blurb: "Manipulation and string handling" },
   { key: "functions", label: "Subprograms", blurb: "Functions and procedures" },
   { key: "files", label: "File handling", blurb: "Reading and writing text files" },
+  {
+    key: "databases",
+    label: "Databases & SQL",
+    blurb: "Relational databases, tables and SQL queries",
+    // AQA-only: OCR's spec has no relational-database content at all (OCR's
+    // own "Moving from AQA" guide lists it under "you will not need to
+    // teach this"), so this topic - and only this one - is gated by board
+    // rather than being available to every GCSE class like the rest.
+    boards: ["aqa"] as const,
+  },
 ] as const;
 
 export const ALEVEL_TOPICS = [
@@ -30,8 +52,17 @@ export const ALEVEL_TOPICS = [
 
 export type TrackKey = "gcse" | "alevel";
 
-export function topicsFor(track: TrackKey) {
-  return track === "gcse" ? [...GCSE_TOPICS] : [...ALEVEL_TOPICS];
+/** `board` only matters for GCSE topics tagged with a `boards` allow-list
+ * (currently just "databases") - everything else is common to both boards,
+ * so it's shown regardless of which one is passed. Omit `board` (or pass
+ * nothing) to get every GCSE topic, board-gating included, which is what
+ * anywhere not board-aware yet (still being migrated) should keep doing. */
+export function topicsFor(track: TrackKey, board?: Board) {
+  if (track === "alevel") return [...ALEVEL_TOPICS];
+  if (!board) return [...GCSE_TOPICS];
+  return GCSE_TOPICS.filter(
+    (t) => !("boards" in t) || (t.boards as readonly Board[]).includes(board),
+  );
 }
 
 export function topicLabel(topic: string) {

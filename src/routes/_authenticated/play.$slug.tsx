@@ -8,8 +8,16 @@ import { supabase } from "@/integrations/supabase/client";
 import { useAuth } from "@/hooks/useAuth";
 import { Button } from "@/components/ui/button";
 import { BADGES, topicLabel, type TrackKey } from "@/lib/game";
-import { checkSyntax, getPyodide, runInteractive, runTests, type RunOutcome } from "@/lib/python-runner";
+import {
+  checkSyntax,
+  getPyodide,
+  runInteractive,
+  runTests,
+  type RunOutcome,
+} from "@/lib/python-runner";
+import { getSqlJs, runSqlOnce, runSqlTests, type SqlRunOutcome } from "@/lib/sql-runner";
 import { highlightErrorLine, pythonEditorExtensions } from "@/lib/python-lint";
+import { sqlEditorExtensions } from "@/lib/sql-lang";
 import { pickChallenge, recordAttempt, type Challenge } from "@/lib/progress";
 import {
   completedTaskSlugs,
@@ -34,9 +42,9 @@ type BossState = { endsAt: number; score: number; track: TrackKey; topic: string
 
 export const Route = createFileRoute("/_authenticated/play/$slug")({
   validateSearch: (s: Record<string, unknown>): Search => ({
-    mode: (
-      ["practice", "boss", "duel", "homework", "recap", "project"] as const
-    ).includes(s["mode"] as never)
+    mode: (["practice", "boss", "duel", "homework", "recap", "project"] as const).includes(
+      s["mode"] as never,
+    )
       ? (s["mode"] as Search["mode"])
       : "practice",
     ...(s["track"] === "alevel" || s["track"] === "gcse" ? { track: s["track"] } : {}),
@@ -56,6 +64,13 @@ export const Route = createFileRoute("/_authenticated/play/$slug")({
   component: Play,
 });
 
+// The one topic that runs SQL instead of Python (AQA's databases content -
+// see game.ts). Everything else on the site is Python, so this is the only
+// place that needs to know the difference.
+function isSqlTopic(topic: string) {
+  return topic === "databases";
+}
+
 function readBoss(): BossState | null {
   try {
     const raw = sessionStorage.getItem("hcode-boss");
@@ -72,7 +87,7 @@ function Play() {
   const navigate = useNavigate();
 
   const [code, setCode] = useState("");
-  const [outcome, setOutcome] = useState<RunOutcome | null>(null);
+  const [outcome, setOutcome] = useState<RunOutcome | SqlRunOutcome | null>(null);
   const [running, setRunning] = useState(false);
   const [engineReady, setEngineReady] = useState(false);
   const [hintsShown, setHintsShown] = useState(0);
@@ -117,7 +132,11 @@ function Play() {
           .select("passed, challenges!inner(slug)")
           .eq("user_id", user!.id)
           .eq("passed", true),
-        supabase.from("quiz_attempts").select("lesson_slug").eq("user_id", user!.id).eq("passed", true),
+        supabase
+          .from("quiz_attempts")
+          .select("lesson_slug")
+          .eq("user_id", user!.id)
+          .eq("passed", true),
       ]);
       const passedSlugs = new Set(
         ((passedRes.data ?? []) as unknown as { challenges: { slug: string } }[]).map(
@@ -147,10 +166,18 @@ function Play() {
   }, [challenge]);
 
   useEffect(() => {
-    void getPyodide()
-      .then(() => setEngineReady(true))
-      .catch(() => toast.error("Could not start the Python engine"));
-  }, []);
+    if (!challenge) return;
+    setEngineReady(false);
+    if (isSqlTopic(challenge.topic)) {
+      void getSqlJs()
+        .then(() => setEngineReady(true))
+        .catch(() => toast.error("Could not start the SQL engine"));
+    } else {
+      void getPyodide()
+        .then(() => setEngineReady(true))
+        .catch(() => toast.error("Could not start the Python engine"));
+    }
+  }, [challenge]);
 
   // Boss battle countdown
   useEffect(() => {
@@ -194,7 +221,28 @@ function Play() {
     }
   };
 
+  // SQL has no input()/stdin concept, so "Run" is a single shot: execute the
+  // whole script once and show whatever rows the last statement produced -
+  // none of the interactive answer/waiting-for-input loop Python's console
+  // needs applies here.
+  const runConsoleSql = async () => {
+    setConsoleRunning(true);
+    try {
+      const result = await runSqlOnce(code);
+      setConsoleOutput(result.output || (result.error ? null : "(no rows)"));
+      setConsoleError(result.error ?? null);
+    } catch (err) {
+      toast.error(err instanceof Error ? err.message : "Run failed");
+    } finally {
+      setConsoleRunning(false);
+    }
+  };
+
   const runConsole = async () => {
+    if (challenge && isSqlTopic(challenge.topic)) {
+      await runConsoleSql();
+      return;
+    }
     const syntaxIssue = await checkSyntax(code);
     setSyntaxError(syntaxIssue);
     if (editorViewRef.current) {
@@ -214,13 +262,18 @@ function Play() {
     if (!challenge || !user) return;
     setRunning(true);
     try {
-      const syntaxIssue = await checkSyntax(code);
-      setSyntaxError(syntaxIssue);
-      if (editorViewRef.current) {
-        highlightErrorLine(editorViewRef.current, syntaxIssue?.line ?? null);
+      const sql = isSqlTopic(challenge.topic);
+      if (!sql) {
+        const syntaxIssue = await checkSyntax(code);
+        setSyntaxError(syntaxIssue);
+        if (editorViewRef.current) {
+          highlightErrorLine(editorViewRef.current, syntaxIssue?.line ?? null);
+        }
       }
 
-      const result = await runTests(code, challenge.tests);
+      const result = sql
+        ? await runSqlTests(code, challenge.tests)
+        : await runTests(code, challenge.tests);
       setOutcome(result);
       const attemptNumber = tries + 1;
       setTries(attemptNumber);
@@ -318,7 +371,7 @@ function Play() {
 
     const next = await pickChallenge({
       track: (search.track ?? challenge.track) as TrackKey,
-      ...(search.topic ?? (search.mode === "boss" ? undefined : challenge.topic)
+      ...((search.topic ?? (search.mode === "boss" ? undefined : challenge.topic))
         ? { topic: search.topic ?? challenge.topic }
         : {}),
       level: challenge.difficulty,
@@ -336,6 +389,8 @@ function Play() {
     return <p className="text-muted-foreground">Loading challenge…</p>;
   }
 
+  const isSql = isSqlTopic(challenge.topic);
+
   // Came from a lesson's task list: show where this task sits in that
   // lesson so it doesn't feel like an anonymous challenge dropped in
   // isolation.
@@ -352,7 +407,7 @@ function Play() {
             challenge.track === "gcse" ? "bg-gcse/15 text-gcse" : "bg-alevel/15 text-alevel"
           }`}
         >
-          {challenge.track === "gcse" ? "GCSE · OCR" : "A LEVEL"}
+          {challenge.track === "gcse" ? `GCSE · ${isSql ? "AQA" : "OCR"}` : "A LEVEL"}
         </span>
         <span className="font-mono text-xs text-muted-foreground">
           {topicLabel(challenge.topic)} · difficulty {challenge.difficulty}/5 · {challenge.xp} XP
@@ -418,7 +473,9 @@ function Play() {
               {challenge.hints.slice(0, hintsShown).map((h, i) => (
                 <li key={i}>💡 {inline(h)}</li>
               ))}
-              {hintsShown === 0 ? <li>Have a go first — hints reduce your first-try bonus.</li> : null}
+              {hintsShown === 0 ? (
+                <li>Have a go first — hints reduce your first-try bonus.</li>
+              ) : null}
             </ul>
           </div>
 
@@ -434,18 +491,24 @@ function Play() {
                   <li
                     key={r.index}
                     className={`rounded-lg border p-3 ${
-                      r.passed ? "border-success/30 bg-success/5" : "border-destructive/30 bg-destructive/5"
+                      r.passed
+                        ? "border-success/30 bg-success/5"
+                        : "border-destructive/30 bg-destructive/5"
                     }`}
                   >
                     <div className="flex items-center gap-2">
                       <span
                         className={`flex h-6 w-6 shrink-0 items-center justify-center rounded-full text-xs font-bold ${
-                          r.passed ? "bg-success/20 text-success" : "bg-destructive/20 text-destructive"
+                          r.passed
+                            ? "bg-success/20 text-success"
+                            : "bg-destructive/20 text-destructive"
                         }`}
                       >
                         {r.passed ? "✓" : "✗"}
                       </span>
-                      <p className={`font-semibold ${r.passed ? "text-success" : "text-destructive"}`}>
+                      <p
+                        className={`font-semibold ${r.passed ? "text-success" : "text-destructive"}`}
+                      >
                         Test {r.index + 1}: {r.passed ? "Correct!" : "Not quite right yet"}
                       </p>
                     </div>
@@ -487,7 +550,8 @@ function Play() {
                             <>
                               <div>
                                 <p className="text-xs font-medium text-muted-foreground">
-                                  ✅ Your code should print:
+                                  ✅{" "}
+                                  {isSql ? "Your query should return:" : "Your code should print:"}
                                 </p>
                                 <p className="mt-1 rounded-md bg-secondary/50 p-2 font-mono text-xs">
                                   {expectedParts.map((part, pi) =>
@@ -506,7 +570,7 @@ function Play() {
                               </div>
                               <div>
                                 <p className="text-xs font-medium text-muted-foreground">
-                                  📝 Your code printed:
+                                  📝 {isSql ? "Your query returned:" : "Your code printed:"}
                                 </p>
                                 <p className="mt-1 rounded-md bg-secondary/50 p-2 font-mono text-xs">
                                   {r.actual ? (
@@ -523,7 +587,9 @@ function Play() {
                                       ),
                                     )
                                   ) : (
-                                    <span className="text-destructive">(nothing was printed)</span>
+                                    <span className="text-destructive">
+                                      {isSql ? "(no rows returned)" : "(nothing was printed)"}
+                                    </span>
                                   )}
                                 </p>
                               </div>
@@ -561,7 +627,7 @@ function Play() {
               value={code}
               height="100%"
               theme="dark"
-              extensions={pythonEditorExtensions}
+              extensions={isSql ? sqlEditorExtensions : pythonEditorExtensions}
               onChange={(value) => {
                 setCode(value);
                 setSyntaxError(null);
@@ -570,7 +636,7 @@ function Play() {
               onCreateEditor={(view) => {
                 editorViewRef.current = view;
               }}
-              placeholder="# write your Python here"
+              placeholder={isSql ? "-- write your SQL here" : "# write your Python here"}
               basicSetup={{ tabSize: 4 }}
             />
           </div>
@@ -586,14 +652,22 @@ function Play() {
               disabled={consoleRunning || !engineReady}
               title="Try it out and see what it prints — doesn't count as an attempt"
             >
-              {!engineReady ? "Starting Python…" : consoleRunning ? "Running…" : "▶ Run"}
+              {!engineReady
+                ? `Starting ${isSql ? "SQL" : "Python"}…`
+                : consoleRunning
+                  ? "Running…"
+                  : "▶ Run"}
             </Button>
             <Button
               onClick={run}
               disabled={running || !engineReady}
               title="Check your answer against the real tests"
             >
-              {!engineReady ? "Starting Python…" : running ? "Testing…" : "✅ Test"}
+              {!engineReady
+                ? `Starting ${isSql ? "SQL" : "Python"}…`
+                : running
+                  ? "Testing…"
+                  : "✅ Test"}
             </Button>
             <Button variant="secondary" onClick={() => setCode(challenge.starter_code || "")}>
               Reset
@@ -608,8 +682,17 @@ function Play() {
             </Button>
           </div>
           <p className="text-xs text-muted-foreground">
-            <strong>Run</strong> lets you try your own input and see what happens.{" "}
-            <strong>Test</strong> checks your answer for real, once you think you're done.
+            {isSql ? (
+              <>
+                <strong>Run</strong> shows you the rows your query returns. <strong>Test</strong>{" "}
+                checks it for real, once you think you're done.
+              </>
+            ) : (
+              <>
+                <strong>Run</strong> lets you try your own input and see what happens.{" "}
+                <strong>Test</strong> checks your answer for real, once you think you're done.
+              </>
+            )}
           </p>
 
           {consoleOutput != null || consoleError != null || waitingForInput ? (
@@ -643,7 +726,8 @@ function Play() {
           ) : null}
 
           <p className="font-mono text-xs text-muted-foreground">
-            Python runs entirely in your browser — nothing is executed on the server.
+            {isSql ? "SQL" : "Python"} runs entirely in your browser — nothing is executed on the
+            server.
           </p>
         </div>
       </div>
@@ -672,5 +756,4 @@ async function submitDuelTime(duelId: string, userId: string, ms: number) {
       ...(winner ? { winner_id: winner } : {}),
     })
     .eq("id", duelId);
-
 }

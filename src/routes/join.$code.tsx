@@ -111,7 +111,7 @@ function JoinPage() {
             </p>
             <h1 className="mt-1 text-2xl font-bold">{cls.name}</h1>
             <p className="mt-1 text-sm text-muted-foreground">
-              {cls.track === "gcse" ? "GCSE · OCR" : "A LEVEL"}
+              {cls.track === "gcse" ? `GCSE · ${cls.board.toUpperCase()}` : "A LEVEL"}
             </p>
 
             <form onSubmit={submit} className="mt-6 space-y-4">

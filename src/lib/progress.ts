@@ -1,6 +1,10 @@
 import { supabase } from "@/integrations/supabase/client";
 import { BADGES, xpForAttempt, type TrackKey } from "@/lib/game";
-import type { RunOutcome } from "@/lib/python-runner";
+
+/** The only shape recordAttempt actually needs from a run outcome - shared
+ * by python-runner's RunOutcome and sql-runner's SqlRunOutcome, so either
+ * can be passed straight in without a cast. */
+type Outcome = { passed: boolean; passedCount: number; total: number; durationMs: number };
 
 export type Challenge = {
   id: string;
@@ -41,7 +45,7 @@ export type AttemptSummary = {
 export async function recordAttempt(opts: {
   userId: string;
   challenge: Challenge;
-  outcome: RunOutcome;
+  outcome: Outcome;
   code: string;
   mode: string;
   firstTry: boolean;
@@ -221,7 +225,11 @@ function shuffled<T>(items: T[]): T[] {
  * one difficulty band of `target`, randomised rather than always the same
  * closest set for a given level.
  */
-function pickNear(items: { id: string; difficulty: number }[], target: number, n: number): string[] {
+function pickNear(
+  items: { id: string; difficulty: number }[],
+  target: number,
+  n: number,
+): string[] {
   const near = items.filter((c) => Math.abs(c.difficulty - target) <= 1);
   const source = near.length >= n ? near : items;
   return shuffled(source)

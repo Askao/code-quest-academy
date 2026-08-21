@@ -32,7 +32,7 @@ export const Route = createFileRoute("/")({
       {
         name: "description",
         content:
-          "Structured Python lesson paths, per-topic adaptive skill tracking, longer assessment projects and a free in-browser IDE for GCSE OCR and A level — with teacher-paced classes, personalised homework and class-wide analytics.",
+          "Structured Python lesson paths, per-topic adaptive skill tracking, longer assessment projects and a free in-browser IDE for GCSE (OCR and AQA) and A level — with teacher-paced classes, personalised homework and class-wide analytics.",
       },
       { property: "og:title", content: "H-Code — free Python practice for GCSE & A level" },
       {
@@ -516,7 +516,7 @@ function Landing() {
         <div className="mx-auto max-w-6xl px-4 pb-16">
           <div className="grid grid-cols-2 gap-3 sm:grid-cols-4">
             <StatCard n="150+" label="GCSE tasks" tint="primary" />
-            <StatCard n="13" label="OCR-aligned topics" tint="accent" />
+            <StatCard n={String(GCSE_TOPICS.length)} label="GCSE topics, OCR & AQA" tint="accent" />
             <StatCard n="4" label="wording tiers, ladder-style" tint="success" />
             <StatCard n="£0" label="to get started" tint="warning" />
           </div>
@@ -564,9 +564,21 @@ function Landing() {
             {(
               [
                 { t: "Teaching notes", d: "Plain English, not a wall of jargon.", tint: "primary" },
-                { t: "Worked example", d: "See real code run before writing your own.", tint: "accent" },
-                { t: "Laddered tasks", d: "Direct instructions, building to exam-style wording.", tint: "success" },
-                { t: "Quick check", d: "A few questions to check the theory landed too.", tint: "warning" },
+                {
+                  t: "Worked example",
+                  d: "See real code run before writing your own.",
+                  tint: "accent",
+                },
+                {
+                  t: "Laddered tasks",
+                  d: "Direct instructions, building to exam-style wording.",
+                  tint: "success",
+                },
+                {
+                  t: "Quick check",
+                  d: "A few questions to check the theory landed too.",
+                  tint: "warning",
+                },
               ] as { t: string; d: string; tint: Tint }[]
             ).map((s, i) => {
               const c = tintClasses[s.tint];
@@ -729,16 +741,26 @@ function Landing() {
           <div className="panel overflow-hidden p-0">
             <div className="border-b border-primary/20 bg-primary/10 px-6 py-4">
               <span className="rounded-full bg-primary/20 px-3 py-1 font-mono text-xs font-medium text-primary">
-                GCSE · OCR
+                GCSE · OCR &amp; AQA
               </span>
               <h2 className="mt-3 text-xl font-semibold">Exactly the spec, nothing more</h2>
+              <p className="mt-1 text-xs text-muted-foreground">
+                Set a class's board when you create it — everything below is shared between both,
+                except Databases &amp; SQL, which is AQA's one topic OCR doesn't have.
+              </p>
             </div>
             <ul className="grid grid-cols-1 gap-x-4 gap-y-2 p-6 text-sm sm:grid-cols-2">
               {GCSE_TOPICS.map((t) => (
                 <li key={t.key} className="flex items-start gap-2">
                   <span className="mt-1.5 h-1.5 w-1.5 shrink-0 rounded-full bg-primary" />
                   <span className="text-muted-foreground">
-                    <span className="font-medium text-foreground">{t.label}</span> — {t.blurb}
+                    <span className="font-medium text-foreground">{t.label}</span>
+                    {"boards" in t ? (
+                      <span className="ml-1.5 rounded-full bg-accent/15 px-1.5 py-0.5 font-mono text-[10px] text-accent">
+                        AQA
+                      </span>
+                    ) : null}{" "}
+                    — {t.blurb}
                   </span>
                 </li>
               ))}
@@ -821,8 +843,8 @@ function Landing() {
                 tint: "primary",
               },
               {
-                n: "OCR",
-                d: 'Built to the exact GCSE spec your students sit, not a generic "learn to code" curriculum.',
+                n: "2 boards",
+                d: 'Built to the exact GCSE spec your students sit — OCR or AQA — not a generic "learn to code" curriculum.',
                 tint: "accent",
               },
               {

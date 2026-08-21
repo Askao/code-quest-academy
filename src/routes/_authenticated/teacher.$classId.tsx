@@ -9,7 +9,14 @@ import { Input } from "@/components/ui/input";
 import { Label } from "@/components/ui/label";
 import { Progress } from "@/components/ui/progress";
 import { Tabs, TabsContent, TabsList, TabsTrigger } from "@/components/ui/tabs";
-import { levelFromXp, skillPercent, topicLabel, topicsFor, type TrackKey } from "@/lib/game";
+import {
+  levelFromXp,
+  skillPercent,
+  topicLabel,
+  topicsFor,
+  type Board,
+  type TrackKey,
+} from "@/lib/game";
 import { pickHomeworkSet } from "@/lib/progress";
 import { downloadCsv } from "@/lib/csv";
 import {
@@ -322,13 +329,14 @@ function ClassDetail() {
   });
 
   const track = (data?.cls?.track ?? "gcse") as TrackKey;
+  const board = (data?.cls?.board ?? "ocr") as Board;
 
   // A student-by-student skill breakdown already exists below, but it only
   // answers "how is this one student doing" - a teacher deciding what to
   // re-teach next needs the other lens: "how is the class doing on this
   // topic". Computed client-side from the same skills rows already fetched
   // above, so it costs nothing extra to query.
-  const topicSummary = topicsFor(track).map((t) => {
+  const topicSummary = topicsFor(track, board).map((t) => {
     const levels = (data?.students ?? [])
       .map((s) => s.skills.find((k) => k.topic === t.key && k.track === track))
       .filter((k): k is NonNullable<typeof k> => !!k);
@@ -522,7 +530,7 @@ function ClassDetail() {
 
   const exportRoster = () => {
     const students = data?.students ?? [];
-    const topics = topicsFor(track);
+    const topics = topicsFor(track, board);
     const rows = [
       [
         "Name",
@@ -596,7 +604,7 @@ function ClassDetail() {
       <div>
         <h1 className="text-3xl font-bold">{data?.cls?.name ?? "Class"}</h1>
         <p className="mt-1 font-mono text-sm text-muted-foreground">
-          {track === "gcse" ? "GCSE · OCR" : "A LEVEL"} · code{" "}
+          {track === "gcse" ? `GCSE · ${board.toUpperCase()}` : "A LEVEL"} · code{" "}
           <span className="text-primary">{data?.cls?.join_code}</span>
         </p>
         {joinLink ? (
@@ -761,7 +769,7 @@ function ClassDetail() {
                       <tr className="border-b border-border/60 bg-secondary/10">
                         <td colSpan={6} className="p-4">
                           <div className="grid gap-3 sm:grid-cols-2 lg:grid-cols-3">
-                            {topicsFor(track).map((t) => {
+                            {topicsFor(track, board).map((t) => {
                               const lvl = Number(
                                 s.skills.find((k) => k.topic === t.key && k.track === track)
                                   ?.level ?? 1,
@@ -811,7 +819,7 @@ function ClassDetail() {
                 }}
               >
                 <option value="">Choose a topic…</option>
-                {topicsWithLessons(track).map((t) => (
+                {topicsWithLessons(track, board).map((t) => (
                   <option key={t} value={t}>
                     {topicLabel(t)}
                   </option>
@@ -960,7 +968,7 @@ function ClassDetail() {
                 </span>
               </Label>
               <div className="flex flex-wrap gap-2">
-                {topicsFor(track).map((t) => {
+                {topicsFor(track, board).map((t) => {
                   const checked = selectedTopics.includes(t.key);
                   return (
                     <label

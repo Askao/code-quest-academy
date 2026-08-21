@@ -4,7 +4,15 @@ import { supabase } from "@/integrations/supabase/client";
 import { useAuth } from "@/hooks/useAuth";
 import { Button } from "@/components/ui/button";
 import { Progress } from "@/components/ui/progress";
-import { BADGES, levelFromXp, skillLabel, skillPercent, topicLabel, topicsFor } from "@/lib/game";
+import {
+  BADGES,
+  levelFromXp,
+  skillLabel,
+  skillPercent,
+  topicLabel,
+  topicsFor,
+  type Board,
+} from "@/lib/game";
 
 export const Route = createFileRoute("/_authenticated/dashboard")({
   head: () => ({
@@ -99,6 +107,15 @@ function Dashboard() {
   const { level, intoLevel, needed } = levelFromXp(xp);
   const tracks = new Set((data?.classes ?? []).map((c) => c!.track as "gcse" | "alevel"));
   if (tracks.size === 0) tracks.add("gcse");
+  // If any of a student's GCSE classes is AQA, show AQA's content (the
+  // extra Databases topic included) - matches how `tracks` above already
+  // collapses multiple classes down to one row per track rather than
+  // tracking per-class.
+  const gcseBoard: Board = (data?.classes ?? []).some(
+    (c) => c!.track === "gcse" && c!.board === "aqa",
+  )
+    ? "aqa"
+    : "ocr";
 
   if (isTeacher) {
     return (
@@ -256,10 +273,10 @@ function Dashboard() {
               <p
                 className={`mb-2 font-mono text-xs ${track === "gcse" ? "text-gcse" : "text-alevel"}`}
               >
-                {track === "gcse" ? "GCSE · OCR" : "A LEVEL"}
+                {track === "gcse" ? `GCSE · ${gcseBoard.toUpperCase()}` : "A LEVEL"}
               </p>
               <div className="grid gap-3 sm:grid-cols-2 lg:grid-cols-3">
-                {topicsFor(track).map((t) => {
+                {topicsFor(track, gcseBoard).map((t) => {
                   const skill = data?.skills.find((s) => s.topic === t.key && s.track === track);
                   const lvl = Number(skill?.level ?? 1);
                   return (

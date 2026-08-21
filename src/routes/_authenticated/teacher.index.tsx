@@ -7,7 +7,7 @@ import { useAuth } from "@/hooks/useAuth";
 import { Button } from "@/components/ui/button";
 import { Input } from "@/components/ui/input";
 import { createSchool, joinSchool, leaveSchool, makeJoinCode } from "@/lib/school";
-import type { TrackKey } from "@/lib/game";
+import type { Board, TrackKey } from "@/lib/game";
 
 export const Route = createFileRoute("/_authenticated/teacher/")({
   head: () => ({
@@ -32,6 +32,7 @@ function Teacher() {
   const qc = useQueryClient();
   const [name, setName] = useState("");
   const [track, setTrack] = useState<TrackKey>("gcse");
+  const [board, setBoard] = useState<Board>("ocr");
   const [improvedWindowDays, setImprovedWindowDays] = useState(7);
   const [schoolName, setSchoolName] = useState("");
   const [schoolCode, setSchoolCode] = useState("");
@@ -118,6 +119,9 @@ function Teacher() {
     const { error } = await supabase.from("classes").insert({
       name: name.trim(),
       track,
+      // Only GCSE has more than one board - an A level class always gets
+      // the default 'ocr' value, which nothing ever reads for that track.
+      ...(track === "gcse" ? { board } : {}),
       teacher_id: user!.id,
       join_code: makeJoinCode(),
       improved_window_days: improvedWindowDays,
@@ -314,9 +318,19 @@ function Teacher() {
             value={track}
             onChange={(e) => setTrack(e.target.value as TrackKey)}
           >
-            <option value="gcse">GCSE (OCR)</option>
+            <option value="gcse">GCSE</option>
             <option value="alevel">A level</option>
           </select>
+          {track === "gcse" ? (
+            <select
+              className="rounded-md border border-border bg-card px-3 py-2 text-sm"
+              value={board}
+              onChange={(e) => setBoard(e.target.value as Board)}
+            >
+              <option value="ocr">OCR</option>
+              <option value="aqa">AQA</option>
+            </select>
+          ) : null}
           <select
             className="rounded-md border border-border bg-card px-3 py-2 text-sm"
             value={improvedWindowDays}
@@ -350,7 +364,7 @@ function Teacher() {
                     c.track === "gcse" ? "bg-gcse/15 text-gcse" : "bg-alevel/15 text-alevel"
                   }`}
                 >
-                  {c.track === "gcse" ? "GCSE" : "A LEVEL"}
+                  {c.track === "gcse" ? `GCSE · ${c.board.toUpperCase()}` : "A LEVEL"}
                 </span>
               </div>
             </div>

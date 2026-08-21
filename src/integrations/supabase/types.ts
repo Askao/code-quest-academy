@@ -202,6 +202,7 @@ export type Database = {
       }
       classes: {
         Row: {
+          board: string
           created_at: string
           id: string
           improved_window_days: number
@@ -212,6 +213,7 @@ export type Database = {
           track: Database["public"]["Enums"]["track"]
         }
         Insert: {
+          board?: string
           created_at?: string
           id?: string
           improved_window_days?: number
@@ -222,6 +224,7 @@ export type Database = {
           track?: Database["public"]["Enums"]["track"]
         }
         Update: {
+          board?: string
           created_at?: string
           id?: string
           improved_window_days?: number
@@ -727,7 +730,12 @@ export type Database = {
       }
       class_for_join_code: {
         Args: { _code: string }
-        Returns: { id: string; name: string; track: Database["public"]["Enums"]["track"] }[]
+        Returns: {
+          id: string
+          name: string
+          track: Database["public"]["Enums"]["track"]
+          board: string
+        }[]
       }
       delete_class: {
         Args: { _class_id: string }

@@ -13,7 +13,8 @@ import lists from "@/content/gcse-lists.json";
 import selection from "@/content/gcse-selection.json";
 import sequencing from "@/content/gcse-sequencing.json";
 import strings from "@/content/gcse-strings.json";
-import { GCSE_TOPICS, type TrackKey } from "@/lib/game";
+import databases from "@/content/gcse-databases.json";
+import { GCSE_TOPICS, topicsFor, type Board, type TrackKey } from "@/lib/game";
 
 export type LessonContent = {
   slug: string;
@@ -96,6 +97,7 @@ const RAW = [
   strings,
   functions,
   files,
+  databases,
 ] as unknown as RawTopic[];
 
 export const LESSONS: LessonContent[] = RAW.flatMap((t) =>
@@ -178,9 +180,9 @@ export function tasksInGroup(group: string) {
  * order is what sequential lesson gating in /learn walks) - not just
  * "whichever topic happened to load first".
  */
-export function topicsWithLessons(track: TrackKey) {
+export function topicsWithLessons(track: TrackKey, board?: Board) {
   const present = new Set(LESSONS.filter((l) => l.track === track).map((l) => l.topic));
-  const ordered = (track === "gcse" ? GCSE_TOPICS : []).map((t) => t.key);
+  const ordered = topicsFor(track, board).map((t) => t.key);
   return ordered.filter((topic) => present.has(topic));
 }
 

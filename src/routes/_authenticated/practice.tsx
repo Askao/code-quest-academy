@@ -7,7 +7,14 @@ import { useAuth } from "@/hooks/useAuth";
 import { Button } from "@/components/ui/button";
 import { Progress } from "@/components/ui/progress";
 import { pickChallenge, pickRecapChallenge } from "@/lib/progress";
-import { skillLabel, skillPercent, topicLabel, topicsFor, type TrackKey } from "@/lib/game";
+import {
+  skillLabel,
+  skillPercent,
+  topicLabel,
+  topicsFor,
+  type Board,
+  type TrackKey,
+} from "@/lib/game";
 import {
   completedTaskSlugs,
   isLessonComplete,
@@ -42,6 +49,10 @@ function Practice() {
   const { user, isTeacher } = useAuth();
   const navigate = useNavigate();
   const [track, setTrack] = useState<TrackKey>("gcse");
+  // Free to switch, unlike A level - AQA isn't extra/higher content behind
+  // a teacher's say-so, it's an alternate view of the same GCSE track, so
+  // any self-learner can explore it same as an AQA class's students would.
+  const [board, setBoard] = useState<Board>("ocr");
   const [quizAnswer, setQuizAnswer] = useState<string | null>(null);
 
   const { data } = useQuery({
@@ -160,7 +171,9 @@ function Practice() {
     const lessons = lessonsForTopic(track, topic);
     return (
       lessons.length === 0 ||
-      lessons.some((l) => isLessonComplete(l.slug, data?.passedSlugs ?? new Set(), data?.quizPassed ?? new Set()))
+      lessons.some((l) =>
+        isLessonComplete(l.slug, data?.passedSlugs ?? new Set(), data?.quizPassed ?? new Set()),
+      )
     );
   };
 
@@ -213,9 +226,11 @@ function Practice() {
   // don't teach a skill of their own to randomly practise, so they're left
   // out of this grid, "Surprise me" and boss battles entirely, even though
   // their lessons are still reachable normally through /learn.
-  const practiceTopics = topicsFor(track).filter((t) => !("practiceExcluded" in t && t.practiceExcluded));
+  const practiceTopics = topicsFor(track, board).filter(
+    (t) => !("practiceExcluded" in t && t.practiceExcluded),
+  );
 
-  const topicsWithProjects = topicsFor("gcse")
+  const topicsWithProjects = topicsFor("gcse", board)
     .map((t) => ({ ...t, projects: projectsForTopic("gcse", t.key) }))
     .filter((t) => t.projects.some((p) => seededProjectSlugs?.has(p.slug)));
 
@@ -309,16 +324,34 @@ function Practice() {
         )}
       </section>
 
-      <div className="flex flex-wrap gap-2">
+      <div className="flex flex-wrap items-center gap-2">
         {(["gcse", "alevel"] as const).map((t) => (
           <Button
             key={t}
             variant={track === t ? "default" : "secondary"}
             onClick={() => setTrack(t)}
           >
-            {t === "gcse" ? "GCSE (OCR)" : "A level"}
+            {t === "gcse" ? "GCSE" : "A level"}
           </Button>
         ))}
+        {track === "gcse" ? (
+          <div className="flex overflow-hidden rounded-md border border-border">
+            {(["ocr", "aqa"] as const).map((b) => (
+              <button
+                key={b}
+                type="button"
+                onClick={() => setBoard(b)}
+                className={`px-3 py-1.5 font-mono text-xs ${
+                  board === b
+                    ? "bg-primary text-primary-foreground"
+                    : "bg-card text-muted-foreground hover:text-foreground"
+                }`}
+              >
+                {b.toUpperCase()}
+              </button>
+            ))}
+          </div>
+        ) : null}
         <Button
           variant="secondary"
           onClick={() => {
@@ -383,8 +416,8 @@ function Practice() {
         <section>
           <h2 className="mb-1 text-xl font-semibold">Projects</h2>
           <p className="mb-3 text-sm text-muted-foreground">
-            Longer, harder programs that pull together everything you've learned in a topic — a
-            real test, not a quick drill.
+            Longer, harder programs that pull together everything you've learned in a topic — a real
+            test, not a quick drill.
           </p>
           <div className="space-y-6">
             {topicsWithProjects.map((t) => {
@@ -408,10 +441,7 @@ function Practice() {
                       .map((p) => {
                         const done = data?.passedSlugs.has(p.slug) ?? false;
                         return (
-                          <div
-                            key={p.slug}
-                            className="panel flex flex-wrap items-center gap-3 p-4"
-                          >
+                          <div key={p.slug} className="panel flex flex-wrap items-center gap-3 p-4">
                             <span className={done ? "text-success" : "text-muted-foreground"}>
                               {done ? "✓" : "🏗"}
                             </span>

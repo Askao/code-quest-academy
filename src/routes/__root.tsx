@@ -83,7 +83,7 @@ export const Route = createRootRouteWithContext<{ queryClient: QueryClient }>()(
       {
         name: "description",
         content:
-          "Free adaptive Python practice for GCSE OCR and A level computer science, with teacher classes, homework and leaderboards.",
+          "Free adaptive Python practice for GCSE (OCR and AQA) and A level computer science, with teacher classes, homework and leaderboards.",
       },
       { property: "og:type", content: "website" },
       { name: "twitter:card", content: "summary_large_image" },

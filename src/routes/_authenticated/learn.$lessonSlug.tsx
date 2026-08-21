@@ -6,7 +6,7 @@ import { supabase } from "@/integrations/supabase/client";
 import { useAuth } from "@/hooks/useAuth";
 import { Button } from "@/components/ui/button";
 import { LessonNotes } from "@/components/LessonNotes";
-import { topicLabel } from "@/lib/game";
+import { topicLabel, type Board } from "@/lib/game";
 import {
   getLesson,
   isLessonAssigned,
@@ -275,18 +275,27 @@ function LessonPage() {
   // admins always see everything unlocked, regardless of class membership -
   // they need to freely browse/preview any lesson, not progress through it
   // like a student.
-  const { data: classIds = [] } = useQuery({
+  const { data: memberships = [] } = useQuery({
     queryKey: ["class-ids", user?.id],
     enabled: !!user && !isTeacher,
     queryFn: async () => {
       const { data } = await supabase
         .from("class_members")
-        .select("class_id")
+        .select("class_id, classes(board, track)")
         .eq("student_id", user!.id);
-      return (data ?? []).map((r) => r.class_id);
+      return data ?? [];
     },
   });
+  const classIds = memberships.map((m) => m.class_id);
   const enrolled = classIds.length > 0;
+  // Same "any AQA class -> show AQA content" rule as the dashboard and
+  // /learn index, so a databases lesson isn't in this page's gating
+  // sequence for a student whose class(es) are all OCR.
+  const gcseBoard: Board = memberships.some(
+    (m) => m.classes?.track === "gcse" && m.classes?.board === "aqa",
+  )
+    ? "aqa"
+    : "ocr";
 
   const { data: assignedSlugs = new Set<string>() } = useQuery({
     queryKey: ["assigned-lesson-slugs", classIds],
@@ -331,10 +340,11 @@ function LessonPage() {
   const [recapPassed, setRecapPassed] = useState(false);
   useEffect(() => setRecapPassed(false), [lesson.slug]);
 
-  const topicOrder = topicsWithLessons(lesson.track);
+  const topicOrder = topicsWithLessons(lesson.track, gcseBoard);
   const topicIndex = topicOrder.indexOf(lesson.topic);
   const previousTopicComplete =
-    topicIndex <= 0 || isTopicComplete(lesson.track, topicOrder[topicIndex - 1]!, passed, quizPassed);
+    topicIndex <= 0 ||
+    isTopicComplete(lesson.track, topicOrder[topicIndex - 1]!, passed, quizPassed);
   const previousSibling = siblings.find((l) => l.order === lesson.order - 1);
   const previousLessonComplete =
     !previousSibling || isLessonComplete(previousSibling.slug, passed, quizPassed);
@@ -495,7 +505,9 @@ function LessonPage() {
                         className="flex items-start gap-3 rounded-lg border border-primary/40 bg-primary/5 p-3 transition-colors hover:border-primary/70"
                       >
                         <span
-                          className={passed.has(task.slug) ? "text-primary" : "text-muted-foreground"}
+                          className={
+                            passed.has(task.slug) ? "text-primary" : "text-muted-foreground"
+                          }
                         >
                           {passed.has(task.slug) ? "✓" : "⭐"}
                         </span>

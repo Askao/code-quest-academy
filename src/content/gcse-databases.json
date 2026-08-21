@@ -1,0 +1,205 @@
+{
+  "track": "gcse",
+  "topic": "databases",
+  "lessons": [
+    {
+      "slug": "gcse-databases-1",
+      "title": "Querying a table with SELECT",
+      "summary": "What a table is, and reading data back out of one with SELECT.",
+      "notes": "A relational database stores data in **tables** — a grid of rows and columns, exactly like a spreadsheet. Each row is one record (e.g. one student); each column is one piece of information about it (e.g. their name).\n\nTo read data back out of a table, you write a query using `SELECT`:\n\n```sql\nSELECT name FROM students;\n```\n\nThis returns the `name` column, for every row in the `students` table. To get more than one column, list them separated by commas, in the order you want them back:\n\n```sql\nSELECT name, year FROM students;\n```\n\nTo get **every** column without typing them all out, use `*` instead of a column list:\n\n```sql\nSELECT * FROM students;\n```\n\nEvery SQL statement ends with a semicolon `;`.",
+      "worked_example": "-- A students table already exists, with columns: id, name, year, house\nSELECT name, year FROM students;",
+      "worked_example_note": "Only two columns were asked for (name, year), so only those two come back — in the order they were listed, not the order the table stores them in."
+    },
+    {
+      "slug": "gcse-databases-2",
+      "title": "Filtering and sorting: WHERE and ORDER BY",
+      "summary": "Only the rows you want, in the order you want them.",
+      "notes": "`SELECT` on its own returns every row. To return only rows matching a condition, add a `WHERE` clause:\n\n```sql\nSELECT name FROM students WHERE year = 10;\n```\n\nThis only returns students whose `year` column equals 10. `WHERE` also accepts `>`, `<`, `>=` and `<=` for comparisons.\n\nText values need **single quotes** around them in a `WHERE` clause — numbers don't:\n\n```sql\nSELECT name FROM students WHERE house = 'Turing';\n```\n\nTo control the order results come back in, add `ORDER BY` at the end:\n\n```sql\nSELECT name FROM students ORDER BY name;\n```\n\nBy default this sorts smallest/earliest first (ascending) — alphabetically for text, lowest-to-highest for numbers. `WHERE` and `ORDER BY` can be combined in the same query, `WHERE` always comes first.",
+      "worked_example": "-- Same students table as before\nSELECT name FROM students WHERE year = 11 ORDER BY name;",
+      "worked_example_note": "WHERE filters down to just year 11 students first, then ORDER BY sorts what's left alphabetically by name."
+    }
+  ],
+  "quiz": [
+    {
+      "lessonSlug": "gcse-databases-1",
+      "question": "Which SQL keyword selects every column in a table, without naming them one by one?",
+      "options": ["*", "ALL", "EVERY", "FULL"],
+      "answer": "*",
+      "explanation": "SELECT * means \"every column\" — a shortcut instead of listing each column name."
+    },
+    {
+      "lessonSlug": "gcse-databases-1",
+      "question": "In SELECT name, year FROM students;, what decides the order the columns are returned in?",
+      "options": [
+        "The order they're listed after SELECT",
+        "Alphabetical order",
+        "The order the table stores them in",
+        "It's random"
+      ],
+      "answer": "The order they're listed after SELECT",
+      "explanation": "Columns come back in exactly the order you list them after SELECT, regardless of how the table itself is structured."
+    },
+    {
+      "lessonSlug": "gcse-databases-2",
+      "question": "Which keyword filters which rows a query returns?",
+      "options": ["WHERE", "FILTER", "IF", "SELECT"],
+      "answer": "WHERE",
+      "explanation": "WHERE adds a condition — only rows matching it are included in the result."
+    },
+    {
+      "lessonSlug": "gcse-databases-2",
+      "question": "Why does WHERE house = 'Turing' need quotes around Turing, but WHERE year = 10 doesn't?",
+      "options": [
+        "Turing is text, and text values need quotes; numbers don't",
+        "Quotes are always required in SQL",
+        "Quotes are never required in SQL",
+        "It's a typo — both need quotes"
+      ],
+      "answer": "Turing is text, and text values need quotes; numbers don't",
+      "explanation": "Text values are wrapped in single quotes so SQL can tell them apart from column names; numbers are written plainly."
+    }
+  ],
+  "tasks": [
+    {
+      "slug": "gcse-databases-t1-01",
+      "lesson": 1,
+      "tier": 1,
+      "difficulty": 1,
+      "xp": 10,
+      "title": "Select everything",
+      "brief": "Below is a table called `students`. Write a query that selects every column, for every student.",
+      "starter": "-- Sample database: a students table\nCREATE TABLE students (id INTEGER, name TEXT, year INTEGER, house TEXT);\nINSERT INTO students VALUES\n  (1, 'Ada', 10, 'Turing'),\n  (2, 'Grace', 11, 'Lovelace'),\n  (3, 'Alan', 10, 'Turing'),\n  (4, 'Margaret', 9, 'Hopper'),\n  (5, 'Tim', 11, 'Lovelace');\n\n-- Write your query below this line:\n",
+      "hints": [
+        "`SELECT *` selects every column, instead of naming them one by one.",
+        "Use `SELECT * FROM students;` to return every column, for every row."
+      ],
+      "tests": [
+        {
+          "expect": "1, Ada, 10, Turing\n2, Grace, 11, Lovelace\n3, Alan, 10, Turing\n4, Margaret, 9, Hopper\n5, Tim, 11, Lovelace"
+        }
+      ]
+    },
+    {
+      "slug": "gcse-databases-t1-02",
+      "lesson": 1,
+      "tier": 1,
+      "difficulty": 1,
+      "xp": 10,
+      "title": "Just the names",
+      "brief": "Write a query that selects only the `name` column from `students`.",
+      "starter": "-- Sample database: a students table\nCREATE TABLE students (id INTEGER, name TEXT, year INTEGER, house TEXT);\nINSERT INTO students VALUES\n  (1, 'Ada', 10, 'Turing'),\n  (2, 'Grace', 11, 'Lovelace'),\n  (3, 'Alan', 10, 'Turing'),\n  (4, 'Margaret', 9, 'Hopper'),\n  (5, 'Tim', 11, 'Lovelace');\n\n-- Write your query below this line:\n",
+      "hints": [
+        "Name the exact column you want after `SELECT`, instead of using `*`.",
+        "Use `SELECT name FROM students;`."
+      ],
+      "tests": [{ "expect": "Ada\nGrace\nAlan\nMargaret\nTim" }]
+    },
+    {
+      "slug": "gcse-databases-t1-03",
+      "lesson": 1,
+      "tier": 2,
+      "difficulty": 2,
+      "xp": 15,
+      "title": "Two columns",
+      "brief": "Write a query that selects the `name` and `year` columns from `students`, in that order.",
+      "starter": "-- Sample database: a students table\nCREATE TABLE students (id INTEGER, name TEXT, year INTEGER, house TEXT);\nINSERT INTO students VALUES\n  (1, 'Ada', 10, 'Turing'),\n  (2, 'Grace', 11, 'Lovelace'),\n  (3, 'Alan', 10, 'Turing'),\n  (4, 'Margaret', 9, 'Hopper'),\n  (5, 'Tim', 11, 'Lovelace');\n\n-- Write your query below this line:\n",
+      "hints": [
+        "List the columns you want after `SELECT`, separated by a comma.",
+        "Use `SELECT name, year FROM students;` — they come back in the order you list them."
+      ],
+      "tests": [{ "expect": "Ada, 10\nGrace, 11\nAlan, 10\nMargaret, 9\nTim, 11" }]
+    },
+    {
+      "slug": "gcse-databases-t1-stretch",
+      "lesson": 1,
+      "tier": 4,
+      "difficulty": 3,
+      "xp": 30,
+      "stretch": true,
+      "title": "Column order matters",
+      "brief": "A teacher wants a report showing each student's year group first, then their name. Write a query that returns the `year` and `name` columns from `students`, in that order.",
+      "starter": "-- Sample database: a students table\nCREATE TABLE students (id INTEGER, name TEXT, year INTEGER, house TEXT);\nINSERT INTO students VALUES\n  (1, 'Ada', 10, 'Turing'),\n  (2, 'Grace', 11, 'Lovelace'),\n  (3, 'Alan', 10, 'Turing'),\n  (4, 'Margaret', 9, 'Hopper'),\n  (5, 'Tim', 11, 'Lovelace');\n\n-- Write your query below this line:\n",
+      "hints": [
+        "The order you name the columns after `SELECT` is the order they come back in — put `year` before `name`.",
+        "Use `SELECT year, name FROM students;`."
+      ],
+      "tests": [{ "expect": "10, Ada\n11, Grace\n10, Alan\n9, Margaret\n11, Tim" }]
+    },
+    {
+      "slug": "gcse-databases-t2-01",
+      "lesson": 2,
+      "tier": 2,
+      "difficulty": 2,
+      "xp": 15,
+      "title": "Filter by year",
+      "brief": "Write a query that selects the `name` of every student in `students` whose `year` is exactly 10.",
+      "starter": "-- Sample database: a students table\nCREATE TABLE students (id INTEGER, name TEXT, year INTEGER, house TEXT);\nINSERT INTO students VALUES\n  (1, 'Ada', 10, 'Turing'),\n  (2, 'Grace', 11, 'Lovelace'),\n  (3, 'Alan', 10, 'Turing'),\n  (4, 'Margaret', 9, 'Hopper'),\n  (5, 'Tim', 11, 'Lovelace');\n\n-- Write your query below this line:\n",
+      "hints": [
+        "Add a `WHERE` clause after the table name to filter which rows come back.",
+        "Use `SELECT name FROM students WHERE year = 10;`."
+      ],
+      "tests": [{ "expect": "Ada\nAlan" }]
+    },
+    {
+      "slug": "gcse-databases-t2-02",
+      "lesson": 2,
+      "tier": 2,
+      "difficulty": 2,
+      "xp": 15,
+      "title": "Filter by text",
+      "brief": "Write a query that selects the `name` of every student whose `house` is `Turing`. Remember that text values need quotes.",
+      "starter": "-- Sample database: a students table\nCREATE TABLE students (id INTEGER, name TEXT, year INTEGER, house TEXT);\nINSERT INTO students VALUES\n  (1, 'Ada', 10, 'Turing'),\n  (2, 'Grace', 11, 'Lovelace'),\n  (3, 'Alan', 10, 'Turing'),\n  (4, 'Margaret', 9, 'Hopper'),\n  (5, 'Tim', 11, 'Lovelace');\n\n-- Write your query below this line:\n",
+      "hints": [
+        "Text values in a `WHERE` clause need single quotes around them, e.g. `'Turing'` — numbers don't.",
+        "Use `SELECT name FROM students WHERE house = 'Turing';`."
+      ],
+      "tests": [{ "expect": "Ada\nAlan" }]
+    },
+    {
+      "slug": "gcse-databases-t2-03",
+      "lesson": 2,
+      "tier": 3,
+      "difficulty": 2,
+      "xp": 15,
+      "title": "Older than",
+      "brief": "Write a query that selects the `name` of every student whose `year` is greater than 10.",
+      "starter": "-- Sample database: a students table\nCREATE TABLE students (id INTEGER, name TEXT, year INTEGER, house TEXT);\nINSERT INTO students VALUES\n  (1, 'Ada', 10, 'Turing'),\n  (2, 'Grace', 11, 'Lovelace'),\n  (3, 'Alan', 10, 'Turing'),\n  (4, 'Margaret', 9, 'Hopper'),\n  (5, 'Tim', 11, 'Lovelace');\n\n-- Write your query below this line:\n",
+      "hints": [
+        "`WHERE` accepts comparison operators like `>` and `<`, not just `=`.",
+        "Use `SELECT name FROM students WHERE year > 10;`."
+      ],
+      "tests": [{ "expect": "Grace\nTim" }]
+    },
+    {
+      "slug": "gcse-databases-t2-04",
+      "lesson": 2,
+      "tier": 3,
+      "difficulty": 2,
+      "xp": 15,
+      "title": "Alphabetical order",
+      "brief": "Write a query that selects the `name` of every student, sorted alphabetically.",
+      "starter": "-- Sample database: a students table\nCREATE TABLE students (id INTEGER, name TEXT, year INTEGER, house TEXT);\nINSERT INTO students VALUES\n  (1, 'Ada', 10, 'Turing'),\n  (2, 'Grace', 11, 'Lovelace'),\n  (3, 'Alan', 10, 'Turing'),\n  (4, 'Margaret', 9, 'Hopper'),\n  (5, 'Tim', 11, 'Lovelace');\n\n-- Write your query below this line:\n",
+      "hints": [
+        "`ORDER BY` sorts the results — by default, smallest/earliest first.",
+        "Use `SELECT name FROM students ORDER BY name;`."
+      ],
+      "tests": [{ "expect": "Ada\nAlan\nGrace\nMargaret\nTim" }]
+    },
+    {
+      "slug": "gcse-databases-t2-stretch",
+      "lesson": 2,
+      "tier": 4,
+      "difficulty": 3,
+      "xp": 30,
+      "stretch": true,
+      "title": "Year 11 register",
+      "brief": "A teacher wants an alphabetical register of Year 11 students. Write a query that selects the `name` of every student in year 11, sorted alphabetically.",
+      "starter": "-- Sample database: a students table\nCREATE TABLE students (id INTEGER, name TEXT, year INTEGER, house TEXT);\nINSERT INTO students VALUES\n  (1, 'Ada', 10, 'Turing'),\n  (2, 'Grace', 11, 'Lovelace'),\n  (3, 'Alan', 10, 'Turing'),\n  (4, 'Margaret', 9, 'Hopper'),\n  (5, 'Tim', 11, 'Lovelace');\n\n-- Write your query below this line:\n",
+      "hints": [
+        "Combine a `WHERE` clause to filter for year 11 with an `ORDER BY` clause to sort what's left.",
+        "Use `SELECT name FROM students WHERE year = 11 ORDER BY name;`."
+      ],
+      "tests": [{ "expect": "Grace\nTim" }]
+    }
+  ]
+}

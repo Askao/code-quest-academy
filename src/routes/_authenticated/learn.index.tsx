@@ -2,7 +2,7 @@ import { createFileRoute, Link } from "@tanstack/react-router";
 import { useQuery } from "@tanstack/react-query";
 import { supabase } from "@/integrations/supabase/client";
 import { useAuth } from "@/hooks/useAuth";
-import { topicLabel } from "@/lib/game";
+import { topicLabel, type Board } from "@/lib/game";
 import {
   LESSONS,
   isLessonAssigned,
@@ -20,7 +20,7 @@ export const Route = createFileRoute("/_authenticated/learn/")({
       {
         name: "description",
         content:
-          "Structured Python lesson paths for GCSE OCR: teaching notes, worked examples and laddered practice tasks.",
+          "Structured Python lesson paths for GCSE (OCR & AQA): teaching notes, worked examples and laddered practice tasks.",
       },
       { property: "og:title", content: "Lessons — H-Code" },
       {
@@ -66,18 +66,25 @@ function LearnIndex() {
   // locked until their teacher assigns them, on top of the mastery gate.
   // Teachers/admins are exempt (see isTeacher use below) - they need to
   // freely browse every lesson, not progress through it like a student.
-  const { data: classIds = [] } = useQuery({
+  const { data: memberships = [] } = useQuery({
     queryKey: ["class-ids", user?.id],
     enabled: !!user && !isTeacher,
     queryFn: async () => {
       const { data } = await supabase
         .from("class_members")
-        .select("class_id")
+        .select("class_id, classes(board, track)")
         .eq("student_id", user!.id);
-      return (data ?? []).map((r) => r.class_id);
+      return data ?? [];
     },
   });
+  const classIds = memberships.map((m) => m.class_id);
   const enrolled = classIds.length > 0;
+  // Same "any AQA class -> show AQA content" rule as the dashboard.
+  const gcseBoard: Board = memberships.some(
+    (m) => m.classes?.track === "gcse" && m.classes?.board === "aqa",
+  )
+    ? "aqa"
+    : "ocr";
 
   const { data: assignedSlugs = new Set<string>() } = useQuery({
     queryKey: ["assigned-lesson-slugs", classIds],
@@ -91,7 +98,7 @@ function LearnIndex() {
     },
   });
 
-  const topics = topicsWithLessons("gcse");
+  const topics = topicsWithLessons("gcse", gcseBoard);
   const roadmap: RoadmapTopic[] = topics.map((topic, i) => {
     const complete = isTopicComplete("gcse", topic, passed, quizPassed);
     const prevComplete =
@@ -107,7 +114,7 @@ function LearnIndex() {
     <div className="space-y-8">
       <div>
         <p className="font-mono text-xs tracking-[0.2em] text-muted-foreground uppercase">
-          GCSE · OCR
+          GCSE · {gcseBoard.toUpperCase()}
         </p>
         <h1 className="mt-2 text-3xl font-semibold">Lesson paths</h1>
         <p className="mt-2 max-w-2xl text-sm text-muted-foreground">
