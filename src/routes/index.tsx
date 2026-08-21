@@ -408,7 +408,7 @@ function Landing() {
             <StatCard n="150+" label="GCSE tasks" tint="primary" />
             <StatCard n="13" label="OCR-aligned topics" tint="accent" />
             <StatCard n="4" label="wording tiers, ladder-style" tint="success" />
-            <StatCard n="£0" label="cost, forever" tint="warning" />
+            <StatCard n="£0" label="to get started" tint="warning" />
           </div>
         </div>
       </section>
@@ -706,10 +706,11 @@ function Landing() {
             Self-hosted · your data stays yours
           </Eyebrow>
           <h2 className="mx-auto mt-4 max-w-xl text-3xl font-semibold text-balance">
-            Free for every computer science department that wants it.
+            Free to set up, no strings attached.
           </h2>
           <p className="mx-auto mt-3 max-w-md text-sm text-muted-foreground">
-            No subscription, no per-seat pricing, no vendor lock-in — set up a class in minutes.
+            No subscription, no per-seat pricing — self-hosted on your own server, so your data
+            stays yours regardless. Set up a class in minutes.
           </p>
           <div className="mt-6 flex flex-wrap justify-center gap-3">
             <Button asChild size="lg">
