@@ -109,6 +109,7 @@ export type Database = {
           created_at: string
           difficulty: number
           hints: Json
+          homework_only: boolean
           id: string
           lesson_id: string | null
           lesson_order: number
@@ -126,6 +127,7 @@ export type Database = {
           created_at?: string
           difficulty?: number
           hints?: Json
+          homework_only?: boolean
           id?: string
           lesson_id?: string | null
           lesson_order?: number
@@ -143,6 +145,7 @@ export type Database = {
           created_at?: string
           difficulty?: number
           hints?: Json
+          homework_only?: boolean
           id?: string
           lesson_id?: string | null
           lesson_order?: number

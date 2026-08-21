@@ -19,7 +19,7 @@ import {
   topicsWithLessons,
 } from "@/lib/content";
 
-const EFFORT_COUNT: Record<string, number> = { low: 2, medium: 4, high: 6 };
+const EFFORT_COUNT: Record<string, number> = { low: 4, medium: 6, high: 8 };
 const STRUGGLING_THRESHOLD = 3;
 
 export const Route = createFileRoute("/_authenticated/teacher/$classId")({
@@ -275,11 +275,18 @@ function ClassDetail() {
       toast.error("No students in this class yet");
       return;
     }
-    let query = supabase.from("challenges").select("id, difficulty, topic").eq("track", track);
+    // Homework pulls exclusively from the homework-only task pool (see
+    // src/content/*.json's "homeworkTasks" arrays) - never the same tasks
+    // a student has already met in a lesson or Practice.
+    let query = supabase
+      .from("challenges")
+      .select("id, difficulty, topic")
+      .eq("track", track)
+      .eq("homework_only", true);
     if (selectedTopics.length > 0) query = query.in("topic", selectedTopics);
     const { data: pool } = await query;
     if (!pool || pool.length === 0) {
-      toast.error("No challenges match those topics");
+      toast.error("No homework tasks available for those topics yet");
       return;
     }
     const count = EFFORT_COUNT[effort] ?? 4;

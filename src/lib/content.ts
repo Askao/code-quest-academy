@@ -47,6 +47,16 @@ export type TaskContent = {
   stretch?: boolean;
 };
 
+/**
+ * A task set aside exclusively for homework - never reachable through any
+ * lesson's task list, and excluded from Practice/Recap/Boss battles (see
+ * pickChallenge in src/lib/progress.ts, which only pulls rows where
+ * homework_only = false unless explicitly asked for the homework pool).
+ * Keeps homework meaningfully different from what a student has already
+ * drilled elsewhere, rather than re-serving the same 150 tasks.
+ */
+export type HomeworkTaskContent = Omit<TaskContent, "lesson" | "lessonSlug">;
+
 export type QuizQuestion = {
   lessonSlug: string;
   question: string;
@@ -60,6 +70,7 @@ type RawTopic = {
   topic: string;
   lessons: Omit<LessonContent, "track" | "topic" | "order">[];
   tasks: Omit<TaskContent, "lessonSlug" | "track" | "topic">[];
+  homeworkTasks?: Omit<HomeworkTaskContent, "track" | "topic">[];
   quiz?: QuizQuestion[];
 };
 
@@ -93,10 +104,20 @@ export const TASKS: TaskContent[] = RAW.flatMap((t) =>
   })),
 );
 
+export const HOMEWORK_TASKS: HomeworkTaskContent[] = RAW.flatMap((t) =>
+  (t.homeworkTasks ?? []).map((task) => ({
+    ...task,
+    track: t.track as TrackKey,
+    topic: t.topic,
+  })),
+);
+
 export const QUIZZES: QuizQuestion[] = RAW.flatMap((t) => t.quiz ?? []);
 
 const lessonBySlug = new Map(LESSONS.map((l) => [l.slug, l]));
-const taskBySlug = new Map(TASKS.map((t) => [t.slug, t]));
+const taskBySlug = new Map<string, TaskContent | HomeworkTaskContent>(
+  [...TASKS, ...HOMEWORK_TASKS].map((t) => [t.slug, t]),
+);
 
 export function getLesson(slug: string) {
   return lessonBySlug.get(slug) ?? null;

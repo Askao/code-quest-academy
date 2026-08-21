@@ -172,7 +172,11 @@ export async function pickChallenge(opts: {
   excludeIds?: string[];
   onlySlugs?: Set<string>;
 }): Promise<Challenge | null> {
-  let query = supabase.from("challenges").select("*").eq("track", opts.track);
+  let query = supabase
+    .from("challenges")
+    .select("*")
+    .eq("track", opts.track)
+    .eq("homework_only", false);
   if (opts.topic) query = query.eq("topic", opts.topic);
   const { data } = await query;
   if (!data || data.length === 0) return null;
