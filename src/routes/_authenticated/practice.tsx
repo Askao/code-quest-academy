@@ -209,6 +209,12 @@ function Practice() {
 
   const alevelLocked = track === "alevel" && !data?.allowAlevel && !isTeacher;
 
+  // Some GCSE topics are lesson-only (see practiceExcluded in game.ts) - they
+  // don't teach a skill of their own to randomly practise, so they're left
+  // out of this grid, "Surprise me" and boss battles entirely, even though
+  // their lessons are still reachable normally through /learn.
+  const practiceTopics = topicsFor(track).filter((t) => !("practiceExcluded" in t && t.practiceExcluded));
+
   const topicsWithProjects = topicsFor("gcse")
     .map((t) => ({ ...t, projects: projectsForTopic("gcse", t.key) }))
     .filter((t) => t.projects.some((p) => seededProjectSlugs?.has(p.slug)));
@@ -316,7 +322,7 @@ function Practice() {
         <Button
           variant="secondary"
           onClick={() => {
-            const topics = topicsFor(track).filter((t) => topicUnlocked(t.key));
+            const topics = practiceTopics.filter((t) => topicUnlocked(t.key));
             const pick = topics[Math.floor(Math.random() * topics.length)];
             if (pick) void start(pick.key, "practice");
             else toast.error("Finish a lesson first — nothing unlocked to surprise you with yet");
@@ -334,7 +340,7 @@ function Practice() {
       ) : null}
 
       <div className="grid gap-4 sm:grid-cols-2 lg:grid-cols-3">
-        {topicsFor(track).map((t) => {
+        {practiceTopics.map((t) => {
           const lvl = levelFor(t.key);
           const unlocked = topicUnlocked(t.key);
           if (!unlocked) {

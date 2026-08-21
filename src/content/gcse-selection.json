@@ -11,6 +11,14 @@
       "worked_example_note": "Only one of the two `print` lines can ever run. The indented block belongs to the branch above it."
     },
     {
+      "slug": "gcse-selection-4",
+      "title": "If, else and comparisons: more practice",
+      "summary": "More practice with the basics before moving on to elif chains.",
+      "notes": "Before adding more branches, it's worth being completely comfortable with a single `if` / `else` and the six comparison operators: `==`, `!=`, `<`, `>`, `<=`, `>=`.\n\nRemember the two classic mistakes from the last lesson: `=` instead of `==`, and a missing colon or indentation.\n\nA condition can compare numbers, or compare text with `==` — but text comparisons are **case sensitive**, so `\"Yes\"` and `\"yes\"` are not equal.",
+      "worked_example": "n = int(input())\nif n % 2 == 0:\n    print(\"Even\")\nelse:\n    print(\"Odd\")",
+      "worked_example_note": "% gives the remainder after dividing by 2 — a remainder of 0 means the number divides evenly."
+    },
+    {
       "slug": "gcse-selection-2",
       "title": "elif chains and logical operators",
       "summary": "More than two options, and conditions joined with and/or/not.",
@@ -31,6 +39,8 @@
     { "lessonSlug": "gcse-selection-1", "question": "Which operator checks if two values are equal in Python?", "options": ["==", "=", "!=", "<>"], "answer": "==", "explanation": "= assigns a value; == compares two values for equality." },
     { "lessonSlug": "gcse-selection-1", "question": "In if age >= 18: print(\"Adult\") else: print(\"Child\"), what happens when age is exactly 18?", "options": ["\"Adult\" is printed", "\"Child\" is printed", "Both are printed", "An error occurs"], "answer": "\"Adult\" is printed", "explanation": ">= includes the boundary value itself, so 18 counts as \"18 or more\"." },
     { "lessonSlug": "gcse-selection-1", "question": "What's wrong with if age = 18:?", "options": ["= is assignment, not comparison — it should be ==", "Nothing, it's correct", "age needs quotes", "18 needs to be in brackets"], "answer": "= is assignment, not comparison — it should be ==", "explanation": "Using = instead of == is one of the two classic if-statement mistakes." },
+    { "lessonSlug": "gcse-selection-4", "question": "Are \"Yes\" and \"yes\" equal when compared with ==?", "options": ["No — text comparison is case sensitive", "Yes, Python ignores case", "Only if both are lowercase", "It depends on the computer"], "answer": "No — text comparison is case sensitive", "explanation": "Python compares text exactly as written, so a different capital letter makes two strings unequal." },
+    { "lessonSlug": "gcse-selection-4", "question": "In if a > b: ... elif a < b: ... else: ..., when does the else branch run?", "options": ["When a and b are equal", "When a is bigger", "When b is bigger", "Never"], "answer": "When a and b are equal", "explanation": "The else only runs once both the > and < checks above it have failed, which leaves equality as the only case left." },
     { "lessonSlug": "gcse-selection-2", "question": "In an elif chain, what happens once Python finds a true condition?", "options": ["It runs that branch and skips the rest of the chain", "It checks every remaining condition anyway", "It runs every true branch", "It stops the whole program"], "answer": "It runs that branch and skips the rest of the chain", "explanation": "Python checks elif conditions in order and stops at the first true one — this is why order matters." },
     { "lessonSlug": "gcse-selection-2", "question": "Why does order matter in an elif chain checking exam grade boundaries?", "options": ["Because the first true condition wins, so stricter boundaries must come first", "It doesn't matter what order they're in", "Because Python runs them alphabetically", "Because elif only works with 2 branches"], "answer": "Because the first true condition wins, so stricter boundaries must come first" },
     { "lessonSlug": "gcse-selection-2", "question": "Which operator requires both conditions to be true?", "options": ["and", "or", "not", "=="], "answer": "and", "explanation": "and only lets the combined condition through if both sides are true; or only needs one." },
@@ -70,6 +80,46 @@
       "starter": "",
       "hints": ["Python's built-in max() finds the largest of several values for you. Think about what it would mean if more than one value matched that largest value.", "Once you know the largest value, compare each of the original values against it to work out how many match."],
       "tests": [{ "stdin": "3\n9\n5", "expect": "9" }, { "stdin": "7\n7\n2", "expect": "Tie" }]
+    },
+    {
+      "slug": "gcse-selection-r1-01", "lesson": 4, "tier": 1, "difficulty": 1, "xp": 10,
+      "title": "Even or odd",
+      "brief": "Input a whole number. Print `Even` if it divides evenly by 2. Otherwise print `Odd`.",
+      "starter": "",
+      "hints": ["% gives the remainder after dividing by 2 — zero means it divides evenly.", "The pattern is `if n % 2 == 0: ... else: ...`."],
+      "tests": [{ "stdin": "4", "expect": "Even" }, { "stdin": "7", "expect": "Odd" }, { "stdin": "0", "expect": "Even" }]
+    },
+    {
+      "slug": "gcse-selection-r1-02", "lesson": 4, "tier": 1, "difficulty": 1, "xp": 10,
+      "title": "Enough money",
+      "brief": "Input the price of an item, then how much money you have, one per line. Print `Can afford` if you have enough money to buy it. Otherwise print `Not enough`.",
+      "starter": "",
+      "hints": ["\"Enough\" includes having exactly the price, so use >= rather than >.", "The pattern is `if money >= price: ... else: ...`."],
+      "tests": [{ "stdin": "5\n10", "expect": "Can afford" }, { "stdin": "10\n5", "expect": "Not enough" }, { "stdin": "5\n5", "expect": "Can afford" }]
+    },
+    {
+      "slug": "gcse-selection-r1-03", "lesson": 4, "tier": 2, "difficulty": 2, "xp": 15,
+      "title": "Warmer, cooler or the same",
+      "brief": "Input today's temperature, then yesterday's temperature, one per line. Print `Warmer` if today is higher, `Cooler` if today is lower, or `Same` if they are equal.",
+      "starter": "",
+      "hints": ["There are three possible outcomes here, not two, so you need a third branch.", "The pattern is `if today > yesterday: ... elif today < yesterday: ... else: ...`."],
+      "tests": [{ "stdin": "20\n15", "expect": "Warmer" }, { "stdin": "10\n15", "expect": "Cooler" }, { "stdin": "15\n15", "expect": "Same" }]
+    },
+    {
+      "slug": "gcse-selection-r1-04", "lesson": 4, "tier": 2, "difficulty": 2, "xp": 15,
+      "title": "Correct password",
+      "brief": "Input a password. Print `Correct` if it exactly matches `python123`. Otherwise print `Incorrect`.",
+      "starter": "",
+      "hints": ["String comparisons are case sensitive — check the exact spelling given.", "The pattern is `if password == \"python123\": ... else: ...`."],
+      "tests": [{ "stdin": "python123", "expect": "Correct" }, { "stdin": "Python123", "expect": "Incorrect" }, { "stdin": "guess", "expect": "Incorrect" }]
+    },
+    {
+      "slug": "gcse-selection-r1-stretch", "lesson": 4, "tier": 4, "difficulty": 5, "xp": 40, "stretch": true,
+      "title": "Closest to the target",
+      "brief": "Input a target number, then two other numbers, one per line. Print whichever of the two numbers is closer to the target. If they are equally close, print `Tie` instead.\n\nFor example, target 10 with 7 and 12 prints 12 (it's 2 away, versus 3 away for 7).",
+      "starter": "",
+      "hints": ["Work out how far each number is from the target first — a negative difference is just as far away as a positive one.", "Compare the two distances from the target, using abs() to ignore whether each difference is positive or negative."],
+      "tests": [{ "stdin": "10\n7\n12", "expect": "12" }, { "stdin": "5\n5\n5", "expect": "Tie" }]
     },
     {
       "slug": "gcse-selection-t2-01", "lesson": 2, "tier": 2, "difficulty": 2, "xp": 15,

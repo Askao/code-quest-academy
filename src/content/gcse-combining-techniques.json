@@ -1,0 +1,152 @@
+{
+  "track": "gcse",
+  "topic": "combining-techniques",
+  "lessons": [
+    {
+      "slug": "gcse-combining-techniques-1",
+      "title": "Loops and decisions together",
+      "summary": "Putting an if/elif/else check inside a loop that repeats a known number of times.",
+      "notes": "A loop's body can contain **any** statement — including a whole `if` / `elif` / `else` block. This is how OCR-style \"read N items and classify each one\" questions work: the loop controls how many times you repeat, and the selection inside it decides what happens each time.\n\n```python\nfor i in range(5):\n    temp = int(input())\n    if temp >= 25:\n        print(\"Hot\")\n    else:\n        print(\"Cold\")\n```\n\nThe decision runs fresh on every single pass, using whatever value was just read that time round.",
+      "worked_example": "for i in range(5):\n    temp = int(input())\n    if temp >= 25:\n        print(\"Hot\")\n    elif temp >= 15:\n        print(\"Mild\")\n    else:\n        print(\"Cold\")",
+      "worked_example_note": "Each of the 5 readings gets its own fresh if/elif/else check — nothing is remembered between passes."
+    },
+    {
+      "slug": "gcse-combining-techniques-2",
+      "title": "Building up a result step by step",
+      "summary": "Tracking more than one running value at once, with decisions guiding what gets counted.",
+      "notes": "Longer problems often need several trackers going through the same loop at once — a running total *and* a count *and* something decided by an if statement. Set every tracker up **before** the loop starts, then update whichever ones apply on each pass.\n\n```python\ntotal = 0\nabove = 0\nfor i in range(n):\n    score = int(input())\n    total = total + score\n    if score > 50:\n        above = above + 1\n```\n\n`total` updates on every pass. `above` only updates when the if condition is true.",
+      "worked_example": "n = int(input())\ntotal = 0\nabove = 0\nfor i in range(n):\n    score = int(input())\n    total = total + score\n    if score > 50:\n        above = above + 1\nprint(total)\nprint(above)",
+      "worked_example_note": "Two separate trackers, both set up before the loop — only `above` depends on the if check."
+    },
+    {
+      "slug": "gcse-combining-techniques-3",
+      "title": "Exam-style combined problems",
+      "summary": "Choosing the right loop, tracking what's needed, and branching — all in one program.",
+      "notes": "Combined exam questions ask the same planning question as before, just with more moving parts: **do I know how many times?** — but now you may also need a *validation* while loop first (for a count that must be in range), before the main for loop that reads and classifies each item.\n\nBuild longer scenarios in stages: get the count validated first, set up every tracker you'll need, then write the loop body last.",
+      "worked_example": "n = int(input())\nwhile n < 1 or n > 30:\n    n = int(input())\npassed = 0\nfailed = 0\nfor i in range(n):\n    score = int(input())\n    if score >= 40:\n        passed = passed + 1\n    else:\n        failed = failed + 1\nprint(f\"Passed: {passed}\")\nprint(f\"Failed: {failed}\")",
+      "worked_example_note": "The validation while loop and the counting for loop are two separate loops, one after another — not nested inside each other."
+    }
+  ],
+  "quiz": [
+    { "lessonSlug": "gcse-combining-techniques-1", "question": "Can a loop's body contain a full if/elif/else block?", "options": ["Yes — a loop can repeat any statement, including a whole selection block", "No, loops can only contain print statements", "Only while loops can contain if statements", "Only if the loop repeats exactly once"], "answer": "Yes — a loop can repeat any statement, including a whole selection block" },
+    { "lessonSlug": "gcse-combining-techniques-1", "question": "In a loop that reads and classifies N items, does the if/elif/else check remember anything from the previous pass?", "options": ["No — it runs fresh every single pass, using only that pass's own value", "Yes, it remembers the last result", "Only the first and last passes are checked", "It skips every other pass"], "answer": "No — it runs fresh every single pass, using only that pass's own value" },
+    { "lessonSlug": "gcse-combining-techniques-2", "question": "A program tracks a running total AND a count of values above 50. Where should both variables be created?", "options": ["Both before the loop starts, then updated inside it", "Both inside the loop, every pass", "Only the total needs setting up first", "It doesn't matter"], "answer": "Both before the loop starts, then updated inside it" },
+    { "lessonSlug": "gcse-combining-techniques-2", "question": "In the pattern total = total + score; if score > 50: above = above + 1, does above increase on every pass?", "options": ["No — only on passes where the if condition is true", "Yes, on every single pass", "No, it never increases", "Only on the first pass"], "answer": "No — only on passes where the if condition is true" },
+    { "lessonSlug": "gcse-combining-techniques-3", "question": "A combined exam question needs a validated count AND then a loop that reads that many items. Which comes first?", "options": ["The validation loop for the count, then the counting loop that reads the items", "The counting loop, then validation", "They must run at exactly the same time", "Validation is never needed in combined questions"], "answer": "The validation loop for the count, then the counting loop that reads the items" },
+    { "lessonSlug": "gcse-combining-techniques-3", "question": "True or false: a validation while loop and the main for loop that follows it are nested one inside the other.", "options": ["False — they are two separate loops, one after another", "True, the for loop is nested inside the while loop", "True, but only in exam questions", "False, they must be the same loop"], "answer": "False — they are two separate loops, one after another" }
+  ],
+  "tasks": [
+    {
+      "slug": "gcse-combining-techniques-t1-01", "lesson": 1, "tier": 1, "difficulty": 1, "xp": 10,
+      "title": "Classify each number",
+      "brief": "Input a whole number N. Input N whole numbers, one at a time. For each one, print `Positive` if it's greater than 0, or `Not positive` otherwise.",
+      "starter": "",
+      "hints": ["The if/else inside the loop runs fresh for every number you read.", "Loop N times, reading a value and printing its result before moving on to the next one."],
+      "tests": [{ "stdin": "3\n5\n-2\n0", "expect": "Positive\nNot positive\nNot positive" }, { "stdin": "1\n7", "expect": "Positive" }]
+    },
+    {
+      "slug": "gcse-combining-techniques-t1-02", "lesson": 1, "tier": 1, "difficulty": 1, "xp": 10,
+      "title": "Pass or fail each student",
+      "brief": "Input a whole number N. Input N whole number test scores, one at a time. For each one, print `Pass` if it's 40 or more, or `Fail` otherwise.",
+      "starter": "",
+      "hints": ["\"40 or more\" includes exactly 40, so use >= rather than >.", "Loop N times, printing the right result for each score before moving to the next one."],
+      "tests": [{ "stdin": "3\n60\n30\n40", "expect": "Pass\nFail\nPass" }, { "stdin": "1\n10", "expect": "Fail" }]
+    },
+    {
+      "slug": "gcse-combining-techniques-t1-03", "lesson": 1, "tier": 2, "difficulty": 2, "xp": 20,
+      "title": "Count how many pass",
+      "brief": "Input a whole number N. Input N whole number test scores, one at a time. Print how many of them are 40 or more.",
+      "starter": "",
+      "hints": ["Set a counter to 0 before the loop, then increase it whenever a score meets the pass mark.", "Loop N times, checking each score with an if statement inside the loop."],
+      "tests": [{ "stdin": "4\n60\n30\n40\n20", "expect": "2" }, { "stdin": "2\n10\n20", "expect": "0" }]
+    },
+    {
+      "slug": "gcse-combining-techniques-t1-04", "lesson": 1, "tier": 2, "difficulty": 2, "xp": 20,
+      "title": "Warn about low stock",
+      "brief": "Input a whole number N. Input N stock counts, one at a time. For each one, print `Reorder` if it's below 5, or `OK` otherwise.",
+      "starter": "",
+      "hints": ["\"Below 5\" does not include exactly 5, so use < rather than <=.", "Loop N times, printing Reorder or OK for each stock count before moving to the next one."],
+      "tests": [{ "stdin": "3\n2\n10\n4", "expect": "Reorder\nOK\nReorder" }, { "stdin": "1\n5", "expect": "OK" }]
+    },
+    {
+      "slug": "gcse-combining-techniques-t1-stretch", "lesson": 1, "tier": 4, "difficulty": 5, "xp": 40, "stretch": true,
+      "title": "Grade each score",
+      "brief": "Input a whole number N. Input N whole number test scores, one at a time. For each one, print `Distinction` for 90 or above, `Merit` for 70 or above, `Pass` for 40 or above, or `Fail` otherwise.",
+      "starter": "",
+      "hints": ["This combines the elif-chain pattern from Selection with the loop pattern from this lesson — check the highest band first.", "Loop N times, running a full elif chain on each score before moving to the next one."],
+      "tests": [{ "stdin": "4\n95\n72\n45\n20", "expect": "Distinction\nMerit\nPass\nFail" }, { "stdin": "1\n40", "expect": "Pass" }]
+    },
+    {
+      "slug": "gcse-combining-techniques-t2-01", "lesson": 2, "tier": 2, "difficulty": 2, "xp": 20,
+      "title": "Total and count above 50",
+      "brief": "Input a whole number N. Input N whole numbers, one at a time. Print the total of all of them, then on the next line print how many were above 50.",
+      "starter": "",
+      "hints": ["Two trackers, both set up before the loop — the total updates every pass, but the count only updates when the if condition is true.", "Update the running total on every pass, and only increase the second counter inside the if statement."],
+      "tests": [{ "stdin": "3\n60\n20\n70", "expect": "150\n2" }, { "stdin": "2\n10\n20", "expect": "30\n0" }]
+    },
+    {
+      "slug": "gcse-combining-techniques-t2-02", "lesson": 2, "tier": 2, "difficulty": 3, "xp": 25,
+      "title": "Bonus points",
+      "brief": "Input a whole number N. Input N whole number scores, one at a time. Add each score to a running total — but if a score is exactly 100, add one extra bonus point on top of it. Print the final total.",
+      "starter": "",
+      "hints": ["Add the score to the total first, then check separately whether it also earns the bonus point.", "The bonus only applies inside the if statement, on top of the addition that already happens every pass."],
+      "tests": [{ "stdin": "3\n50\n100\n30", "expect": "181" }, { "stdin": "2\n10\n20", "expect": "30" }]
+    },
+    {
+      "slug": "gcse-combining-techniques-t2-03", "lesson": 2, "tier": 2, "difficulty": 2, "xp": 20,
+      "title": "Passes and fails separately",
+      "brief": "Input a whole number N. Input N whole number test scores, one at a time. Print how many scored 40 or more, then on the next line print how many scored below 40.",
+      "starter": "",
+      "hints": ["Two counters, one for each outcome — exactly one of them increases on every pass.", "The pattern is `if score >= 40: passed += 1 else: failed += 1`, inside the loop."],
+      "tests": [{ "stdin": "4\n60\n30\n40\n20", "expect": "2\n2" }, { "stdin": "1\n100", "expect": "1\n0" }]
+    },
+    {
+      "slug": "gcse-combining-techniques-t2-04", "lesson": 2, "tier": 3, "difficulty": 3, "xp": 25,
+      "title": "Highest of the positives",
+      "brief": "Input a whole number N. Input N whole numbers, one at a time — some may be negative. Track the highest value seen so far, but only among the positive ones. Print the highest positive value found. If none of the N numbers are positive, print `None`.",
+      "starter": "",
+      "hints": ["Only update the running highest when the current value is both positive and bigger than what's tracked so far — that's two conditions to check together.", "Start the tracker as \"nothing yet\" so the first positive value found can always become the new highest."],
+      "tests": [{ "stdin": "4\n-3\n5\n-1\n2", "expect": "5" }, { "stdin": "3\n-1\n-2\n-3", "expect": "None" }]
+    },
+    {
+      "slug": "gcse-combining-techniques-t2-stretch", "lesson": 2, "tier": 4, "difficulty": 5, "xp": 40, "stretch": true,
+      "title": "Three trackers",
+      "brief": "Input a whole number N. Input N whole number scores, one at a time. Print the total of all of them, then the highest score, then how many of them were exactly 100 (a perfect score) — each on its own line.",
+      "starter": "",
+      "hints": ["Three separate trackers, all set up before the loop, each updated by its own rule inside it.", "One tracker updates every pass (the total), one compares against the running highest, and one only increases for an exact match."],
+      "tests": [{ "stdin": "4\n80\n100\n60\n100", "expect": "340\n100\n2" }, { "stdin": "1\n50", "expect": "50\n50\n0" }]
+    },
+    {
+      "slug": "gcse-combining-techniques-t3-01", "lesson": 3, "tier": 3, "difficulty": 3, "xp": 25,
+      "title": "Validated attendance register",
+      "brief": "Input a whole number for how many students there are — if it isn't between 1 and 30 inclusive, keep asking until it is. Then input that many attendance statuses, one at a time, each either `in` or `out`. Print how many students are marked `in`.",
+      "starter": "",
+      "hints": ["Validate the student count the same way as the Iteration lesson's validation example, then loop that many times reading statuses.", "Compare each status exactly to \"in\" inside the loop, counting the matches."],
+      "tests": [{ "stdin": "40\n0\n3\nin\nout\nin", "expect": "2" }, { "stdin": "2\nout\nout", "expect": "0" }]
+    },
+    {
+      "slug": "gcse-combining-techniques-t3-02", "lesson": 3, "tier": 3, "difficulty": 3, "xp": 30,
+      "title": "Multi-part average with grade",
+      "brief": "Input a whole number for how many test scores there are — if it isn't between 1 and 30 inclusive, keep asking until it is. Then input that many whole number test scores, one at a time. Print the average, rounded to 1 decimal place, then print `Merit` if the average is 70 or above, or `Pass` otherwise.",
+      "starter": "",
+      "hints": ["Validate the count first, the same way as before, then use the running-total-then-divide pattern for the average.", "Compare the rounded average against the boundary to decide which word to print."],
+      "tests": [{ "stdin": "3\n60\n70\n80", "expect": "70.0\nMerit" }, { "stdin": "40\n0\n2\n30\n30", "expect": "30.0\nPass" }]
+    },
+    {
+      "slug": "gcse-combining-techniques-t3-03", "lesson": 3, "tier": 3, "difficulty": 4, "xp": 30,
+      "title": "Longest streak of passes",
+      "brief": "Input a whole number N. Input N whole number test scores, one at a time. Print the length of the longest run of consecutive passes in a row (a pass is 40 or more). A single fail breaks the streak back to zero.\n\nFor example, scores 50, 60, 30, 45, 70, 80 have a streak of 2 (50, 60), which breaks at 30, then a streak of 3 (45, 70, 80) — the longest is 3.",
+      "starter": "",
+      "hints": ["Track two values: the current streak (reset to 0 on a fail) and the longest streak seen so far (only updated when the current one grows past it).", "Increase the current streak on a pass and compare it against the longest-so-far; reset the current streak to 0 on any fail."],
+      "tests": [{ "stdin": "6\n50\n60\n30\n45\n70\n80", "expect": "3" }, { "stdin": "3\n10\n20\n30", "expect": "0" }]
+    },
+    {
+      "slug": "gcse-combining-techniques-t3-stretch", "lesson": 3, "tier": 4, "difficulty": 5, "xp": 40, "stretch": true,
+      "title": "Delivery cost with validation",
+      "brief": "Input a whole number for how many parcels there are — if it isn't between 1 and 20 inclusive, keep asking until it is. Then input that many parcel weights in kg, one at a time (each may include decimals) — if a weight isn't greater than 0, keep asking again for that same parcel. Each parcel costs £2 per kg, and parcels over 10kg get an extra £5 handling fee added to their own cost. Print the total cost of all parcels, rounded to 2 decimal places.",
+      "starter": "",
+      "hints": ["Two separate validations are needed: one for the number of parcels, and a second while loop for each individual weight.", "Work out each parcel's own cost (with its own handling fee if it applies) before adding it to the running total."],
+      "tests": [{ "stdin": "2\n5.0\n15.0", "expect": "45.0" }, { "stdin": "25\n0\n1\n-2\n8.0", "expect": "16.0" }]
+    }
+  ]
+}

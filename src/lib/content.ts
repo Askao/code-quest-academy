@@ -3,6 +3,7 @@
  * edited, reviewed and self-hosted without touching the database. The database only
  * stores the identity and metadata of each lesson/task plus student progress.
  */
+import combiningTechniques from "@/content/gcse-combining-techniques.json";
 import files from "@/content/gcse-files.json";
 import fundamentals from "@/content/gcse-fundamentals.json";
 import functions from "@/content/gcse-functions.json";
@@ -90,6 +91,7 @@ const RAW = [
   sequencing,
   selection,
   iteration,
+  combiningTechniques,
   lists,
   strings,
   functions,

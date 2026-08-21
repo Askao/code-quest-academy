@@ -4,6 +4,17 @@ export const GCSE_TOPICS = [
   { key: "sequencing", label: "Sequencing", blurb: "Input, output, variables, arithmetic" },
   { key: "selection", label: "Selection", blurb: "if / elif / else and conditions" },
   { key: "iteration", label: "Iteration", blurb: "for and while loops" },
+  {
+    key: "combining-techniques",
+    label: "Combining techniques",
+    blurb: "Putting sequencing, selection and iteration together",
+    // Lesson-only: reachable through /learn, but deliberately left out of
+    // Practice's random topic-picker and boss battles (see practice.tsx) -
+    // it doesn't teach any new skill of its own, just combines the three
+    // topics before it, so there's nothing for it to be "practised" on that
+    // Iteration/Selection practice doesn't already cover.
+    practiceExcluded: true,
+  },
   { key: "lists", label: "Lists & arrays", blurb: "1D and 2D lists, searching" },
   { key: "strings", label: "Strings", blurb: "Manipulation and string handling" },
   { key: "functions", label: "Subprograms", blurb: "Functions and procedures" },
