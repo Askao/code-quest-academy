@@ -11,7 +11,7 @@ function NavLink({ to, children, onClick }: { to: string; children: ReactNode; o
     <Link
       to={to as never}
       onClick={onClick}
-      className="rounded-md px-3 py-1.5 text-sm text-muted-foreground transition-colors hover:bg-secondary hover:text-foreground"
+      className="rounded-md px-3 py-1.5 text-sm whitespace-nowrap text-muted-foreground transition-colors hover:bg-secondary hover:text-foreground"
       activeProps={{ className: "bg-secondary text-foreground" }}
     >
       {children}
@@ -68,15 +68,20 @@ export function AppShell({ children }: { children: ReactNode }) {
     <div className="min-h-screen">
       <header className="sticky top-0 z-40 border-b border-border bg-background/80 backdrop-blur">
         <div className="mx-auto flex max-w-6xl items-center gap-2 px-4 py-3">
-          <Link to={user ? "/dashboard" : "/"} className="mr-2 font-mono text-lg font-bold text-primary">
+          <Link
+            to={user ? "/dashboard" : "/"}
+            className="mr-2 shrink-0 font-mono text-lg font-bold whitespace-nowrap text-primary"
+          >
             &gt;_ H-Code
           </Link>
 
           {user ? (
             <>
-              <nav className="hidden flex-wrap items-center gap-1 sm:flex">{navLinks}</nav>
+              <nav className="hidden min-w-0 items-center gap-1 overflow-x-auto lg:flex">
+                {navLinks}
+              </nav>
               <button
-                className="ml-1 rounded-md p-2 text-muted-foreground hover:bg-secondary hover:text-foreground sm:hidden"
+                className="ml-1 rounded-md p-2 text-muted-foreground hover:bg-secondary hover:text-foreground lg:hidden"
                 onClick={() => setMenuOpen((v) => !v)}
                 aria-label="Toggle menu"
               >
@@ -87,7 +92,7 @@ export function AppShell({ children }: { children: ReactNode }) {
             <NavLink to="/ide">IDE</NavLink>
           )}
 
-          <div className="ml-auto flex items-center gap-2">
+          <div className="ml-auto flex shrink-0 items-center gap-2">
             <ThemeToggle />
             {user ? (
               <>
@@ -113,7 +118,7 @@ export function AppShell({ children }: { children: ReactNode }) {
           </div>
         </div>
         {user && menuOpen ? (
-          <nav className="flex flex-col gap-1 border-t border-border px-4 py-3 sm:hidden">
+          <nav className="flex flex-col gap-1 border-t border-border px-4 py-3 lg:hidden">
             {navLinks}
           </nav>
         ) : null}
