@@ -157,7 +157,20 @@ function Leaderboard() {
         .from("class_members")
         .select("student_id")
         .eq("class_id", activeClassId!);
-      const ids = (members.data ?? []).map((m) => m.student_id);
+      const memberIds = (members.data ?? []).map((m) => m.student_id);
+      if (memberIds.length === 0) return { topXp: [], improved: [], total: 0, windowDays };
+
+      // Admins/teachers shouldn't rank on the leaderboard - a class_members
+      // row can outlive a student being promoted to teacher (the admin
+      // Users table doesn't clean that up), so filter by role rather than
+      // trusting membership alone.
+      const rolesRes = await supabase
+        .from("user_roles")
+        .select("user_id, role")
+        .in("user_id", memberIds)
+        .in("role", ["teacher", "admin"]);
+      const staffIds = new Set((rolesRes.data ?? []).map((r) => r.user_id));
+      const ids = memberIds.filter((id) => !staffIds.has(id));
       if (ids.length === 0) return { topXp: [], improved: [], total: 0, windowDays };
 
       const sinceIso = new Date(Date.now() - windowDays * 86400000).toISOString();
