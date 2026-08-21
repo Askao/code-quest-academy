@@ -87,11 +87,11 @@ function Leaderboard() {
   const [schoolTrack, setSchoolTrack] = useState<TrackKey>("gcse");
 
   const { data: myClasses } = useQuery({
-    queryKey: ["leaderboard-classes", user?.id],
+    queryKey: ["leaderboard-classes", user?.id, schoolId],
     enabled: !!user,
     queryFn: async () => {
       const uid = user!.id;
-      const [asStudent, owned, coTaught] = await Promise.all([
+      const [asStudent, owned, coTaught, schoolClasses] = await Promise.all([
         supabase
           .from("class_members")
           .select("classes(id, name, improved_window_days, school_id)")
@@ -104,11 +104,22 @@ function Leaderboard() {
           .from("class_co_teachers")
           .select("classes(id, name, improved_window_days, school_id)")
           .eq("teacher_id", uid),
+        // Every teacher at the same school has automatic full access to
+        // every class in it (see is_class_teacher()) - so they should be
+        // able to pick any of them here too, not just owned/explicitly
+        // co-taught ones.
+        schoolId
+          ? supabase
+              .from("classes")
+              .select("id, name, improved_window_days, school_id")
+              .eq("school_id", schoolId)
+          : Promise.resolve({ data: [] }),
       ]);
       const list = [
         ...(asStudent.data ?? []).map((m) => m.classes).filter(Boolean),
         ...(owned.data ?? []),
         ...(coTaught.data ?? []).map((m) => m.classes).filter(Boolean),
+        ...(schoolClasses.data ?? []),
       ] as { id: string; name: string; improved_window_days: number; school_id: string | null }[];
       const seen = new Set<string>();
       return list.filter((c) => (seen.has(c.id) ? false : (seen.add(c.id), true)));

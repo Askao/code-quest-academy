@@ -6,7 +6,7 @@ import { supabase } from "@/integrations/supabase/client";
 import { useAuth } from "@/hooks/useAuth";
 import { Button } from "@/components/ui/button";
 import { Input } from "@/components/ui/input";
-import { createSchool, joinSchool, makeJoinCode } from "@/lib/school";
+import { createSchool, joinSchool, leaveSchool, makeJoinCode } from "@/lib/school";
 import type { TrackKey } from "@/lib/game";
 
 export const Route = createFileRoute("/_authenticated/teacher/")({
@@ -36,12 +36,13 @@ function Teacher() {
   const [schoolName, setSchoolName] = useState("");
   const [schoolCode, setSchoolCode] = useState("");
   const [schoolBusy, setSchoolBusy] = useState(false);
+  const [confirmingLeave, setConfirmingLeave] = useState(false);
 
   const { data: classes } = useQuery({
-    queryKey: ["teacher-classes", user?.id],
+    queryKey: ["teacher-classes", user?.id, schoolId],
     enabled: !!user,
     queryFn: async () => {
-      const [owned, coTaught] = await Promise.all([
+      const [owned, coTaught, schoolClasses] = await Promise.all([
         supabase
           .from("classes")
           .select("*, class_members(count)")
@@ -51,14 +52,30 @@ function Teacher() {
           .from("class_co_teachers")
           .select("classes(*, class_members(count))")
           .eq("teacher_id", user!.id),
+        // Every teacher at the same school now gets automatic access to
+        // every class in it (see is_class_teacher()) - so this list needs
+        // to show them too, not just explicit co-teacher invites.
+        schoolId
+          ? supabase
+              .from("classes")
+              .select("*, class_members(count)")
+              .eq("school_id", schoolId)
+              .neq("teacher_id", user!.id)
+          : Promise.resolve({ data: [] }),
       ]);
       const mine = (owned.data ?? []).map((c) => ({ ...c, shared: false }));
-      const shared = (coTaught.data ?? [])
-        .map((r) => r.classes)
-        .filter((c): c is NonNullable<typeof c> => !!c)
-        .map((c) => ({ ...c, shared: true }));
+      const sharedRaw = [
+        ...(coTaught.data ?? []).map((r) => r.classes).filter(Boolean),
+        ...(schoolClasses.data ?? []),
+      ] as NonNullable<typeof owned.data>[number][];
       const seen = new Set(mine.map((c) => c.id));
-      return [...mine, ...shared.filter((c) => !seen.has(c.id))];
+      const shared: typeof mine = [];
+      for (const c of sharedRaw) {
+        if (seen.has(c.id)) continue;
+        seen.add(c.id);
+        shared.push({ ...c, shared: true });
+      }
+      return [...mine, ...shared];
     },
   });
 
@@ -78,6 +95,7 @@ function Teacher() {
   // Owned classes only - a colleague covering someone else's class
   // shouldn't be blocked by that class's owner's own creation history.
   const ownedClasses = (classes ?? []).filter((c) => !c.shared);
+  const ownedSchoolClassCount = ownedClasses.filter((c) => c.school_id === schoolId).length;
 
   const createClass = async () => {
     if (!name.trim()) return;
@@ -144,6 +162,21 @@ function Teacher() {
     toast.success("School join code copied");
   };
 
+  const handleLeaveSchool = async () => {
+    if (!user || !schoolId) return;
+    setSchoolBusy(true);
+    const result = await leaveSchool(user.id, schoolId);
+    setSchoolBusy(false);
+    setConfirmingLeave(false);
+    if (!result.ok) {
+      toast.error(result.error);
+      return;
+    }
+    toast.success("You've left the school — your classes went with you");
+    await refresh();
+    void qc.invalidateQueries({ queryKey: ["teacher-classes"] });
+  };
+
   if (!isTeacher) {
     return <p className="text-muted-foreground">This area is for teachers.</p>;
   }
@@ -162,8 +195,10 @@ function Teacher() {
         {schoolId ? (
           <>
             <p className="text-sm text-muted-foreground">
-              You're part of <span className="text-foreground font-medium">{school?.name}</span>.
-              Share its join code so colleagues can create or attach their own classes here too.
+              You're part of <span className="text-foreground font-medium">{school?.name}</span> —
+              every teacher there automatically gets full access to every class in it (roster,
+              homework, lessons), the same as an explicitly-added co-teacher, no invite needed. You
+              can only be in one school at a time.
             </p>
             <div className="flex flex-wrap items-center gap-2">
               <span className="rounded-md border border-border bg-secondary/40 px-2 py-1 font-mono text-xs text-muted-foreground">
@@ -173,13 +208,43 @@ function Teacher() {
                 Copy code
               </Button>
             </div>
+            {!confirmingLeave ? (
+              <Button size="sm" variant="secondary" onClick={() => setConfirmingLeave(true)}>
+                Leave school
+              </Button>
+            ) : (
+              <div className="space-y-2 rounded-lg border border-border bg-secondary/10 p-3">
+                <p className="text-sm">
+                  Leaving takes{" "}
+                  <strong>
+                    {ownedSchoolClassCount} class{ownedSchoolClassCount === 1 ? "" : "es"}
+                  </strong>{" "}
+                  you own out of {school?.name} with you, and ends your colleagues' automatic access
+                  to them immediately. Classes you only co-teach for someone else aren't affected.
+                </p>
+                <div className="flex gap-2">
+                  <Button
+                    size="sm"
+                    variant="destructive"
+                    onClick={handleLeaveSchool}
+                    disabled={schoolBusy}
+                  >
+                    {schoolBusy ? "Leaving…" : "Yes, leave"}
+                  </Button>
+                  <Button size="sm" variant="secondary" onClick={() => setConfirmingLeave(false)}>
+                    Cancel
+                  </Button>
+                </div>
+              </div>
+            )}
           </>
         ) : (
           <>
             <p className="text-sm text-muted-foreground">
-              Not everyone using H-Code is from the same school. Create a school (or join a
-              colleague's with their code) to keep your leaderboards and classes scoped to your own
-              — any classes you already own get attached automatically.
+              Not everyone using H-Code is from the same school. You can only be part of one school
+              at a time — create one, or join a colleague's with their code, and every class you
+              currently own moves with you into it automatically (leaving later takes them back out
+              with you too).
             </p>
             <div className="grid gap-3 sm:grid-cols-2">
               <div className="flex gap-2">

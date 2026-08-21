@@ -37,7 +37,7 @@ export const Route = createFileRoute("/_authenticated/teacher/$classId")({
 
 function ClassDetail() {
   const { classId } = Route.useParams();
-  const { user, isAdmin } = useAuth();
+  const { user, isAdmin, schoolId } = useAuth();
   const navigate = useNavigate();
   const qc = useQueryClient();
   const [title, setTitle] = useState("");
@@ -334,11 +334,14 @@ function ClassDetail() {
   // isPrimaryOwner: the original owner or an admin - gates Danger Zone and
   // adding/removing co-teachers, so a colleague covering the class can't
   // remove the owner's access or delete it.
-  // hasAccess: owner, admin, OR a co-teacher - gates the rest of the page
-  // (roster, homework, lessons), the actual "cover this class" access.
+  // hasAccess: owner, admin, an explicitly-added co-teacher, OR anyone at
+  // the same school (automatic, see is_class_teacher()) - gates the rest
+  // of the page (roster, homework, lessons), the actual "cover this
+  // class" access.
   const isPrimaryOwner = !!data?.cls && (data.cls.teacher_id === user?.id || isAdmin);
   const isCoTeacher = (data?.coTeachers ?? []).some((t) => t.teacherId === user?.id);
-  const hasAccess = isPrimaryOwner || isCoTeacher;
+  const isSameSchool = !!data?.cls?.school_id && !!schoolId && data.cls.school_id === schoolId;
+  const hasAccess = isPrimaryOwner || isCoTeacher || isSameSchool;
 
   const setHomework = async () => {
     if (!title.trim()) {
@@ -599,10 +602,18 @@ function ClassDetail() {
 
       <div className="panel space-y-3 p-5">
         <h2 className="text-lg font-semibold">Teachers on this class</h2>
-        <p className="text-sm text-muted-foreground">
-          Co-teachers get the same day-to-day access as you — roster, homework, lessons, progress —
-          for cover or shared classes. Only you can add or remove them, or delete the class.
-        </p>
+        {data?.cls?.school_id ? (
+          <p className="text-sm text-muted-foreground">
+            Every teacher at this class's school already has full access automatically — roster,
+            homework, lessons, progress — no invite needed. Use "Add teacher" below only to bring in
+            someone from outside the school. Only you can remove access or delete the class.
+          </p>
+        ) : (
+          <p className="text-sm text-muted-foreground">
+            Co-teachers get the same day-to-day access as you — roster, homework, lessons, progress
+            — for cover or shared classes. Only you can add or remove them, or delete the class.
+          </p>
+        )}
         <ul className="space-y-1.5 text-sm">
           <li className="flex items-center justify-between gap-2 rounded-md border border-border px-3 py-2">
             <span>

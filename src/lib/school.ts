@@ -6,6 +6,16 @@ export function makeJoinCode() {
 }
 
 export type SchoolActionResult = { ok: true; schoolName: string } | { ok: false; error: string };
+export type SimpleResult = { ok: true } | { ok: false; error: string };
+
+async function currentSchoolId(userId: string): Promise<string | null> {
+  const { data } = await supabase
+    .from("profiles")
+    .select("school_id")
+    .eq("id", userId)
+    .maybeSingle();
+  return data?.school_id ?? null;
+}
 
 // Sweeps up any of this teacher's existing classes that aren't attached to
 // a school yet - covers both "creating/joining a school after already
@@ -33,6 +43,9 @@ async function attachToSchool(
 export async function createSchool(userId: string, name: string): Promise<SchoolActionResult> {
   const trimmed = name.trim();
   if (!trimmed) return { ok: false, error: "Give the school a name" };
+  if (await currentSchoolId(userId)) {
+    return { ok: false, error: "You're already part of a school — leave it first to switch." };
+  }
   const { data: school, error } = await supabase
     .from("schools")
     .insert({ name: trimmed, join_code: makeJoinCode(), created_by: userId })
@@ -45,8 +58,34 @@ export async function createSchool(userId: string, name: string): Promise<School
 export async function joinSchool(userId: string, code: string): Promise<SchoolActionResult> {
   const trimmed = code.trim().toUpperCase();
   if (!trimmed) return { ok: false, error: "Enter a join code" };
+  if (await currentSchoolId(userId)) {
+    return { ok: false, error: "You're already part of a school — leave it first to switch." };
+  }
   const { data, error } = await supabase.rpc("school_for_join_code", { _code: trimmed });
   const school = data?.[0];
   if (error || !school) return { ok: false, error: "No school found with that code" };
   return attachToSchool(userId, school.id, school.name);
+}
+
+// Leaving takes every class this teacher owns out of the school with them
+// - classes they only co-teach for someone else aren't touched, since they
+// don't own those. Explicit class_co_teachers grants on their own classes
+// are untouched too (sticky invites survive a school change); it's only
+// the automatic same-school access (see is_class_teacher()) that ends,
+// immediately, since that's derived live from school_id.
+export async function leaveSchool(userId: string, schoolId: string): Promise<SimpleResult> {
+  const { error: classError } = await supabase
+    .from("classes")
+    .update({ school_id: null })
+    .eq("teacher_id", userId)
+    .eq("school_id", schoolId);
+  if (classError) return { ok: false, error: classError.message };
+
+  const { error: profileError } = await supabase
+    .from("profiles")
+    .update({ school_id: null })
+    .eq("id", userId);
+  if (profileError) return { ok: false, error: profileError.message };
+
+  return { ok: true };
 }
