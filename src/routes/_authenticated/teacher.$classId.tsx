@@ -54,7 +54,6 @@ function ClassDetail() {
   const [expandedStudent, setExpandedStudent] = useState<string | null>(null);
   const [expandedLesson, setExpandedLesson] = useState<string | null>(null);
   const [expandedHomework, setExpandedHomework] = useState<string | null>(null);
-  const [expandedHomeworkStudent, setExpandedHomeworkStudent] = useState<string | null>(null);
 
   const { data } = useQuery({
     queryKey: ["class", classId],
@@ -937,40 +936,55 @@ function ClassDetail() {
                       </div>
                     ) : null}
                     {isExpanded && sorted.length > 0 ? (
-                      <div className="mt-3 grid gap-1.5 border-t border-border pt-3 sm:grid-cols-2 lg:grid-cols-3">
-                        {sorted.map((c) => {
-                          const studentKey = `${h.id}:${c.id}`;
-                          const studentExpanded = expandedHomeworkStudent === studentKey;
-                          return (
-                            <div key={c.id} className="text-xs">
-                              <button
-                                className="flex w-full items-center justify-between gap-2 text-left"
-                                onClick={() =>
-                                  setExpandedHomeworkStudent(studentExpanded ? null : studentKey)
-                                }
-                              >
-                                <span className={c.done === c.total && c.total > 0 ? "text-success" : ""}>
-                                  {c.done === c.total && c.total > 0 ? "✓" : "○"} {c.name}
-                                </span>
-                                <span className="font-mono text-muted-foreground">
-                                  {c.done}/{c.total} {studentExpanded ? "▲" : "▼"}
-                                </span>
-                              </button>
-                              {studentExpanded ? (
-                                <ul className="mt-1.5 space-y-1 border-l border-border pl-2.5">
-                                  {c.tasks.map((t) => (
-                                    <li
-                                      key={t.id}
-                                      className={t.passed ? "text-success" : "text-muted-foreground"}
+                      <div className="mt-3 overflow-x-auto border-t border-border pt-3">
+                        <table className="text-xs">
+                          <thead>
+                            <tr>
+                              <th className="p-1.5 text-left font-normal text-muted-foreground">
+                                Student
+                              </th>
+                              {Array.from({ length: perStudentCount }, (_, i) => (
+                                <th
+                                  key={i}
+                                  className="p-1.5 text-center font-mono font-normal text-muted-foreground"
+                                >
+                                  {i + 1}
+                                </th>
+                              ))}
+                              <th className="p-1.5 text-center font-mono font-normal text-muted-foreground">
+                                Done
+                              </th>
+                            </tr>
+                          </thead>
+                          <tbody>
+                            {sorted.map((c) => (
+                              <tr key={c.id} className="border-t border-border/60 hover:bg-secondary/20">
+                                <td className="p-1.5 whitespace-nowrap font-medium">{c.name}</td>
+                                {Array.from({ length: perStudentCount }, (_, i) => {
+                                  const t = c.tasks[i];
+                                  return (
+                                    <td
+                                      key={i}
+                                      title={t?.title}
+                                      className={`p-1.5 text-center ${
+                                        t?.passed ? "text-success" : "text-muted-foreground"
+                                      }`}
                                     >
-                                      {t.passed ? "✓" : "○"} {t.title}
-                                    </li>
-                                  ))}
-                                </ul>
-                              ) : null}
-                            </div>
-                          );
-                        })}
+                                      {t ? (t.passed ? "✓" : "○") : ""}
+                                    </td>
+                                  );
+                                })}
+                                <td className="p-1.5 text-center font-mono whitespace-nowrap text-muted-foreground">
+                                  {c.done}/{c.total}
+                                </td>
+                              </tr>
+                            ))}
+                          </tbody>
+                        </table>
+                        <p className="mt-2 text-xs text-muted-foreground">
+                          Each student's homework is personalised, so column N isn't the same task for
+                          everyone — hover a cell to see which task it is.
+                        </p>
                       </div>
                     ) : null}
                   </div>
