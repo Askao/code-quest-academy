@@ -373,18 +373,45 @@ function Play() {
 
           {outcome ? (
             <div className="panel p-5">
-              <h2 className="font-semibold">
-                Tests: {outcome.passedCount}/{outcome.total} passed
+              <h2 className="text-lg font-semibold">
+                {outcome.passed
+                  ? `🎉 All ${outcome.total} tests passed!`
+                  : `${outcome.passedCount} out of ${outcome.total} correct so far`}
               </h2>
-              <ul className="mt-3 space-y-3 text-sm">
+              <ul className="mt-4 space-y-3 text-sm">
                 {outcome.results.map((r) => (
-                  <li key={r.index} className="rounded-md border border-border p-3">
-                    <p className={r.passed ? "text-success" : "text-destructive"}>
-                      {r.passed ? "✓ Passed" : "✗ Failed"} — test {r.index + 1}
-                    </p>
+                  <li
+                    key={r.index}
+                    className={`rounded-lg border p-3 ${
+                      r.passed ? "border-success/30 bg-success/5" : "border-destructive/30 bg-destructive/5"
+                    }`}
+                  >
+                    <div className="flex items-center gap-2">
+                      <span
+                        className={`flex h-6 w-6 shrink-0 items-center justify-center rounded-full text-xs font-bold ${
+                          r.passed ? "bg-success/20 text-success" : "bg-destructive/20 text-destructive"
+                        }`}
+                      >
+                        {r.passed ? "✓" : "✗"}
+                      </span>
+                      <p className={`font-semibold ${r.passed ? "text-success" : "text-destructive"}`}>
+                        Test {r.index + 1}: {r.passed ? "Correct!" : "Not quite right yet"}
+                      </p>
+                    </div>
                     {!r.passed ? (
-                      <div className="mt-2 space-y-1 font-mono text-xs">
-                        {r.stdin ? <p>input: {r.stdin.replace(/\n/g, " ⏎ ")}</p> : null}
+                      <div className="mt-3 space-y-3 pl-8">
+                        {r.stdin ? (
+                          <div>
+                            <p className="text-xs font-medium text-muted-foreground">
+                              🔤 We typed this in:
+                            </p>
+                            <div className="mt-1 rounded-md bg-secondary/50 p-2 font-mono text-xs">
+                              {r.stdin.split("\n").map((line, i) => (
+                                <div key={i}>{line || " "}</div>
+                              ))}
+                            </div>
+                          </div>
+                        ) : null}
                         {(() => {
                           const { expectedParts, actualParts } = diffStrings(r.expected, r.actual);
                           // A highlighted run that's just a space or two renders as an
@@ -392,58 +419,82 @@ function Play() {
                           // default, and even with that off, a lone space with only a
                           // background tint is easy to miss entirely. Swap spaces for a
                           // visible middle dot inside highlighted runs only, so a missing
-                          // or extra space is as obvious as a wrong letter.
-                          const plain = (text: string) => text.replace(/\n/g, " ⏎ ");
-                          const marked = (text: string) => plain(text).replace(/ /g, "·");
+                          // or extra space is as obvious as a wrong letter. Newlines inside
+                          // a part render as real line breaks rather than a symbol crammed
+                          // onto one line - multi-line output is much easier to read that way.
+                          const renderText = (text: string, markSpaces: boolean) => {
+                            const shown = markSpaces ? text.replace(/ /g, "·") : text;
+                            const lines = shown.split("\n");
+                            return lines.map((line, li) => (
+                              <span key={li}>
+                                {line}
+                                {li < lines.length - 1 ? <br /> : null}
+                              </span>
+                            ));
+                          };
                           return (
                             <>
-                              <p className="whitespace-pre-wrap">
-                                expected:{" "}
-                                {expectedParts.map((part, pi) =>
-                                  part.type === "removed" ? (
-                                    <span
-                                      key={pi}
-                                      className="rounded-sm bg-warning/30 px-0.5 text-warning underline decoration-warning decoration-2"
-                                    >
-                                      {marked(part.text)}
-                                    </span>
-                                  ) : (
-                                    <span key={pi}>{plain(part.text)}</span>
-                                  ),
-                                )}
-                              </p>
-                              <p className="whitespace-pre-wrap">
-                                you gave:{" "}
-                                {r.actual ? (
-                                  actualParts.map((part, pi) =>
-                                    part.type === "added" ? (
+                              <div>
+                                <p className="text-xs font-medium text-muted-foreground">
+                                  ✅ Your code should print:
+                                </p>
+                                <p className="mt-1 rounded-md bg-secondary/50 p-2 font-mono text-xs">
+                                  {expectedParts.map((part, pi) =>
+                                    part.type === "removed" ? (
                                       <span
                                         key={pi}
-                                        className="rounded-sm bg-destructive/30 px-0.5 text-destructive underline decoration-destructive decoration-2"
+                                        className="rounded-sm bg-warning/30 px-0.5 text-warning underline decoration-warning decoration-2"
                                       >
-                                        {marked(part.text)}
+                                        {renderText(part.text, true)}
                                       </span>
                                     ) : (
-                                      <span key={pi}>{plain(part.text)}</span>
+                                      <span key={pi}>{renderText(part.text, false)}</span>
                                     ),
-                                  )
-                                ) : (
-                                  <span className="text-destructive">(nothing)</span>
-                                )}
-                              </p>
+                                  )}
+                                </p>
+                              </div>
+                              <div>
+                                <p className="text-xs font-medium text-muted-foreground">
+                                  📝 Your code printed:
+                                </p>
+                                <p className="mt-1 rounded-md bg-secondary/50 p-2 font-mono text-xs">
+                                  {r.actual ? (
+                                    actualParts.map((part, pi) =>
+                                      part.type === "added" ? (
+                                        <span
+                                          key={pi}
+                                          className="rounded-sm bg-destructive/30 px-0.5 text-destructive underline decoration-destructive decoration-2"
+                                        >
+                                          {renderText(part.text, true)}
+                                        </span>
+                                      ) : (
+                                        <span key={pi}>{renderText(part.text, false)}</span>
+                                      ),
+                                    )
+                                  ) : (
+                                    <span className="text-destructive">(nothing was printed)</span>
+                                  )}
+                                </p>
+                              </div>
                               {r.actual && r.expected !== r.actual ? (
-                                <p className="text-muted-foreground">
-                                  Highlighted = where they don't match —{" "}
-                                  <span className="text-warning">amber</span> is what should be
-                                  there, <span className="text-destructive">red</span> is what you
-                                  wrote instead ({"·"} marks a space, so a missing or extra one is
-                                  easy to spot). Check spelling, capitals and spacing closely.
+                                <p className="text-xs text-muted-foreground">
+                                  🔎 The highlighted bit is different — check spelling, capital
+                                  letters, and spaces (shown as a dot ·).
                                 </p>
                               ) : null}
                             </>
                           );
                         })()}
-                        {r.error ? <p className="text-destructive">{r.error}</p> : null}
+                        {r.error ? (
+                          <div>
+                            <p className="text-xs font-medium text-muted-foreground">
+                              ⚠️ Your code had a problem:
+                            </p>
+                            <p className="mt-1 rounded-md bg-destructive/10 p-2 font-mono text-xs text-destructive">
+                              {r.error}
+                            </p>
+                          </div>
+                        ) : null}
                       </div>
                     ) : null}
                   </li>
