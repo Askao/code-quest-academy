@@ -261,5 +261,35 @@
       "brief": "Input a whole number N. Print N lines: the first shows just 1, the second shows 12, the third shows 123, and so on up to N digits on the final line.",
       "starter": "", "hints": ["Build up a string one digit at a time inside the loop, printing it after each addition.", "Start with an empty string, and on each pass through the loop add the next digit before printing."],
       "tests": [{ "stdin": "4", "expect": "1\n12\n123\n1234" }, { "stdin": "3", "expect": "1\n12\n123" }] }
+  ],
+  "projectTasks": [
+    { "slug": "gcse-iteration-project-01", "tier": 4, "difficulty": 2, "xp": 40, "title": "Class Average Report",
+      "brief": "A teacher wants the average score for their class. Input a whole number for how many students there are — if it isn't between 1 and 30 inclusive, keep asking until it is. Then input that many whole number test scores, one at a time, keeping a running total as you go. Once every score has been read, print the total on one line, then the average rounded to 1 decimal place on the next line, then a grade based on that average: Distinction for 90 or above, Merit for 70 or above, Pass for 40 or above, or Fail otherwise, on the final line.",
+      "starter": "", "hints": ["A while loop can keep re-asking for the student count until it's within the allowed range, the same shape as the lesson's validation example.", "Keep a running total inside the loop that reads each score, then use it for both the total line and the average."],
+      "tests": [
+        { "stdin": "3\n10\n20\n30", "expect": "60\n20.0\nFail" },
+        { "stdin": "40\n0\n2\n95\n95", "expect": "190\n95.0\nDistinction" }
+      ] },
+    { "slug": "gcse-iteration-project-02", "tier": 4, "difficulty": 3, "xp": 60, "title": "Savings Goal Tracker",
+      "brief": "Input a savings target, which may include pence. Input how much is saved each week, which may include pence. Starting from zero, add one week's saving at a time and print the running total after each addition, shown to exactly 2 decimal places, stopping as soon as the total reaches or exceeds the target. On the final line, print how many weeks it took, in the format Reached the target in <n> week(s).",
+      "starter": "", "hints": ["A while loop can keep adding a week's saving and printing the new total for as long as the target hasn't been reached yet.", "Format each printed total with :.2f so it always shows exactly 2 decimal places."],
+      "tests": [
+        { "stdin": "100\n25", "expect": "25.00\n50.00\n75.00\n100.00\nReached the target in 4 week(s)" },
+        { "stdin": "30\n20", "expect": "20.00\n40.00\nReached the target in 2 week(s)" }
+      ] },
+    { "slug": "gcse-iteration-project-03", "tier": 4, "difficulty": 4, "xp": 80, "title": "Exam Results Summary",
+      "brief": "A teacher wants a summary of exam results. Input a whole number for how many students there are — if it isn't between 1 and 30 inclusive, keep asking until it is. Then input that many whole number exam scores, one at a time. Count how many fall into each band: Distinction for 90 or above, Merit for 70 or above but below 90, Pass for 40 or above but below 70, and Fail for anything below 40. Print each count on its own line, in the format Distinction: <n>, then Merit: <n>, then Pass: <n>, then Fail: <n>.",
+      "starter": "", "hints": ["Validate the number of students the same way as the lesson's validation example, then use four separate counters, one per grade band.", "An elif chain checks each score once, checking the highest band first so lower checks only run when needed."],
+      "tests": [
+        { "stdin": "5\n95\n72\n45\n20\n88", "expect": "Distinction: 1\nMerit: 2\nPass: 1\nFail: 1" },
+        { "stdin": "40\n0\n4\n60\n60\n60\n60", "expect": "Distinction: 0\nMerit: 0\nPass: 4\nFail: 0" }
+      ] },
+    { "slug": "gcse-iteration-project-04", "tier": 4, "difficulty": 5, "xp": 100, "title": "Delivery Route Summary",
+      "brief": "A delivery driver wants a summary of today's drop-offs. Input a whole number for how many deliveries there are — if it isn't between 1 and 50 inclusive, keep asking until it is. Then input that many delivery distances in km, one at a time (each may include decimals) — if a distance isn't greater than 0, keep asking again for that same delivery. Once every distance has been read, print the total distance travelled, then the longest single delivery, then the shortest single delivery, each rounded to 1 decimal place and each on its own line. Finally, print Long day if the total distance is over 100km, or Normal day otherwise.",
+      "starter": "", "hints": ["Two separate validations are needed here: one while loop for the number of deliveries, and a second while loop inside the reading loop for each individual distance.", "Track the total, the longest-so-far and the shortest-so-far together inside the same loop that reads each distance."],
+      "tests": [
+        { "stdin": "3\n10.5\n20.0\n5.5", "expect": "36.0\n20.0\n5.5\nNormal day" },
+        { "stdin": "60\n0\n2\n-5\n60.0\n50.0", "expect": "110.0\n60.0\n50.0\nLong day" }
+      ] }
   ]
 }

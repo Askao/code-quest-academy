@@ -57,6 +57,15 @@ export type TaskContent = {
  */
 export type HomeworkTaskContent = Omit<TaskContent, "lesson" | "lessonSlug">;
 
+/**
+ * A longer, harder assessment task that pulls together everything a topic
+ * covers - modelled on GoCodeIt's "Assessment Point" pages. Browsed as a
+ * fixed, difficulty-ordered list on /projects rather than randomly picked,
+ * and (like homework tasks) never reachable through a lesson's task list or
+ * surfaced by Practice/Recap/Boss/Duel's random pickChallenge() calls.
+ */
+export type ProjectTaskContent = Omit<TaskContent, "lesson" | "lessonSlug">;
+
 export type QuizQuestion = {
   lessonSlug: string;
   question: string;
@@ -71,6 +80,7 @@ type RawTopic = {
   lessons: Omit<LessonContent, "track" | "topic" | "order">[];
   tasks: Omit<TaskContent, "lessonSlug" | "track" | "topic">[];
   homeworkTasks?: Omit<HomeworkTaskContent, "track" | "topic">[];
+  projectTasks?: Omit<ProjectTaskContent, "track" | "topic">[];
   quiz?: QuizQuestion[];
 };
 
@@ -112,11 +122,19 @@ export const HOMEWORK_TASKS: HomeworkTaskContent[] = RAW.flatMap((t) =>
   })),
 );
 
+export const PROJECT_TASKS: ProjectTaskContent[] = RAW.flatMap((t) =>
+  (t.projectTasks ?? []).map((task) => ({
+    ...task,
+    track: t.track as TrackKey,
+    topic: t.topic,
+  })),
+);
+
 export const QUIZZES: QuizQuestion[] = RAW.flatMap((t) => t.quiz ?? []);
 
 const lessonBySlug = new Map(LESSONS.map((l) => [l.slug, l]));
-const taskBySlug = new Map<string, TaskContent | HomeworkTaskContent>(
-  [...TASKS, ...HOMEWORK_TASKS].map((t) => [t.slug, t]),
+const taskBySlug = new Map<string, TaskContent | HomeworkTaskContent | ProjectTaskContent>(
+  [...TASKS, ...HOMEWORK_TASKS, ...PROJECT_TASKS].map((t) => [t.slug, t]),
 );
 
 export function getLesson(slug: string) {
@@ -137,6 +155,13 @@ export function tasksForLesson(lessonSlug: string) {
 
 export function quizForLesson(lessonSlug: string) {
   return QUIZZES.filter((q) => q.lessonSlug === lessonSlug);
+}
+
+/** A topic's projects, easiest first - the fixed, difficulty-ordered list /projects shows. */
+export function projectsForTopic(track: TrackKey, topic: string) {
+  return PROJECT_TASKS.filter((p) => p.track === track && p.topic === topic).sort(
+    (a, b) => a.difficulty - b.difficulty,
+  );
 }
 
 /** Tasks sharing a `group` are ordered steps (Part A, B, ...) of one bigger problem. */

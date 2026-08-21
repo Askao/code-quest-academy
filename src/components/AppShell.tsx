@@ -68,6 +68,9 @@ export function AppShell({ children }: { children: ReactNode }) {
       <NavLink to="/practice" onClick={closeMenu}>
         Practise
       </NavLink>
+      <NavLink to="/projects" onClick={closeMenu}>
+        Projects
+      </NavLink>
       {hasRecap ? (
         <NavLink to="/recap" onClick={closeMenu}>
           Recap

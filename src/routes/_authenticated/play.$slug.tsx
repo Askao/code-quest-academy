@@ -11,12 +11,18 @@ import { BADGES, topicLabel, type TrackKey } from "@/lib/game";
 import { checkSyntax, getPyodide, runTests, type RunOutcome } from "@/lib/python-runner";
 import { highlightErrorLine, pythonEditorExtensions } from "@/lib/python-lint";
 import { pickChallenge, recordAttempt, type Challenge } from "@/lib/progress";
-import { completedTaskSlugs, tasksForLesson, tasksInGroup, withContent } from "@/lib/content";
+import {
+  completedTaskSlugs,
+  projectsForTopic,
+  tasksForLesson,
+  tasksInGroup,
+  withContent,
+} from "@/lib/content";
 import { inline } from "@/lib/markdown";
 import { diffStrings } from "@/lib/diff";
 
 type Search = {
-  mode: "practice" | "boss" | "duel" | "homework" | "recap";
+  mode: "practice" | "boss" | "duel" | "homework" | "recap" | "project";
   track?: TrackKey;
   topic?: string;
   duel?: string;
@@ -28,7 +34,9 @@ type BossState = { endsAt: number; score: number; track: TrackKey; topic: string
 
 export const Route = createFileRoute("/_authenticated/play/$slug")({
   validateSearch: (s: Record<string, unknown>): Search => ({
-    mode: (["practice", "boss", "duel", "homework", "recap"] as const).includes(s["mode"] as never)
+    mode: (
+      ["practice", "boss", "duel", "homework", "recap", "project"] as const
+    ).includes(s["mode"] as never)
       ? (s["mode"] as Search["mode"])
       : "practice",
     ...(s["track"] === "alevel" || s["track"] === "gcse" ? { track: s["track"] } : {}),
@@ -211,6 +219,22 @@ function Play() {
   const nextChallenge = async () => {
     if (!challenge) return;
 
+    // Projects are a fixed, difficulty-ordered list per topic (see
+    // projectsForTopic in content.ts), not something pickChallenge() should
+    // ever pick at random - move to the next one in that order, or back to
+    // the projects page once they're all done.
+    if (search.mode === "project") {
+      const projects = projectsForTopic(challenge.track, challenge.topic);
+      const myIndex = projects.findIndex((p) => p.slug === challenge.slug);
+      const nextProject = projects[myIndex + 1];
+      if (nextProject) {
+        void navigate({ to: "/play/$slug", params: { slug: nextProject.slug }, search });
+      } else {
+        void navigate({ to: "/projects" });
+      }
+      return;
+    }
+
     // Came from a lesson's task list: follow that lesson's task order
     // rather than picking something random from the whole topic. Once
     // there's nothing left in the lesson (including the stretch task),
@@ -309,6 +333,11 @@ function Play() {
         {search.mode === "recap" ? (
           <span className="ml-auto rounded-full bg-primary/15 px-3 py-1 font-mono text-sm text-primary">
             ↻ Daily recap
+          </span>
+        ) : null}
+        {search.mode === "project" ? (
+          <span className="ml-auto rounded-full bg-accent/15 px-3 py-1 font-mono text-sm text-accent">
+            🏗 Project
           </span>
         ) : null}
       </div>

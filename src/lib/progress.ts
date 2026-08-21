@@ -176,7 +176,8 @@ export async function pickChallenge(opts: {
     .from("challenges")
     .select("*")
     .eq("track", opts.track)
-    .eq("homework_only", false);
+    .eq("homework_only", false)
+    .eq("is_project", false);
   if (opts.topic) query = query.eq("topic", opts.topic);
   const { data } = await query;
   if (!data || data.length === 0) return null;
