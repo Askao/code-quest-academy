@@ -48,12 +48,31 @@ function Duels() {
           .order("created_at", { ascending: false })
           .limit(20),
       ]);
-      const others = (members.data ?? []).filter((m) => m.student_id !== uid);
+      const otherIds = new Set(
+        (members.data ?? []).filter((m) => m.student_id !== uid).map((m) => m.student_id),
+      );
+      // A class_members row can outlive a student being promoted to
+      // teacher (the admin Users table doesn't clean that up) - exclude
+      // staff by role so they never show up as a duelable "classmate".
+      const rolesRes = otherIds.size
+        ? await supabase
+            .from("user_roles")
+            .select("user_id")
+            .in("user_id", Array.from(otherIds))
+            .in("role", ["teacher", "admin"])
+        : { data: [] as { user_id: string }[] };
+      const staffIds = new Set((rolesRes.data ?? []).map((r) => r.user_id));
+      const others = (members.data ?? []).filter(
+        (m) => otherIds.has(m.student_id) && !staffIds.has(m.student_id),
+      );
       const profiles = others.length
         ? await supabase
             .from("profiles")
             .select("id, full_name")
-            .in("id", others.map((o) => o.student_id))
+            .in(
+              "id",
+              others.map((o) => o.student_id),
+            )
         : { data: [] as { id: string; full_name: string | null }[] };
       const nameOf = new Map((profiles.data ?? []).map((p) => [p.id, p.full_name]));
       return {
@@ -61,7 +80,6 @@ function Duels() {
         classmates: others.map((o) => ({ ...o, name: nameOf.get(o.student_id) ?? "Student" })),
         duels: duels.data ?? [],
       };
-
     },
   });
 
@@ -95,7 +113,7 @@ function Duels() {
   };
 
   const trackOf = (classId: string) =>
-    ((data?.classes.find((c) => c!.id === classId)?.track as TrackKey) ?? "gcse");
+    (data?.classes.find((c) => c!.id === classId)?.track as TrackKey) ?? "gcse";
 
   return (
     <div className="space-y-8">
@@ -110,7 +128,10 @@ function Duels() {
         <h2 className="mb-3 text-xl font-semibold">Classmates</h2>
         <div className="grid gap-3 sm:grid-cols-2 lg:grid-cols-3">
           {data?.classmates.map((c) => (
-            <div key={`${c.class_id}-${c.student_id}`} className="panel flex items-center gap-3 p-4">
+            <div
+              key={`${c.class_id}-${c.student_id}`}
+              className="panel flex items-center gap-3 p-4"
+            >
               <span className="flex-1 font-medium">{c.name}</span>
               <Button
                 size="sm"

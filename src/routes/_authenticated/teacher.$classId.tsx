@@ -84,7 +84,19 @@ function ClassDetail() {
         .from("class_members")
         .select("student_id")
         .eq("class_id", classId);
-      const ids = (members.data ?? []).map((m) => m.student_id);
+      const memberIds = (members.data ?? []).map((m) => m.student_id);
+      // A class_members row can outlive a student being promoted to
+      // teacher (the admin Users table doesn't clean that up) - exclude
+      // staff by role so a colleague never shows up as a "student" here.
+      const rosterRolesRes = memberIds.length
+        ? await supabase
+            .from("user_roles")
+            .select("user_id")
+            .in("user_id", memberIds)
+            .in("role", ["teacher", "admin"])
+        : { data: [] };
+      const rosterStaffIds = new Set((rosterRolesRes.data ?? []).map((r) => r.user_id));
+      const ids = memberIds.filter((id) => !rosterStaffIds.has(id));
       const [profiles, stats, skills, attempts, homework] = await Promise.all([
         ids.length
           ? supabase.from("profiles").select("id, full_name, email").in("id", ids)
