@@ -179,21 +179,22 @@ function SkillMock() {
         <div className="flex items-start gap-2">
           <span className="mt-0.5 text-success">✓</span>
           <span className="text-muted-foreground">
-            Fast, first-try pass — <span className="text-foreground">bigger bump</span>, not a flat
-            +1
+            Get it right first try —{" "}
+            <span className="text-foreground">skill level jumps up faster</span>
           </span>
         </div>
         <div className="flex items-start gap-2">
           <span className="mt-0.5 text-warning">•</span>
           <span className="text-muted-foreground">
-            One wrong answer — <span className="text-foreground">gentle −12%</span>, never a reset
+            Get one wrong — <span className="text-foreground">only a small dip</span>, progress
+            isn't lost
           </span>
         </div>
         <div className="flex items-start gap-2">
           <span className="mt-0.5 text-destructive">✗</span>
           <span className="text-muted-foreground">
-            Three wrong in a row — <span className="text-foreground">that's</span> when it steps
-            down a level
+            Get three wrong in a row —{" "}
+            <span className="text-foreground">only then does it drop a level</span>
           </span>
         </div>
       </div>
