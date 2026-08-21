@@ -85,7 +85,7 @@ function Teacher() {
     queryFn: async () => {
       const { data } = await supabase
         .from("schools")
-        .select("name, join_code")
+        .select("name, join_code, created_by")
         .eq("id", schoolId!)
         .maybeSingle();
       return data;
@@ -96,6 +96,11 @@ function Teacher() {
   // shouldn't be blocked by that class's owner's own creation history.
   const ownedClasses = (classes ?? []).filter((c) => !c.shared);
   const ownedSchoolClassCount = ownedClasses.filter((c) => c.school_id === schoolId).length;
+  const isSchoolOwner = !!school && school.created_by === user?.id;
+  // The full class list already includes every class in the school (mine
+  // plus every colleague's, via automatic same-school access) - exactly
+  // what the owner needs to know is about to be detached.
+  const schoolClassCount = (classes ?? []).filter((c) => c.school_id === schoolId).length;
 
   const createClass = async () => {
     if (!name.trim()) return;
@@ -165,14 +170,18 @@ function Teacher() {
   const handleLeaveSchool = async () => {
     if (!user || !schoolId) return;
     setSchoolBusy(true);
-    const result = await leaveSchool(user.id, schoolId);
+    const result = await leaveSchool(schoolId);
     setSchoolBusy(false);
     setConfirmingLeave(false);
     if (!result.ok) {
       toast.error(result.error);
       return;
     }
-    toast.success("You've left the school — your classes went with you");
+    toast.success(
+      isSchoolOwner
+        ? "School deleted — everyone's classes went back out with them"
+        : "You've left the school — your classes went with you",
+    );
     await refresh();
     void qc.invalidateQueries({ queryKey: ["teacher-classes"] });
   };
@@ -210,18 +219,31 @@ function Teacher() {
             </div>
             {!confirmingLeave ? (
               <Button size="sm" variant="secondary" onClick={() => setConfirmingLeave(true)}>
-                Leave school
+                {isSchoolOwner ? "Delete school" : "Leave school"}
               </Button>
             ) : (
               <div className="space-y-2 rounded-lg border border-border bg-secondary/10 p-3">
-                <p className="text-sm">
-                  Leaving takes{" "}
-                  <strong>
-                    {ownedSchoolClassCount} class{ownedSchoolClassCount === 1 ? "" : "es"}
-                  </strong>{" "}
-                  you own out of {school?.name} with you, and ends your colleagues' automatic access
-                  to them immediately. Classes you only co-teach for someone else aren't affected.
-                </p>
+                {isSchoolOwner ? (
+                  <p className="text-sm">
+                    You created {school?.name} — leaving deletes it entirely.{" "}
+                    <strong>
+                      Every teacher in it loses access, and all {schoolClassCount} class
+                      {schoolClassCount === 1 ? "" : "es"}
+                    </strong>{" "}
+                    (yours and theirs) go back to having no school, exactly as if each teacher had
+                    left individually. Explicit co-teacher invites aren't affected.
+                  </p>
+                ) : (
+                  <p className="text-sm">
+                    Leaving takes{" "}
+                    <strong>
+                      {ownedSchoolClassCount} class{ownedSchoolClassCount === 1 ? "" : "es"}
+                    </strong>{" "}
+                    you own out of {school?.name} with you, and ends your colleagues' automatic
+                    access to them immediately. Classes you only co-teach for someone else aren't
+                    affected.
+                  </p>
+                )}
                 <div className="flex gap-2">
                   <Button
                     size="sm"
@@ -229,7 +251,13 @@ function Teacher() {
                     onClick={handleLeaveSchool}
                     disabled={schoolBusy}
                   >
-                    {schoolBusy ? "Leaving…" : "Yes, leave"}
+                    {schoolBusy
+                      ? isSchoolOwner
+                        ? "Deleting…"
+                        : "Leaving…"
+                      : isSchoolOwner
+                        ? "Yes, delete for everyone"
+                        : "Yes, leave"}
                   </Button>
                   <Button size="sm" variant="secondary" onClick={() => setConfirmingLeave(false)}>
                     Cancel

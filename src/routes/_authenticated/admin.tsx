@@ -1,4 +1,4 @@
-import { createFileRoute } from "@tanstack/react-router";
+import { createFileRoute, Link } from "@tanstack/react-router";
 import { useQuery, useQueryClient } from "@tanstack/react-query";
 import { useState } from "react";
 import { toast } from "sonner";
@@ -44,11 +44,7 @@ function Admin() {
     enabled: isAdmin,
     queryFn: async () => {
       const [profiles, roles, appSettings, challenges, classes] = await Promise.all([
-        supabase
-          .from("profiles")
-          .select("*")
-          .order("created_at", { ascending: false })
-          .limit(200),
+        supabase.from("profiles").select("*").order("created_at", { ascending: false }).limit(200),
         supabase.from("user_roles").select("*"),
         supabase.from("app_settings").select("*"),
         supabase.from("challenges").select("id, track"),
@@ -67,11 +63,28 @@ function Admin() {
   const setRole = async (userId: string, role: RoleKey) => {
     await supabase.from("user_roles").delete().eq("user_id", userId);
     const { error } = await supabase.from("user_roles").insert({ user_id: userId, role });
-    if (error) toast.error(error.message);
-    else {
-      toast.success(`Role set to ${role}`);
-      void qc.invalidateQueries({ queryKey: ["admin"] });
+    if (error) {
+      toast.error(error.message);
+      return;
     }
+    // A promoted-to-staff account isn't a student anymore - leaving their
+    // old class_members row behind is exactly what let a promoted teacher
+    // keep showing up ranked on leaderboards and as a duel opponent.
+    let droppedMembership = false;
+    if (role !== "student") {
+      const { data: dropped } = await supabase
+        .from("class_members")
+        .delete()
+        .eq("student_id", userId)
+        .select("id");
+      droppedMembership = (dropped ?? []).length > 0;
+    }
+    toast.success(
+      droppedMembership
+        ? `Role set to ${role} — also removed their old class membership`
+        : `Role set to ${role}`,
+    );
+    void qc.invalidateQueries({ queryKey: ["admin"] });
   };
 
   const deleteUser = async () => {
@@ -98,7 +111,20 @@ function Admin() {
     else toast.success("Saved");
   };
 
-  if (!isAdmin) return <p className="text-muted-foreground">Admins only.</p>;
+  if (!isAdmin) {
+    return (
+      <div className="panel p-6">
+        <p className="font-medium">🔒 Admins only.</p>
+        <p className="mt-2 text-sm text-muted-foreground">
+          This page manages every user's role and the site's SMTP settings — only an admin account
+          can see it.
+        </p>
+        <Button asChild className="mt-4">
+          <Link to="/dashboard">Back to dashboard</Link>
+        </Button>
+      </div>
+    );
+  }
 
   const roleOf = (id: string) =>
     (data?.roles.find((r) => r.user_id === id)?.role ?? "student") as RoleKey;

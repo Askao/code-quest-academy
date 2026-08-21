@@ -752,6 +752,10 @@ export type Database = {
         Args: { _class_id: string; _user_id: string }
         Returns: boolean
       }
+      leave_school: {
+        Args: { _school_id: string }
+        Returns: undefined
+      }
       leaderboard_most_improved: {
         Args: {
           _class_id?: string | null

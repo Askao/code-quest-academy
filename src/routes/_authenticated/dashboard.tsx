@@ -19,11 +19,11 @@ export const Route = createFileRoute("/_authenticated/dashboard")({
 });
 
 function Dashboard() {
-  const { user, fullName } = useAuth();
+  const { user, fullName, isTeacher, schoolId } = useAuth();
 
   const { data } = useQuery({
     queryKey: ["dashboard", user?.id],
-    enabled: !!user,
+    enabled: !!user && !isTeacher,
     queryFn: async () => {
       const uid = user!.id;
       const todayStart = new Date().toISOString().slice(0, 10) + "T00:00:00.000Z";
@@ -58,10 +58,125 @@ function Dashboard() {
     },
   });
 
+  // Same "owned + explicit co-teacher + automatic same-school" merge as the
+  // Teacher area's own class list, so this summary never disagrees with it.
+  const { data: teacherClasses } = useQuery({
+    queryKey: ["dashboard-teacher-classes", user?.id, schoolId],
+    enabled: !!user && isTeacher,
+    queryFn: async () => {
+      const [owned, coTaught, schoolClasses] = await Promise.all([
+        supabase
+          .from("classes")
+          .select("id, name, track, join_code, class_members(count)")
+          .eq("teacher_id", user!.id)
+          .order("created_at", { ascending: false }),
+        supabase
+          .from("class_co_teachers")
+          .select("classes(id, name, track, join_code, class_members(count))")
+          .eq("teacher_id", user!.id),
+        schoolId
+          ? supabase
+              .from("classes")
+              .select("id, name, track, join_code, class_members(count)")
+              .eq("school_id", schoolId)
+              .neq("teacher_id", user!.id)
+          : Promise.resolve({ data: [] }),
+      ]);
+      const mine = owned.data ?? [];
+      const sharedRaw = [
+        ...(coTaught.data ?? []).map((r) => r.classes).filter(Boolean),
+        ...(schoolClasses.data ?? []),
+      ] as NonNullable<typeof owned.data>[number][];
+      const seen = new Set(mine.map((c) => c.id));
+      const shared = sharedRaw.filter((c) => (seen.has(c.id) ? false : (seen.add(c.id), true)));
+      const classes = [...mine, ...shared];
+      const students = classes.reduce((sum, c) => sum + (c.class_members?.[0]?.count ?? 0), 0);
+      return { classes, students };
+    },
+  });
+
   const xp = data?.stats?.xp ?? 0;
   const { level, intoLevel, needed } = levelFromXp(xp);
   const tracks = new Set((data?.classes ?? []).map((c) => c!.track as "gcse" | "alevel"));
   if (tracks.size === 0) tracks.add("gcse");
+
+  if (isTeacher) {
+    return (
+      <div className="space-y-8">
+        <div>
+          <h1 className="text-3xl font-bold">Hi {fullName || "there"} 👋</h1>
+          <p className="mt-1 text-muted-foreground">Here's where your classes are at right now.</p>
+        </div>
+
+        <div className="grid gap-4 sm:grid-cols-3">
+          <div className="panel p-5">
+            <p className="font-mono text-xs text-muted-foreground">CLASSES</p>
+            <p className="mt-1 text-3xl font-bold text-primary">
+              {teacherClasses?.classes.length ?? 0}
+            </p>
+          </div>
+          <div className="panel p-5">
+            <p className="font-mono text-xs text-muted-foreground">STUDENTS</p>
+            <p className="mt-1 text-3xl font-bold text-accent">{teacherClasses?.students ?? 0}</p>
+          </div>
+          <div className="panel flex flex-col justify-between p-5">
+            <p className="font-mono text-xs text-muted-foreground">TEACHER AREA</p>
+            <Button asChild size="sm" className="mt-3 self-start">
+              <Link to="/teacher">Manage classes</Link>
+            </Button>
+          </div>
+        </div>
+
+        <section>
+          <h2 className="mb-3 text-xl font-semibold">Your classes</h2>
+          <div className="grid gap-4 sm:grid-cols-2 lg:grid-cols-3">
+            {(teacherClasses?.classes ?? []).map((c) => (
+              <div key={c.id} className="panel p-5">
+                <div className="flex items-start justify-between gap-2">
+                  <p className="font-semibold">{c.name}</p>
+                  <span
+                    className={`rounded-full px-2 py-0.5 font-mono text-xs ${
+                      c.track === "gcse" ? "bg-gcse/15 text-gcse" : "bg-alevel/15 text-alevel"
+                    }`}
+                  >
+                    {c.track === "gcse" ? "GCSE" : "A LEVEL"}
+                  </span>
+                </div>
+                <p className="mt-1 text-xs text-muted-foreground">
+                  {c.class_members?.[0]?.count ?? 0} student(s)
+                </p>
+                <Button asChild size="sm" className="mt-4">
+                  <Link to="/teacher/$classId" params={{ classId: c.id }}>
+                    Open class
+                  </Link>
+                </Button>
+              </div>
+            ))}
+            {(teacherClasses?.classes.length ?? 0) === 0 ? (
+              <p className="text-muted-foreground">
+                No classes yet —{" "}
+                <Link to="/teacher" className="text-primary underline">
+                  create your first one
+                </Link>
+                .
+              </p>
+            ) : null}
+          </div>
+        </section>
+
+        <section className="panel p-5">
+          <h2 className="text-lg font-semibold">Your own practice</h2>
+          <p className="mt-1 text-sm text-muted-foreground">
+            Teacher and admin accounts can still practise, in case you want to try a task before
+            setting it.
+          </p>
+          <Button asChild size="sm" variant="secondary" className="mt-3">
+            <Link to="/practice">Practise</Link>
+          </Button>
+        </section>
+      </div>
+    );
+  }
 
   return (
     <div className="space-y-8">
@@ -81,9 +196,7 @@ function Dashboard() {
         </div>
         <div className="panel p-5">
           <p className="font-mono text-xs text-muted-foreground">STREAK</p>
-          <p className="mt-1 text-3xl font-bold text-warning">
-            {data?.stats?.streak_days ?? 0} 🔥
-          </p>
+          <p className="mt-1 text-3xl font-bold text-warning">{data?.stats?.streak_days ?? 0} 🔥</p>
           <p className="mt-2 text-xs text-muted-foreground">
             Best: {data?.stats?.best_streak ?? 0} days
           </p>
@@ -147,9 +260,7 @@ function Dashboard() {
               </p>
               <div className="grid gap-3 sm:grid-cols-2 lg:grid-cols-3">
                 {topicsFor(track).map((t) => {
-                  const skill = data?.skills.find(
-                    (s) => s.topic === t.key && s.track === track,
-                  );
+                  const skill = data?.skills.find((s) => s.topic === t.key && s.track === track);
                   const lvl = Number(skill?.level ?? 1);
                   return (
                     <div key={t.key} className="panel p-4">
@@ -211,7 +322,8 @@ function Dashboard() {
       </section>
 
       <p className="text-xs text-muted-foreground">
-        Recent topics: {(data?.skills ?? []).map((s) => topicLabel(s.topic)).join(", ") || "none yet"}
+        Recent topics:{" "}
+        {(data?.skills ?? []).map((s) => topicLabel(s.topic)).join(", ") || "none yet"}
       </p>
     </div>
   );

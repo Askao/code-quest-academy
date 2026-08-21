@@ -16,6 +16,7 @@ import {
 } from "lucide-react";
 import { Button } from "@/components/ui/button";
 import { ThemeToggle } from "@/components/ThemeToggle";
+import { useAuth } from "@/hooks/useAuth";
 import { GCSE_TOPICS, ALEVEL_TOPICS } from "@/lib/game";
 
 export const Route = createFileRoute("/")({
@@ -80,8 +81,8 @@ function SkillMock() {
         <div className="flex items-start gap-2">
           <span className="text-success">✓</span>
           <span className="text-muted-foreground">
-            Fast, first-try pass — <span className="text-foreground">bigger bump</span>, not a
-            flat +1
+            Fast, first-try pass — <span className="text-foreground">bigger bump</span>, not a flat
+            +1
           </span>
         </div>
         <div className="flex items-start gap-2">
@@ -211,6 +212,7 @@ function TeacherMock() {
 }
 
 function Landing() {
+  const { user, loading } = useAuth();
   return (
     <div className="min-h-screen">
       <header className="sticky top-0 z-40 border-b border-border bg-background/80 backdrop-blur">
@@ -221,14 +223,22 @@ function Landing() {
             <Button asChild variant="ghost" size="sm" className="hidden sm:inline-flex">
               <Link to="/ide">Try the IDE</Link>
             </Button>
-            <Button asChild variant="ghost" size="sm">
-              <Link to="/auth">Sign in</Link>
-            </Button>
-            <Button asChild size="sm">
-              <Link to="/auth" search={{ mode: "signup" }}>
-                Get started
-              </Link>
-            </Button>
+            {loading ? null : user ? (
+              <Button asChild size="sm">
+                <Link to="/dashboard">Go to dashboard</Link>
+              </Button>
+            ) : (
+              <>
+                <Button asChild variant="ghost" size="sm">
+                  <Link to="/auth">Sign in</Link>
+                </Button>
+                <Button asChild size="sm">
+                  <Link to="/auth" search={{ mode: "signup" }}>
+                    Get started
+                  </Link>
+                </Button>
+              </>
+            )}
           </div>
         </div>
       </header>
@@ -241,8 +251,8 @@ function Landing() {
           </h1>
           <p className="mt-5 max-w-xl text-lg text-muted-foreground">
             Every GCSE and A level topic runs as a lesson path — teaching notes, a worked example,
-            laddered practice tasks and a quick check — with challenges chosen automatically at
-            each student's own level.
+            laddered practice tasks and a quick check — with challenges chosen automatically at each
+            student's own level.
           </p>
           <div className="mt-8 flex flex-wrap gap-3">
             <Button asChild size="lg">
@@ -264,7 +274,11 @@ function Landing() {
       <section className="mx-auto max-w-6xl px-4 pb-16">
         <div className="grid gap-4 sm:grid-cols-4">
           {[
-            { icon: BookOpenCheck, t: "Lesson paths", d: "Notes, a worked example, then practice." },
+            {
+              icon: BookOpenCheck,
+              t: "Lesson paths",
+              d: "Notes, a worked example, then practice.",
+            },
             { icon: Gauge, t: "Adapts to you", d: "Wording and difficulty match your level." },
             { icon: Code2, t: "Free IDE", d: "Write and run any Python, no challenge needed." },
             { icon: UserCheck, t: "Teacher-paced classes", d: "Or fully self-paced — your call." },
@@ -288,14 +302,22 @@ function Landing() {
           </h2>
           <div className="mt-8 grid gap-4 sm:grid-cols-2 lg:grid-cols-4">
             {[
-              { n: "1", t: "Teaching notes", d: "Plain-English explanations, not a wall of jargon." },
+              {
+                n: "1",
+                t: "Teaching notes",
+                d: "Plain-English explanations, not a wall of jargon.",
+              },
               { n: "2", t: "Worked example", d: "See real code run before writing your own." },
               {
                 n: "3",
                 t: "Laddered tasks",
                 d: "Direct instructions first, working up to exam-style wording.",
               },
-              { n: "4", t: "Quick check", d: "A few questions to check the theory landed, not just the code." },
+              {
+                n: "4",
+                t: "Quick check",
+                d: "A few questions to check the theory landed, not just the code.",
+              },
             ].map((s, i) => (
               <div key={s.n} className="relative panel p-5">
                 <span className="font-mono text-xs text-primary">{s.n}</span>
@@ -324,8 +346,8 @@ function Landing() {
           A real look at the lessons, projects and teacher view.
         </h2>
         <p className="mt-3 max-w-2xl text-sm text-muted-foreground">
-          Actual screens from the app, not stock photos — a student's lesson path, the Projects
-          list for a topic, and a teacher's class overview.
+          Actual screens from the app, not stock photos — a student's lesson path, the Projects list
+          for a topic, and a teacher's class overview.
         </p>
         <div className="mt-6 grid gap-4 sm:grid-cols-2 lg:grid-cols-3">
           <LessonMock />
@@ -342,8 +364,8 @@ function Landing() {
           H-Code is built for classrooms first — but you don't need one.
         </h2>
         <p className="mt-3 max-w-2xl text-sm text-muted-foreground">
-          Every lesson path, adaptive challenge and the free IDE work exactly the same on an
-          account with no teacher or class attached to it — sign up, pick GCSE or A level, and go.
+          Every lesson path, adaptive challenge and the free IDE work exactly the same on an account
+          with no teacher or class attached to it — sign up, pick GCSE or A level, and go.
         </p>
         <div className="mt-6 grid gap-4 sm:grid-cols-3">
           {[
@@ -417,12 +439,12 @@ function Landing() {
               A real adaptive engine, tuned to not overreact.
             </h3>
             <p className="mt-3 text-sm text-muted-foreground">
-              Most "adaptive" tools just count right vs. wrong. H-Code tracks a live skill level
-              per student, per topic — and it's built around a known failure mode in adaptive
-              difficulty design: overreacting to one bad answer. A single mistake barely moves the
-              needle; it takes a genuine pattern (three wrong in a row) before the difficulty
-              actually steps down. A fast, clean, first-try pass earns more than a slow one, so
-              confident students get pushed harder instead of drilling the same level on repeat.
+              Most "adaptive" tools just count right vs. wrong. H-Code tracks a live skill level per
+              student, per topic — and it's built around a known failure mode in adaptive difficulty
+              design: overreacting to one bad answer. A single mistake barely moves the needle; it
+              takes a genuine pattern (three wrong in a row) before the difficulty actually steps
+              down. A fast, clean, first-try pass earns more than a slow one, so confident students
+              get pushed harder instead of drilling the same level on repeat.
             </p>
             <p className="mt-3 text-sm text-muted-foreground">
               Every one of those signals rolls up to a class-wide view — not "Ada got 60%", but
@@ -477,15 +499,27 @@ function Landing() {
         </p>
         <div className="mt-4 grid gap-4 sm:grid-cols-2 lg:grid-cols-5">
           {[
-            { icon: Gauge, t: "Adaptive practice", d: "Challenges chosen from your live skill level." },
+            {
+              icon: Gauge,
+              t: "Adaptive practice",
+              d: "Challenges chosen from your live skill level.",
+            },
             {
               icon: Hammer,
               t: "Projects",
               d: "Longer assessments per topic that pull everything together.",
             },
-            { icon: FlaskConical, t: "Boss battles", d: "Timed rapid-fire runs for XP multipliers." },
+            {
+              icon: FlaskConical,
+              t: "Boss battles",
+              d: "Timed rapid-fire runs for XP multipliers.",
+            },
             { icon: Swords, t: "Duels", d: "Race a classmate on the same challenge." },
-            { icon: Trophy, t: "Class leaderboards", d: "XP, streaks and badges per class." },
+            {
+              icon: Trophy,
+              t: "Class & school leaderboards",
+              d: "Top 10 by XP, plus who's improved most recently.",
+            },
           ].map((c) => (
             <div key={c.t} className="panel p-5">
               <c.icon className="h-5 w-5 text-primary" strokeWidth={1.75} />

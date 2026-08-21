@@ -73,19 +73,14 @@ export async function joinSchool(userId: string, code: string): Promise<SchoolAc
 // are untouched too (sticky invites survive a school change); it's only
 // the automatic same-school access (see is_class_teacher()) that ends,
 // immediately, since that's derived live from school_id.
-export async function leaveSchool(userId: string, schoolId: string): Promise<SimpleResult> {
-  const { error: classError } = await supabase
-    .from("classes")
-    .update({ school_id: null })
-    .eq("teacher_id", userId)
-    .eq("school_id", schoolId);
-  if (classError) return { ok: false, error: classError.message };
-
-  const { error: profileError } = await supabase
-    .from("profiles")
-    .update({ school_id: null })
-    .eq("id", userId);
-  if (profileError) return { ok: false, error: profileError.message };
-
+//
+// If the leaver is the school's creator, the leave_school() function deletes
+// the school outright and detaches every other teacher and class in it too
+// - same end state as if each of them had individually left. Handled
+// server-side (not here) so it's atomic and can't be triggered by anyone
+// but the actual creator.
+export async function leaveSchool(schoolId: string): Promise<SimpleResult> {
+  const { error } = await supabase.rpc("leave_school", { _school_id: schoolId });
+  if (error) return { ok: false, error: error.message };
   return { ok: true };
 }
