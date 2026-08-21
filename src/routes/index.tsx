@@ -13,6 +13,7 @@ import {
   UserCheck,
 } from "lucide-react";
 import { Button } from "@/components/ui/button";
+import { ThemeToggle } from "@/components/ThemeToggle";
 import { GCSE_TOPICS, ALEVEL_TOPICS } from "@/lib/game";
 
 export const Route = createFileRoute("/")({
@@ -99,6 +100,114 @@ function SkillMock() {
   );
 }
 
+function LessonMock() {
+  return (
+    <div className="panel overflow-hidden p-0">
+      <div className="border-b border-border px-4 py-2.5">
+        <span className="font-mono text-xs text-muted-foreground">/learn</span>
+      </div>
+      <div className="p-4">
+        <div className="flex items-center justify-between">
+          <p className="font-semibold">Getting started</p>
+          <span className="font-mono text-xs text-muted-foreground">2/20 tasks passed</span>
+        </div>
+        <div className="mt-1.5 h-1 overflow-hidden rounded-full bg-secondary">
+          <div className="h-full w-[10%] rounded-full bg-primary" />
+        </div>
+        <div className="mt-3 space-y-2">
+          {[
+            { n: "1", t: "Using the IDE & print()", d: "1/5 tasks" },
+            { n: "2", t: "Variables — storing a value", d: "1/5 tasks" },
+            { n: "3", t: "Getting input from the user", d: "0/5 tasks" },
+          ].map((l) => (
+            <div key={l.n} className="rounded-lg border border-border p-2.5 text-xs">
+              <span className="font-mono text-muted-foreground">Lesson {l.n}</span>
+              <p className="font-medium">{l.t}</p>
+              <p className="mt-0.5 font-mono text-muted-foreground">{l.d}</p>
+            </div>
+          ))}
+        </div>
+      </div>
+    </div>
+  );
+}
+
+function ProjectMock() {
+  return (
+    <div className="panel overflow-hidden p-0">
+      <div className="border-b border-border px-4 py-2.5">
+        <span className="font-mono text-xs text-muted-foreground">/practice — Projects</span>
+      </div>
+      <div className="p-4">
+        <p className="text-xs font-semibold text-muted-foreground">Iteration</p>
+        <div className="mt-2 space-y-2">
+          {[
+            { t: "Class Average Report", d: "difficulty 2/5 · 40 XP", done: true },
+            { t: "Savings Goal Tracker", d: "difficulty 3/5 · 60 XP", done: false },
+            { t: "Exam Results Summary", d: "difficulty 4/5 · 80 XP", done: false },
+          ].map((p) => (
+            <div
+              key={p.t}
+              className="flex items-center gap-2 rounded-lg border border-border p-2.5 text-xs"
+            >
+              <span className={p.done ? "text-success" : "text-muted-foreground"}>
+                {p.done ? "✓" : "🏗"}
+              </span>
+              <div className="flex-1">
+                <p className="font-medium">{p.t}</p>
+                <p className="font-mono text-muted-foreground">{p.d}</p>
+              </div>
+              <span className="rounded-md bg-primary/90 px-2 py-1 font-mono text-primary-foreground">
+                {p.done ? "Redo" : "Start"}
+              </span>
+            </div>
+          ))}
+        </div>
+      </div>
+    </div>
+  );
+}
+
+function TeacherMock() {
+  return (
+    <div className="panel overflow-hidden p-0">
+      <div className="border-b border-border px-4 py-2.5">
+        <span className="font-mono text-xs text-muted-foreground">/teacher/[class] — Overview</span>
+      </div>
+      <div className="p-4">
+        <p className="text-xs font-semibold text-muted-foreground">Class strength by topic</p>
+        <div className="mt-2 space-y-2.5">
+          {[
+            { t: "Getting started", pct: 19 },
+            { t: "Data types & variables", pct: 19 },
+            { t: "Sequencing", pct: 16 },
+          ].map((row) => (
+            <div key={row.t} className="rounded-lg border border-border p-2.5 text-xs">
+              <div className="flex items-center justify-between">
+                <span className="font-medium">{row.t}</span>
+                <span className="font-mono text-muted-foreground">{row.pct}%</span>
+              </div>
+              <div className="mt-1.5 h-1 overflow-hidden rounded-full bg-secondary">
+                <div className="h-full rounded-full bg-primary" style={{ width: `${row.pct}%` }} />
+              </div>
+            </div>
+          ))}
+        </div>
+        <div className="mt-3 space-y-1 border-t border-border pt-3 text-xs">
+          <div className="flex justify-between text-muted-foreground">
+            <span>John Smith</span>
+            <span className="font-mono">Level 2 · 45% accuracy</span>
+          </div>
+          <div className="flex justify-between text-muted-foreground">
+            <span>Grace Curwood</span>
+            <span className="font-mono">Level 1 · 67% accuracy</span>
+          </div>
+        </div>
+      </div>
+    </div>
+  );
+}
+
 function Landing() {
   return (
     <div className="min-h-screen">
@@ -106,6 +215,7 @@ function Landing() {
         <div className="mx-auto flex max-w-6xl items-center justify-between px-4 py-4">
           <span className="font-mono text-lg font-bold text-primary">&gt;_ H-Code</span>
           <div className="flex items-center gap-2">
+            <ThemeToggle />
             <Button asChild variant="ghost" size="sm" className="hidden sm:inline-flex">
               <Link to="/ide">Try the IDE</Link>
             </Button>
@@ -202,6 +312,24 @@ function Landing() {
             Lessons unlock in order as each is mastered, and short recap questions from earlier
             topics keep resurfacing so nothing gets forgotten.
           </p>
+        </div>
+      </section>
+
+      <section className="mx-auto max-w-6xl px-4 pb-16">
+        <p className="font-mono text-xs tracking-[0.2em] text-muted-foreground uppercase">
+          See it in action
+        </p>
+        <h2 className="mt-2 max-w-xl text-3xl font-semibold text-balance">
+          A real look at the lessons, projects and teacher view.
+        </h2>
+        <p className="mt-3 max-w-2xl text-sm text-muted-foreground">
+          Actual screens from the app, not stock photos — a student's lesson path, the Projects
+          list for a topic, and a teacher's class overview.
+        </p>
+        <div className="mt-6 grid gap-4 lg:grid-cols-3">
+          <LessonMock />
+          <ProjectMock />
+          <TeacherMock />
         </div>
       </section>
 

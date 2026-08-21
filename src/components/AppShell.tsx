@@ -4,6 +4,7 @@ import { Menu, X, UserRound } from "lucide-react";
 import { supabase } from "@/integrations/supabase/client";
 import { useAuth } from "@/hooks/useAuth";
 import { Button } from "@/components/ui/button";
+import { ThemeToggle } from "@/components/ThemeToggle";
 
 function NavLink({ to, children, onClick }: { to: string; children: ReactNode; onClick?: () => void }) {
   return (
@@ -87,6 +88,7 @@ export function AppShell({ children }: { children: ReactNode }) {
           )}
 
           <div className="ml-auto flex items-center gap-2">
+            <ThemeToggle />
             {user ? (
               <>
                 <span className="hidden text-sm text-muted-foreground sm:inline">

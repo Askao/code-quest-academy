@@ -110,6 +110,14 @@ function RootShell({ children }: { children: ReactNode }) {
     <html lang="en">
       <head>
         <HeadContent />
+        {/* Applies a saved light-theme preference before first paint, so
+            there's no flash of the dark default while React hydrates. */}
+        <script
+          dangerouslySetInnerHTML={{
+            __html:
+              "try{if(localStorage.getItem('hcode-theme')==='light')document.documentElement.classList.add('light')}catch(e){}",
+          }}
+        />
       </head>
       <body>
         {children}

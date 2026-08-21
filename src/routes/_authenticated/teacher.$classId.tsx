@@ -16,6 +16,7 @@ import {
   getLesson,
   isLessonComplete,
   lessonsForTopic,
+  tasksForLesson,
   topicsWithLessons,
 } from "@/lib/content";
 
@@ -53,6 +54,7 @@ function ClassDetail() {
   const [expandedStudent, setExpandedStudent] = useState<string | null>(null);
   const [expandedLesson, setExpandedLesson] = useState<string | null>(null);
   const [expandedHomework, setExpandedHomework] = useState<string | null>(null);
+  const [expandedHomeworkStudent, setExpandedHomeworkStudent] = useState<string | null>(null);
 
   const { data } = useQuery({
     queryKey: ["class", classId],
@@ -182,17 +184,28 @@ function ClassDetail() {
           ...(assignments.data ?? []).flatMap((a) => a.challenge_ids ?? []),
         ]),
       );
-      const passedForHomework =
+      const [passedForHomework, homeworkChallengesRes] = await Promise.all([
         ids.length && homeworkChallengeIds.length
-          ? await supabase
+          ? supabase
               .from("attempts")
               .select("user_id, challenge_id")
               .in("user_id", ids)
               .in("challenge_id", homeworkChallengeIds)
               .eq("passed", true)
-          : { data: [] };
+          : Promise.resolve({ data: [] }),
+        // Titles for each homework's specific tasks, so the per-student
+        // breakdown below can name exactly what's done/not done instead of
+        // only a done/total count - homework is personalised per student
+        // (see assignmentByKey), so this can't reuse tasksForLesson().
+        homeworkChallengeIds.length
+          ? supabase.from("challenges").select("id, title").in("id", homeworkChallengeIds)
+          : Promise.resolve({ data: [] }),
+      ]);
       const passedSet = new Set(
         (passedForHomework.data ?? []).map((a) => `${a.user_id}:${a.challenge_id}`),
+      );
+      const homeworkChallengeTitleById = new Map(
+        (homeworkChallengesRes.data ?? []).map((c) => [c.id, c.title]),
       );
 
       // "I'm stuck" flags a student can leave against a specific homework
@@ -216,20 +229,32 @@ function ClassDetail() {
       return {
         cls: cls.data,
         students,
-        lessonAssignments: (lessonAssignmentsRes.data ?? []).map((a) => ({
-          id: a.id,
-          lessonSlug: a.lesson_slug,
-          createdAt: a.created_at,
-          completion: students.map((s) => ({
-            id: s.id,
-            name: s.name,
-            complete: isLessonComplete(
-              a.lesson_slug,
-              passedTaskSlugsByUser.get(s.id) ?? new Set<string>(),
-              quizPassedByUser.get(s.id) ?? new Set<string>(),
-            ),
-          })),
-        })),
+        lessonAssignments: (lessonAssignmentsRes.data ?? []).map((a) => {
+          // Every student sees the same tasks for a given lesson (unlike
+          // homework, which is personalised per student) - so a single task
+          // list drives a shared student x task grid below, rather than a
+          // per-student "N done" tick that hides which task is the gap.
+          const lessonTasks = tasksForLesson(a.lesson_slug);
+          return {
+            id: a.id,
+            lessonSlug: a.lesson_slug,
+            createdAt: a.created_at,
+            tasks: lessonTasks.map((t) => ({ slug: t.slug, title: t.title, stretch: !!t.stretch })),
+            completion: students.map((s) => {
+              const passed = passedTaskSlugsByUser.get(s.id) ?? new Set<string>();
+              return {
+                id: s.id,
+                name: s.name,
+                complete: isLessonComplete(
+                  a.lesson_slug,
+                  passed,
+                  quizPassedByUser.get(s.id) ?? new Set<string>(),
+                ),
+                taskResults: lessonTasks.map((t) => passed.has(t.slug)),
+              };
+            }),
+          };
+        }),
         homework: (homework.data ?? []).map((h) => ({
           ...h,
           completion: students.map((s) => {
@@ -240,6 +265,14 @@ function ClassDetail() {
               name: s.name,
               done: challengeIds.filter((cid) => passedSet.has(`${s.id}:${cid}`)).length,
               total: challengeIds.length,
+              // Homework is personalised per student (see assignmentByKey
+              // above), so unlike lessons this can't be one shared table -
+              // each student's own task list, named and marked individually.
+              tasks: challengeIds.map((cid) => ({
+                id: cid,
+                title: homeworkChallengeTitleById.get(cid) ?? "Task",
+                passed: passedSet.has(`${s.id}:${cid}`),
+              })),
             };
           }),
           helpRequests: (helpRequestsByHomework.get(h.id) ?? []).map((r) => ({
@@ -724,14 +757,45 @@ function ClassDetail() {
                       </Button>
                     </div>
                     {isExpanded && a.completion.length > 0 ? (
-                      <div className="mt-3 grid gap-1.5 border-t border-border pt-3 sm:grid-cols-2 lg:grid-cols-3">
-                        {a.completion.map((c) => (
-                          <div key={c.id} className="flex items-center justify-between gap-2 text-xs">
-                            <span className={c.complete ? "text-success" : ""}>
-                              {c.complete ? "✓" : "○"} {c.name}
-                            </span>
-                          </div>
-                        ))}
+                      <div className="mt-3 overflow-x-auto border-t border-border pt-3">
+                        <table className="text-xs">
+                          <thead>
+                            <tr>
+                              <th className="p-1.5 text-left font-normal text-muted-foreground">
+                                Student
+                              </th>
+                              {a.tasks.map((t, i) => (
+                                <th
+                                  key={t.slug}
+                                  title={t.title}
+                                  className="p-1.5 text-center font-mono font-normal text-muted-foreground"
+                                >
+                                  {t.stretch ? "★" : i + 1}
+                                </th>
+                              ))}
+                            </tr>
+                          </thead>
+                          <tbody>
+                            {a.completion.map((c) => (
+                              <tr key={c.id} className="border-t border-border/60">
+                                <td className="p-1.5 whitespace-nowrap">{c.name}</td>
+                                {c.taskResults.map((passed, i) => (
+                                  <td
+                                    key={a.tasks[i]!.slug}
+                                    className={`p-1.5 text-center ${passed ? "text-success" : "text-muted-foreground"}`}
+                                  >
+                                    {passed ? "✓" : "○"}
+                                  </td>
+                                ))}
+                              </tr>
+                            ))}
+                          </tbody>
+                        </table>
+                        <p className="mt-2 text-xs text-muted-foreground">
+                          {a.tasks
+                            .map((t, i) => `${t.stretch ? "★" : i + 1} = ${t.title}`)
+                            .join(" · ")}
+                        </p>
                       </div>
                     ) : null}
                   </div>
@@ -874,16 +938,39 @@ function ClassDetail() {
                     ) : null}
                     {isExpanded && sorted.length > 0 ? (
                       <div className="mt-3 grid gap-1.5 border-t border-border pt-3 sm:grid-cols-2 lg:grid-cols-3">
-                        {sorted.map((c) => (
-                          <div key={c.id} className="flex items-center justify-between gap-2 text-xs">
-                            <span className={c.done === c.total && c.total > 0 ? "text-success" : ""}>
-                              {c.done === c.total && c.total > 0 ? "✓" : "○"} {c.name}
-                            </span>
-                            <span className="font-mono text-muted-foreground">
-                              {c.done}/{c.total}
-                            </span>
-                          </div>
-                        ))}
+                        {sorted.map((c) => {
+                          const studentKey = `${h.id}:${c.id}`;
+                          const studentExpanded = expandedHomeworkStudent === studentKey;
+                          return (
+                            <div key={c.id} className="text-xs">
+                              <button
+                                className="flex w-full items-center justify-between gap-2 text-left"
+                                onClick={() =>
+                                  setExpandedHomeworkStudent(studentExpanded ? null : studentKey)
+                                }
+                              >
+                                <span className={c.done === c.total && c.total > 0 ? "text-success" : ""}>
+                                  {c.done === c.total && c.total > 0 ? "✓" : "○"} {c.name}
+                                </span>
+                                <span className="font-mono text-muted-foreground">
+                                  {c.done}/{c.total} {studentExpanded ? "▲" : "▼"}
+                                </span>
+                              </button>
+                              {studentExpanded ? (
+                                <ul className="mt-1.5 space-y-1 border-l border-border pl-2.5">
+                                  {c.tasks.map((t) => (
+                                    <li
+                                      key={t.id}
+                                      className={t.passed ? "text-success" : "text-muted-foreground"}
+                                    >
+                                      {t.passed ? "✓" : "○"} {t.title}
+                                    </li>
+                                  ))}
+                                </ul>
+                              ) : null}
+                            </div>
+                          );
+                        })}
                       </div>
                     ) : null}
                   </div>
