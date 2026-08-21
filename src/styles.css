@@ -60,6 +60,13 @@
   --shadow-glow: 0 0 0 1px var(--border), 0 24px 60px -28px oklch(0 0 0 / 0.7);
   --animate-float: float 7s ease-in-out infinite;
   --animate-wiggle: wiggle 1.6s ease-in-out infinite;
+  --animate-blink: blink 1s steps(1) infinite;
+}
+
+@keyframes blink {
+  50% {
+    opacity: 0;
+  }
 }
 
 @keyframes float {

@@ -2,6 +2,7 @@ import { createFileRoute, Link } from "@tanstack/react-router";
 import type { ComponentType } from "react";
 import {
   BookOpenCheck,
+  Check,
   Code2,
   Compass,
   FlaskConical,
@@ -11,6 +12,7 @@ import {
   Heart,
   Link as LinkIcon,
   ListChecks,
+  Lock,
   Server,
   ShieldCheck,
   Sparkles,
@@ -45,11 +47,11 @@ export const Route = createFileRoute("/")({
 
 type Tint = "primary" | "accent" | "success" | "warning";
 
-const tintClasses: Record<Tint, { bg: string; text: string; ring: string }> = {
-  primary: { bg: "bg-primary/15", text: "text-primary", ring: "ring-primary/25" },
-  accent: { bg: "bg-accent/15", text: "text-accent", ring: "ring-accent/25" },
-  success: { bg: "bg-success/15", text: "text-success", ring: "ring-success/25" },
-  warning: { bg: "bg-warning/15", text: "text-warning", ring: "ring-warning/25" },
+const tintClasses: Record<Tint, { bg: string; text: string; ring: string; dot: string }> = {
+  primary: { bg: "bg-primary/15", text: "text-primary", ring: "ring-primary/25", dot: "bg-primary" },
+  accent: { bg: "bg-accent/15", text: "text-accent", ring: "ring-accent/25", dot: "bg-accent" },
+  success: { bg: "bg-success/15", text: "text-success", ring: "ring-success/25", dot: "bg-success" },
+  warning: { bg: "bg-warning/15", text: "text-warning", ring: "ring-warning/25", dot: "bg-warning" },
 };
 
 function IconBadge({
@@ -123,30 +125,55 @@ function StatCard({ n, label, tint }: { n: string; label: string; tint: Tint }) 
 
 function CodeMock() {
   return (
-    <div className="overflow-hidden rounded-xl border border-border bg-secondary/30 shadow-lg shadow-black/20">
-      <div className="flex items-center gap-1.5 border-b border-border px-4 py-2.5">
-        <span className="h-2.5 w-2.5 rounded-full bg-destructive/60" />
-        <span className="h-2.5 w-2.5 rounded-full bg-warning/60" />
-        <span className="h-2.5 w-2.5 rounded-full bg-success/60" />
-        <span className="ml-2 font-mono text-xs text-muted-foreground">practice.py</span>
+    <div className="overflow-hidden rounded-xl border border-border bg-secondary/30 shadow-xl shadow-black/30">
+      <div className="flex items-center border-b border-border bg-background/40">
+        <span className="flex items-center gap-2 border-r border-border bg-secondary/40 px-4 py-2.5 font-mono text-xs text-foreground">
+          practice.py
+        </span>
+        <span className="px-4 py-2.5 font-mono text-xs text-muted-foreground">tests</span>
       </div>
       <pre className="overflow-x-auto p-4 text-left font-mono text-xs leading-relaxed sm:text-sm">
         <code>
+          <span className="mr-3 inline-block w-3 select-none text-muted-foreground/40">1</span>
           <span className="text-muted-foreground"># A till system rounds up the paint needed</span>
           {"\n"}
+          <span className="mr-3 inline-block w-3 select-none text-muted-foreground/40">2</span>
           <span className="text-accent">name</span> = <span className="text-primary">input</span>
           ()
           {"\n"}
+          <span className="mr-3 inline-block w-3 select-none text-muted-foreground/40">3</span>
           <span className="text-accent">area</span> = <span className="text-accent">width</span> *{" "}
           <span className="text-accent">height</span>
           {"\n"}
+          <span className="mr-3 inline-block w-3 select-none text-muted-foreground/40">4</span>
           <span className="text-primary">print</span>(f
           <span className="text-success">"Litres needed: {"{litres}"}"</span>)
+          <span className="ml-0.5 inline-block h-3.5 w-1.5 -translate-y-0.5 bg-primary align-middle motion-safe:animate-blink" />
         </code>
       </pre>
       <div className="border-t border-border bg-success/10 px-4 py-2.5 font-mono text-xs font-medium text-success">
         ✓ 3/3 tests passed · +25 XP
       </div>
+    </div>
+  );
+}
+
+function FloatTag({
+  children,
+  tint,
+  className = "",
+}: {
+  children: React.ReactNode;
+  tint: Tint;
+  className?: string;
+}) {
+  const c = tintClasses[tint];
+  return (
+    <div
+      className={`panel absolute hidden items-center gap-2 rounded-full px-3.5 py-2 font-mono text-xs shadow-glow sm:flex ${className}`}
+    >
+      <span className={`h-1.5 w-1.5 rounded-full ${c.dot}`} />
+      {children}
     </div>
   );
 }
@@ -165,39 +192,59 @@ function XpFloatCard() {
   );
 }
 
-function SkillMock() {
+type MapNodeState = "done" | "current" | "locked";
+
+const SKILL_MAP_NODES: { label: string; sub: string; state: MapNodeState }[] = [
+  { label: "Sequencing", sub: "mastered", state: "done" },
+  { label: "Selection", sub: "mastered", state: "done" },
+  { label: "Iteration", sub: "58% skill", state: "current" },
+  { label: "Lists", sub: "locked", state: "locked" },
+  { label: "Strings", sub: "locked", state: "locked" },
+  { label: "Functions", sub: "locked", state: "locked" },
+];
+
+/** The adaptive engine's lesson-unlock path, drawn as a literal map rather
+ * than described in prose — this is H-Code's actual "not a black box"
+ * mechanic, shown mid-way through a class working on Iteration. */
+function SkillMap() {
   return (
-    <div className="panel p-5 shadow-glow">
-      <p className="font-mono text-xs text-muted-foreground uppercase">
-        Iteration · class skill level
-      </p>
-      <div className="mt-3 h-2 overflow-hidden rounded-full bg-secondary">
-        <div className="h-full w-[58%] rounded-full bg-accent" />
-      </div>
-      <p className="mt-1.5 font-mono text-xs text-accent">58% — up from 42% this week</p>
-      <div className="mt-4 space-y-2.5 text-sm">
-        <div className="flex items-start gap-2">
-          <span className="mt-0.5 text-success">✓</span>
-          <span className="text-muted-foreground">
-            Get it right first try —{" "}
-            <span className="text-foreground">skill level jumps up faster</span>
-          </span>
+    <div className="flex items-center gap-0 overflow-x-auto pb-2">
+      {SKILL_MAP_NODES.map((node, i) => (
+        <div key={node.label} className="flex items-center">
+          <div className="flex w-[92px] shrink-0 flex-col items-center gap-2 text-center sm:w-[110px]">
+            <span
+              className={
+                node.state === "done"
+                  ? "flex h-11 w-11 items-center justify-center rounded-full bg-success/20 text-success ring-2 ring-success/40"
+                  : node.state === "current"
+                    ? "flex h-11 w-11 items-center justify-center rounded-full bg-primary font-mono text-sm font-semibold text-primary-foreground shadow-glow ring-4 ring-primary/25"
+                    : "flex h-11 w-11 items-center justify-center rounded-full border border-border bg-secondary/40 text-muted-foreground"
+              }
+            >
+              {node.state === "done" ? (
+                <Check className="h-5 w-5" strokeWidth={2.5} />
+              ) : node.state === "current" ? (
+                "3"
+              ) : (
+                <Lock className="h-4 w-4" strokeWidth={2} />
+              )}
+            </span>
+            <div>
+              <p
+                className={`text-xs font-medium ${node.state === "locked" ? "text-muted-foreground" : "text-foreground"}`}
+              >
+                {node.label}
+              </p>
+              <p className="font-mono text-[10px] text-muted-foreground">{node.sub}</p>
+            </div>
+          </div>
+          {i < SKILL_MAP_NODES.length - 1 ? (
+            <span
+              className={`-mt-6 h-0.5 w-6 shrink-0 sm:w-10 ${node.state === "done" ? "bg-success/50" : "bg-border"}`}
+            />
+          ) : null}
         </div>
-        <div className="flex items-start gap-2">
-          <span className="mt-0.5 text-warning">•</span>
-          <span className="text-muted-foreground">
-            Get one wrong — <span className="text-foreground">only a small dip</span>, progress
-            isn't lost
-          </span>
-        </div>
-        <div className="flex items-start gap-2">
-          <span className="mt-0.5 text-destructive">✗</span>
-          <span className="text-muted-foreground">
-            Get three wrong in a row —{" "}
-            <span className="text-foreground">only then does it drop a level</span>
-          </span>
-        </div>
-      </div>
+      ))}
     </div>
   );
 }
@@ -356,29 +403,51 @@ function Landing() {
           aria-hidden
           className="pointer-events-none absolute inset-x-0 top-0 -z-10 h-[36rem] overflow-hidden"
         >
-          <div className="absolute -top-24 left-[8%] h-72 w-72 rounded-full bg-primary/20 blur-3xl motion-safe:animate-float" />
+          <span className="font-display absolute -top-16 -left-10 text-[16rem] leading-none font-semibold text-foreground/[0.03] select-none">
+            &gt;_
+          </span>
+          <div className="absolute -top-24 left-[8%] h-72 w-72 rounded-full bg-primary/25 blur-3xl motion-safe:animate-float" />
           <div
-            className="absolute top-10 right-[10%] h-80 w-80 rounded-full bg-accent/15 blur-3xl motion-safe:animate-float"
+            className="absolute top-10 right-[10%] h-80 w-80 rounded-full bg-accent/20 blur-3xl motion-safe:animate-float"
             style={{ animationDelay: "-2.5s" }}
           />
           <div
-            className="absolute top-56 left-[40%] h-56 w-56 rounded-full bg-success/10 blur-3xl motion-safe:animate-float"
+            className="absolute top-56 left-[40%] h-56 w-56 rounded-full bg-success/15 blur-3xl motion-safe:animate-float"
             style={{ animationDelay: "-5s" }}
           />
         </div>
 
         <div className="mx-auto grid max-w-6xl items-center gap-10 px-4 pt-14 pb-16 lg:grid-cols-[1.1fr_1fr] lg:pt-20">
-          <div>
+          <div className="relative">
             <Eyebrow tint="primary">
               <Sparkles className="h-3.5 w-3.5 motion-safe:animate-pulse" strokeWidth={2} />
               100% free · self-hosted by your department
             </Eyebrow>
             <h1 className="mt-5 max-w-xl text-4xl font-bold text-balance sm:text-5xl">
-              Python practice built for the classroom, not a generic tutorial site.
+              Python practice that{" "}
+              <span className="relative inline-block text-primary">
+                shows its work
+                <svg
+                  aria-hidden
+                  viewBox="0 0 200 12"
+                  preserveAspectRatio="none"
+                  className="absolute -right-1 -bottom-1 left-0 h-2.5 w-[calc(100%+0.5rem)]"
+                >
+                  <path
+                    d="M2 8 Q 100 2 198 8"
+                    stroke="currentColor"
+                    strokeWidth="3"
+                    fill="none"
+                    strokeLinecap="round"
+                  />
+                </svg>
+              </span>
+              .
             </h1>
             <p className="mt-5 max-w-xl text-lg text-muted-foreground">
-              Structured lesson paths, a real adaptive difficulty engine, and a free in-browser IDE
-              — with classes, homework and progress tracking your department actually owns.
+              Every skill level, every lesson unlock, every "why this task next" is visible — to
+              students and to you. Structured lesson paths, a real adaptive engine and a free
+              in-browser IDE, with classes and progress tracking your department actually owns.
             </p>
             <div className="mt-8 flex flex-wrap gap-3">
               <Button asChild size="lg">
@@ -397,6 +466,9 @@ function Landing() {
           </div>
           <div className="relative">
             <CodeMock />
+            <FloatTag tint="success" className="-top-4 -right-3 sm:-right-6">
+              matched to your skill level
+            </FloatTag>
             <div className="absolute -right-2 -bottom-8 sm:-right-8">
               <XpFloatCard />
             </div>
@@ -566,42 +638,44 @@ function Landing() {
           />
         </div>
 
-        <div className="mt-6 grid items-center gap-8 rounded-2xl border border-accent/25 bg-accent/5 p-6 lg:grid-cols-[1fr_0.9fr] lg:p-8">
-          <div>
-            <Eyebrow tint="accent">Not a black box</Eyebrow>
-            <h3 className="mt-3 text-2xl font-semibold text-balance">
-              An adaptive engine tuned to not overreact.
-            </h3>
-            <p className="mt-3 text-sm text-muted-foreground">
-              Most "adaptive" tools just count right vs. wrong. H-Code tracks a live skill level
-              per student, per topic, built around one known failure mode: overreacting to a
-              single bad answer.
-            </p>
-            <div className="mt-4 space-y-2.5 text-sm">
-              <div className="flex items-start gap-2">
-                <span className="mt-0.5 text-success">✓</span>
-                <span className="text-muted-foreground">
-                  A fast, clean pass earns <span className="text-foreground">more</span>, pushing
-                  confident students harder
-                </span>
-              </div>
-              <div className="flex items-start gap-2">
-                <span className="mt-0.5 text-warning">•</span>
-                <span className="text-muted-foreground">
-                  One mistake barely moves the needle — <span className="text-foreground">no</span>{" "}
-                  reset to square one
-                </span>
-              </div>
-              <div className="flex items-start gap-2">
-                <span className="mt-0.5 text-foreground">→</span>
-                <span className="text-muted-foreground">
-                  Every signal rolls up class-wide:{" "}
-                  <span className="text-foreground">"this class needs Iteration re-taught"</span>
-                </span>
-              </div>
+        <div className="mt-6 rounded-2xl border border-accent/25 bg-accent/5 p-6 lg:p-8">
+          <Eyebrow tint="accent">Not a black box</Eyebrow>
+          <h3 className="mt-3 max-w-xl text-2xl font-semibold text-balance">
+            Watch the skill map build itself.
+          </h3>
+          <p className="mt-3 max-w-xl text-sm text-muted-foreground">
+            Most "adaptive" tools just count right vs. wrong. H-Code tracks a live skill level per
+            student, per topic — lessons unlock in the order a class actually needs them. This is
+            what that path looks like mid-way through Iteration.
+          </p>
+
+          <div className="mt-6">
+            <SkillMap />
+          </div>
+
+          <div className="mt-6 grid gap-2.5 border-t border-accent/15 pt-6 text-sm sm:grid-cols-3">
+            <div className="flex items-start gap-2">
+              <span className="mt-0.5 text-success">✓</span>
+              <span className="text-muted-foreground">
+                A fast, clean pass earns <span className="text-foreground">more</span>, pushing
+                confident students harder
+              </span>
+            </div>
+            <div className="flex items-start gap-2">
+              <span className="mt-0.5 text-warning">•</span>
+              <span className="text-muted-foreground">
+                One mistake barely moves the needle — <span className="text-foreground">no</span>{" "}
+                reset to square one
+              </span>
+            </div>
+            <div className="flex items-start gap-2">
+              <span className="mt-0.5 text-foreground">→</span>
+              <span className="text-muted-foreground">
+                Every signal rolls up class-wide:{" "}
+                <span className="text-foreground">"this class needs Iteration re-taught"</span>
+              </span>
             </div>
           </div>
-          <SkillMock />
         </div>
 
         <Button asChild className="mt-6" size="lg" variant="secondary">
@@ -691,6 +765,41 @@ function Landing() {
             desc="Top 10 by XP, plus who's improved most recently."
             idle="wiggle"
           />
+        </div>
+      </section>
+
+      {/* Why H-Code */}
+      <section className="mx-auto max-w-6xl px-4 pb-16">
+        <Eyebrow tint="success">Why H-Code</Eyebrow>
+        <h2 className="mt-3 max-w-xl text-3xl font-semibold text-balance">
+          What you don't get from a generic platform.
+        </h2>
+        <div className="mt-6 grid gap-4 sm:grid-cols-2 lg:grid-cols-4">
+          <div className="panel p-5">
+            <p className="font-display text-3xl font-semibold text-primary">£0</p>
+            <p className="mt-1.5 text-sm text-muted-foreground">
+              Free to set up, self-hosted on your own server — no per-seat pricing.
+            </p>
+          </div>
+          <div className="panel p-5">
+            <p className="font-display text-3xl font-semibold text-accent">OCR</p>
+            <p className="mt-1.5 text-sm text-muted-foreground">
+              Built to the exact GCSE spec your students sit, not a generic "learn to code"
+              curriculum.
+            </p>
+          </div>
+          <div className="panel p-5">
+            <p className="font-display text-3xl font-semibold text-success">You</p>
+            <p className="mt-1.5 text-sm text-muted-foreground">
+              Your department owns the data and the pacing — lessons unlock when you say so.
+            </p>
+          </div>
+          <div className="panel p-5">
+            <p className="font-display text-3xl font-semibold text-warning">Open</p>
+            <p className="mt-1.5 text-sm text-muted-foreground">
+              The adaptive engine's logic is shown on the page, not hidden behind "AI-powered."
+            </p>
+          </div>
         </div>
       </section>
 
