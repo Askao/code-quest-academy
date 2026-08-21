@@ -208,17 +208,21 @@ const SKILL_MAP_NODES: { label: string; sub: string; state: MapNodeState }[] = [
  * mechanic, shown mid-way through a class working on Iteration. */
 function SkillMap() {
   return (
-    <div className="flex items-center gap-0 overflow-x-auto pb-2">
+    // Below sm: a vertical timeline (icon beside label, connector running
+    // down) - a horizontal row doesn't fit a phone width without forcing a
+    // sideways scroll, which buried half the map off-screen. At sm+: the
+    // horizontal row, connectors between nodes.
+    <div className="flex flex-col gap-0 sm:flex-row sm:items-center sm:gap-0 sm:overflow-x-auto sm:pb-2">
       {SKILL_MAP_NODES.map((node, i) => (
-        <div key={node.label} className="flex items-center">
-          <div className="flex w-[92px] shrink-0 flex-col items-center gap-2 text-center sm:w-[110px]">
+        <div key={node.label} className="flex flex-col sm:flex-row sm:items-center">
+          <div className="flex items-center gap-3 sm:w-[110px] sm:shrink-0 sm:flex-col sm:gap-2 sm:text-center">
             <span
               className={
                 node.state === "done"
-                  ? "flex h-11 w-11 items-center justify-center rounded-full bg-success/20 text-success ring-2 ring-success/40"
+                  ? "flex h-11 w-11 shrink-0 items-center justify-center rounded-full bg-success/20 text-success ring-2 ring-success/40"
                   : node.state === "current"
-                    ? "flex h-11 w-11 items-center justify-center rounded-full bg-primary font-mono text-sm font-semibold text-primary-foreground shadow-glow ring-4 ring-primary/25"
-                    : "flex h-11 w-11 items-center justify-center rounded-full border border-border bg-secondary/40 text-muted-foreground"
+                    ? "flex h-11 w-11 shrink-0 items-center justify-center rounded-full bg-primary font-mono text-sm font-semibold text-primary-foreground shadow-glow ring-4 ring-primary/25"
+                    : "flex h-11 w-11 shrink-0 items-center justify-center rounded-full border border-border bg-secondary/40 text-muted-foreground"
               }
             >
               {node.state === "done" ? (
@@ -240,7 +244,7 @@ function SkillMap() {
           </div>
           {i < SKILL_MAP_NODES.length - 1 ? (
             <span
-              className={`-mt-6 h-0.5 w-6 shrink-0 sm:w-10 ${node.state === "done" ? "bg-success/50" : "bg-border"}`}
+              className={`ml-[22px] h-6 w-0.5 shrink-0 sm:ml-0 sm:-mt-6 sm:h-0.5 sm:w-10 ${node.state === "done" ? "bg-success/50" : "bg-border"}`}
             />
           ) : null}
         </div>
@@ -403,7 +407,7 @@ function Landing() {
           aria-hidden
           className="pointer-events-none absolute inset-x-0 top-0 -z-10 h-[36rem] overflow-hidden"
         >
-          <span className="font-display absolute -top-16 -left-10 text-[16rem] leading-none font-semibold text-foreground/[0.03] select-none">
+          <span className="font-display absolute -top-8 -left-6 text-[7rem] leading-none font-semibold text-foreground/[0.03] select-none sm:-top-16 sm:-left-10 sm:text-[16rem]">
             &gt;_
           </span>
           <div className="absolute -top-24 left-[8%] h-72 w-72 rounded-full bg-primary/25 blur-3xl motion-safe:animate-float" />
@@ -774,7 +778,7 @@ function Landing() {
         <h2 className="mt-3 max-w-xl text-3xl font-semibold text-balance">
           What you don't get from a generic platform.
         </h2>
-        <div className="mt-6 grid gap-4 sm:grid-cols-2 lg:grid-cols-4">
+        <div className="mt-6 grid grid-cols-2 gap-4 lg:grid-cols-4">
           <div className="panel p-5">
             <p className="font-display text-3xl font-semibold text-primary">£0</p>
             <p className="mt-1.5 text-sm text-muted-foreground">
