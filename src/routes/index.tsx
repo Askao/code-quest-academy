@@ -1,4 +1,5 @@
 import { createFileRoute, Link } from "@tanstack/react-router";
+import type { ComponentType } from "react";
 import {
   BookOpenCheck,
   Code2,
@@ -10,6 +11,9 @@ import {
   Heart,
   Link as LinkIcon,
   ListChecks,
+  Server,
+  ShieldCheck,
+  Sparkles,
   Swords,
   Trophy,
   UserCheck,
@@ -39,6 +43,84 @@ export const Route = createFileRoute("/")({
   component: Landing,
 });
 
+type Tint = "primary" | "accent" | "success" | "warning";
+
+const tintClasses: Record<Tint, { bg: string; text: string; ring: string }> = {
+  primary: { bg: "bg-primary/15", text: "text-primary", ring: "ring-primary/25" },
+  accent: { bg: "bg-accent/15", text: "text-accent", ring: "ring-accent/25" },
+  success: { bg: "bg-success/15", text: "text-success", ring: "ring-success/25" },
+  warning: { bg: "bg-warning/15", text: "text-warning", ring: "ring-warning/25" },
+};
+
+function IconBadge({
+  icon: Icon,
+  tint,
+  idle,
+}: {
+  icon: ComponentType<{ className?: string; strokeWidth?: number }>;
+  tint: Tint;
+  /** A continuous idle animation for icons where a hover-only cue isn't enough (e.g. a trophy). */
+  idle?: "wiggle" | "pulse" | undefined;
+}) {
+  const c = tintClasses[tint];
+  const idleClass =
+    idle === "wiggle"
+      ? "motion-safe:animate-wiggle"
+      : idle === "pulse"
+        ? "motion-safe:animate-pulse"
+        : "";
+  return (
+    <span
+      className={`inline-flex h-10 w-10 items-center justify-center rounded-xl ${c.bg} ring-1 ${c.ring} transition-transform duration-300 group-hover:scale-110 group-hover:-rotate-6`}
+    >
+      <Icon className={`h-5 w-5 ${c.text} ${idleClass}`} strokeWidth={1.9} />
+    </span>
+  );
+}
+
+function Eyebrow({ children, tint = "primary" }: { children: React.ReactNode; tint?: Tint }) {
+  const c = tintClasses[tint];
+  return (
+    <span
+      className={`inline-flex items-center gap-1.5 rounded-full ${c.bg} px-3 py-1 font-mono text-xs font-medium tracking-wide ${c.text}`}
+    >
+      {children}
+    </span>
+  );
+}
+
+function FeatureCard({
+  icon,
+  tint,
+  title,
+  desc,
+  idle,
+}: {
+  icon: ComponentType<{ className?: string; strokeWidth?: number }>;
+  tint: Tint;
+  title: string;
+  desc: string;
+  idle?: "wiggle" | "pulse" | undefined;
+}) {
+  return (
+    <div className="panel group p-5 transition-transform hover:-translate-y-0.5">
+      <IconBadge icon={icon} tint={tint} idle={idle} />
+      <h3 className="mt-3.5 font-semibold">{title}</h3>
+      <p className="mt-1 text-sm text-muted-foreground">{desc}</p>
+    </div>
+  );
+}
+
+function StatCard({ n, label, tint }: { n: string; label: string; tint: Tint }) {
+  const c = tintClasses[tint];
+  return (
+    <div className="panel p-5 text-center">
+      <p className={`font-display text-3xl font-semibold sm:text-4xl ${c.text}`}>{n}</p>
+      <p className="mt-1 text-xs text-muted-foreground sm:text-sm">{label}</p>
+    </div>
+  );
+}
+
 function CodeMock() {
   return (
     <div className="overflow-hidden rounded-xl border border-border bg-secondary/30 shadow-lg shadow-black/20">
@@ -62,9 +144,23 @@ function CodeMock() {
           <span className="text-success">"Litres needed: {"{litres}"}"</span>)
         </code>
       </pre>
-      <div className="border-t border-border bg-background/60 px-4 py-2.5 font-mono text-xs text-success">
+      <div className="border-t border-border bg-success/10 px-4 py-2.5 font-mono text-xs font-medium text-success">
         ✓ 3/3 tests passed · +25 XP
       </div>
+    </div>
+  );
+}
+
+function XpFloatCard() {
+  return (
+    <div className="panel hidden w-44 -translate-y-6 translate-x-6 rotate-2 p-3.5 shadow-glow sm:block">
+      <p className="font-mono text-[10px] tracking-wide text-muted-foreground uppercase">
+        Iteration · skill
+      </p>
+      <div className="mt-2 h-1.5 overflow-hidden rounded-full bg-secondary">
+        <div className="h-full w-[58%] rounded-full bg-accent" />
+      </div>
+      <p className="mt-1.5 text-xs font-medium text-accent">58% — up from 42%</p>
     </div>
   );
 }
@@ -72,30 +168,32 @@ function CodeMock() {
 function SkillMock() {
   return (
     <div className="panel p-5 shadow-glow">
-      <p className="font-mono text-xs text-muted-foreground">ITERATION · CLASS SKILL LEVEL</p>
+      <p className="font-mono text-xs text-muted-foreground uppercase">
+        Iteration · class skill level
+      </p>
       <div className="mt-3 h-2 overflow-hidden rounded-full bg-secondary">
-        <div className="h-full w-[58%] rounded-full bg-primary" />
+        <div className="h-full w-[58%] rounded-full bg-accent" />
       </div>
-      <p className="mt-1.5 font-mono text-xs text-muted-foreground">58% — up from 42% this week</p>
+      <p className="mt-1.5 font-mono text-xs text-accent">58% — up from 42% this week</p>
       <div className="mt-4 space-y-2.5 text-sm">
         <div className="flex items-start gap-2">
-          <span className="text-success">✓</span>
+          <span className="mt-0.5 text-success">✓</span>
           <span className="text-muted-foreground">
             Fast, first-try pass — <span className="text-foreground">bigger bump</span>, not a flat
             +1
           </span>
         </div>
         <div className="flex items-start gap-2">
-          <span className="text-warning">•</span>
+          <span className="mt-0.5 text-warning">•</span>
           <span className="text-muted-foreground">
             One wrong answer — <span className="text-foreground">gentle −12%</span>, never a reset
           </span>
         </div>
         <div className="flex items-start gap-2">
-          <span className="text-destructive">✗</span>
+          <span className="mt-0.5 text-destructive">✗</span>
           <span className="text-muted-foreground">
-            Three wrong in a row — <span className="text-foreground">that's</span> when it actually
-            steps down a level
+            Three wrong in a row — <span className="text-foreground">that's</span> when it steps
+            down a level
           </span>
         </div>
       </div>
@@ -106,13 +204,14 @@ function SkillMock() {
 function LessonMock() {
   return (
     <div className="panel overflow-hidden p-0">
-      <div className="border-b border-border px-4 py-2.5">
-        <span className="font-mono text-xs text-muted-foreground">/learn</span>
+      <div className="flex items-center justify-between border-b border-border bg-primary/10 px-4 py-2.5">
+        <span className="font-mono text-xs text-primary">/learn</span>
+        <BookOpenCheck className="h-3.5 w-3.5 text-primary" strokeWidth={2} />
       </div>
       <div className="p-4">
         <div className="flex items-center justify-between">
           <p className="font-semibold">Getting started</p>
-          <span className="font-mono text-xs text-muted-foreground">2/20 tasks passed</span>
+          <span className="font-mono text-xs text-muted-foreground">2/20 tasks</span>
         </div>
         <div className="mt-1.5 h-1 overflow-hidden rounded-full bg-secondary">
           <div className="h-full w-[10%] rounded-full bg-primary" />
@@ -138,8 +237,9 @@ function LessonMock() {
 function ProjectMock() {
   return (
     <div className="panel overflow-hidden p-0">
-      <div className="border-b border-border px-4 py-2.5">
-        <span className="font-mono text-xs text-muted-foreground">/practice — Projects</span>
+      <div className="flex items-center justify-between border-b border-border bg-success/10 px-4 py-2.5">
+        <span className="font-mono text-xs text-success">/practice — Projects</span>
+        <Hammer className="h-3.5 w-3.5 text-success" strokeWidth={2} />
       </div>
       <div className="p-4">
         <p className="text-xs font-semibold text-muted-foreground">Iteration</p>
@@ -160,7 +260,7 @@ function ProjectMock() {
                 <p className="font-medium">{p.t}</p>
                 <p className="font-mono text-muted-foreground">{p.d}</p>
               </div>
-              <span className="rounded-md bg-primary/90 px-2 py-1 font-mono text-primary-foreground">
+              <span className="rounded-md bg-success/90 px-2 py-1 font-mono text-success-foreground">
                 {p.done ? "Redo" : "Start"}
               </span>
             </div>
@@ -174,8 +274,9 @@ function ProjectMock() {
 function TeacherMock() {
   return (
     <div className="panel overflow-hidden p-0">
-      <div className="border-b border-border px-4 py-2.5">
-        <span className="font-mono text-xs text-muted-foreground">/teacher/[class] — Overview</span>
+      <div className="flex items-center justify-between border-b border-border bg-accent/10 px-4 py-2.5">
+        <span className="font-mono text-xs text-accent">/teacher/[class] — Overview</span>
+        <Gauge className="h-3.5 w-3.5 text-accent" strokeWidth={2} />
       </div>
       <div className="p-4">
         <p className="text-xs font-semibold text-muted-foreground">Class strength by topic</p>
@@ -191,7 +292,7 @@ function TeacherMock() {
                 <span className="font-mono text-muted-foreground">{row.pct}%</span>
               </div>
               <div className="mt-1.5 h-1 overflow-hidden rounded-full bg-secondary">
-                <div className="h-full rounded-full bg-primary" style={{ width: `${row.pct}%` }} />
+                <div className="h-full rounded-full bg-accent" style={{ width: `${row.pct}%` }} />
               </div>
             </div>
           ))}
@@ -214,10 +315,15 @@ function TeacherMock() {
 function Landing() {
   const { user, loading } = useAuth();
   return (
-    <div className="min-h-screen">
+    <div className="min-h-screen overflow-x-clip">
       <header className="sticky top-0 z-40 border-b border-border bg-background/80 backdrop-blur">
         <div className="mx-auto flex max-w-6xl items-center justify-between px-4 py-4">
-          <span className="font-mono text-lg font-bold text-primary">&gt;_ H-Code</span>
+          <span className="flex items-center gap-2 font-mono text-lg font-bold text-primary">
+            <span className="flex h-7 w-7 items-center justify-center rounded-lg bg-primary/15">
+              &gt;_
+            </span>
+            H-Code
+          </span>
           <div className="flex items-center gap-2">
             <ThemeToggle />
             <Button asChild variant="ghost" size="sm" className="hidden sm:inline-flex">
@@ -243,111 +349,149 @@ function Landing() {
         </div>
       </header>
 
-      <section className="mx-auto grid max-w-6xl items-center gap-10 px-4 pt-14 pb-16 lg:grid-cols-[1.1fr_1fr] lg:pt-20">
-        <div>
-          <p className="font-mono text-sm text-primary">python practice, built for the classroom</p>
-          <h1 className="mt-4 max-w-xl text-4xl font-bold text-balance sm:text-5xl">
-            Structured lessons, adaptive practice, and a free Python IDE.
-          </h1>
-          <p className="mt-5 max-w-xl text-lg text-muted-foreground">
-            Every GCSE and A level topic runs as a lesson path — teaching notes, a worked example,
-            laddered practice tasks and a quick check — with challenges chosen automatically at each
-            student's own level.
-          </p>
-          <div className="mt-8 flex flex-wrap gap-3">
-            <Button asChild size="lg">
-              <Link to="/auth" search={{ mode: "signup" }}>
-                Create a free account
-              </Link>
-            </Button>
-            <Button asChild size="lg" variant="secondary">
-              <Link to="/ide">Try the IDE — no account needed</Link>
-            </Button>
-          </div>
-          <p className="mt-4 font-mono text-xs text-muted-foreground">
-            Runs entirely in the browser — nothing executes on the server.
-          </p>
+      {/* Hero */}
+      <section className="relative">
+        <div
+          aria-hidden
+          className="pointer-events-none absolute inset-x-0 top-0 -z-10 h-[36rem] overflow-hidden"
+        >
+          <div className="absolute -top-24 left-[8%] h-72 w-72 rounded-full bg-primary/20 blur-3xl motion-safe:animate-float" />
+          <div
+            className="absolute top-10 right-[10%] h-80 w-80 rounded-full bg-accent/15 blur-3xl motion-safe:animate-float"
+            style={{ animationDelay: "-2.5s" }}
+          />
+          <div
+            className="absolute top-56 left-[40%] h-56 w-56 rounded-full bg-success/10 blur-3xl motion-safe:animate-float"
+            style={{ animationDelay: "-5s" }}
+          />
         </div>
-        <CodeMock />
-      </section>
 
-      <section className="mx-auto max-w-6xl px-4 pb-16">
-        <div className="grid gap-4 sm:grid-cols-4">
-          {[
-            {
-              icon: BookOpenCheck,
-              t: "Lesson paths",
-              d: "Notes, a worked example, then practice.",
-            },
-            { icon: Gauge, t: "Adapts to you", d: "Wording and difficulty match your level." },
-            { icon: Code2, t: "Free IDE", d: "Write and run any Python, no challenge needed." },
-            { icon: UserCheck, t: "Teacher-paced classes", d: "Or fully self-paced — your call." },
-          ].map((c) => (
-            <div key={c.t} className="panel p-5">
-              <c.icon className="h-5 w-5 text-primary" strokeWidth={1.75} />
-              <h3 className="mt-3 font-semibold">{c.t}</h3>
-              <p className="mt-1 text-sm text-muted-foreground">{c.d}</p>
+        <div className="mx-auto grid max-w-6xl items-center gap-10 px-4 pt-14 pb-16 lg:grid-cols-[1.1fr_1fr] lg:pt-20">
+          <div>
+            <Eyebrow tint="primary">
+              <Sparkles className="h-3.5 w-3.5 motion-safe:animate-pulse" strokeWidth={2} />
+              100% free · self-hosted by your department
+            </Eyebrow>
+            <h1 className="mt-5 max-w-xl text-4xl font-bold text-balance sm:text-5xl">
+              Python practice built for the classroom, not a generic tutorial site.
+            </h1>
+            <p className="mt-5 max-w-xl text-lg text-muted-foreground">
+              Structured lesson paths, a real adaptive difficulty engine, and a free in-browser IDE
+              — with classes, homework and progress tracking your department actually owns.
+            </p>
+            <div className="mt-8 flex flex-wrap gap-3">
+              <Button asChild size="lg">
+                <Link to="/auth" search={{ mode: "signup" }}>
+                  Create a free account
+                </Link>
+              </Button>
+              <Button asChild size="lg" variant="secondary">
+                <Link to="/ide">Try the IDE — no account needed</Link>
+              </Button>
             </div>
-          ))}
+            <p className="mt-4 flex items-center gap-1.5 font-mono text-xs text-muted-foreground">
+              <ShieldCheck className="h-3.5 w-3.5" strokeWidth={2} />
+              Runs entirely in the browser — nothing executes on your server.
+            </p>
+          </div>
+          <div className="relative">
+            <CodeMock />
+            <div className="absolute -right-2 -bottom-8 sm:-right-8">
+              <XpFloatCard />
+            </div>
+          </div>
+        </div>
+
+        <div className="mx-auto max-w-6xl px-4 pb-16">
+          <div className="grid grid-cols-2 gap-3 sm:grid-cols-4">
+            <StatCard n="150+" label="GCSE tasks" tint="primary" />
+            <StatCard n="13" label="OCR-aligned topics" tint="accent" />
+            <StatCard n="4" label="wording tiers, ladder-style" tint="success" />
+            <StatCard n="£0" label="cost, forever" tint="warning" />
+          </div>
         </div>
       </section>
 
+      {/* Feature grid */}
+      <section className="mx-auto max-w-6xl px-4 pb-16">
+        <div className="grid gap-4 sm:grid-cols-2 lg:grid-cols-4">
+          <FeatureCard
+            icon={BookOpenCheck}
+            tint="primary"
+            title="Lesson paths"
+            desc="Notes, a worked example, then practice — every topic, same reliable shape."
+          />
+          <FeatureCard
+            icon={Gauge}
+            tint="accent"
+            title="Adapts to you"
+            desc="Wording and difficulty track a live per-topic skill level, not just right/wrong."
+          />
+          <FeatureCard
+            icon={Code2}
+            tint="success"
+            title="Free IDE"
+            desc="Write and run any Python, no challenge needed, no account required."
+          />
+          <FeatureCard
+            icon={UserCheck}
+            tint="warning"
+            title="Teacher-paced classes"
+            desc="Or fully self-paced — lessons only unlock when you're ready."
+          />
+        </div>
+      </section>
+
+      {/* How a lesson works */}
       <section className="border-y border-border bg-secondary/20 py-16">
         <div className="mx-auto max-w-6xl px-4">
-          <p className="font-mono text-xs tracking-[0.2em] text-muted-foreground uppercase">
-            How a lesson works
-          </p>
-          <h2 className="mt-2 max-w-xl text-3xl font-semibold text-balance">
-            Every topic runs the same reliable path, start to finish.
+          <Eyebrow tint="accent">How a lesson works</Eyebrow>
+          <h2 className="mt-3 max-w-xl text-3xl font-semibold text-balance">
+            Every topic runs the same path, start to finish.
           </h2>
           <div className="mt-8 grid gap-4 sm:grid-cols-2 lg:grid-cols-4">
-            {[
-              {
-                n: "1",
-                t: "Teaching notes",
-                d: "Plain-English explanations, not a wall of jargon.",
-              },
-              { n: "2", t: "Worked example", d: "See real code run before writing your own." },
-              {
-                n: "3",
-                t: "Laddered tasks",
-                d: "Direct instructions first, working up to exam-style wording.",
-              },
-              {
-                n: "4",
-                t: "Quick check",
-                d: "A few questions to check the theory landed, not just the code.",
-              },
-            ].map((s, i) => (
-              <div key={s.n} className="relative panel p-5">
-                <span className="font-mono text-xs text-primary">{s.n}</span>
-                <h3 className="mt-2 font-semibold">{s.t}</h3>
-                <p className="mt-1 text-sm text-muted-foreground">{s.d}</p>
-                {i < 3 ? (
-                  <span className="absolute top-1/2 -right-4 hidden -translate-y-1/2 font-mono text-muted-foreground lg:block">
-                    →
+            {(
+              [
+                { t: "Teaching notes", d: "Plain English, not a wall of jargon.", tint: "primary" },
+                { t: "Worked example", d: "See real code run before writing your own.", tint: "accent" },
+                { t: "Laddered tasks", d: "Direct instructions, building to exam-style wording.", tint: "success" },
+                { t: "Quick check", d: "A few questions to check the theory landed too.", tint: "warning" },
+              ] as { t: string; d: string; tint: Tint }[]
+            ).map((s, i) => {
+              const c = tintClasses[s.tint];
+              return (
+                <div key={s.t} className="relative panel p-5">
+                  <span
+                    className={`flex h-8 w-8 items-center justify-center rounded-full ${c.bg} font-mono text-sm font-semibold ${c.text}`}
+                  >
+                    {i + 1}
                   </span>
-                ) : null}
-              </div>
-            ))}
+                  <h3 className="mt-3 font-semibold">{s.t}</h3>
+                  <p className="mt-1 text-sm text-muted-foreground">{s.d}</p>
+                  {i < 3 ? (
+                    <span className="absolute top-1/2 -right-4 hidden -translate-y-1/2 font-mono text-muted-foreground lg:block">
+                      →
+                    </span>
+                  ) : null}
+                </div>
+              );
+            })}
           </div>
           <p className="mt-6 text-sm text-muted-foreground">
-            Lessons unlock in order as each is mastered, and short recap questions from earlier
-            topics keep resurfacing so nothing gets forgotten.
+            Lessons unlock in order as each is mastered. Recap questions from earlier topics keep
+            resurfacing so nothing gets forgotten.
           </p>
         </div>
       </section>
 
+      {/* Screenshots */}
       <section className="mx-auto max-w-6xl px-4 py-16">
-        <p className="font-mono text-xs tracking-[0.2em] text-muted-foreground uppercase">
-          See it in action
-        </p>
-        <h2 className="mt-2 max-w-xl text-3xl font-semibold text-balance">
-          A real look at the lessons, projects and teacher view.
+        <Eyebrow tint="success">See it in action</Eyebrow>
+        <h2 className="mt-3 max-w-xl text-3xl font-semibold text-balance">
+          Real screens — a lesson, a project, a teacher's view.
         </h2>
         <p className="mt-3 max-w-2xl text-sm text-muted-foreground">
-          Actual screens from the app, not stock photos — a student's lesson path, the Projects list
-          for a topic, and a teacher's class overview.
+          Actual screens from the app, not stock photos.
         </p>
         <div className="mt-6 grid gap-4 sm:grid-cols-2 lg:grid-cols-3">
           <LessonMock />
@@ -356,177 +500,226 @@ function Landing() {
         </div>
       </section>
 
+      {/* Who it's for */}
       <section className="mx-auto max-w-6xl px-4 pb-16">
-        <p className="font-mono text-xs tracking-[0.2em] text-muted-foreground uppercase">
-          Not in a class?
-        </p>
-        <h2 className="mt-2 max-w-xl text-3xl font-semibold text-balance">
-          H-Code is built for classrooms first — but you don't need one.
+        <Eyebrow tint="warning">Not in a class?</Eyebrow>
+        <h2 className="mt-3 max-w-xl text-3xl font-semibold text-balance">
+          Built for classrooms first — but you don't need one.
         </h2>
         <p className="mt-3 max-w-2xl text-sm text-muted-foreground">
-          Every lesson path, adaptive challenge and the free IDE work exactly the same on an account
-          with no teacher or class attached to it — sign up, pick GCSE or A level, and go.
+          Every lesson, adaptive challenge and the free IDE work exactly the same without a teacher
+          or class attached — sign up, pick GCSE or A level, and go.
         </p>
         <div className="mt-6 grid gap-4 sm:grid-cols-3">
-          {[
-            {
-              icon: Compass,
-              t: "Self-learners",
-              d: "Working through GCSE or A level Python on your own timeline, with a structured path instead of a random tutorial.",
-            },
-            {
-              icon: Heart,
-              t: "Parents & tutors",
-              d: "Helping with homework or filling in gaps between lessons, without needing to be enrolled in the class yourself.",
-            },
-            {
-              icon: Code2,
-              t: "Curious developers",
-              d: "Already know some code and just want a free, no-signup Python sandbox — the IDE needs no account at all.",
-            },
-          ].map((c) => (
-            <div key={c.t} className="panel p-5">
-              <c.icon className="h-5 w-5 text-primary" strokeWidth={1.75} />
-              <h3 className="mt-3 font-semibold">{c.t}</h3>
-              <p className="mt-1 text-sm text-muted-foreground">{c.d}</p>
-            </div>
-          ))}
+          <FeatureCard
+            icon={Compass}
+            tint="primary"
+            title="Self-learners"
+            desc="A structured path instead of a random tutorial, on your own timeline."
+          />
+          <FeatureCard
+            icon={Heart}
+            tint="accent"
+            title="Parents & tutors"
+            desc="Help fill gaps between lessons, no enrolment needed."
+          />
+          <FeatureCard
+            icon={Code2}
+            tint="success"
+            title="Curious developers"
+            desc="A free, no-signup Python sandbox — the IDE needs no account at all."
+          />
         </div>
       </section>
 
+      {/* For teachers */}
       <section className="mx-auto max-w-6xl px-4 py-16">
-        <p className="font-mono text-xs tracking-[0.2em] text-muted-foreground uppercase">
-          For teachers
-        </p>
-        <h2 className="mt-2 max-w-xl text-3xl font-semibold text-balance">
+        <Eyebrow tint="primary">For teachers</Eyebrow>
+        <h2 className="mt-3 max-w-xl text-3xl font-semibold text-balance">
           Run your class at your own pace, not the app's.
         </h2>
         <div className="mt-8 grid gap-4 sm:grid-cols-2 lg:grid-cols-4">
-          {[
-            {
-              icon: LinkIcon,
-              t: "One join link per class",
-              d: "Students sign up through your link and land straight in your class — no separate join step.",
-            },
-            {
-              icon: GraduationCap,
-              t: "You control pacing",
-              d: "Lessons stay locked for your students until you assign them, however far ahead the content goes.",
-            },
-            {
-              icon: ListChecks,
-              t: "Personalised homework",
-              d: "Each student gets challenges picked at their own skill level for the topic you set — not one shared list.",
-            },
-            {
-              icon: FlaskConical,
-              t: "Class-wide topic strength",
-              d: "See which topic the whole class needs re-taught, not just how one student is doing.",
-            },
-          ].map((c) => (
-            <div key={c.t} className="panel p-5">
-              <c.icon className="h-5 w-5 text-primary" strokeWidth={1.75} />
-              <h3 className="mt-3 font-semibold">{c.t}</h3>
-              <p className="mt-1 text-sm text-muted-foreground">{c.d}</p>
-            </div>
-          ))}
+          <FeatureCard
+            icon={LinkIcon}
+            tint="primary"
+            title="One join link per class"
+            desc="Students sign up through your link and land straight in your class."
+          />
+          <FeatureCard
+            icon={GraduationCap}
+            tint="accent"
+            title="You control pacing"
+            desc="Lessons stay locked until you assign them, however far ahead the content goes."
+          />
+          <FeatureCard
+            icon={ListChecks}
+            tint="success"
+            title="Personalised homework"
+            desc="Each student gets challenges at their own skill level, not one shared list."
+          />
+          <FeatureCard
+            icon={FlaskConical}
+            tint="warning"
+            title="Class-wide topic strength"
+            desc="See which topic the whole class needs re-taught, not just one student."
+          />
         </div>
 
-        <div className="mt-6 grid items-center gap-10 rounded-2xl border border-border bg-secondary/10 p-6 lg:grid-cols-[1fr_0.9fr] lg:p-8">
+        <div className="mt-6 grid items-center gap-8 rounded-2xl border border-accent/25 bg-accent/5 p-6 lg:grid-cols-[1fr_0.9fr] lg:p-8">
           <div>
-            <p className="font-mono text-xs text-primary">not a black box</p>
-            <h3 className="mt-2 text-2xl font-semibold text-balance">
-              A real adaptive engine, tuned to not overreact.
+            <Eyebrow tint="accent">Not a black box</Eyebrow>
+            <h3 className="mt-3 text-2xl font-semibold text-balance">
+              An adaptive engine tuned to not overreact.
             </h3>
             <p className="mt-3 text-sm text-muted-foreground">
-              Most "adaptive" tools just count right vs. wrong. H-Code tracks a live skill level per
-              student, per topic — and it's built around a known failure mode in adaptive difficulty
-              design: overreacting to one bad answer. A single mistake barely moves the needle; it
-              takes a genuine pattern (three wrong in a row) before the difficulty actually steps
-              down. A fast, clean, first-try pass earns more than a slow one, so confident students
-              get pushed harder instead of drilling the same level on repeat.
+              Most "adaptive" tools just count right vs. wrong. H-Code tracks a live skill level
+              per student, per topic, built around one known failure mode: overreacting to a
+              single bad answer.
             </p>
-            <p className="mt-3 text-sm text-muted-foreground">
-              Every one of those signals rolls up to a class-wide view — not "Ada got 60%", but
-              "this class needs Iteration re-taught."
-            </p>
+            <div className="mt-4 space-y-2.5 text-sm">
+              <div className="flex items-start gap-2">
+                <span className="mt-0.5 text-success">✓</span>
+                <span className="text-muted-foreground">
+                  A fast, clean pass earns <span className="text-foreground">more</span>, pushing
+                  confident students harder
+                </span>
+              </div>
+              <div className="flex items-start gap-2">
+                <span className="mt-0.5 text-warning">•</span>
+                <span className="text-muted-foreground">
+                  One mistake barely moves the needle — <span className="text-foreground">no</span>{" "}
+                  reset to square one
+                </span>
+              </div>
+              <div className="flex items-start gap-2">
+                <span className="mt-0.5 text-foreground">→</span>
+                <span className="text-muted-foreground">
+                  Every signal rolls up class-wide:{" "}
+                  <span className="text-foreground">"this class needs Iteration re-taught"</span>
+                </span>
+              </div>
+            </div>
           </div>
           <SkillMock />
         </div>
 
-        <Button asChild className="mt-6" variant="secondary">
+        <Button asChild className="mt-6" size="lg" variant="secondary">
           <Link to="/auth" search={{ mode: "signup", role: "teacher" }}>
             Set up a class
           </Link>
         </Button>
       </section>
 
-      <section className="mx-auto grid max-w-6xl gap-4 px-4 pb-16 md:grid-cols-2">
-        <div className="panel p-6">
-          <span className="rounded-full bg-gcse/15 px-3 py-1 font-mono text-xs text-gcse">
-            GCSE · OCR
-          </span>
-          <h2 className="mt-4 text-2xl font-semibold">Exactly the GCSE spec, nothing more</h2>
-          <ul className="mt-4 space-y-2 text-sm text-muted-foreground">
-            {GCSE_TOPICS.map((t) => (
-              <li key={t.key}>
-                <span className="text-foreground">{t.label}</span> — {t.blurb}
-              </li>
-            ))}
-          </ul>
-        </div>
-        <div className="panel p-6">
-          <span className="rounded-full bg-alevel/15 px-3 py-1 font-mono text-xs text-alevel">
-            A level · separate track
-          </span>
-          <h2 className="mt-4 text-2xl font-semibold">Higher content, walled off</h2>
-          <ul className="mt-4 space-y-2 text-sm text-muted-foreground">
-            {ALEVEL_TOPICS.map((t) => (
-              <li key={t.key}>
-                <span className="text-foreground">{t.label}</span> — {t.blurb}
-              </li>
-            ))}
-          </ul>
-          <p className="mt-4 text-sm text-muted-foreground">
-            GCSE students never see these topics unless their teacher switches their class track.
-          </p>
+      {/* Spec coverage */}
+      <section className="mx-auto max-w-6xl px-4 pb-16">
+        <div className="grid gap-4 md:grid-cols-2">
+          <div className="panel overflow-hidden p-0">
+            <div className="border-b border-primary/20 bg-primary/10 px-6 py-4">
+              <span className="rounded-full bg-primary/20 px-3 py-1 font-mono text-xs font-medium text-primary">
+                GCSE · OCR
+              </span>
+              <h2 className="mt-3 text-xl font-semibold">Exactly the spec, nothing more</h2>
+            </div>
+            <ul className="grid grid-cols-1 gap-x-4 gap-y-2 p-6 text-sm sm:grid-cols-2">
+              {GCSE_TOPICS.map((t) => (
+                <li key={t.key} className="flex items-start gap-2">
+                  <span className="mt-1.5 h-1.5 w-1.5 shrink-0 rounded-full bg-primary" />
+                  <span className="text-muted-foreground">
+                    <span className="font-medium text-foreground">{t.label}</span> — {t.blurb}
+                  </span>
+                </li>
+              ))}
+            </ul>
+          </div>
+          <div className="panel overflow-hidden p-0">
+            <div className="border-b border-accent/20 bg-accent/10 px-6 py-4">
+              <span className="rounded-full bg-accent/20 px-3 py-1 font-mono text-xs font-medium text-accent">
+                A level · separate track
+              </span>
+              <h2 className="mt-3 text-xl font-semibold">Higher content, walled off</h2>
+            </div>
+            <ul className="space-y-2 p-6 text-sm">
+              {ALEVEL_TOPICS.map((t) => (
+                <li key={t.key} className="flex items-start gap-2">
+                  <span className="mt-1.5 h-1.5 w-1.5 shrink-0 rounded-full bg-accent" />
+                  <span className="text-muted-foreground">
+                    <span className="font-medium text-foreground">{t.label}</span> — {t.blurb}
+                  </span>
+                </li>
+              ))}
+            </ul>
+            <p className="border-t border-border px-6 py-4 text-xs text-muted-foreground">
+              GCSE students never see these topics unless their teacher switches their class track.
+            </p>
+          </div>
         </div>
       </section>
 
-      <section className="mx-auto max-w-6xl px-4 pb-20">
-        <p className="font-mono text-xs tracking-[0.2em] text-muted-foreground uppercase">
-          Stay motivated
-        </p>
+      {/* Motivation strip */}
+      <section className="mx-auto max-w-6xl px-4 pb-16">
+        <Eyebrow tint="warning">Stay motivated</Eyebrow>
         <div className="mt-4 grid gap-4 sm:grid-cols-2 lg:grid-cols-5">
-          {[
-            {
-              icon: Gauge,
-              t: "Adaptive practice",
-              d: "Challenges chosen from your live skill level.",
-            },
-            {
-              icon: Hammer,
-              t: "Projects",
-              d: "Longer assessments per topic that pull everything together.",
-            },
-            {
-              icon: FlaskConical,
-              t: "Boss battles",
-              d: "Timed rapid-fire runs for XP multipliers.",
-            },
-            { icon: Swords, t: "Duels", d: "Race a classmate on the same challenge." },
-            {
-              icon: Trophy,
-              t: "Class & school leaderboards",
-              d: "Top 10 by XP, plus who's improved most recently.",
-            },
-          ].map((c) => (
-            <div key={c.t} className="panel p-5">
-              <c.icon className="h-5 w-5 text-primary" strokeWidth={1.75} />
-              <h3 className="mt-3 font-semibold">{c.t}</h3>
-              <p className="mt-1 text-sm text-muted-foreground">{c.d}</p>
-            </div>
-          ))}
+          <FeatureCard
+            icon={Gauge}
+            tint="primary"
+            title="Adaptive practice"
+            desc="Challenges chosen from your live skill level."
+          />
+          <FeatureCard
+            icon={Hammer}
+            tint="accent"
+            title="Projects"
+            desc="Longer assessments per topic that pull everything together."
+          />
+          <FeatureCard
+            icon={FlaskConical}
+            tint="success"
+            title="Boss battles"
+            desc="Timed rapid-fire runs for XP multipliers."
+          />
+          <FeatureCard
+            icon={Swords}
+            tint="warning"
+            title="Duels"
+            desc="Race a classmate on the same challenge."
+          />
+          <FeatureCard
+            icon={Trophy}
+            tint="primary"
+            title="Leaderboards"
+            desc="Top 10 by XP, plus who's improved most recently."
+            idle="wiggle"
+          />
+        </div>
+      </section>
+
+      {/* Final CTA */}
+      <section className="mx-auto max-w-6xl px-4 pb-20">
+        <div className="relative overflow-hidden rounded-2xl border border-border bg-secondary/20 p-8 text-center sm:p-12">
+          <div
+            aria-hidden
+            className="pointer-events-none absolute inset-0 -z-10 bg-[radial-gradient(45rem_20rem_at_50%_0%,oklch(0.82_0.075_88/0.12),transparent_65%)]"
+          />
+          <Eyebrow tint="primary">
+            <Server className="h-3.5 w-3.5" strokeWidth={2} />
+            Self-hosted · your data stays yours
+          </Eyebrow>
+          <h2 className="mx-auto mt-4 max-w-xl text-3xl font-semibold text-balance">
+            Free for every computer science department that wants it.
+          </h2>
+          <p className="mx-auto mt-3 max-w-md text-sm text-muted-foreground">
+            No subscription, no per-seat pricing, no vendor lock-in — set up a class in minutes.
+          </p>
+          <div className="mt-6 flex flex-wrap justify-center gap-3">
+            <Button asChild size="lg">
+              <Link to="/auth" search={{ mode: "signup", role: "teacher" }}>
+                Set up your department
+              </Link>
+            </Button>
+            <Button asChild size="lg" variant="secondary">
+              <Link to="/ide">Try the IDE first</Link>
+            </Button>
+          </div>
         </div>
       </section>
 
