@@ -6,7 +6,7 @@
       "slug": "gcse-selection-1",
       "title": "if, else and comparisons",
       "summary": "Making a program choose between two paths.",
-      "notes": "**Selection** means the program picks which lines to run.\n\n```python\nif age >= 18:\n    print(\"Adult\")\nelse:\n    print(\"Child\")\n```\n\nComparison operators: `==` equal to, `!=` not equal to, `<`, `>`, `<=`, `>=`.\n\nTwo classic mistakes:\n- using `=` (assignment) when you mean `==` (comparison)\n- forgetting the colon or the indentation under the `if`",
+      "notes": "**Selection** means the program picks which lines to run.\n\n```python\nif age >= 18:\n    print(\"Adult\")\nelse:\n    print(\"Child\")\n```\n\nComparison operators: `==` equal to, `!=` not equal to, `<`, `>`, `<=`, `>=`.\n\n---\n\nTwo classic mistakes:\n- using `=` (assignment) when you mean `==` (comparison)\n- forgetting the colon or the indentation under the `if`",
       "worked_example": "score = int(input())\nif score >= 40:\n    print(\"Pass\")\nelse:\n    print(\"Fail\")",
       "worked_example_note": "Only one of the two `print` lines can ever run. The indented block belongs to the branch above it.",
       "worked_example_demo_input": ["55"]
@@ -24,7 +24,7 @@
       "slug": "gcse-selection-2",
       "title": "elif chains and logical operators",
       "summary": "More than two options, and conditions joined with and/or/not.",
-      "notes": "Use `elif` for a chain of options. Python checks them in order and stops at the first one that is true, so **order matters** — put the strictest boundary first.\n\n```python\nif mark >= 80:\n    grade = \"9\"\nelif mark >= 60:\n    grade = \"7\"\nelse:\n    grade = \"4\"\n```\n\nJoin conditions with `and` (both must be true), `or` (at least one), `not` (reverses it).\n\nOCR wording tip: *\"between 10 and 20 inclusive\"* becomes `if 10 <= n <= 20:` or `if n >= 10 and n <= 20:`.",
+      "notes": "Use `elif` for a chain of options. Python checks them in order and stops at the first one that is true, so **order matters** — put the strictest boundary first.\n\n```python\nif mark >= 80:\n    grade = \"9\"\nelif mark >= 60:\n    grade = \"7\"\nelse:\n    grade = \"4\"\n```\n\n---\n\nJoin conditions with `and` (both must be true), `or` (at least one), `not` (reverses it).\n\nOCR wording tip: *\"between 10 and 20 inclusive\"* becomes `if 10 <= n <= 20:` or `if n >= 10 and n <= 20:`.",
       "worked_example": "temp = int(input())\nrain = input()\nif temp > 20 and rain == \"no\":\n    print(\"Go outside\")\nelse:\n    print(\"Stay in\")",
       "worked_example_note": "`and` needs both sides to be true. Compare strings with `==` and remember they are case sensitive.",
       "worked_example_demo_input": ["25", "no"]
@@ -33,7 +33,7 @@
       "slug": "gcse-selection-3",
       "title": "Exam-style selection problems",
       "summary": "Working out the boundaries from a written scenario.",
-      "notes": "Exam scenarios hide the conditions inside sentences. Build a small table before you code:\n\n```text\nCondition          Output\n90 or more         Gold\n70 to 89           Silver\nless than 70       Bronze\n```\n\nThen write one branch per row, strictest first. Check the **boundary values** (exactly 90, exactly 70) — that is where marks are usually lost.",
+      "notes": "Exam scenarios hide the conditions inside sentences. Build a small table before you code:\n\n```text\nCondition          Output\n90 or more         Gold\n70 to 89           Silver\nless than 70       Bronze\n```\n\n---\n\nThen write one branch per row, strictest first. Check the **boundary values** (exactly 90, exactly 70) — that is where marks are usually lost.",
       "worked_example": "# Discount: 10% off orders of 50 or more, 5% off orders of 20 or more\ntotal = float(input())\nif total >= 50:\n    total = total * 0.9\nelif total >= 20:\n    total = total * 0.95\nprint(round(total, 2))",
       "worked_example_note": "There is no `else` here because orders under £20 need no change at all.",
       "worked_example_demo_input": ["60"]

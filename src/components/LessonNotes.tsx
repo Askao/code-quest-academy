@@ -22,11 +22,19 @@ function parseTable(chunk: string): { header: string[]; rows: string[][] } | nul
   };
 }
 
-/** A paragraph-shaped chunk is a bullet list if every non-blank line starts with "- ". */
-function parseBullets(chunk: string): string[] | null {
+/**
+ * A paragraph-shaped chunk is a bullet list if, after an optional lead-in
+ * line ("Think of it like a labelled box:"), every remaining line starts
+ * "- ". Mirrors parseNumbered below - notes routinely introduce a list with
+ * a sentence on the line right before it, in the same paragraph chunk.
+ */
+function parseBullets(chunk: string): { lead: string | null; items: string[] } | null {
   const lines = chunk.split("\n").map((l) => l.trim()).filter(Boolean);
-  if (lines.length === 0 || !lines.every((l) => l.startsWith("- "))) return null;
-  return lines.map((l) => l.slice(2));
+  if (lines.length === 0) return null;
+  const lead = lines[0]!.startsWith("- ") ? null : lines[0]!;
+  const rest = lead === null ? lines : lines.slice(1);
+  if (rest.length === 0 || !rest.every((l) => l.startsWith("- "))) return null;
+  return { lead, items: rest.map((l) => l.slice(2)) };
 }
 
 /**
@@ -77,7 +85,12 @@ type Token =
  */
 function tokenize(notes: string): Token[] {
   const tokens: Token[] = [];
-  const fenceRe = /```(python|ide-error|ide)?\n([\s\S]*?)```\n?/g;
+  // The tag can be anything (python, text, sql, or nothing) and still
+  // renders as a plain code block - only ide/ide-error is special-cased.
+  // A tag list limited to just those three would silently fail to match
+  // (and dump the raw ``` markup as text) the moment any other tag shows
+  // up, e.g. a ```text fence used for a non-code illustration.
+  const fenceRe = /```(\S*)\n([\s\S]*?)```\n?/g;
   let lastIndex = 0;
   let m: RegExpExecArray | null;
   while ((m = fenceRe.exec(notes))) {
@@ -164,14 +177,17 @@ function renderBody(text: string, keyPrefix: string, skipInlineCallout = false) 
             const bullets = parseBullets(p);
             if (bullets) {
               return (
-                <ul key={j} className="space-y-3">
-                  {bullets.map((item, k) => (
-                    <li key={k} className="flex items-start gap-3">
-                      <span className="mt-2.5 h-1.5 w-1.5 shrink-0 rounded-full bg-primary" />
-                      <span>{inline(item)}</span>
-                    </li>
-                  ))}
-                </ul>
+                <div key={j}>
+                  {bullets.lead ? <p className="mb-2.5">{inline(bullets.lead)}</p> : null}
+                  <ul className="space-y-3">
+                    {bullets.items.map((item, k) => (
+                      <li key={k} className="flex items-start gap-3">
+                        <span className="mt-2.5 h-1.5 w-1.5 shrink-0 rounded-full bg-primary" />
+                        <span>{inline(item)}</span>
+                      </li>
+                    ))}
+                  </ul>
+                </div>
               );
             }
 
