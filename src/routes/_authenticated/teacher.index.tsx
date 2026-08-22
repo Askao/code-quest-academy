@@ -7,7 +7,9 @@ import { useAuth } from "@/hooks/useAuth";
 import { Button } from "@/components/ui/button";
 import { Input } from "@/components/ui/input";
 import { createSchool, joinSchool, leaveSchool, makeJoinCode } from "@/lib/school";
-import type { Board, TrackKey } from "@/lib/game";
+import { ResetProgressControl } from "@/components/ResetProgressControl";
+import { lessonsForTopic } from "@/lib/content";
+import { topicLabel, topicsFor, type Board, type TrackKey } from "@/lib/game";
 
 export const Route = createFileRoute("/_authenticated/teacher/")({
   head: () => ({
@@ -38,6 +40,9 @@ function Teacher() {
   const [schoolCode, setSchoolCode] = useState("");
   const [schoolBusy, setSchoolBusy] = useState(false);
   const [confirmingLeave, setConfirmingLeave] = useState(false);
+  const [showOwnReset, setShowOwnReset] = useState(false);
+  const [ownResetTrack, setOwnResetTrack] = useState<TrackKey>("gcse");
+  const [ownResetBoard, setOwnResetBoard] = useState<Board>("ocr");
 
   const { data: classes } = useQuery({
     queryKey: ["teacher-classes", user?.id, schoolId],
@@ -383,6 +388,82 @@ function Teacher() {
         ))}
         {(classes ?? []).length === 0 ? (
           <p className="text-muted-foreground">No classes yet — create your first one above.</p>
+        ) : null}
+      </div>
+
+      <div className="panel p-5">
+        <button
+          type="button"
+          onClick={() => setShowOwnReset((v) => !v)}
+          className="flex w-full items-center justify-between text-left"
+        >
+          <span>
+            <h2 className="font-semibold">Reset your own progress</h2>
+            <p className="mt-1 text-xs text-muted-foreground">
+              If you've been testing tasks yourself, clear your own attempts and skill level for a
+              topic.
+            </p>
+          </span>
+          <span className="font-mono text-xs text-muted-foreground">{showOwnReset ? "▲" : "▼"}</span>
+        </button>
+        {showOwnReset ? (
+          <div className="mt-4 space-y-3 border-t border-border pt-4">
+            <div className="flex flex-wrap items-center gap-2">
+              <div className="flex overflow-hidden rounded-md border border-border">
+                {(["gcse", "alevel"] as const).map((t) => (
+                  <button
+                    key={t}
+                    type="button"
+                    onClick={() => setOwnResetTrack(t)}
+                    className={`px-2.5 py-1 font-mono text-xs ${
+                      ownResetTrack === t
+                        ? "bg-primary text-primary-foreground"
+                        : "bg-card text-muted-foreground hover:text-foreground"
+                    }`}
+                  >
+                    {t === "gcse" ? "GCSE" : "A LEVEL"}
+                  </button>
+                ))}
+              </div>
+              {ownResetTrack === "gcse" ? (
+                <div className="flex overflow-hidden rounded-md border border-border">
+                  {(["ocr", "aqa"] as const).map((b) => (
+                    <button
+                      key={b}
+                      type="button"
+                      onClick={() => setOwnResetBoard(b)}
+                      className={`px-2.5 py-1 font-mono text-xs ${
+                        ownResetBoard === b
+                          ? "bg-primary text-primary-foreground"
+                          : "bg-card text-muted-foreground hover:text-foreground"
+                      }`}
+                    >
+                      {b.toUpperCase()}
+                    </button>
+                  ))}
+                </div>
+              ) : null}
+            </div>
+            <div className="grid gap-3 sm:grid-cols-2 lg:grid-cols-3">
+              {topicsFor(ownResetTrack, ownResetBoard).map((t) => (
+                <div key={t.key} className="rounded-lg border border-border p-3">
+                  <p className="text-sm font-medium">{t.label}</p>
+                  <ResetProgressControl
+                    userId={user!.id}
+                    track={ownResetTrack}
+                    topic={t.key}
+                    topicLabel={t.label}
+                    targetLabel="your"
+                    lessons={lessonsForTopic(ownResetTrack, t.key).map((l) => ({
+                      slug: l.slug,
+                      title: l.title,
+                    }))}
+                    onDone={() => void qc.invalidateQueries({ queryKey: ["dashboard", user?.id] })}
+                  />
+                </div>
+              ))}
+            </div>
+          </div>
         ) : null}
       </div>
     </div>

@@ -784,6 +784,16 @@ export type Database = {
         }
         Returns: { id: string; name: string; xp: number; streak_days: number }[]
       }
+      reset_progress: {
+        Args: {
+          _user_id: string
+          _track: Database["public"]["Enums"]["track"]
+          _topic: string
+          _lesson_slug?: string | null
+          _task_slugs?: string[] | null
+        }
+        Returns: undefined
+      }
       school_for_join_code: {
         Args: { _code: string }
         Returns: { id: string; name: string }[]

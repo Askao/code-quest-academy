@@ -1,9 +1,11 @@
 import { createFileRoute, Link } from "@tanstack/react-router";
-import { useQuery } from "@tanstack/react-query";
+import { useQuery, useQueryClient } from "@tanstack/react-query";
 import { supabase } from "@/integrations/supabase/client";
 import { useAuth } from "@/hooks/useAuth";
 import { Button } from "@/components/ui/button";
 import { Progress } from "@/components/ui/progress";
+import { ResetProgressControl } from "@/components/ResetProgressControl";
+import { lessonsForTopic } from "@/lib/content";
 import {
   BADGES,
   levelFromXp,
@@ -28,6 +30,7 @@ export const Route = createFileRoute("/_authenticated/dashboard")({
 
 function Dashboard() {
   const { user, fullName, isTeacher, schoolId } = useAuth();
+  const qc = useQueryClient();
 
   const { data } = useQuery({
     queryKey: ["dashboard", user?.id],
@@ -289,6 +292,18 @@ function Dashboard() {
                       </div>
                       <Progress value={skillPercent(lvl)} className="mt-3" />
                       <p className="mt-2 text-xs text-muted-foreground">{skillLabel(lvl)}</p>
+                      <ResetProgressControl
+                        userId={user!.id}
+                        track={track}
+                        topic={t.key}
+                        topicLabel={t.label}
+                        targetLabel="your"
+                        lessons={lessonsForTopic(track, t.key).map((l) => ({
+                          slug: l.slug,
+                          title: l.title,
+                        }))}
+                        onDone={() => void qc.invalidateQueries({ queryKey: ["dashboard", user?.id] })}
+                      />
                     </div>
                   );
                 })}

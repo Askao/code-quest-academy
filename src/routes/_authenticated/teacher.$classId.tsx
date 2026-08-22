@@ -9,6 +9,7 @@ import { Input } from "@/components/ui/input";
 import { Label } from "@/components/ui/label";
 import { Progress } from "@/components/ui/progress";
 import { Tabs, TabsContent, TabsList, TabsTrigger } from "@/components/ui/tabs";
+import { ResetProgressControl } from "@/components/ResetProgressControl";
 import {
   levelFromXp,
   skillPercent,
@@ -783,6 +784,20 @@ function ClassDetail() {
                                     </span>
                                   </div>
                                   <Progress value={skillPercent(lvl)} className="mt-1" />
+                                  <ResetProgressControl
+                                    userId={s.id}
+                                    track={track}
+                                    topic={t.key}
+                                    topicLabel={t.label}
+                                    targetLabel={`${s.name}'s`}
+                                    lessons={lessonsForTopic(track, t.key).map((l) => ({
+                                      slug: l.slug,
+                                      title: l.title,
+                                    }))}
+                                    onDone={() =>
+                                      void qc.invalidateQueries({ queryKey: ["class", classId] })
+                                    }
+                                  />
                                 </div>
                               );
                             })}

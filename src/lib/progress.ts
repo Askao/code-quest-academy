@@ -1,6 +1,35 @@
 import { supabase } from "@/integrations/supabase/client";
 import { BADGES, xpForAttempt, type TrackKey } from "@/lib/game";
 
+/**
+ * Wipes a student's (or the caller's own) progress on a topic - every task
+ * attempt, every lesson quiz result in it, and the topic's skill level, a
+ * genuine "start over" - or on just one lesson within it (that lesson's
+ * task attempts and its one quiz attempt; the skill level is a topic-wide
+ * signal so a single-lesson reset leaves it alone). `taskSlugs` is required
+ * for a lesson-scoped reset - only the caller (via content.ts) knows which
+ * task slugs belong to a given lesson number, the database doesn't.
+ * Authorization (self, admin, or a teacher of a class this student is in)
+ * is enforced inside the reset_progress RPC, not here.
+ */
+export async function resetProgress(opts: {
+  userId: string;
+  track: TrackKey;
+  topic: string;
+  lessonSlug?: string | undefined;
+  taskSlugs?: string[] | undefined;
+}): Promise<{ ok: true } | { ok: false; error: string }> {
+  const { error } = await supabase.rpc("reset_progress", {
+    _user_id: opts.userId,
+    _track: opts.track,
+    _topic: opts.topic,
+    _lesson_slug: opts.lessonSlug ?? null,
+    _task_slugs: opts.taskSlugs ?? null,
+  });
+  if (error) return { ok: false, error: error.message };
+  return { ok: true };
+}
+
 /** The only shape recordAttempt actually needs from a run outcome - shared
  * by python-runner's RunOutcome and sql-runner's SqlRunOutcome, so either
  * can be passed straight in without a cast. */
