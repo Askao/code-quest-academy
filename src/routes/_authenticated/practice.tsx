@@ -1,12 +1,12 @@
 import { createFileRoute, useNavigate, Link } from "@tanstack/react-router";
-import { useQuery } from "@tanstack/react-query";
+import { useQuery, useQueryClient } from "@tanstack/react-query";
 import { useState } from "react";
 import { toast } from "sonner";
 import { supabase } from "@/integrations/supabase/client";
 import { useAuth } from "@/hooks/useAuth";
 import { Button } from "@/components/ui/button";
 import { Progress } from "@/components/ui/progress";
-import { pickChallenge, pickRecapChallenge } from "@/lib/progress";
+import { pickChallenge, pickRecapChallenge, resetProgress } from "@/lib/progress";
 import {
   skillLabel,
   skillPercent,
@@ -49,6 +49,7 @@ function todayStart() {
 function Practice() {
   const { user, isTeacher } = useAuth();
   const navigate = useNavigate();
+  const qc = useQueryClient();
   const [track, setTrack] = useState<TrackKey>("gcse");
   // Free to switch, unlike A level - AQA isn't extra/higher content behind
   // a teacher's say-so, it's an alternate view of the same GCSE track, so
@@ -56,6 +57,8 @@ function Practice() {
   const [board, setBoard] = useState<Board>("ocr");
   const [quizAnswer, setQuizAnswer] = useState<string | null>(null);
   const [browsingTopic, setBrowsingTopic] = useState<string | null>(null);
+  const [confirmingReset, setConfirmingReset] = useState<string | null>(null);
+  const [resetting, setResetting] = useState(false);
 
   const { data } = useQuery({
     queryKey: ["practice-context", user?.id],
@@ -251,6 +254,39 @@ function Practice() {
     .map((t) => ({ ...t, projects: projectsForTopic("gcse", t.key) }))
     .filter((t) => t.projects.some((p) => seededProjectSlugs?.has(p.slug)));
 
+  const isTopicPracticeComplete = (topicKey: string) => {
+    const pool = practiceTasksForTopic(track, topicKey);
+    return pool.length > 0 && pool.every((task) => data?.passedSlugs.has(task.slug));
+  };
+
+  // The reset button only appears once every practiceable topic (every one
+  // with an authored practice pool, unlocked or not - a locked topic can
+  // never be "complete" so it naturally keeps this false) is fully done,
+  // not per-topic - a deliberate "you've mastered everything, now you may
+  // loop back and grind any one topic again" gate rather than letting
+  // students reset and re-grind a topic mid-way through the others.
+  const practiceTopicsWithPool = practiceTopics.filter(
+    (t) => practiceTasksForTopic(track, t.key).length > 0,
+  );
+  const allPracticeComplete =
+    practiceTopicsWithPool.length > 0 &&
+    practiceTopicsWithPool.every((t) => isTopicPracticeComplete(t.key));
+
+  const doResetTopicPractice = async (topicKey: string) => {
+    if (!user) return;
+    setResetting(true);
+    const slugs = practiceTasksForTopic(track, topicKey).map((p) => p.slug);
+    const result = await resetProgress({ userId: user.id, track, topic: topicKey, taskSlugs: slugs });
+    setResetting(false);
+    setConfirmingReset(null);
+    if (!result.ok) {
+      toast.error(result.error);
+      return;
+    }
+    toast.success(`${topicLabel(topicKey)} practice reset — have another go.`);
+    void qc.invalidateQueries({ queryKey: ["practice-context", user.id] });
+  };
+
   return (
     <div className="space-y-8">
       <div>
@@ -403,6 +439,7 @@ function Practice() {
               </div>
             );
           }
+          const topicComplete = isTopicPracticeComplete(t.key);
           return (
             <div key={t.key} className="panel flex flex-col p-5">
               <p className="font-semibold">{t.label}</p>
@@ -411,19 +448,64 @@ function Practice() {
               <p className="mt-2 font-mono text-xs text-muted-foreground">
                 {skillPercent(lvl)}% · {skillLabel(lvl)}
               </p>
-              <div className="mt-4 flex gap-2">
-                <Button size="sm" className="flex-1" onClick={() => start(t.key, "practice")}>
-                  Practise
-                </Button>
-                <Button
-                  size="sm"
-                  variant="secondary"
-                  onClick={() => start(t.key, "boss")}
-                  title="5 minute timed run"
-                >
-                  Boss ⚔
-                </Button>
-              </div>
+              {topicComplete ? (
+                <div className="mt-4 space-y-2">
+                  <div className="rounded-md bg-success/15 px-3 py-2 text-center font-mono text-sm font-semibold text-success">
+                    ✓ COMPLETED
+                  </div>
+                  {allPracticeComplete ? (
+                    confirmingReset === t.key ? (
+                      <div className="space-y-2 rounded-md border border-destructive/40 bg-destructive/10 p-3 text-xs">
+                        <p className="text-muted-foreground">
+                          Reset every practice task in {t.label}? You'll be able to redo them all
+                          from scratch.
+                        </p>
+                        <div className="flex gap-2">
+                          <Button
+                            size="sm"
+                            variant="destructive"
+                            disabled={resetting}
+                            onClick={() => doResetTopicPractice(t.key)}
+                          >
+                            {resetting ? "Resetting…" : "Confirm reset"}
+                          </Button>
+                          <Button
+                            size="sm"
+                            variant="ghost"
+                            onClick={() => setConfirmingReset(null)}
+                            disabled={resetting}
+                          >
+                            Cancel
+                          </Button>
+                        </div>
+                      </div>
+                    ) : (
+                      <Button
+                        size="sm"
+                        variant="secondary"
+                        className="w-full"
+                        onClick={() => setConfirmingReset(t.key)}
+                      >
+                        ↺ Reset this topic's practice
+                      </Button>
+                    )
+                  ) : null}
+                </div>
+              ) : (
+                <div className="mt-4 flex gap-2">
+                  <Button size="sm" className="flex-1" onClick={() => start(t.key, "practice")}>
+                    Practise
+                  </Button>
+                  <Button
+                    size="sm"
+                    variant="secondary"
+                    onClick={() => start(t.key, "boss")}
+                    title="5 minute timed run"
+                  >
+                    Boss ⚔
+                  </Button>
+                </div>
+              )}
               <button
                 type="button"
                 onClick={() => setBrowsingTopic(browsingTopic === t.key ? null : t.key)}
