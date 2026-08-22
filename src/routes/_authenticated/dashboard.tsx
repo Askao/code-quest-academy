@@ -48,6 +48,7 @@ function Dashboard() {
           .select("id", { count: "exact", head: true })
           .eq("user_id", uid)
           .eq("mode", "recap")
+          .eq("passed", true)
           .gte("created_at", todayStart),
       ]);
       const classIds = (memberships.data ?? []).map((m) => m.class_id);

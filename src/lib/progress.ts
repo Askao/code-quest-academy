@@ -156,11 +156,20 @@ export async function recordAttempt(opts: {
     .eq("user_id", userId)
     .maybeSingle();
 
+  // The daily streak is earned specifically by passing the recap task, not
+  // by any old attempt - a student grinding Practice or Duels all day
+  // shouldn't see their streak climb unless they've actually done the one
+  // thing ("today's recap") the streak is meant to represent. Every other
+  // mode still updates XP as normal, just leaves streak/last_active
+  // untouched rather than silently advancing them.
   const day = today();
   const yesterday = new Date(Date.now() - 86400000).toISOString().slice(0, 10);
+  const isRecapCompletion = mode === "recap" && outcome.passed;
   let streak = stats?.streak_days ?? 0;
-  if (stats?.last_active !== day) {
+  let lastActive = stats?.last_active ?? null;
+  if (isRecapCompletion && stats?.last_active !== day) {
     streak = stats?.last_active === yesterday ? streak + 1 : 1;
+    lastActive = day;
   }
 
   const newXp = (stats?.xp ?? 0) + xpAwarded;
@@ -169,7 +178,7 @@ export async function recordAttempt(opts: {
     xp: newXp,
     streak_days: streak,
     best_streak: Math.max(stats?.best_streak ?? 0, streak),
-    last_active: day,
+    last_active: lastActive,
     updated_at: new Date().toISOString(),
   });
 
