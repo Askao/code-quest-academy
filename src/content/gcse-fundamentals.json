@@ -371,6 +371,14 @@
     { "slug": "gcse-fundamentals-p-10", "tier": 4, "difficulty": 5, "xp": 30, "title": "Membership receipt",
       "brief": "Input a customer's name, then their membership number as text, cast it to a whole number, then a pounds amount and an exchange rate, both of which may include decimals. Print the customer line, then the converted amount, in the format `Customer: <name> (#<membership>)` then `Converted: $<amount>`.",
       "starter": "", "hints": ["Four separate inputs, each cast to the right type before it's used.", "Cast membership with int(), amount and rate with float(), then print both lines using f-strings."],
-      "tests": [{ "stdin": "Ada\n1001\n100\n1.2", "expect": "Customer: Ada (#1001)\nConverted: $120.0" }, { "stdin": "Sam\n2002\n50\n2.0", "expect": "Customer: Sam (#2002)\nConverted: $100.0" }] }
+      "tests": [{ "stdin": "Ada\n1001\n100\n1.2", "expect": "Customer: Ada (#1001)\nConverted: $120.0" }, { "stdin": "Sam\n2002\n50\n2.0", "expect": "Customer: Sam (#2002)\nConverted: $100.0" }] },
+    { "slug": "gcse-fundamentals-p-s1", "tier": 4, "difficulty": 5, "xp": 35, "stretch": true, "title": "🌟 Restaurant bill split",
+      "brief": "Input a bill total, which may include pence, then the number of people splitting it, a whole number, then a tip percentage, a whole number. Print the tip amount, then the total including tip, then each person's share, all rounded to 2 decimal places, in the format `Tip: £<amount>`, `Total: £<amount>`, `Each pays: £<amount>`.",
+      "starter": "", "hints": ["Work out the tip first, then add it to the bill for the total, then divide by the number of people for the share — round each one as you print it.", "tip = round(bill * tip_pct / 100, 2); total = round(bill + tip, 2); share = round(total / people, 2)."],
+      "tests": [{ "stdin": "80\n4\n10", "expect": "Tip: £8.0\nTotal: £88.0\nEach pays: £22.0" }, { "stdin": "100\n3\n15", "expect": "Tip: £15.0\nTotal: £115.0\nEach pays: £38.33" }] },
+    { "slug": "gcse-fundamentals-p-s2", "tier": 4, "difficulty": 5, "xp": 35, "stretch": true, "title": "🌟 Unit price comparison",
+      "brief": "Input two products, one at a time: a name, a price (which may include pence), and a quantity, a whole number. Print each product's price per single unit, rounded to 2 decimal places, in the format `<name>: £<amount> each`. Then print which product is the better value (the lower unit price), in the format `Better value: <name>`.",
+      "starter": "", "hints": ["A unit price is the price divided by the quantity — work this out for both products before comparing them.", "unit1 = round(price1 / qty1, 2); unit2 = round(price2 / qty2, 2); the better value is whichever name has the smaller unit price."],
+      "tests": [{ "stdin": "Small\n2.50\n5\nLarge\n4.00\n10", "expect": "Small: £0.5 each\nLarge: £0.4 each\nBetter value: Large" }, { "stdin": "A\n3.00\n3\nB\n5.00\n4", "expect": "A: £1.0 each\nB: £1.25 each\nBetter value: A" }] }
   ]
 }

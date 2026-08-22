@@ -21,10 +21,10 @@ import {
 import { pickHomeworkSet, resetProgress } from "@/lib/progress";
 import { downloadCsv } from "@/lib/csv";
 import {
+  corePracticeTasksForTopic,
   getLesson,
   isLessonComplete,
   lessonsForTopic,
-  practiceTasksForTopic,
   projectGroupsForTopic,
   tasksForLesson,
   topicsWithLessons,
@@ -199,11 +199,14 @@ function ClassDetail() {
         // quick-glance columns) from the same passed-slugs set the lesson
         // tracker above already builds, against the topic's authored pool
         // (see practiceTasksForTopic/projectGroupsForTopic in content.ts).
+        // Uses the core pool only (stretch tasks excluded), matching the
+        // student-facing COMPLETED badge, so "Ready for more" below fires
+        // at the same point a student's own /practice page would show it.
         const passedSlugs = passedTaskSlugsByUser.get(p.id) ?? new Set<string>();
         const practiceByTopic: Record<string, { done: number; total: number }> = {};
         const projectsByTopic: Record<string, { done: number; total: number }> = {};
         for (const t of topicsFor(trackLocal, boardLocal)) {
-          const pool = practiceTasksForTopic(trackLocal, t.key);
+          const pool = corePracticeTasksForTopic(trackLocal, t.key);
           practiceByTopic[t.key] = {
             done: pool.filter((task) => passedSlugs.has(task.slug)).length,
             total: pool.length,
@@ -223,6 +226,14 @@ function ClassDetail() {
           { done: 0, total: 0 },
         );
 
+        // The mirror case to "struggling": a student who's cleared every
+        // practice task in every topic (same bar the student-facing Reset
+        // gate on /practice uses) has nothing left the platform can give
+        // them - worth surfacing to a teacher just as much as one who's
+        // stuck, since in a multi-year course "ready for more" is a signal
+        // to act on, not a quiet success to overlook.
+        const readyForMore = practiceTotals.total > 0 && practiceTotals.done === practiceTotals.total;
+
         return {
           id: p.id,
           name: p.full_name ?? p.email ?? "Student",
@@ -233,6 +244,7 @@ function ClassDetail() {
           lastActive: s?.last_active,
           skills: mine,
           struggling,
+          readyForMore,
           practiceByTopic,
           projectsByTopic,
           practiceTotals,
@@ -797,6 +809,11 @@ function ClassDetail() {
                         {s.struggling ? (
                           <span className="ml-2 rounded-full bg-destructive/15 px-2 py-0.5 font-mono text-xs text-destructive">
                             🔴 Struggling
+                          </span>
+                        ) : null}
+                        {s.readyForMore ? (
+                          <span className="ml-2 rounded-full bg-warning/15 px-2 py-0.5 font-mono text-xs text-warning">
+                            🟡 Ready for more
                           </span>
                         ) : null}
                       </td>

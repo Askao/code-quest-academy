@@ -337,7 +337,15 @@
     { "slug": "gcse-sequencing-p-10", "tier": 3, "difficulty": 5, "xp": 40, "title": "Petrol station queue time",
       "brief": "Input the number of cars ahead of you in a petrol station queue, a whole number. Input the average time each car takes at the pump in seconds, which may include decimals. Input how long you expect your own fill-up to take in seconds. Print your total wait for the cars ahead, then the total time including your own fill-up, then that total converted to minutes rounded to 1 decimal place, in the format `Wait: <n>s`, `Total: <n>s`, `Minutes: <n>`.",
       "starter": "", "hints": ["Work out the wait for the cars ahead first (cars times average time), then add your own fill-up time for the total.", "wait = cars * avg_time; total = wait + your_time; minutes = round(total / 60, 1) — then print all three, each on its own line."],
-      "tests": [{ "stdin": "5\n90\n120", "expect": "Wait: 450.0s\nTotal: 570.0s\nMinutes: 9.5" }, { "stdin": "3\n60\n60", "expect": "Wait: 180.0s\nTotal: 240.0s\nMinutes: 4.0" }] }
+      "tests": [{ "stdin": "5\n90\n120", "expect": "Wait: 450.0s\nTotal: 570.0s\nMinutes: 9.5" }, { "stdin": "3\n60\n60", "expect": "Wait: 180.0s\nTotal: 240.0s\nMinutes: 4.0" }] },
+    { "slug": "gcse-sequencing-p-s1", "tier": 3, "difficulty": 5, "xp": 40, "stretch": true, "title": "🌟 Change given",
+      "brief": "Input the cost of an item in pence, a whole number. Input the amount paid, also in pence. Work out the change owed in pence, then split it into whole pounds and remaining pence using // and %. Print the pounds, then the pence, in the format `Pounds: <n>` then `Pence: <n>`.",
+      "starter": "", "hints": ["The change is paid minus cost — then // by 100 gives whole pounds, and % 100 gives what's left over in pence.", "change = paid - cost; pounds = change // 100; pence = change % 100."],
+      "tests": [{ "stdin": "455\n500", "expect": "Pounds: 0\nPence: 45" }, { "stdin": "1250\n2000", "expect": "Pounds: 7\nPence: 50" }] },
+    { "slug": "gcse-sequencing-p-s2", "tier": 4, "difficulty": 5, "xp": 40, "stretch": true, "title": "🌟 Movie night cost, split evenly",
+      "brief": "Input a ticket price, which may include pence, then the number of friends going, a whole number, then a snacks budget, which may include pence. The total cost is the ticket price times the number of friends, plus the snacks budget. Print the total, then each friend's even share, then how much is left over after splitting evenly (because the share had to be rounded) — all rounded to 2 decimal places, in the format `Total: £<amount>`, `Each pays: £<amount>`, `Leftover: £<amount>`.",
+      "starter": "", "hints": ["Work out the total first, then the share (total divided by friends, rounded), then the leftover is whatever the rounded shares don't quite add up to.", "total = round(price * friends + snacks, 2); share = round(total / friends, 2); leftover = round(total - share * friends, 2)."],
+      "tests": [{ "stdin": "8.50\n3\n10", "expect": "Total: £35.5\nEach pays: £11.83\nLeftover: £0.01" }, { "stdin": "5.00\n4\n8", "expect": "Total: £28.0\nEach pays: £7.0\nLeftover: £0.0" }] }
   ],
   "projectTasks": [
     { "slug": "gcse-sequencing-proj1a", "tier": 4, "difficulty": 2, "xp": 30, "group": "gcse-sequencing-bigproj1", "part": "A",

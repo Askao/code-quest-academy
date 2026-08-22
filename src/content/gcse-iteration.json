@@ -437,6 +437,14 @@
     { "slug": "gcse-iteration-p-10", "tier": 4, "difficulty": 5, "xp": 30, "title": "FizzBuzz range",
       "brief": "Input a start number, then an end number (inclusive). For every whole number in that range, print `FizzBuzz` if it divides evenly by both 3 and 5, `Fizz` if just by 3, `Buzz` if just by 5, or the number itself if none of those apply.",
       "starter": "", "hints": ["Check divisibility by 15 first (both 3 and 5 at once), then 3, then 5, then fall back to the number.", "for i in range(start, end + 1): if i % 15 == 0: print(\"FizzBuzz\") elif i % 3 == 0: print(\"Fizz\") elif i % 5 == 0: print(\"Buzz\") else: print(i)."],
-      "tests": [{ "stdin": "1\n15", "expect": "1\n2\nFizz\n4\nBuzz\nFizz\n7\n8\nFizz\nBuzz\n11\nFizz\n13\n14\nFizzBuzz" }, { "stdin": "10\n16", "expect": "Buzz\n11\nFizz\n13\n14\nFizzBuzz\n16" }] }
+      "tests": [{ "stdin": "1\n15", "expect": "1\n2\nFizz\n4\nBuzz\nFizz\n7\n8\nFizz\nBuzz\n11\nFizz\n13\n14\nFizzBuzz" }, { "stdin": "10\n16", "expect": "Buzz\n11\nFizz\n13\n14\nFizzBuzz\n16" }] },
+    { "slug": "gcse-iteration-p-s1", "tier": 4, "difficulty": 5, "xp": 40, "stretch": true, "title": "🌟 Prime checker",
+      "brief": "Input a whole number greater than 1. Check every number from 2 up to (but not including) it — if any of them divides it evenly, it isn't prime. Print `Prime` or `Not prime`.",
+      "starter": "", "hints": ["Loop through the possible divisors, and if you ever find one that divides evenly, the number isn't prime — you can stop checking as soon as you know.", "is_prime = True; for i in range(2, n): if n % i == 0: is_prime = False; break — then print based on is_prime."],
+      "tests": [{ "stdin": "7", "expect": "Prime" }, { "stdin": "8", "expect": "Not prime" }, { "stdin": "2", "expect": "Prime" }] },
+    { "slug": "gcse-iteration-p-s2", "tier": 4, "difficulty": 5, "xp": 40, "stretch": true, "title": "🌟 Shrinking triangle",
+      "brief": "Input a whole number N. Print N rows of asterisks, where the first row has N asterisks, the next has one fewer, and so on down to a single asterisk on the last row — one row per line.",
+      "starter": "", "hints": ["A loop counting down, printing that many asterisks on each pass.", "for row in range(n, 0, -1): print(\"*\" * row)."],
+      "tests": [{ "stdin": "4", "expect": "****\n***\n**\n*" }, { "stdin": "3", "expect": "***\n**\n*" }] }
   ]
 }

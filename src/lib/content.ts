@@ -202,6 +202,19 @@ export function practiceTasksForTopic(track: TrackKey, topic: string) {
   return PRACTICE_TASKS.filter((p) => p.track === track && p.topic === topic);
 }
 
+/**
+ * Just the required practice tasks for a topic - stretch tasks (harder,
+ * beyond the normal difficulty-5 ceiling; see the GCSE stretch tier)
+ * excluded. Used anywhere "is this topic's practice done" is decided -
+ * COMPLETED badges, the reset gate, roster/dashboard completion counts -
+ * so extension content a student may never touch doesn't block a status
+ * that's meant to mean "finished the core pool". Browsing/picking still
+ * uses practiceTasksForTopic directly so stretch tasks stay reachable.
+ */
+export function corePracticeTasksForTopic(track: TrackKey, topic: string) {
+  return practiceTasksForTopic(track, topic).filter((p) => !p.stretch);
+}
+
 export type ProjectGroup = { title: string; slugs: string[] };
 
 /**

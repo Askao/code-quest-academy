@@ -265,6 +265,14 @@
     { "slug": "gcse-files-p-10", "tier": 4, "difficulty": 5, "xp": 35, "title": "Merge two files",
       "brief": "Input a whole number N1. Input N1 lines of text, writing them to `file_a.txt`. Input a whole number N2. Input N2 lines of text, writing them to `file_b.txt`. Create a third file, `merged.txt`, containing every line from `file_a.txt` followed by every line from `file_b.txt`. Reopen `merged.txt` and print its full contents.",
       "starter": "", "hints": ["Open merged.txt for writing, then read the full contents of each of the other two files straight into it, one after the other.", "with open(\"merged.txt\", \"w\") as out: out.write(open(\"file_a.txt\").read()); out.write(open(\"file_b.txt\").read()) — then reopen merged.txt and print its contents."],
-      "tests": [{ "stdin": "2\napple\nbanana\n1\ncherry", "expect": "apple\nbanana\ncherry" }, { "stdin": "1\nx\n2\ny\nz", "expect": "x\ny\nz" }] }
+      "tests": [{ "stdin": "2\napple\nbanana\n1\ncherry", "expect": "apple\nbanana\ncherry" }, { "stdin": "1\nx\n2\ny\nz", "expect": "x\ny\nz" }] },
+    { "slug": "gcse-files-p-s1", "tier": 4, "difficulty": 5, "xp": 40, "stretch": true, "title": "🌟 Word frequency in a file",
+      "brief": "Input a whole number N. Input N lines of text, one at a time. Write them to `source.txt`, one per line. Input a target word. Reopen the file and count how many times that exact word appears across every line. Write the result to `result.txt` in the format `<word>: <count>`. Reopen `result.txt` and print its contents.",
+      "starter": "", "hints": ["Split each reopened line into words and count how many of them match the target exactly.", "count = 0; for line in f: count += line.split().count(target) — then write and reopen result.txt as described."],
+      "tests": [{ "stdin": "3\nthe cat sat\non the mat\nthe end\nthe", "expect": "the: 3" }, { "stdin": "2\nred blue red\nred green", "expect": "red: 3" }] },
+    { "slug": "gcse-files-p-s2", "tier": 4, "difficulty": 5, "xp": 40, "stretch": true, "title": "🌟 Score report with average",
+      "brief": "Input a whole number N. Input N students, each as a name then a score. Write each as a line `<name>,<score>` to `report.csv`. Reopen the file, work out the average score rounded to 2 decimal places, then append one more line to the same file, `Average,<amount>`. Reopen `report.csv` one more time and print its full contents.",
+      "starter": "", "hints": ["Write the student lines first, then reopen to calculate the average from what you wrote, then reopen again in append mode to add the final line.", "Split each reopened line on the comma to get the score back as a number; open in \"a\" mode to add the Average line without erasing what's already there."],
+      "tests": [{ "stdin": "3\nAda\n80\nSam\n90\nMia\n70", "expect": "Ada,80\nSam,90\nMia,70\nAverage,80.0" }] }
   ]
 }

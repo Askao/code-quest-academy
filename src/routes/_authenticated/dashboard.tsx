@@ -5,7 +5,7 @@ import { useAuth } from "@/hooks/useAuth";
 import { Button } from "@/components/ui/button";
 import { Progress } from "@/components/ui/progress";
 import { ResetProgressControl } from "@/components/ResetProgressControl";
-import { lessonsForTopic } from "@/lib/content";
+import { corePracticeTasksForTopic, lessonsForTopic, projectGroupsForTopic } from "@/lib/content";
 import {
   BADGES,
   levelFromXp,
@@ -38,7 +38,7 @@ function Dashboard() {
     queryFn: async () => {
       const uid = user!.id;
       const todayStart = new Date().toISOString().slice(0, 10) + "T00:00:00.000Z";
-      const [stats, skills, badges, memberships, recapToday] = await Promise.all([
+      const [stats, skills, badges, memberships, recapToday, passedRes] = await Promise.all([
         supabase.from("stats").select("*").eq("user_id", uid).maybeSingle(),
         supabase.from("skills").select("*").eq("user_id", uid),
         supabase.from("badges").select("*").eq("user_id", uid),
@@ -50,6 +50,11 @@ function Dashboard() {
           .eq("mode", "recap")
           .eq("passed", true)
           .gte("created_at", todayStart),
+        // Whole-course passed slugs, for the long-term "your journey"
+        // section below (topics mastered, projects finished) - a
+        // three-year span needs a sense of overall shape, not just today's
+        // streak and level.
+        supabase.from("attempts").select("passed, challenges!inner(slug)").eq("user_id", uid).eq("passed", true),
       ]);
       const classIds = (memberships.data ?? []).map((m) => m.class_id);
       const homeworkRes = classIds.length
@@ -96,6 +101,16 @@ function Dashboard() {
         return { ...hw, total, completed };
       });
 
+      const passedSlugs = new Set(
+        ((passedRes.data ?? []) as unknown as { challenges: { slug: string } }[]).map(
+          (r) => r.challenges.slug,
+        ),
+      );
+      // A skill row's `passes` counts every pass ever recorded against that
+      // topic (see recordAttempt in progress.ts), so summing across topics
+      // gives "challenges passed, ever" without a separate count query.
+      const totalPassed = (skills.data ?? []).reduce((sum, k) => sum + (k.passes ?? 0), 0);
+
       return {
         stats: stats.data,
         skills: skills.data ?? [],
@@ -103,6 +118,8 @@ function Dashboard() {
         classes: (memberships.data ?? []).map((m) => m.classes).filter(Boolean),
         homework,
         recapDoneToday: (recapToday.count ?? 0) > 0,
+        passedSlugs,
+        totalPassed,
       };
     },
   });
@@ -163,6 +180,30 @@ function Dashboard() {
     .filter((hw) => hw.total > 0 && hw.completed >= hw.total)
     .slice()
     .reverse();
+
+  // Long-term shape of the whole course, not just today - a topic counts
+  // "mastered" once every core practice task in it is passed (stretch
+  // tasks excluded - same bar as the student-facing COMPLETED badge and
+  // reset gate on /practice), and a project counts done once every part
+  // of it is passed (see projectGroupsForTopic in content.ts).
+  const passedSlugs = data?.passedSlugs ?? new Set<string>();
+  let topicsMastered = 0;
+  let topicsWithPool = 0;
+  const completedProjects: { title: string; topicLabel: string }[] = [];
+  for (const trk of tracks) {
+    for (const t of topicsFor(trk, trk === "gcse" ? gcseBoard : undefined)) {
+      const pool = corePracticeTasksForTopic(trk, t.key);
+      if (pool.length > 0) {
+        topicsWithPool += 1;
+        if (pool.every((task) => passedSlugs.has(task.slug))) topicsMastered += 1;
+      }
+      for (const g of projectGroupsForTopic(trk, t.key)) {
+        if (g.slugs.every((slug) => passedSlugs.has(slug))) {
+          completedProjects.push({ title: g.title, topicLabel: t.label });
+        }
+      }
+    }
+  }
 
   if (isTeacher) {
     return (
@@ -287,6 +328,36 @@ function Dashboard() {
           <Link to="/practice">{data?.recapDoneToday ? "Do it again" : "Start recap"}</Link>
         </Button>
       </div>
+
+      <section>
+        <h2 className="mb-3 text-xl font-semibold">Your journey</h2>
+        <div className="grid gap-4 sm:grid-cols-3">
+          <div className="panel p-5">
+            <p className="font-mono text-xs text-muted-foreground">CHALLENGES PASSED</p>
+            <p className="mt-1 text-3xl font-bold text-primary">{data?.totalPassed ?? 0}</p>
+            <p className="mt-2 text-xs text-muted-foreground">Every task, ever — the whole course.</p>
+          </div>
+          <div className="panel p-5">
+            <p className="font-mono text-xs text-muted-foreground">TOPICS MASTERED</p>
+            <p className="mt-1 text-3xl font-bold text-success">
+              {topicsMastered}
+              <span className="text-lg text-muted-foreground">/{topicsWithPool}</span>
+            </p>
+            <p className="mt-2 text-xs text-muted-foreground">
+              Every practice task passed in that topic.
+            </p>
+          </div>
+          <div className="panel p-5">
+            <p className="font-mono text-xs text-muted-foreground">PROJECTS BUILT</p>
+            <p className="mt-1 text-3xl font-bold text-accent">{completedProjects.length}</p>
+            <p className="mt-2 text-xs text-muted-foreground">
+              {completedProjects.length > 0
+                ? completedProjects.map((p) => p.title).join(" · ")
+                : "None finished yet — Projects live on the Practice page."}
+            </p>
+          </div>
+        </div>
+      </section>
 
       {currentHomework.length > 0 ? (
         <section>

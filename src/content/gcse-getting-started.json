@@ -322,6 +322,14 @@
     { "slug": "gcse-getting-started-p-10", "tier": 4, "difficulty": 5, "xp": 30, "title": "Package receipt",
       "brief": "Input a sender, a receiver, an item name, a quantity, and a price — five separate inputs. Print a 3-line receipt, all built with +: `From: <sender> To: <receiver>`, then `Item: <item> x<quantity>`, then `Total due: £<price>`.",
       "starter": "", "hints": ["Five input() calls, then three print() calls — some lines need more than one + join.", "print(\"From: \" + sender + \" To: \" + receiver); print(\"Item: \" + item + \" x\" + quantity); print(\"Total due: £\" + price)."],
-      "tests": [{ "stdin": "Ada\nSam\nBook\n2\n9.99", "expect": "From: Ada To: Sam\nItem: Book x2\nTotal due: £9.99" }, { "stdin": "Mia\nBob\nMug\n1\n5.50", "expect": "From: Mia To: Bob\nItem: Mug x1\nTotal due: £5.50" }] }
+      "tests": [{ "stdin": "Ada\nSam\nBook\n2\n9.99", "expect": "From: Ada To: Sam\nItem: Book x2\nTotal due: £9.99" }, { "stdin": "Mia\nBob\nMug\n1\n5.50", "expect": "From: Mia To: Bob\nItem: Mug x1\nTotal due: £5.50" }] },
+    { "slug": "gcse-getting-started-p-s1", "tier": 4, "difficulty": 5, "xp": 35, "stretch": true, "title": "🌟 Full shipping label",
+      "brief": "Input a name, two address lines, a city, a postcode, and a country — six separate inputs. Print a 5-line shipping label, built entirely with +: the name, then each address line, then the city and postcode combined on one line (`<city>, <postcode>`), then the country.",
+      "starter": "", "hints": ["Six input() calls, then five print() calls — only the city/postcode line needs a + join.", "print(name); print(a1); print(a2); print(city + \", \" + postcode); print(country)."],
+      "tests": [{ "stdin": "Ada Lovelace\n221B Byte Street\nFlat 4\nLondon\nEC1A 1AA\nUK", "expect": "Ada Lovelace\n221B Byte Street\nFlat 4\nLondon, EC1A 1AA\nUK" }, { "stdin": "Sam Lee\n12 Loop Road\nUnit 2\nLeeds\nLS1 2AB\nUK", "expect": "Sam Lee\n12 Loop Road\nUnit 2\nLeeds, LS1 2AB\nUK" }] },
+    { "slug": "gcse-getting-started-p-s2", "tier": 4, "difficulty": 5, "xp": 35, "stretch": true, "title": "🌟 Event invitation",
+      "brief": "Input a host's name, a guest's name, an event name, a date, a time, and a venue — six separate inputs. Print a 3-line invitation, all built with +: `<guest>, you're invited to <event>!`, then `Hosted by <host> at <venue>.`, then `<date> at <time>.`",
+      "starter": "", "hints": ["Each line mixes several of the six variables together with + — plan which pieces go on which line before you start.", "print(guest + \", you're invited to \" + event + \"!\"); print(\"Hosted by \" + host + \" at \" + venue + \".\"); print(date + \" at \" + time + \".\")."],
+      "tests": [{ "stdin": "Ada\nSam\nCode Night\nFriday\n6pm\nRoom 12", "expect": "Sam, you're invited to Code Night!\nHosted by Ada at Room 12.\nFriday at 6pm." }, { "stdin": "Mia\nBob\nQuiz Night\nMonday\n7pm\nHall A", "expect": "Bob, you're invited to Quiz Night!\nHosted by Mia at Hall A.\nMonday at 7pm." }] }
   ]
 }

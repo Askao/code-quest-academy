@@ -339,15 +339,27 @@ export async function pickRecapChallenge(opts: {
 }): Promise<Challenge | null> {
   const { data: skills } = await supabase
     .from("skills")
-    .select("topic, level")
+    .select("topic, level, updated_at")
     .eq("user_id", opts.userId)
     .eq("track", opts.track);
   if (!skills || skills.length === 0) return null;
 
-  // Try topics weakest-first, but a topic only counts if it actually has
-  // something in onlySlugs - a weak topic with no completed lessons yet
-  // has nothing eligible to recap.
-  const sorted = [...skills].sort((a, b) => Number(a.level) - Number(b.level));
+  // Interleaved, not just weakest-first: over a multi-year course, the
+  // topic that's gone longest without being touched at all is the one
+  // actually at risk of decaying (spaced/interleaved retrieval - see the
+  // "Three-Year Runway" plan), which "weakest skill" alone doesn't catch -
+  // a topic can sit at a high skill level and still not have been touched
+  // in months. skills.updated_at bumps on every attempt in that topic,
+  // pass or fail (see the adaptive skill level block below), so it's a
+  // reliable "last touched" signal with no new tracking needed. Weakest
+  // skill only breaks ties between two topics untouched for about the
+  // same length of time.
+  const sorted = [...skills].sort((a, b) => {
+    const aTime = a.updated_at ? new Date(a.updated_at).getTime() : 0;
+    const bTime = b.updated_at ? new Date(b.updated_at).getTime() : 0;
+    if (aTime !== bTime) return aTime - bTime;
+    return Number(a.level) - Number(b.level);
+  });
   for (const s of sorted) {
     const result = await pickChallenge({
       track: opts.track,

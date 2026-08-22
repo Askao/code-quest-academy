@@ -17,6 +17,7 @@ import {
 } from "@/lib/game";
 import {
   completedTaskSlugs,
+  corePracticeTasksForTopic,
   isLessonComplete,
   lessonsForTopic,
   practiceTasksForTopic,
@@ -254,8 +255,11 @@ function Practice() {
     .map((t) => ({ ...t, projects: projectsForTopic("gcse", t.key) }))
     .filter((t) => t.projects.some((p) => seededProjectSlugs?.has(p.slug)));
 
+  // Stretch tasks (see the GCSE stretch tier) don't count toward
+  // "complete" - they're optional extension content beyond the core pool,
+  // same as a lesson's own stretch task never blocking that lesson.
   const isTopicPracticeComplete = (topicKey: string) => {
-    const pool = practiceTasksForTopic(track, topicKey);
+    const pool = corePracticeTasksForTopic(track, topicKey);
     return pool.length > 0 && pool.every((task) => data?.passedSlugs.has(task.slug));
   };
 
@@ -266,7 +270,7 @@ function Practice() {
   // loop back and grind any one topic again" gate rather than letting
   // students reset and re-grind a topic mid-way through the others.
   const practiceTopicsWithPool = practiceTopics.filter(
-    (t) => practiceTasksForTopic(track, t.key).length > 0,
+    (t) => corePracticeTasksForTopic(track, t.key).length > 0,
   );
   const allPracticeComplete =
     practiceTopicsWithPool.length > 0 &&

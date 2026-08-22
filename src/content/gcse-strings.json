@@ -282,6 +282,14 @@
     { "slug": "gcse-strings-p-10", "tier": 4, "difficulty": 5, "xp": 30, "title": "Caesar shift by one",
       "brief": "Input a lowercase word made only of letters, no spaces. Print it with every letter shifted forward by one place in the alphabet — so `a` becomes `b`, `b` becomes `c`, and so on, with `z` wrapping around back to `a`.",
       "starter": "", "hints": ["ord() turns a letter into its character code, and chr() turns a code back into a letter - shifting the code by one shifts the letter, except z needs a special case to wrap around.", "result = \"\"; for ch in word: if ch == \"z\": result += \"a\" else: result += chr(ord(ch) + 1) — then print(result)."],
-      "tests": [{ "stdin": "abc", "expect": "bcd" }, { "stdin": "xyz", "expect": "yza" }] }
+      "tests": [{ "stdin": "abc", "expect": "bcd" }, { "stdin": "xyz", "expect": "yza" }] },
+    { "slug": "gcse-strings-p-s1", "tier": 4, "difficulty": 5, "xp": 40, "stretch": true, "title": "🌟 Run-length encoding",
+      "brief": "Input a word. Compress it by replacing every run of the same repeated character with that character followed by how many times it repeats in a row — so `aaabbc` becomes `a3b2c1`.",
+      "starter": "", "hints": ["Walk through the word counting how many times each character repeats before it changes, building the result as you go.", "Track a current character and a running count; whenever the next character differs, append the character and its count to the result, then reset the count."],
+      "tests": [{ "stdin": "aaabbc", "expect": "a3b2c1" }, { "stdin": "abc", "expect": "a1b1c1" }] },
+    { "slug": "gcse-strings-p-s2", "tier": 4, "difficulty": 5, "xp": 40, "stretch": true, "title": "🌟 Palindrome sentence",
+      "brief": "Input a sentence, which may contain spaces and a mix of upper and lower case. Remove the spaces and convert it to lowercase, then check whether it reads the same forwards and backwards. Print `Palindrome` or `Not a palindrome`.",
+      "starter": "", "hints": ["Clean the sentence up first (no spaces, all lowercase), then compare it to its reverse exactly as in a simple palindrome check.", "cleaned = sentence.replace(\" \", \"\").lower(); print(\"Palindrome\" if cleaned == cleaned[::-1] else \"Not a palindrome\")."],
+      "tests": [{ "stdin": "Was it a car or a cat I saw", "expect": "Palindrome" }, { "stdin": "Hello World", "expect": "Not a palindrome" }] }
   ]
 }
