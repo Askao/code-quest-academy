@@ -124,6 +124,19 @@ function Ide() {
     await execute(next);
   };
 
+  const downloadCode = () => {
+    const name = currentName.trim() || "program";
+    const blob = new Blob([code], { type: "text/plain" });
+    const url = URL.createObjectURL(blob);
+    const a = document.createElement("a");
+    a.href = url;
+    a.download = `${name}.py`;
+    document.body.appendChild(a);
+    a.click();
+    document.body.removeChild(a);
+    URL.revokeObjectURL(url);
+  };
+
   const reset = () => {
     setCode(DEFAULT_CODE);
     setCurrentId(null);
@@ -270,6 +283,9 @@ function Ide() {
           <div className="flex flex-wrap gap-2">
             <Button onClick={run} disabled={running || !engineReady}>
               {!engineReady ? "Starting Python…" : running ? "Running…" : "Run"}
+            </Button>
+            <Button variant="secondary" onClick={downloadCode} title="Save your code as a file">
+              ⬇ Download
             </Button>
           </div>
           <p className="font-mono text-xs text-muted-foreground">

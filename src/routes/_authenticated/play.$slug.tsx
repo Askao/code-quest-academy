@@ -350,6 +350,20 @@ function Play() {
     }
   };
 
+  const downloadCode = () => {
+    if (!challenge) return;
+    const ext = isSqlTopic(challenge.topic) ? "sql" : "py";
+    const blob = new Blob([code], { type: "text/plain" });
+    const url = URL.createObjectURL(blob);
+    const a = document.createElement("a");
+    a.href = url;
+    a.download = `${challenge.slug}.${ext}`;
+    document.body.appendChild(a);
+    a.click();
+    document.body.removeChild(a);
+    URL.revokeObjectURL(url);
+  };
+
   const nextChallenge = async () => {
     if (!challenge) return;
 
@@ -742,6 +756,9 @@ function Play() {
               onClick={() => setCode(priorAttempt?.code ?? challenge.starter_code ?? "")}
             >
               Reset
+            </Button>
+            <Button variant="secondary" onClick={downloadCode} title="Save your code as a file">
+              ⬇ Download
             </Button>
             {solved ? (
               <Button variant="secondary" onClick={nextChallenge}>
