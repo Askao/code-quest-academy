@@ -114,7 +114,7 @@ function QuickCheck({ lessonSlug, alreadyPassed }: { lessonSlug: string; already
     <section className="panel p-6">
       <div className="flex items-start justify-between gap-3">
         <div className="flex items-start gap-3">
-          <SectionBadge n={4} tint="warning" />
+          <SectionBadge n={3} tint="warning" />
           <h2 className="text-xl font-semibold">Quick check</h2>
         </div>
         {alreadyPassed ? <span className="font-mono text-xs text-primary">✓ passed</span> : null}
@@ -449,7 +449,7 @@ function LessonPage() {
         <section className="panel p-6">
           <div className="flex flex-wrap items-center justify-between gap-2">
             <div className="flex items-center gap-3">
-              <SectionBadge n={3} tint="success" />
+              <SectionBadge n={4} tint="success" />
               <h2 className="text-xl font-semibold">Practice tasks</h2>
             </div>
             <span className="font-mono text-xs text-muted-foreground">
