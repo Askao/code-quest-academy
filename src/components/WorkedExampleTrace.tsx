@@ -4,7 +4,7 @@ import { traceWorkedExample } from "@/lib/trace-runner";
 
 const STEP_DELAY_MS = 1300;
 const LOOP_PAUSE_MS = 1800;
-const TYPE_MS_PER_CHAR = 18;
+const TYPE_MS_PER_CHAR = 45;
 
 /**
  * A step-through visualisation of a lesson's worked example: real code,

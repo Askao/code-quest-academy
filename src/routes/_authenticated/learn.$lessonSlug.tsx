@@ -28,6 +28,31 @@ const TIER_LABEL: Record<number, string> = {
   4: "Exam-style",
 };
 
+/**
+ * The same four-step colour mapping the homepage's "How a lesson works"
+ * section uses (teaching notes → primary, worked example → accent,
+ * practice tasks → success, quick check → warning) - reused here so the
+ * actual page reads as the same shape the marketing page promised, and so
+ * each section has a visual identity beyond "another grey box".
+ */
+const SECTION_TINT = {
+  primary: { bg: "bg-primary/15", text: "text-primary" },
+  accent: { bg: "bg-accent/15", text: "text-accent" },
+  success: { bg: "bg-success/15", text: "text-success" },
+  warning: { bg: "bg-warning/15", text: "text-warning" },
+} as const;
+
+export function SectionBadge({ n, tint }: { n: number; tint: keyof typeof SECTION_TINT }) {
+  const c = SECTION_TINT[tint];
+  return (
+    <span
+      className={`flex h-8 w-8 shrink-0 items-center justify-center rounded-full ${c.bg} font-mono text-sm font-semibold ${c.text}`}
+    >
+      {n}
+    </span>
+  );
+}
+
 const QUIZ_PASS_PERCENT = 70;
 
 export const Route = createFileRoute("/_authenticated/learn/$lessonSlug")({
@@ -87,18 +112,21 @@ function QuickCheck({ lessonSlug, alreadyPassed }: { lessonSlug: string; already
 
   return (
     <section className="panel p-6">
-      <div className="flex items-baseline justify-between">
-        <h2 className="text-lg font-semibold">Quick check</h2>
+      <div className="flex items-start justify-between gap-3">
+        <div className="flex items-start gap-3">
+          <SectionBadge n={4} tint="warning" />
+          <h2 className="text-xl font-semibold">Quick check</h2>
+        </div>
         {alreadyPassed ? <span className="font-mono text-xs text-primary">✓ passed</span> : null}
       </div>
-      <p className="mt-1 text-sm text-muted-foreground">
+      <p className="mt-2 text-base text-muted-foreground">
         A few questions to check the theory has landed, not just the code.
       </p>
-      <ol className="mt-4 space-y-5">
+      <ol className="mt-5 space-y-6">
         {questions.map((q, i) => (
           <li key={i}>
-            <p className="text-sm font-medium">{q.question}</p>
-            <div className="mt-2 space-y-1.5">
+            <p className="text-base font-medium">{q.question}</p>
+            <div className="mt-2.5 space-y-2">
               {q.options.map((option) => {
                 const chosen = answers[i] === option;
                 const showResult = submitted;
@@ -106,7 +134,7 @@ function QuickCheck({ lessonSlug, alreadyPassed }: { lessonSlug: string; already
                 return (
                   <label
                     key={option}
-                    className={`flex cursor-pointer items-center gap-2 rounded-md border p-2 text-sm transition-colors ${
+                    className={`flex cursor-pointer items-center gap-2 rounded-md border p-2.5 text-base transition-colors ${
                       showResult
                         ? isCorrect
                           ? "border-success/50 bg-success/10"
@@ -384,35 +412,46 @@ function LessonPage() {
 
       <div className="space-y-6">
         <section className="panel p-6">
-          <h1 className="text-3xl font-semibold">{lesson.title}</h1>
-          <p className="mt-2 text-sm text-muted-foreground">{lesson.summary}</p>
-          <div className="mt-5">
+          <div className="flex items-start gap-3">
+            <SectionBadge n={1} tint="primary" />
+            <div>
+              <h1 className="text-3xl font-semibold sm:text-4xl">{lesson.title}</h1>
+              <p className="mt-1.5 text-base text-muted-foreground">{lesson.summary}</p>
+            </div>
+          </div>
+          <div className="mt-6">
             <LessonNotes notes={lesson.notes} />
           </div>
         </section>
 
         <section className="panel p-6">
-          <h2 className="text-lg font-semibold">Worked example</h2>
+          <div className="flex items-center gap-3">
+            <SectionBadge n={2} tint="accent" />
+            <h2 className="text-xl font-semibold">Worked example</h2>
+          </div>
           {lesson.worked_example_demo_input ? (
             <WorkedExampleTrace
               source={lesson.worked_example}
               demoInput={lesson.worked_example_demo_input}
             />
           ) : (
-            <pre className="mt-3 overflow-x-auto rounded-lg border border-border bg-secondary/40 p-4 text-xs">
+            <pre className="mt-3 overflow-x-auto rounded-lg border border-border bg-secondary/40 p-4 text-sm">
               <code>{lesson.worked_example}</code>
             </pre>
           )}
           {lesson.worked_example_note ? (
-            <p className="mt-3 text-sm text-muted-foreground">{lesson.worked_example_note}</p>
+            <p className="mt-3 text-base text-muted-foreground">{lesson.worked_example_note}</p>
           ) : null}
         </section>
 
         <QuickCheck lessonSlug={lesson.slug} alreadyPassed={quizPassed.has(lesson.slug)} />
 
         <section className="panel p-6">
-          <div className="flex items-baseline justify-between">
-            <h2 className="text-lg font-semibold">Practice tasks</h2>
+          <div className="flex flex-wrap items-center justify-between gap-2">
+            <div className="flex items-center gap-3">
+              <SectionBadge n={3} tint="success" />
+              <h2 className="text-xl font-semibold">Practice tasks</h2>
+            </div>
             <span className="font-mono text-xs text-muted-foreground">
               {done}/{tasks.length} passed
             </span>
