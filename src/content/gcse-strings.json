@@ -241,5 +241,27 @@
       "brief": "**Part C.** Continuing the checker: read the password and print the same two lines as Part B. A password counts as strong if it is at least 8 characters long **and** contains a digit. Print a final line, `Strength: Strong` or `Strength: Weak`.",
       "starter": "", "hints": ["Work out the length and the has-digit flag exactly as in Part B, then combine both conditions with and.", "Use an if that checks len(password) >= 8 and the digit flag together, printing Strong only when both are true, otherwise Weak."],
       "tests": [{ "stdin": "hello123", "expect": "Length: 8\nHas digit: Yes\nStrength: Strong" }, { "stdin": "cat", "expect": "Length: 3\nHas digit: No\nStrength: Weak" }] }
+  ],
+  "practiceTasks": [
+    { "slug": "gcse-strings-p-01", "tier": 1, "difficulty": 1, "xp": 10, "title": "First and last letter",
+      "brief": "Input a word. Print its first character, then its last character, each on its own line.",
+      "starter": "", "hints": ["Index 0 is the first character; index -1 is the last, counting from the end.", "print(word[0]) then print(word[-1])."],
+      "tests": [{ "stdin": "Python", "expect": "P\nn" }] },
+    { "slug": "gcse-strings-p-02", "tier": 1, "difficulty": 1, "xp": 10, "title": "Shout it",
+      "brief": "Input a sentence. Print it in capital letters.",
+      "starter": "", "hints": [".upper() converts a whole string to capitals.", "print(sentence.upper())."],
+      "tests": [{ "stdin": "hello there", "expect": "HELLO THERE" }] },
+    { "slug": "gcse-strings-p-03", "tier": 2, "difficulty": 2, "xp": 15, "title": "Count a letter",
+      "brief": "Input a word, then a single letter. Print how many times that letter appears in the word.",
+      "starter": "", "hints": ["Loop through every character in the word, comparing each one to the target letter.", "count = 0; for ch in word: if ch == letter: count = count + 1 - then print count."],
+      "tests": [{ "stdin": "banana\na", "expect": "3" }] },
+    { "slug": "gcse-strings-p-04", "tier": 2, "difficulty": 2, "xp": 20, "title": "Reverse a word",
+      "brief": "Input a word. Print it reversed, back to front.",
+      "starter": "", "hints": ["Build up a new string one character at a time, adding each new character to the front rather than the end.", "reversed_word = \"\"; for ch in word: reversed_word = ch + reversed_word - then print(reversed_word)."],
+      "tests": [{ "stdin": "hello", "expect": "olleh" }] },
+    { "slug": "gcse-strings-p-05", "tier": 3, "difficulty": 3, "xp": 25, "title": "Palindrome check",
+      "brief": "Input a word. Print `Palindrome` if it reads the same forwards and backwards, otherwise print `Not a palindrome`.",
+      "starter": "", "hints": ["word[::-1] gives you the word reversed in one step, ready to compare to the original.", "if word == word[::-1]: print(\"Palindrome\") else: print(\"Not a palindrome\")."],
+      "tests": [{ "stdin": "level", "expect": "Palindrome" }, { "stdin": "hello", "expect": "Not a palindrome" }] }
   ]
 }

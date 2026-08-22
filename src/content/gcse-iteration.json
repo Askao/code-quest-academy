@@ -396,5 +396,27 @@
         { "stdin": "3\n10.5\n20.0\n5.5", "expect": "36.0\n20.0\n5.5\nNormal day" },
         { "stdin": "60\n0\n2\n-5\n60.0\n50.0", "expect": "110.0\n60.0\n50.0\nLong day" }
       ] }
+  ],
+  "practiceTasks": [
+    { "slug": "gcse-iteration-p-01", "tier": 1, "difficulty": 1, "xp": 10, "title": "Countdown",
+      "brief": "Input a whole number. Print every number from it down to 1, one per line.",
+      "starter": "", "hints": ["range() can count downwards if you give it a negative step.", "for i in range(n, 0, -1): print(i)."],
+      "tests": [{ "stdin": "4", "expect": "4\n3\n2\n1" }] },
+    { "slug": "gcse-iteration-p-02", "tier": 2, "difficulty": 2, "xp": 15, "title": "Sum of even numbers",
+      "brief": "Input a whole number N. Print the sum of every even number from 2 up to and including N.",
+      "starter": "", "hints": ["range() can step by 2 to land on only the even numbers.", "total = 0, then for i in range(2, n + 1, 2): total = total + i, then print total."],
+      "tests": [{ "stdin": "10", "expect": "30" }, { "stdin": "7", "expect": "12" }] },
+    { "slug": "gcse-iteration-p-03", "tier": 2, "difficulty": 2, "xp": 15, "title": "Repeat a greeting",
+      "brief": "Input a name, then a whole number. Print `Hello, <name>!` that many times, once per line.",
+      "starter": "", "hints": ["The loop just needs to run the right number of times - it doesn't need to use the loop variable itself.", "for i in range(times): print(f\"Hello, {name}!\")."],
+      "tests": [{ "stdin": "Ada\n3", "expect": "Hello, Ada!\nHello, Ada!\nHello, Ada!" }] },
+    { "slug": "gcse-iteration-p-04", "tier": 2, "difficulty": 2, "xp": 15, "title": "Countdown to liftoff",
+      "brief": "Input a whole number. While it's still greater than 0, print it and reduce it by 1 each time. Once the loop ends, print `Liftoff!`.",
+      "starter": "", "hints": ["A while loop that keeps going as long as the number is above 0, reducing it by 1 inside the loop.", "while n > 0: print(n); n = n - 1 - then print(\"Liftoff!\") after the loop ends."],
+      "tests": [{ "stdin": "3", "expect": "3\n2\n1\nLiftoff!" }] },
+    { "slug": "gcse-iteration-p-05", "tier": 3, "difficulty": 3, "xp": 25, "title": "Multiples up to a limit",
+      "brief": "Input a whole number N, then a limit. Print every multiple of N from N up to the limit (inclusive), one per line.",
+      "starter": "", "hints": ["range() can start at N and step by N each time.", "for i in range(n, limit + 1, n): print(i)."],
+      "tests": [{ "stdin": "3\n15", "expect": "3\n6\n9\n12\n15" }] }
   ]
 }

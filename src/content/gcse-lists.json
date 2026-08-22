@@ -281,5 +281,27 @@
       "brief": "**Part C.** Continuing the analyser: read the marks and print the same three lines as Part B. Then also count how many marks are strictly above the mean, and print it as a final line, `Above average: <n>`.",
       "starter": "", "hints": ["Work out the mean first, then loop through the list a second time comparing each mark to it.", "After printing the Part B lines, loop over the list counting marks greater than the (unrounded) mean, then print the count."],
       "tests": [{ "stdin": "5\n60\n75\n40\n90\n55", "expect": "Highest: 90\nLowest: 40\nMean: 64.0\nAbove average: 2" }, { "stdin": "4\n50\n50\n50\n50", "expect": "Highest: 50\nLowest: 50\nMean: 50.0\nAbove average: 0" }] }
+  ],
+  "practiceTasks": [
+    { "slug": "gcse-lists-p-01", "tier": 2, "difficulty": 2, "xp": 15, "title": "Reverse print",
+      "brief": "Input a whole number N, then N words, one per line, storing them in a list. Print them back out in reverse order, one per line.",
+      "starter": "", "hints": ["Build the list first with a loop, then walk through it backwards.", "Build the list with append(), then for i in range(n - 1, -1, -1): print(words[i])."],
+      "tests": [{ "stdin": "3\nred\ngreen\nblue", "expect": "blue\ngreen\nred" }] },
+    { "slug": "gcse-lists-p-02", "tier": 2, "difficulty": 2, "xp": 15, "title": "Shopping list total",
+      "brief": "Input a whole number N. Then, for N items, input the item's name, then the quantity bought. Print the total number of items bought, added up across all of them.",
+      "starter": "", "hints": ["You only need to keep a running total, not the names themselves.", "total = 0, then for i in range(n): name = input(); qty = int(input()); total = total + qty."],
+      "tests": [{ "stdin": "2\nMilk\n2\nBread\n3", "expect": "5" }] },
+    { "slug": "gcse-lists-p-03", "tier": 2, "difficulty": 2, "xp": 20, "title": "Count matches",
+      "brief": "Input a whole number N, then N more whole numbers, storing them in a list. Input a target value. Print how many times the target appears in the list.",
+      "starter": "", "hints": ["Build the list first, then loop over the finished list comparing each value to the target.", "Build the list, read the target, then count = 0; for v in values: if v == target: count = count + 1."],
+      "tests": [{ "stdin": "5\n2\n4\n2\n7\n2\n2", "expect": "3" }] },
+    { "slug": "gcse-lists-p-04", "tier": 3, "difficulty": 3, "xp": 25, "title": "Second highest",
+      "brief": "Input a whole number N, then N more whole numbers, storing them in a list. Print the second-highest value in the list.",
+      "starter": "", "hints": ["Find the highest first with max(), then look for the biggest value that isn't the highest.", "highest = max(values); second = min(values); then loop over values, updating second whenever a value isn't the highest but beats the current second."],
+      "tests": [{ "stdin": "4\n10\n30\n20\n5", "expect": "20" }] },
+    { "slug": "gcse-lists-p-05", "tier": 3, "difficulty": 4, "xp": 30, "title": "Unique count",
+      "brief": "Input a whole number N, then N more whole numbers, storing them in a list. Print how many different (unique) values are in the list.",
+      "starter": "", "hints": ["Build a second list, only adding a value to it if it isn't already there.", "unique = []; for v in values: if v not in unique: unique.append(v) - then print(len(unique))."],
+      "tests": [{ "stdin": "5\n3\n5\n3\n7\n5", "expect": "3" }] }
   ]
 }

@@ -254,5 +254,27 @@
       "brief": "**Part C.** Continuing the calculator: also write a function `circle_area(radius)` that returns round(3.14159 × radius², 2). Read a shape type (`rectangle`, `triangle` or `circle`). For a circle, read just the radius; for the other two shapes, read their two dimensions as in Part B. Call the matching function and print the area, in the format `Area: <n>`.",
       "starter": "", "hints": ["A circle only needs one number read, not two - the amount you read depends on which shape type was given.", "Keep both functions from Part B, add circle_area, then use an if/elif/else on the shape type, reading either one or two numbers before calling the matching function."],
       "tests": [{ "stdin": "circle\n3", "expect": "Area: 28.27" }, { "stdin": "rectangle\n4\n5", "expect": "Area: 20.0" }] }
+  ],
+  "practiceTasks": [
+    { "slug": "gcse-functions-p-01", "tier": 1, "difficulty": 1, "xp": 10, "title": "Greet function",
+      "brief": "Write a function `greet(name)` that returns `Hello, <name>!`. Input a name, call your function, then print the result.",
+      "starter": "", "hints": ["The function returns the greeting; it doesn't print it itself.", "def greet(name): return f\"Hello, {name}!\" - then print(greet(input()))."],
+      "tests": [{ "stdin": "Ada", "expect": "Hello, Ada!" }] },
+    { "slug": "gcse-functions-p-02", "tier": 1, "difficulty": 1, "xp": 10, "title": "Double function",
+      "brief": "Write a function `double(n)` that returns n doubled. Input a number, call your function, then print the result.",
+      "starter": "", "hints": ["A one-line function: return n * 2.", "def double(n): return n * 2 - then print(double(int(input())))."],
+      "tests": [{ "stdin": "6", "expect": "12" }] },
+    { "slug": "gcse-functions-p-03", "tier": 2, "difficulty": 2, "xp": 15, "title": "Is even function",
+      "brief": "Write a function `is_even(n)` that returns True if n is even, otherwise False. Input a number and print `Even` if your function says it's even, otherwise print `Odd`.",
+      "starter": "", "hints": ["n % 2 == 0 is itself a True/False value - you can return it directly.", "def is_even(n): return n % 2 == 0 - then if is_even(number): print(\"Even\") else: print(\"Odd\")."],
+      "tests": [{ "stdin": "4", "expect": "Even" }, { "stdin": "7", "expect": "Odd" }] },
+    { "slug": "gcse-functions-p-04", "tier": 2, "difficulty": 2, "xp": 15, "title": "Max of two",
+      "brief": "Write a function `max_of_two(a, b)` that returns whichever of the two is larger. Input two numbers, call your function, then print the result.",
+      "starter": "", "hints": ["A simple if inside the function decides which one to return.", "def max_of_two(a, b): if a > b: return a; return b."],
+      "tests": [{ "stdin": "8\n3", "expect": "8" }] },
+    { "slug": "gcse-functions-p-05", "tier": 3, "difficulty": 3, "xp": 25, "title": "Total with VAT",
+      "brief": "Write a function `add_vat(price)` that returns the price with 20% VAT added, rounded to 2 decimal places. Input a price, call your function, then print the result.",
+      "starter": "", "hints": ["Multiplying by 1.2 adds 20% on top, then round() the result before returning it.", "def add_vat(price): return round(price * 1.2, 2)."],
+      "tests": [{ "stdin": "10", "expect": "12.0" }] }
   ]
 }

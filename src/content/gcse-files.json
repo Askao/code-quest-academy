@@ -224,5 +224,27 @@
       "brief": "Input a whole number N. Input N lines of text, one at a time. Write them to `file_a.txt`. Input a whole number M. Input M lines of text, one at a time. Write them to `file_b.txt`. Reopen both files and print `A has more lines`, `B has more lines`, or `Equal lines`, depending on which file has more lines.",
       "starter": "", "hints": ["Reopen both files and use .readlines() on each to compare their lengths.", "Count the lines in each reopened file, then compare the two counts with an if/elif/else."],
       "tests": [{ "stdin": "3\nx\ny\nz\n2\np\nq", "expect": "A has more lines" }, { "stdin": "1\nx\n1\ny", "expect": "Equal lines" }] }
+  ],
+  "practiceTasks": [
+    { "slug": "gcse-files-p-01", "tier": 1, "difficulty": 1, "xp": 15, "title": "Save a high score",
+      "brief": "Input a player's name and their score. Write a single line to `highscore.txt` in the form `<name>: <score>`. Reopen the file and print its contents.",
+      "starter": "", "hints": ["Write the combined line with a file's .write() method, then close the file before reopening it to read.", "with open(\"highscore.txt\", \"w\") as f: f.write(f\"{name}: {score}\") - then reopen with \"r\" and print(f.read())."],
+      "tests": [{ "stdin": "Ada\n95", "expect": "Ada: 95" }] },
+    { "slug": "gcse-files-p-02", "tier": 2, "difficulty": 2, "xp": 20, "title": "Append a log entry",
+      "brief": "Input a message. Open `log.txt` in append mode and add the message as a new line. Reopen the file and print its contents.",
+      "starter": "", "hints": ["Append mode is \"a\" instead of \"w\" - it adds to the end of the file rather than overwriting it.", "with open(\"log.txt\", \"a\") as f: f.write(message + \"\\n\") - then reopen with \"r\" and print(f.read().strip())."],
+      "tests": [{ "stdin": "Server started", "expect": "Server started" }] },
+    { "slug": "gcse-files-p-03", "tier": 2, "difficulty": 2, "xp": 20, "title": "Count lines",
+      "brief": "Input a whole number N. Input N lines of text, one at a time. Write them to `notes.txt`, one per line. Reopen the file and print how many lines it contains.",
+      "starter": "", "hints": ["Write each line with a newline after it, then use .readlines() on the reopened file to count them.", "for _ in range(n): f.write(input() + \"\\n\") - then reopen and print(len(f.readlines()))."],
+      "tests": [{ "stdin": "3\nfirst\nsecond\nthird", "expect": "3" }] },
+    { "slug": "gcse-files-p-04", "tier": 3, "difficulty": 3, "xp": 30, "title": "Average from a file",
+      "brief": "Input a whole number N. Input N whole number readings, one at a time. Write them to `readings.txt`, one per line. Reopen the file and print the mean of the readings, rounded to 2 decimal places.",
+      "starter": "", "hints": ["Cast each line back to a number after reopening the file, before averaging them.", "Reopen, cast each stripped line to int, sum them, divide by len(), then round(total / count, 2)."],
+      "tests": [{ "stdin": "3\n40\n55\n45", "expect": "46.67" }] },
+    { "slug": "gcse-files-p-05", "tier": 3, "difficulty": 3, "xp": 30, "title": "Guest list check-in",
+      "brief": "Input a whole number N. Input N guest names, one at a time. Write them to `guests.txt`, one per line. Input a name to check in. Reopen the file and print `Found` if that name is in the list, otherwise print `Not found`.",
+      "starter": "", "hints": ["Strip each reopened line before comparing it, since it will still have a trailing newline.", "Reopen the file, build a list of stripped lines, then check if the name to find is in that list."],
+      "tests": [{ "stdin": "3\nAda\nAlan\nGrace\nAlan", "expect": "Found" }, { "stdin": "3\nAda\nAlan\nGrace\nBob", "expect": "Not found" }] }
   ]
 }

@@ -281,5 +281,27 @@
       "brief": "Input a first name. Input a last name. Input a nickname. Print a sentence in the format `<nickname> (<first> <last>)`, built using +. For example, entering Robert, Smith, then Bob prints Bob (Robert Smith).",
       "starter": "", "hints": ["Notice the printed order isn't the same as the input order — plan which variable goes where before joining them.", "Join nickname + fixed text \" (\" + first + \" \" + last + \")\" with +, in that order."],
       "tests": [{ "stdin": "Robert\nSmith\nBob", "expect": "Bob (Robert Smith)" }, { "stdin": "Elizabeth\nJones\nLiz", "expect": "Liz (Elizabeth Jones)" }] }
+  ],
+  "practiceTasks": [
+    { "slug": "gcse-getting-started-p-01", "tier": 1, "difficulty": 1, "xp": 10, "title": "Print your name twice",
+      "brief": "Input your name. Print it twice, once per line.",
+      "starter": "", "hints": ["Store the name in a variable first, then print that variable twice.", "print(name) called twice, on two separate lines, after storing the input in a variable called name."],
+      "tests": [{ "stdin": "Ada", "expect": "Ada\nAda" }, { "stdin": "Sam", "expect": "Sam\nSam" }] },
+    { "slug": "gcse-getting-started-p-02", "tier": 1, "difficulty": 1, "xp": 10, "title": "Echo a number",
+      "brief": "Input a number (you don't need to convert it to a whole number for this). Print it with \"Number: \" in front, using +.",
+      "starter": "", "hints": ["input() already gives you text, so you can join it straight onto another piece of text with +.", "print(\"Number: \" + number), where number is whatever input() gave you, with no casting needed."],
+      "tests": [{ "stdin": "42", "expect": "Number: 42" }, { "stdin": "7", "expect": "Number: 7" }] },
+    { "slug": "gcse-getting-started-p-03", "tier": 2, "difficulty": 2, "xp": 15, "title": "Greeting card",
+      "brief": "Input a name, then an occasion. Print a greeting in the format `Happy <occasion>, <name>!`, joining the pieces together with +.",
+      "starter": "", "hints": ["Read the name first, then the occasion, storing each in its own variable.", "Build the message with + : \"Happy \" + occasion + \", \" + name + \"!\"."],
+      "tests": [{ "stdin": "Ada\nBirthday", "expect": "Happy Birthday, Ada!" }, { "stdin": "Sam\nGraduation", "expect": "Happy Graduation, Sam!" }] },
+    { "slug": "gcse-getting-started-p-04", "tier": 2, "difficulty": 2, "xp": 15, "title": "Two-line label",
+      "brief": "Input an item's name, then its shelf location. Print the item name on its own line, then the location in the format `Located at: <location>`.",
+      "starter": "", "hints": ["Two separate print() calls, one for each line.", "print(item), then print(\"Located at: \" + location) on the next line."],
+      "tests": [{ "stdin": "Milk\nAisle 3", "expect": "Milk\nLocated at: Aisle 3" }, { "stdin": "Bread\nAisle 1", "expect": "Bread\nLocated at: Aisle 1" }] },
+    { "slug": "gcse-getting-started-p-05", "tier": 3, "difficulty": 2, "xp": 20, "title": "Introduce yourself",
+      "brief": "Ada is filling in a profile. Input a name, then a hobby. Print a sentence introducing them, in the format `<name> enjoys <hobby>.`, built with +.",
+      "starter": "", "hints": ["Read both pieces first, then build the full sentence with + before printing it.", "print(name + \" enjoys \" + hobby + \".\")."],
+      "tests": [{ "stdin": "Ada\npainting", "expect": "Ada enjoys painting." }, { "stdin": "Sam\nfootball", "expect": "Sam enjoys football." }] }
   ]
 }

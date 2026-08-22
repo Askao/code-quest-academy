@@ -330,5 +330,27 @@
       "brief": "**Part C.** Continuing the kiosk: read the amount in pounds and the exchange rate, as before. Read a customer ID, typed as text, and cast it to a whole number. Print the customer ID and the converted amount after the £1.50 fee, rounded to 2 decimal places, in the format `Customer <id>: $<amount>`.",
       "starter": "", "hints": ["The ID is typed as text, so it needs casting to a number before it can be used - though here you only need to print it back.", "Cast the ID with int(), work out the converted amount exactly as in Part B, then build the output with an f-string."],
       "tests": [{ "stdin": "100\n1.25\n4021", "expect": "Customer 4021: $123.12" }, { "stdin": "50\n1.2\n88", "expect": "Customer 88: $58.2" }] }
+  ],
+  "practiceTasks": [
+    { "slug": "gcse-fundamentals-p-01", "tier": 1, "difficulty": 1, "xp": 10, "title": "Pet's age",
+      "brief": "Input a pet's age, a whole number. Print it in the format `My pet is <age> years old.` using an f-string.",
+      "starter": "", "hints": ["Cast the input to a whole number before using it in the f-string.", "age = int(input()), then print(f\"My pet is {age} years old.\")."],
+      "tests": [{ "stdin": "3", "expect": "My pet is 3 years old." }, { "stdin": "7", "expect": "My pet is 7 years old." }] },
+    { "slug": "gcse-fundamentals-p-02", "tier": 1, "difficulty": 1, "xp": 10, "title": "Book price",
+      "brief": "Input a book's price, which may include pence. Print it in the format `This book costs £<price>` using an f-string.",
+      "starter": "", "hints": ["A price with pence needs casting to a float, not a whole number.", "price = float(input()), then print(f\"This book costs £{price}\")."],
+      "tests": [{ "stdin": "9.99", "expect": "This book costs £9.99" }, { "stdin": "12.5", "expect": "This book costs £12.5" }] },
+    { "slug": "gcse-fundamentals-p-03", "tier": 2, "difficulty": 2, "xp": 15, "title": "Two totals",
+      "brief": "Input the price of a drink, then a snack, both of which may include pence. Print their combined total in the format `Total: £<amount>` using an f-string.",
+      "starter": "", "hints": ["Cast both inputs to floats before adding them.", "print(f\"Total: £{drink + snack}\") after casting both inputs."],
+      "tests": [{ "stdin": "1.50\n2.50", "expect": "Total: £4.0" }, { "stdin": "2.0\n3.0", "expect": "Total: £5.0" }] },
+    { "slug": "gcse-fundamentals-p-04", "tier": 2, "difficulty": 2, "xp": 15, "title": "Temperature swing",
+      "brief": "Input today's high temperature, then the low temperature, both of which may include decimals. Print the difference between them (high minus low) in the format `Swing: <amount>` using an f-string.",
+      "starter": "", "hints": ["Cast both temperatures to floats, then subtract the low from the high.", "print(f\"Swing: {high - low}\") after casting both inputs."],
+      "tests": [{ "stdin": "22.5\n14.5", "expect": "Swing: 8.0" }, { "stdin": "18.0\n9.0", "expect": "Swing: 9.0" }] },
+    { "slug": "gcse-fundamentals-p-05", "tier": 3, "difficulty": 3, "xp": 25, "title": "Trip cost per person",
+      "brief": "A group is splitting the cost of a trip evenly. Input the total cost, which may include pence, then the number of people. Print how much each person pays, in the format `Each pays: £<amount>` using an f-string.",
+      "starter": "", "hints": ["Cast the cost to a float and the number of people to a whole number, then divide.", "print(f\"Each pays: £{total / people}\") after casting both inputs."],
+      "tests": [{ "stdin": "100\n4", "expect": "Each pays: £25.0" }, { "stdin": "60\n3", "expect": "Each pays: £20.0" }] }
   ]
 }

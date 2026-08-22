@@ -168,5 +168,27 @@
       "brief": "**Part C.** Continuing the tracker: read the class size and each student's status exactly as in Part B, printing the same four lines as Part B. Then also work out the longest run of consecutive `present` entries in a row, and print it as a final line, `Longest streak: <n>`.",
       "starter": "", "hints": ["Keep a running \"current streak\" that grows by 1 on each present and resets to 0 on each absent, and remember the biggest it ever reached.", "Track two counters through the loop: one for the current run of presents (reset to 0 on any absent), and one for the longest run seen so far, updated whenever the current run beats it."],
       "tests": [{ "stdin": "5\npresent\npresent\nabsent\npresent\npresent", "expect": "Present: 4\nAbsent: 1\nGood attendance\nLongest streak: 2" }, { "stdin": "6\nabsent\nabsent\npresent\npresent\npresent\nabsent", "expect": "Present: 3\nAbsent: 3\nLow attendance\nLongest streak: 3" }] }
+  ],
+  "practiceTasks": [
+    { "slug": "gcse-combining-techniques-p-01", "tier": 2, "difficulty": 2, "xp": 15, "title": "Count positives",
+      "brief": "Input a whole number N, then N more whole numbers, one per line. Print how many of them are positive (greater than 0).",
+      "starter": "", "hints": ["Read each number inside the loop, checking it against 0 as you go.", "count = 0, then for i in range(n): value = int(input()); if value > 0: count = count + 1 - then print count."],
+      "tests": [{ "stdin": "4\n5\n-2\n7\n-1", "expect": "2" }] },
+    { "slug": "gcse-combining-techniques-p-02", "tier": 2, "difficulty": 2, "xp": 15, "title": "Shoe size check",
+      "brief": "A shop stocks sizes 3 to 12. Input a whole number N, then N requested shoe sizes, one per line. For each one, print `Available` if it's between 3 and 12 inclusive, otherwise print `Out of stock`.",
+      "starter": "", "hints": ["Each size gets checked and printed for straight away, inside the loop.", "for i in range(n): size = int(input()); if size >= 3 and size <= 12: print(\"Available\") else: print(\"Out of stock\")."],
+      "tests": [{ "stdin": "3\n6\n14\n2", "expect": "Available\nOut of stock\nOut of stock" }] },
+    { "slug": "gcse-combining-techniques-p-03", "tier": 3, "difficulty": 3, "xp": 25, "title": "Highest even number",
+      "brief": "Input a whole number N, then N more whole numbers. Print the highest one that is even. If none of them are even, print `None`.",
+      "starter": "", "hints": ["Only update your \"highest even so far\" tracker when a number is both even and bigger than what you've already got.", "Start a variable at None; inside the loop, if the number is even and (the tracker is still None or the number beats it), update the tracker. Print \"None\" if it's still None afterwards."],
+      "tests": [{ "stdin": "4\n7\n12\n9\n8", "expect": "12" }, { "stdin": "3\n1\n3\n5", "expect": "None" }] },
+    { "slug": "gcse-combining-techniques-p-04", "tier": 3, "difficulty": 3, "xp": 25, "title": "Count and total odd numbers",
+      "brief": "Input a whole number N, then N more whole numbers. Print how many of them are odd, then print the total of just the odd ones.",
+      "starter": "", "hints": ["Track a count and a total together, both only updating when a number is odd.", "count = 0, total = 0, then inside the loop: if value % 2 != 0: count = count + 1; total = total + value."],
+      "tests": [{ "stdin": "5\n3\n4\n7\n2\n9", "expect": "3\n19" }] },
+    { "slug": "gcse-combining-techniques-p-05", "tier": 4, "difficulty": 4, "xp": 30, "title": "Bus occupancy",
+      "brief": "A bus starts empty. Input a whole number N (the number of stops). At each stop, input how many people get on, then how many get off. Print how many people are on the bus after the final stop, then print the highest number of people on the bus at any point.",
+      "starter": "", "hints": ["Keep a running total that changes at every stop, and a separate \"highest ever seen\" tracker that only ever goes up.", "on_board = 0, max_seen = 0; each stop: on_board = on_board + got_on - got_off; if on_board > max_seen: max_seen = on_board."],
+      "tests": [{ "stdin": "3\n10\n0\n5\n3\n8\n15", "expect": "5\n12" }, { "stdin": "3\n6\n0\n4\n2\n10\n5", "expect": "13\n13" }] }
   ]
 }

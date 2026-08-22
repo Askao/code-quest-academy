@@ -332,5 +332,27 @@
       "brief": "**Part C.** Continuing the estimator: read the weight, then whether next-day delivery is wanted (`yes` or `no`). Work out the cost exactly as in Part B, then add a flat £4.00 surcharge if next-day delivery was chosen. Print the final cost, rounded to 2 decimal places, in the format `Cost: £<amount>`.",
       "starter": "", "hints": ["Work out the base cost first using the same rule as Part B, then add the surcharge afterwards if needed.", "Read both inputs, calculate the weight-based cost, then add 4.00 only if the next-day answer is \"yes\"."],
       "tests": [{ "stdin": "3\nno", "expect": "Cost: £3.5" }, { "stdin": "8\nyes", "expect": "Cost: £11.1" }] }
+  ],
+  "practiceTasks": [
+    { "slug": "gcse-selection-p-01", "tier": 1, "difficulty": 1, "xp": 10, "title": "Voting age checker",
+      "brief": "Input a person's age. Print `Can vote` if they are 18 or over, otherwise print `Cannot vote`.",
+      "starter": "", "hints": ["Compare the age to 18 with >=.", "if age >= 18: print(\"Can vote\") else: print(\"Cannot vote\")."],
+      "tests": [{ "stdin": "20", "expect": "Can vote" }, { "stdin": "15", "expect": "Cannot vote" }] },
+    { "slug": "gcse-selection-p-02", "tier": 1, "difficulty": 1, "xp": 10, "title": "Positive or negative",
+      "brief": "Input a whole number. Print `Positive` if it's greater than 0, `Negative` if it's less than 0, or `Zero` if it's exactly 0.",
+      "starter": "", "hints": ["Three possible outcomes needs an if / elif / else chain.", "if n > 0: ... elif n < 0: ... else: print(\"Zero\")."],
+      "tests": [{ "stdin": "5", "expect": "Positive" }, { "stdin": "-3", "expect": "Negative" }, { "stdin": "0", "expect": "Zero" }] },
+    { "slug": "gcse-selection-p-03", "tier": 2, "difficulty": 2, "xp": 15, "title": "Speed camera",
+      "brief": "A road has a 30mph speed limit. Input a car's speed. Print `Speeding` if it's over 30, otherwise print `Within limit`.",
+      "starter": "", "hints": ["Compare the speed to 30 with >.", "if speed > 30: print(\"Speeding\") else: print(\"Within limit\")."],
+      "tests": [{ "stdin": "35", "expect": "Speeding" }, { "stdin": "28", "expect": "Within limit" }] },
+    { "slug": "gcse-selection-p-04", "tier": 3, "difficulty": 3, "xp": 25, "title": "Cinema age rating",
+      "brief": "A cinema uses age ratings U, 12, 15 and 18. Input a person's age. Print the highest rating they're allowed to watch: `18` for 18 or over, `15` for 15 or over, `12` for 12 or over, otherwise `U`.",
+      "starter": "", "hints": ["Check the highest boundary first in an elif chain, so a 20-year-old doesn't also match the 12+ or 15+ checks.", "if age >= 18: ... elif age >= 15: ... elif age >= 12: ... else: print(\"U\")."],
+      "tests": [{ "stdin": "20", "expect": "18" }, { "stdin": "16", "expect": "15" }, { "stdin": "13", "expect": "12" }, { "stdin": "8", "expect": "U" }] },
+    { "slug": "gcse-selection-p-05", "tier": 3, "difficulty": 3, "xp": 25, "title": "Data allowance",
+      "brief": "A phone plan includes 500MB of data. Input how many MB have been used. If it's over 500, print how many MB over in the format `Over allowance: <n>MB`; otherwise print how many MB are left, in the format `Remaining: <n>MB`.",
+      "starter": "", "hints": ["Compare the used amount to 500, then work out the difference either way round.", "if used > 500: print(f\"Over allowance: {used - 500}MB\") else: print(f\"Remaining: {500 - used}MB\")."],
+      "tests": [{ "stdin": "620", "expect": "Over allowance: 120MB" }, { "stdin": "350", "expect": "Remaining: 150MB" }] }
   ]
 }
