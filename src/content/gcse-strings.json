@@ -262,6 +262,26 @@
     { "slug": "gcse-strings-p-05", "tier": 3, "difficulty": 3, "xp": 25, "title": "Palindrome check",
       "brief": "Input a word. Print `Palindrome` if it reads the same forwards and backwards, otherwise print `Not a palindrome`.",
       "starter": "", "hints": ["word[::-1] gives you the word reversed in one step, ready to compare to the original.", "if word == word[::-1]: print(\"Palindrome\") else: print(\"Not a palindrome\")."],
-      "tests": [{ "stdin": "level", "expect": "Palindrome" }, { "stdin": "hello", "expect": "Not a palindrome" }] }
+      "tests": [{ "stdin": "level", "expect": "Palindrome" }, { "stdin": "hello", "expect": "Not a palindrome" }] },
+    { "slug": "gcse-strings-p-06", "tier": 1, "difficulty": 2, "xp": 15, "title": "Remove spaces",
+      "brief": "Input a sentence, which may contain spaces. Print it with every space removed.",
+      "starter": "", "hints": ["A string method can replace every occurrence of one substring with another — including replacing a space with nothing.", "print(sentence.replace(\" \", \"\"))."],
+      "tests": [{ "stdin": "hello world", "expect": "helloworld" }, { "stdin": "a b c", "expect": "abc" }] },
+    { "slug": "gcse-strings-p-07", "tier": 2, "difficulty": 3, "xp": 20, "title": "Title case manually",
+      "brief": "Input a word, in any mix of upper and lower case. Print it with only its first letter capitalised and every other letter lowercase.",
+      "starter": "", "hints": ["Handle the first character and the rest of the string separately, then join them back together.", "print(word[0].upper() + word[1:].lower())."],
+      "tests": [{ "stdin": "hELLO", "expect": "Hello" }, { "stdin": "PYTHON", "expect": "Python" }] },
+    { "slug": "gcse-strings-p-08", "tier": 2, "difficulty": 3, "xp": 20, "title": "Count words",
+      "brief": "Input a sentence. Print how many words it contains, counting a word as anything separated by spaces.",
+      "starter": "", "hints": ["A string method can split a sentence into a list of words at every space.", "print(len(sentence.split()))."],
+      "tests": [{ "stdin": "the quick brown fox", "expect": "4" }, { "stdin": "hello", "expect": "1" }] },
+    { "slug": "gcse-strings-p-09", "tier": 3, "difficulty": 4, "xp": 25, "title": "Vowel counter",
+      "brief": "Input a word. Count how many of its letters are vowels (a, e, i, o, u — either case), and print the count.",
+      "starter": "", "hints": ["Loop over every character, checking whether it's in a string of the vowel letters.", "count = 0; for ch in word.lower(): if ch in \"aeiou\": count += 1 — then print(count)."],
+      "tests": [{ "stdin": "Programming", "expect": "3" }, { "stdin": "rhythm", "expect": "0" }] },
+    { "slug": "gcse-strings-p-10", "tier": 4, "difficulty": 5, "xp": 30, "title": "Caesar shift by one",
+      "brief": "Input a lowercase word made only of letters, no spaces. Print it with every letter shifted forward by one place in the alphabet — so `a` becomes `b`, `b` becomes `c`, and so on, with `z` wrapping around back to `a`.",
+      "starter": "", "hints": ["ord() turns a letter into its character code, and chr() turns a code back into a letter - shifting the code by one shifts the letter, except z needs a special case to wrap around.", "result = \"\"; for ch in word: if ch == \"z\": result += \"a\" else: result += chr(ord(ch) + 1) — then print(result)."],
+      "tests": [{ "stdin": "abc", "expect": "bcd" }, { "stdin": "xyz", "expect": "yza" }] }
   ]
 }

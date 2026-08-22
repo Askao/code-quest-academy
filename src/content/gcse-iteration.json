@@ -417,6 +417,26 @@
     { "slug": "gcse-iteration-p-05", "tier": 3, "difficulty": 3, "xp": 25, "title": "Multiples up to a limit",
       "brief": "Input a whole number N, then a limit. Print every multiple of N from N up to the limit (inclusive), one per line.",
       "starter": "", "hints": ["range() can start at N and step by N each time.", "for i in range(n, limit + 1, n): print(i)."],
-      "tests": [{ "stdin": "3\n15", "expect": "3\n6\n9\n12\n15" }] }
+      "tests": [{ "stdin": "3\n15", "expect": "3\n6\n9\n12\n15" }] },
+    { "slug": "gcse-iteration-p-06", "tier": 1, "difficulty": 2, "xp": 15, "title": "Sum 1 to N",
+      "brief": "Input a whole number N. Add up every whole number from 1 to N (inclusive) using a loop, and print the total.",
+      "starter": "", "hints": ["range(1, n + 1) gives you every number from 1 up to and including n.", "total = 0; for i in range(1, n + 1): total += i — then print(total)."],
+      "tests": [{ "stdin": "5", "expect": "15" }, { "stdin": "10", "expect": "55" }] },
+    { "slug": "gcse-iteration-p-07", "tier": 2, "difficulty": 3, "xp": 20, "title": "Largest of N numbers",
+      "brief": "Input a whole number N. Then input N more whole numbers, one at a time. Print the largest one.",
+      "starter": "", "hints": ["Keep a running \"largest so far\" variable, updating it inside the loop whenever a bigger number comes in.", "largest = None; for _ in range(n): x = int(input()); if largest is None or x > largest: largest = x — then print(largest)."],
+      "tests": [{ "stdin": "4\n3\n8\n1\n5", "expect": "8" }, { "stdin": "3\n10\n2\n7", "expect": "10" }] },
+    { "slug": "gcse-iteration-p-08", "tier": 3, "difficulty": 3, "xp": 20, "title": "Countdown by twos",
+      "brief": "Input a starting even whole number N. Using a while loop, print N, then N minus 2, then N minus 4, and so on, down to and including 0 — one number per line.",
+      "starter": "", "hints": ["A while loop that keeps going while the number is 0 or more, subtracting 2 each time round.", "while n >= 0: print(n); n -= 2."],
+      "tests": [{ "stdin": "6", "expect": "6\n4\n2\n0" }, { "stdin": "10", "expect": "10\n8\n6\n4\n2\n0" }] },
+    { "slug": "gcse-iteration-p-09", "tier": 3, "difficulty": 4, "xp": 25, "title": "Times table",
+      "brief": "Input a whole number N, then a limit L. Print the N times table from 1×N up to L×N, one line each, in the format `<i> x <N> = <result>`.",
+      "starter": "", "hints": ["Loop i from 1 up to and including the limit, working out i times N on each pass.", "for i in range(1, limit + 1): print(f\"{i} x {n} = {i * n}\")."],
+      "tests": [{ "stdin": "3\n5", "expect": "1 x 3 = 3\n2 x 3 = 6\n3 x 3 = 9\n4 x 3 = 12\n5 x 3 = 15" }, { "stdin": "2\n3", "expect": "1 x 2 = 2\n2 x 2 = 4\n3 x 2 = 6" }] },
+    { "slug": "gcse-iteration-p-10", "tier": 4, "difficulty": 5, "xp": 30, "title": "FizzBuzz range",
+      "brief": "Input a start number, then an end number (inclusive). For every whole number in that range, print `FizzBuzz` if it divides evenly by both 3 and 5, `Fizz` if just by 3, `Buzz` if just by 5, or the number itself if none of those apply.",
+      "starter": "", "hints": ["Check divisibility by 15 first (both 3 and 5 at once), then 3, then 5, then fall back to the number.", "for i in range(start, end + 1): if i % 15 == 0: print(\"FizzBuzz\") elif i % 3 == 0: print(\"Fizz\") elif i % 5 == 0: print(\"Buzz\") else: print(i)."],
+      "tests": [{ "stdin": "1\n15", "expect": "1\n2\nFizz\n4\nBuzz\nFizz\n7\n8\nFizz\nBuzz\n11\nFizz\n13\n14\nFizzBuzz" }, { "stdin": "10\n16", "expect": "Buzz\n11\nFizz\n13\n14\nFizzBuzz\n16" }] }
   ]
 }

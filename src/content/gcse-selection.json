@@ -353,6 +353,26 @@
     { "slug": "gcse-selection-p-05", "tier": 3, "difficulty": 3, "xp": 25, "title": "Data allowance",
       "brief": "A phone plan includes 500MB of data. Input how many MB have been used. If it's over 500, print how many MB over in the format `Over allowance: <n>MB`; otherwise print how many MB are left, in the format `Remaining: <n>MB`.",
       "starter": "", "hints": ["Compare the used amount to 500, then work out the difference either way round.", "if used > 500: print(f\"Over allowance: {used - 500}MB\") else: print(f\"Remaining: {500 - used}MB\")."],
-      "tests": [{ "stdin": "620", "expect": "Over allowance: 120MB" }, { "stdin": "350", "expect": "Remaining: 150MB" }] }
+      "tests": [{ "stdin": "620", "expect": "Over allowance: 120MB" }, { "stdin": "350", "expect": "Remaining: 150MB" }] },
+    { "slug": "gcse-selection-p-06", "tier": 1, "difficulty": 2, "xp": 15, "title": "Grade classifier",
+      "brief": "Input a score out of 100, a whole number. Print `Pass` if it's 40 or above, otherwise print `Fail`.",
+      "starter": "", "hints": ["A single if/else compares the score to 40.", "if score >= 40: print(\"Pass\") else: print(\"Fail\")."],
+      "tests": [{ "stdin": "55", "expect": "Pass" }, { "stdin": "30", "expect": "Fail" }] },
+    { "slug": "gcse-selection-p-07", "tier": 2, "difficulty": 3, "xp": 20, "title": "Even, odd or zero",
+      "brief": "Input a whole number. Print `Zero` if it's 0, `Even` if it's even, or `Odd` if it's odd.",
+      "starter": "", "hints": ["Check for 0 first, then use % 2 to tell even from odd for everything else.", "if n == 0: print(\"Zero\") elif n % 2 == 0: print(\"Even\") else: print(\"Odd\")."],
+      "tests": [{ "stdin": "0", "expect": "Zero" }, { "stdin": "4", "expect": "Even" }, { "stdin": "7", "expect": "Odd" }] },
+    { "slug": "gcse-selection-p-08", "tier": 3, "difficulty": 4, "xp": 25, "title": "Triangle classifier",
+      "brief": "Input three side lengths of a triangle, one at a time, whole numbers. If the two shortest sides don't add up to more than the longest, the shape isn't a valid triangle at all — print `Not a triangle`. Otherwise, print `Equilateral` if all three sides are equal, `Isosceles` if exactly two are equal, or `Scalene` if all three are different.",
+      "starter": "", "hints": ["Sort the three sides first so you always know which is longest, then check the triangle rule before checking for equal sides.", "sides = sorted([a, b, c]); if sides[0] + sides[1] <= sides[2]: print(\"Not a triangle\") — otherwise compare a, b and c for equality to decide between the other three."],
+      "tests": [{ "stdin": "3\n3\n3", "expect": "Equilateral" }, { "stdin": "3\n3\n5", "expect": "Isosceles" }, { "stdin": "3\n4\n5", "expect": "Scalene" }, { "stdin": "1\n1\n5", "expect": "Not a triangle" }] },
+    { "slug": "gcse-selection-p-09", "tier": 3, "difficulty": 4, "xp": 25, "title": "Loyalty discount tier",
+      "brief": "Input a total spend, which may include pence, then whether the customer has a loyalty card (`yes` or `no`). With a card: 20% off if spend is £100 or more, 10% off if £50 or more, otherwise 5% off. Without a card: 10% off if £100 or more, 5% off if £50 or more, otherwise no discount. Print the discount percentage, then the final price rounded to 2 decimal places, in the format `Discount: <n>%` then `Final: £<amount>`.",
+      "starter": "", "hints": ["Two separate if/elif/else chains, one nested inside a check for whether they have a card.", "if card == \"yes\": (a 3-way if/elif/else for 20/10/5) else: (a 3-way if/elif/else for 10/5/0) — then apply whichever percentage was chosen."],
+      "tests": [{ "stdin": "120\nyes", "expect": "Discount: 20%\nFinal: £96.0" }, { "stdin": "120\nno", "expect": "Discount: 10%\nFinal: £108.0" }, { "stdin": "30\nyes", "expect": "Discount: 5%\nFinal: £28.5" }] },
+    { "slug": "gcse-selection-p-10", "tier": 4, "difficulty": 5, "xp": 30, "title": "Exam grade boundaries with resit flag",
+      "brief": "Input a percentage score, a whole number, then whether this is a resit (`yes` or `no`). Print the grade using these boundaries: 80+ is `A*`, 70+ is `A`, 60+ is `B`, 50+ is `C`, 40+ is `D`, below that is `U`. If it's a resit **and** the grade is `D` or `U`, also print a second line, `Resit recommended`.",
+      "starter": "", "hints": ["Work out the grade first with an if/elif chain, then a separate check afterwards decides whether to print the extra line.", "Use `in (\"U\", \"D\")` to test the grade against both values at once, combined with the resit check using and."],
+      "tests": [{ "stdin": "85\nno", "expect": "A*" }, { "stdin": "35\nyes", "expect": "U\nResit recommended" }, { "stdin": "45\nyes", "expect": "D\nResit recommended" }, { "stdin": "55\nyes", "expect": "C" }] }
   ]
 }

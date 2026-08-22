@@ -302,6 +302,26 @@
     { "slug": "gcse-lists-p-05", "tier": 3, "difficulty": 4, "xp": 30, "title": "Unique count",
       "brief": "Input a whole number N, then N more whole numbers, storing them in a list. Print how many different (unique) values are in the list.",
       "starter": "", "hints": ["Build a second list, only adding a value to it if it isn't already there.", "unique = []; for v in values: if v not in unique: unique.append(v) - then print(len(unique))."],
-      "tests": [{ "stdin": "5\n3\n5\n3\n7\n5", "expect": "3" }] }
+      "tests": [{ "stdin": "5\n3\n5\n3\n7\n5", "expect": "3" }] },
+    { "slug": "gcse-lists-p-06", "tier": 1, "difficulty": 2, "xp": 15, "title": "Sum of a list",
+      "brief": "Input a whole number N, then N more whole numbers, storing them in a list. Print the total of every value in the list.",
+      "starter": "", "hints": ["Build the list with a loop first, then use a built-in on the finished list.", "Append each value to a list inside a loop, then print(sum(list))."],
+      "tests": [{ "stdin": "3\n2\n4\n6", "expect": "12" }, { "stdin": "4\n1\n1\n1\n1", "expect": "4" }] },
+    { "slug": "gcse-lists-p-07", "tier": 2, "difficulty": 3, "xp": 20, "title": "First and last item",
+      "brief": "Input a whole number N, then N items of text, storing them in a list. Print the first item, then the last item, each on its own line.",
+      "starter": "", "hints": ["The first item is index 0; the last item can be reached with index -1.", "print(items[0]) then print(items[-1])."],
+      "tests": [{ "stdin": "3\napple\nbanana\ncherry", "expect": "apple\ncherry" }, { "stdin": "2\ndog\ncat", "expect": "dog\ncat" }] },
+    { "slug": "gcse-lists-p-08", "tier": 2, "difficulty": 3, "xp": 20, "title": "Even numbers only",
+      "brief": "Input a whole number N, then N more whole numbers, storing them in a list. Build a new list containing only the even ones, then print them all on one line, separated by spaces. If there aren't any, print `None` instead.",
+      "starter": "", "hints": ["Loop over the original list, adding a value to a new list only when it's even.", "evens = [x for x in nums if x % 2 == 0] — then print(\" \".join(str(x) for x in evens)) if evens else print(\"None\")."],
+      "tests": [{ "stdin": "5\n1\n2\n3\n4\n5", "expect": "2 4" }, { "stdin": "3\n1\n3\n5", "expect": "None" }] },
+    { "slug": "gcse-lists-p-09", "tier": 3, "difficulty": 4, "xp": 25, "title": "Remove duplicates, keep order",
+      "brief": "Input a whole number N, then N more whole numbers, which may repeat, storing them in a list. Print only the first occurrence of each value, in the order they first appeared, all on one line separated by spaces.",
+      "starter": "", "hints": ["Build a second list, only adding a value to it the first time you see it.", "seen = []; for x in nums: if x not in seen: seen.append(x) — then print(\" \".join(str(x) for x in seen))."],
+      "tests": [{ "stdin": "6\n1\n2\n2\n3\n1\n4", "expect": "1 2 3 4" }, { "stdin": "4\n5\n5\n5\n5", "expect": "5" }] },
+    { "slug": "gcse-lists-p-10", "tier": 4, "difficulty": 5, "xp": 30, "title": "Grade lookup by index",
+      "brief": "Input a whole number N. Then, for each of the N students, input their name and their score, one at a time, storing names and scores in two separate lists at matching positions. Finally, input a name to look up. If that name is in the list, print their score in the format `<name>: <score>`; otherwise print `Not found`.",
+      "starter": "", "hints": ["Two parallel lists, built together in the same loop, then .index() finds where a name sits so you can look up the matching score.", "if target in names: i = names.index(target); print(f\"{names[i]}: {scores[i]}\") else: print(\"Not found\")."],
+      "tests": [{ "stdin": "3\nAda\n80\nSam\n65\nMia\n90\nSam", "expect": "Sam: 65" }, { "stdin": "2\nAda\n80\nSam\n65\nBob", "expect": "Not found" }] }
   ]
 }

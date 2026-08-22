@@ -433,25 +433,34 @@ function Practice() {
               </button>
               {browsingTopic === t.key ? (
                 <div className="mt-2 max-h-72 space-y-1 overflow-y-auto rounded-md border border-border p-3">
-                  {practiceTasksForTopic(track, t.key).map((task) => {
-                    const done = data?.passedSlugs.has(task.slug) ?? false;
-                    return (
-                      <Link
-                        key={task.slug}
-                        to="/play/$slug"
-                        params={{ slug: task.slug }}
-                        search={{ mode: "practice" as const, track, topic: t.key }}
-                        className={`flex items-center gap-2 rounded px-1.5 py-1 text-sm hover:bg-secondary/40 ${
-                          done ? "text-muted-foreground" : "text-foreground"
-                        }`}
-                      >
-                        <span className={done ? "text-success" : "text-muted-foreground"}>
-                          {done ? "✓" : "○"}
-                        </span>
-                        {task.title}
-                      </Link>
-                    );
-                  })}
+                  {[...practiceTasksForTopic(track, t.key)]
+                    .sort((a, b) => a.difficulty - b.difficulty)
+                    .map((task) => {
+                      const done = data?.passedSlugs.has(task.slug) ?? false;
+                      return (
+                        <Link
+                          key={task.slug}
+                          to="/play/$slug"
+                          params={{ slug: task.slug }}
+                          search={{ mode: "practice" as const, track, topic: t.key }}
+                          className={`flex items-center gap-2 rounded px-1.5 py-1 text-sm hover:bg-secondary/40 ${
+                            done ? "text-muted-foreground" : "text-foreground"
+                          }`}
+                        >
+                          <span className={done ? "text-success" : "text-muted-foreground"}>
+                            {done ? "✓" : "○"}
+                          </span>
+                          <span className="flex-1">{task.title}</span>
+                          <span
+                            className="font-mono text-xs text-muted-foreground"
+                            title={`Difficulty ${task.difficulty}/5`}
+                          >
+                            {"●".repeat(task.difficulty)}
+                            {"○".repeat(5 - task.difficulty)}
+                          </span>
+                        </Link>
+                      );
+                    })}
                   {practiceTasksForTopic(track, t.key).length === 0 ? (
                     <p className="text-sm text-muted-foreground">
                       No dedicated practice tasks for this topic yet — "Practise" above still works,

@@ -302,6 +302,26 @@
     { "slug": "gcse-getting-started-p-05", "tier": 3, "difficulty": 2, "xp": 20, "title": "Introduce yourself",
       "brief": "Ada is filling in a profile. Input a name, then a hobby. Print a sentence introducing them, in the format `<name> enjoys <hobby>.`, built with +.",
       "starter": "", "hints": ["Read both pieces first, then build the full sentence with + before printing it.", "print(name + \" enjoys \" + hobby + \".\")."],
-      "tests": [{ "stdin": "Ada\npainting", "expect": "Ada enjoys painting." }, { "stdin": "Sam\nfootball", "expect": "Sam enjoys football." }] }
+      "tests": [{ "stdin": "Ada\npainting", "expect": "Ada enjoys painting." }, { "stdin": "Sam\nfootball", "expect": "Sam enjoys football." }] },
+    { "slug": "gcse-getting-started-p-06", "tier": 2, "difficulty": 3, "xp": 20, "title": "Full address label",
+      "brief": "Input a house number, then a street name, then a city — three separate inputs. Print them as one address line, in the format `<number> <street>, <city>`, built entirely with +.",
+      "starter": "", "hints": ["Three input() calls, then one print() that joins all three with + and the right spaces/comma.", "print(number + \" \" + street + \", \" + city)."],
+      "tests": [{ "stdin": "12\nElm Street\nLondon", "expect": "12 Elm Street, London" }, { "stdin": "45\nHigh Road\nLeeds", "expect": "45 High Road, Leeds" }] },
+    { "slug": "gcse-getting-started-p-07", "tier": 3, "difficulty": 3, "xp": 20, "title": "Two-part story",
+      "brief": "Input a name, then a place. Print two sentences, each built with +, reusing both pieces of information in each line: `<name> travelled to <place>.` then `<place> welcomed <name> warmly.`",
+      "starter": "", "hints": ["Read both values once, then reuse the same two variables in both print() calls — no need to read anything twice.", "print(name + \" travelled to \" + place + \".\") then print(place + \" welcomed \" + name + \" warmly.\")."],
+      "tests": [{ "stdin": "Ada\nParis", "expect": "Ada travelled to Paris.\nParis welcomed Ada warmly." }, { "stdin": "Sam\nRome", "expect": "Sam travelled to Rome.\nRome welcomed Sam warmly." }] },
+    { "slug": "gcse-getting-started-p-08", "tier": 3, "difficulty": 4, "xp": 25, "title": "Business card",
+      "brief": "Input a name, a job title, and a phone number — three separate inputs. Print a 3-line business card: the name, then the job title, then the phone number in the format `Call: <phone>`.",
+      "starter": "", "hints": ["Three input() calls, then three separate print() calls — one line doesn't need +, the other does.", "print(name); print(title); print(\"Call: \" + phone)."],
+      "tests": [{ "stdin": "Ada Lovelace\nSoftware Engineer\n07123456789", "expect": "Ada Lovelace\nSoftware Engineer\nCall: 07123456789" }, { "stdin": "Sam Lee\nShop Manager\n07999999999", "expect": "Sam Lee\nShop Manager\nCall: 07999999999" }] },
+    { "slug": "gcse-getting-started-p-09", "tier": 3, "difficulty": 4, "xp": 25, "title": "Movie ticket",
+      "brief": "Input a film name, a showtime, and a seat number — three separate inputs. Print them all on one line, in the format `<film> — <showtime> — Seat <seat>`, built entirely with +.",
+      "starter": "", "hints": ["One long + chain, joining all three pieces with \" — \" and \" — Seat \" in between.", "print(film + \" — \" + showtime + \" — Seat \" + seat)."],
+      "tests": [{ "stdin": "Inception\n7:30pm\nA12", "expect": "Inception — 7:30pm — Seat A12" }, { "stdin": "Dune\n9:00pm\nC5", "expect": "Dune — 9:00pm — Seat C5" }] },
+    { "slug": "gcse-getting-started-p-10", "tier": 4, "difficulty": 5, "xp": 30, "title": "Package receipt",
+      "brief": "Input a sender, a receiver, an item name, a quantity, and a price — five separate inputs. Print a 3-line receipt, all built with +: `From: <sender> To: <receiver>`, then `Item: <item> x<quantity>`, then `Total due: £<price>`.",
+      "starter": "", "hints": ["Five input() calls, then three print() calls — some lines need more than one + join.", "print(\"From: \" + sender + \" To: \" + receiver); print(\"Item: \" + item + \" x\" + quantity); print(\"Total due: £\" + price)."],
+      "tests": [{ "stdin": "Ada\nSam\nBook\n2\n9.99", "expect": "From: Ada To: Sam\nItem: Book x2\nTotal due: £9.99" }, { "stdin": "Mia\nBob\nMug\n1\n5.50", "expect": "From: Mia To: Bob\nItem: Mug x1\nTotal due: £5.50" }] }
   ]
 }

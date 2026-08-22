@@ -275,6 +275,26 @@
     { "slug": "gcse-functions-p-05", "tier": 3, "difficulty": 3, "xp": 25, "title": "Total with VAT",
       "brief": "Write a function `add_vat(price)` that returns the price with 20% VAT added, rounded to 2 decimal places. Input a price, call your function, then print the result.",
       "starter": "", "hints": ["Multiplying by 1.2 adds 20% on top, then round() the result before returning it.", "def add_vat(price): return round(price * 1.2, 2)."],
-      "tests": [{ "stdin": "10", "expect": "12.0" }] }
+      "tests": [{ "stdin": "10", "expect": "12.0" }] },
+    { "slug": "gcse-functions-p-06", "tier": 1, "difficulty": 2, "xp": 15, "title": "Square function",
+      "brief": "Write a function `square(n)` that returns n multiplied by itself. Input a number, call your function, then print the result in the format `Square: <n>`.",
+      "starter": "", "hints": ["A one-line function: return n * n.", "def square(n): return n * n — then print(f\"Square: {square(number)}\")."],
+      "tests": [{ "stdin": "5", "expect": "Square: 25" }, { "stdin": "9", "expect": "Square: 81" }] },
+    { "slug": "gcse-functions-p-07", "tier": 2, "difficulty": 3, "xp": 20, "title": "Min of three",
+      "brief": "Write a function `min_of_three(a, b, c)` that returns the smallest of the three values. Input three numbers, call your function, then print the result.",
+      "starter": "", "hints": ["Python's built-in min() already accepts three arguments at once.", "def min_of_three(a, b, c): return min(a, b, c)."],
+      "tests": [{ "stdin": "5\n2\n8", "expect": "2" }, { "stdin": "10\n3\n7", "expect": "3" }] },
+    { "slug": "gcse-functions-p-08", "tier": 2, "difficulty": 3, "xp": 20, "title": "Convert temperature function",
+      "brief": "Write a function `celsius_to_fahrenheit(c)` that returns c × 9 / 5 + 32, rounded to 2 decimal places. Input a temperature in Celsius, call your function, then print the result in the format `Fahrenheit: <n>`.",
+      "starter": "", "hints": ["Follow the exact formula given, then round the result before returning it.", "def celsius_to_fahrenheit(c): return round(c * 9 / 5 + 32, 2)."],
+      "tests": [{ "stdin": "0", "expect": "Fahrenheit: 32.0" }, { "stdin": "100", "expect": "Fahrenheit: 212.0" }, { "stdin": "37", "expect": "Fahrenheit: 98.6" }] },
+    { "slug": "gcse-functions-p-09", "tier": 3, "difficulty": 4, "xp": 25, "title": "Area and perimeter",
+      "brief": "Write two functions: `rectangle_area(w, h)` returning w × h, and `rectangle_perimeter(w, h)` returning 2 × (w + h). Input a width and a height, then print the area, then the perimeter, using your functions, in the format `Area: <n>` then `Perimeter: <n>`.",
+      "starter": "", "hints": ["Two separate one-line functions, each called once after reading both inputs.", "def rectangle_area(w, h): return w * h\ndef rectangle_perimeter(w, h): return 2 * (w + h)."],
+      "tests": [{ "stdin": "4\n5", "expect": "Area: 20.0\nPerimeter: 18.0" }, { "stdin": "3\n3", "expect": "Area: 9.0\nPerimeter: 12.0" }] },
+    { "slug": "gcse-functions-p-10", "tier": 4, "difficulty": 5, "xp": 30, "title": "Grade function with bonus",
+      "brief": "Write two functions: `classify(score)` returns `\"Pass\"` if score is 40 or above, otherwise `\"Fail\"`. `bonus(score)` returns 5 if score is 90 or above, otherwise 0. Input a score, then print the result of `classify()`, then a line `Bonus: <n>` using the result of `bonus()`.",
+      "starter": "", "hints": ["Two independent functions, each with their own condition on the same score.", "def classify(score): return \"Pass\" if score >= 40 else \"Fail\"\ndef bonus(score): return 5 if score >= 90 else 0."],
+      "tests": [{ "stdin": "95", "expect": "Pass\nBonus: 5" }, { "stdin": "35", "expect": "Fail\nBonus: 0" }, { "stdin": "50", "expect": "Pass\nBonus: 0" }] }
   ]
 }

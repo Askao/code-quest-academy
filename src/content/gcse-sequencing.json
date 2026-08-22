@@ -329,7 +329,15 @@
     { "slug": "gcse-sequencing-p-08", "tier": 4, "difficulty": 5, "xp": 40, "stretch": true, "title": "Road trip time",
       "brief": "A car travels at a fixed average speed for an entire journey.\n\nInput the distance of the journey in miles, a whole number. Input the average speed in mph, a whole number. Calculate the total journey time, then report it as whole hours and remaining minutes, in the format `<hours>h <minutes>m`.\n\nFor example, travelling 150 miles at 60 mph takes 2h 30m.",
       "starter": "", "hints": ["Work out the total journey time in minutes first, then use // and % to split it into hours and minutes.", "Calculate total minutes as distance divided by speed times 60, cast to a whole number, then use // for hours and % for the remaining minutes."],
-      "tests": [{ "stdin": "150\n60", "expect": "2h 30m" }, { "stdin": "70\n20", "expect": "3h 30m" }] }
+      "tests": [{ "stdin": "150\n60", "expect": "2h 30m" }, { "stdin": "70\n20", "expect": "3h 30m" }] },
+    { "slug": "gcse-sequencing-p-09", "tier": 2, "difficulty": 3, "xp": 25, "title": "Discounted price",
+      "brief": "Input an item's original price, which may include pence. Input a discount percentage, a whole number. Print the discount amount, then the final price after the discount, each rounded to 2 decimal places, in the format `Discount: £<amount>` then `Final: £<amount>`.",
+      "starter": "", "hints": ["The discount amount is the price times the percentage divided by 100.", "Cast both inputs, work out discount = round(price * pct / 100, 2), then final = round(price - discount, 2)."],
+      "tests": [{ "stdin": "50\n20", "expect": "Discount: £10.0\nFinal: £40.0" }, { "stdin": "80\n25", "expect": "Discount: £20.0\nFinal: £60.0" }] },
+    { "slug": "gcse-sequencing-p-10", "tier": 3, "difficulty": 5, "xp": 40, "title": "Petrol station queue time",
+      "brief": "Input the number of cars ahead of you in a petrol station queue, a whole number. Input the average time each car takes at the pump in seconds, which may include decimals. Input how long you expect your own fill-up to take in seconds. Print your total wait for the cars ahead, then the total time including your own fill-up, then that total converted to minutes rounded to 1 decimal place, in the format `Wait: <n>s`, `Total: <n>s`, `Minutes: <n>`.",
+      "starter": "", "hints": ["Work out the wait for the cars ahead first (cars times average time), then add your own fill-up time for the total.", "wait = cars * avg_time; total = wait + your_time; minutes = round(total / 60, 1) — then print all three, each on its own line."],
+      "tests": [{ "stdin": "5\n90\n120", "expect": "Wait: 450.0s\nTotal: 570.0s\nMinutes: 9.5" }, { "stdin": "3\n60\n60", "expect": "Wait: 180.0s\nTotal: 240.0s\nMinutes: 4.0" }] }
   ],
   "projectTasks": [
     { "slug": "gcse-sequencing-proj1a", "tier": 4, "difficulty": 2, "xp": 30, "group": "gcse-sequencing-bigproj1", "part": "A",

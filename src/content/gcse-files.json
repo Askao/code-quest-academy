@@ -245,6 +245,26 @@
     { "slug": "gcse-files-p-05", "tier": 3, "difficulty": 3, "xp": 30, "title": "Guest list check-in",
       "brief": "Input a whole number N. Input N guest names, one at a time. Write them to `guests.txt`, one per line. Input a name to check in. Reopen the file and print `Found` if that name is in the list, otherwise print `Not found`.",
       "starter": "", "hints": ["Strip each reopened line before comparing it, since it will still have a trailing newline.", "Reopen the file, build a list of stripped lines, then check if the name to find is in that list."],
-      "tests": [{ "stdin": "3\nAda\nAlan\nGrace\nAlan", "expect": "Found" }, { "stdin": "3\nAda\nAlan\nGrace\nBob", "expect": "Not found" }] }
+      "tests": [{ "stdin": "3\nAda\nAlan\nGrace\nAlan", "expect": "Found" }, { "stdin": "3\nAda\nAlan\nGrace\nBob", "expect": "Not found" }] },
+    { "slug": "gcse-files-p-06", "tier": 1, "difficulty": 2, "xp": 20, "title": "Overwrite protection",
+      "brief": "Input a value. Write it to `data.txt`. Input a second value. Write it to `data.txt` again — writing in this mode replaces the file's old contents rather than adding to them. Reopen the file and print its contents, to show only the second value survived.",
+      "starter": "", "hints": ["Opening a file in \"w\" mode twice, with two separate `with` blocks, overwrites it the second time rather than appending.", "with open(\"data.txt\", \"w\") as f: f.write(first) — then a second, separate with-block writing second the same way — then reopen with \"r\" and print(f.read())."],
+      "tests": [{ "stdin": "first\nsecond", "expect": "second" }, { "stdin": "draft\nfinal", "expect": "final" }] },
+    { "slug": "gcse-files-p-07", "tier": 2, "difficulty": 3, "xp": 25, "title": "Count words in a file",
+      "brief": "Input a whole number N. Input N lines of text, one at a time. Write them to `essay.txt`, one per line. Reopen the file and print the total number of words across every line (a word is anything separated by spaces).",
+      "starter": "", "hints": ["Reopen the file and loop over its lines, splitting each one into words and adding to a running total.", "total = 0; for line in f: total += len(line.split()) — then print(total)."],
+      "tests": [{ "stdin": "2\nthe quick fox\njumps high", "expect": "5" }, { "stdin": "1\nhello there world", "expect": "3" }] },
+    { "slug": "gcse-files-p-08", "tier": 3, "difficulty": 4, "xp": 25, "title": "Find the longest line",
+      "brief": "Input a whole number N. Input N lines of text, one at a time. Write them to `lines.txt`, one per line. Reopen the file and print whichever line has the most characters. If two lines tie, print whichever one came first.",
+      "starter": "", "hints": ["Strip each reopened line, then compare its length to the longest one found so far.", "longest = \"\"; for line in f: line = line.strip(); if len(line) > len(longest): longest = line — then print(longest)."],
+      "tests": [{ "stdin": "3\nhi\nhello there\nbye", "expect": "hello there" }, { "stdin": "2\nshort\na bit longer", "expect": "a bit longer" }] },
+    { "slug": "gcse-files-p-09", "tier": 3, "difficulty": 4, "xp": 30, "title": "Filter and rewrite",
+      "brief": "Input a whole number N. Input N whole numbers, one at a time. Write them to `numbers.txt`, one per line. Reopen the file, keep only the numbers greater than 10, and write those to a second file, `filtered.txt`, all on one line separated by spaces. Reopen `filtered.txt` and print its contents — or print `None` if nothing qualified.",
+      "starter": "", "hints": ["Read and cast each line from numbers.txt, filter the ones over 10, then write that filtered list to a new file.", "Build a filtered list from the reopened numbers.txt, write \" \".join(...) of it to filtered.txt, then reopen and print filtered.txt's contents (or \"None\" if it's empty)."],
+      "tests": [{ "stdin": "5\n3\n15\n8\n22\n10", "expect": "15 22" }, { "stdin": "3\n1\n2\n3", "expect": "None" }] },
+    { "slug": "gcse-files-p-10", "tier": 4, "difficulty": 5, "xp": 35, "title": "Merge two files",
+      "brief": "Input a whole number N1. Input N1 lines of text, writing them to `file_a.txt`. Input a whole number N2. Input N2 lines of text, writing them to `file_b.txt`. Create a third file, `merged.txt`, containing every line from `file_a.txt` followed by every line from `file_b.txt`. Reopen `merged.txt` and print its full contents.",
+      "starter": "", "hints": ["Open merged.txt for writing, then read the full contents of each of the other two files straight into it, one after the other.", "with open(\"merged.txt\", \"w\") as out: out.write(open(\"file_a.txt\").read()); out.write(open(\"file_b.txt\").read()) — then reopen merged.txt and print its contents."],
+      "tests": [{ "stdin": "2\napple\nbanana\n1\ncherry", "expect": "apple\nbanana\ncherry" }, { "stdin": "1\nx\n2\ny\nz", "expect": "x\ny\nz" }] }
   ]
 }
