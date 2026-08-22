@@ -51,19 +51,56 @@ function Dashboard() {
           .gte("created_at", todayStart),
       ]);
       const classIds = (memberships.data ?? []).map((m) => m.class_id);
-      const homework = classIds.length
+      const homeworkRes = classIds.length
         ? await supabase
             .from("homework")
             .select("*, classes(name)")
             .in("class_id", classIds)
             .order("due_at", { ascending: true })
         : { data: [] };
+      const homeworkList = homeworkRes.data ?? [];
+      const homeworkIds = homeworkList.map((hw) => hw.id);
+
+      // Same "personalized list if assigned, else the shared list" fallback
+      // used by the individual homework page, just batched across every
+      // homework this student has, so the dashboard can show completion
+      // per item without a query per homework.
+      const assignments = homeworkIds.length
+        ? await supabase
+            .from("homework_assignments")
+            .select("homework_id, challenge_ids")
+            .in("homework_id", homeworkIds)
+            .eq("student_id", uid)
+        : { data: [] };
+      const assignmentMap = new Map(
+        (assignments.data ?? []).map((a) => [a.homework_id, a.challenge_ids as string[]]),
+      );
+      const homeworkWithIds = homeworkList.map((hw) => ({
+        ...hw,
+        challengeIds: assignmentMap.get(hw.id) ?? (hw.challenge_ids as string[] | null) ?? [],
+      }));
+      const allChallengeIds = [...new Set(homeworkWithIds.flatMap((hw) => hw.challengeIds))];
+      const hwAttempts = allChallengeIds.length
+        ? await supabase
+            .from("attempts")
+            .select("challenge_id")
+            .eq("user_id", uid)
+            .eq("passed", true)
+            .in("challenge_id", allChallengeIds)
+        : { data: [] };
+      const passedSet = new Set((hwAttempts.data ?? []).map((a) => a.challenge_id));
+      const homework = homeworkWithIds.map((hw) => {
+        const total = hw.challengeIds.length;
+        const completed = hw.challengeIds.filter((id) => passedSet.has(id)).length;
+        return { ...hw, total, completed };
+      });
+
       return {
         stats: stats.data,
         skills: skills.data ?? [],
         badges: badges.data ?? [],
         classes: (memberships.data ?? []).map((m) => m.classes).filter(Boolean),
-        homework: homework.data ?? [],
+        homework,
         recapDoneToday: (recapToday.count ?? 0) > 0,
       };
     },
@@ -119,6 +156,12 @@ function Dashboard() {
   )
     ? "aqa"
     : "ocr";
+
+  const currentHomework = (data?.homework ?? []).filter((hw) => hw.completed < hw.total || hw.total === 0);
+  const completedHomework = (data?.homework ?? [])
+    .filter((hw) => hw.total > 0 && hw.completed >= hw.total)
+    .slice()
+    .reverse();
 
   if (isTeacher) {
     return (
@@ -244,22 +287,50 @@ function Dashboard() {
         </Button>
       </div>
 
-      {(data?.homework ?? []).length > 0 ? (
+      {currentHomework.length > 0 ? (
         <section>
-          <h2 className="mb-3 text-xl font-semibold">Homework</h2>
+          <h2 className="mb-3 text-xl font-semibold">Current homework</h2>
           <div className="space-y-3">
-            {data!.homework.map((hw) => (
+            {currentHomework.map((hw) => (
               <div key={hw.id} className="panel flex flex-wrap items-center gap-3 p-4">
                 <div className="flex-1">
                   <p className="font-medium">{hw.title}</p>
                   <p className="text-sm text-muted-foreground">
                     {hw.instructions || "Complete the set challenges."}
                     {hw.due_at ? ` · Due ${new Date(hw.due_at).toLocaleDateString("en-GB")}` : ""}
+                    {hw.total > 0 ? ` · ${hw.completed}/${hw.total} done` : ""}
                   </p>
                 </div>
                 <Button asChild size="sm">
                   <Link to="/homework/$homeworkId" params={{ homeworkId: hw.id }}>
-                    Start
+                    {hw.completed > 0 ? "Continue" : "Start"}
+                  </Link>
+                </Button>
+              </div>
+            ))}
+          </div>
+        </section>
+      ) : null}
+
+      {completedHomework.length > 0 ? (
+        <section>
+          <h2 className="mb-3 text-xl font-semibold">Completed homework</h2>
+          <div className="space-y-3">
+            {completedHomework.map((hw) => (
+              <div key={hw.id} className="panel flex flex-wrap items-center gap-3 p-4">
+                <div className="flex-1">
+                  <p className="font-medium">
+                    {hw.title} <span className="text-success">✓</span>
+                  </p>
+                  <p className="text-sm text-muted-foreground">
+                    {hw.classes?.name}
+                    {hw.due_at ? ` · Due ${new Date(hw.due_at).toLocaleDateString("en-GB")}` : ""}
+                    {` · ${hw.completed}/${hw.total} done`}
+                  </p>
+                </div>
+                <Button asChild size="sm" variant="secondary">
+                  <Link to="/homework/$homeworkId" params={{ homeworkId: hw.id }}>
+                    Review
                   </Link>
                 </Button>
               </div>
