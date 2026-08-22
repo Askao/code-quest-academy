@@ -956,6 +956,7 @@ function ClassDetail() {
               <Input placeholder="Title" value={title} onChange={(e) => setTitle(e.target.value)} />
               <Input
                 type="datetime-local"
+                className="min-w-0"
                 value={dueAt}
                 onChange={(e) => setDueAt(e.target.value)}
               />
