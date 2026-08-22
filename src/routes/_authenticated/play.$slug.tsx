@@ -449,7 +449,11 @@ function Play() {
       </div>
 
       <div className="grid gap-6 lg:grid-cols-[minmax(0,1fr)_minmax(0,1.2fr)]">
-        <div className="space-y-4">
+        {/* order-2 on mobile: the editor (second in this markup) needs to be
+            the first thing a student on a phone sees, not something they
+            scroll past the brief and hints to reach. lg:order-none restores
+            normal document order once the grid goes two-column side by side. */}
+        <div className="order-2 space-y-4 lg:order-none">
           <div className="panel p-5">
             <h1 className="text-2xl font-bold">{challenge.title}</h1>
             <p className="mt-3 whitespace-pre-wrap text-muted-foreground">
@@ -621,7 +625,7 @@ function Play() {
           ) : null}
         </div>
 
-        <div className="space-y-3">
+        <div className="order-1 space-y-3 lg:order-none">
           <div className="h-[20rem] overflow-hidden rounded-xl border border-border sm:h-[26rem]">
             <CodeMirror
               value={code}
