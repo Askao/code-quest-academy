@@ -1,5 +1,6 @@
 import { createFileRoute, Link } from "@tanstack/react-router";
 import { useQuery } from "@tanstack/react-query";
+import { useState } from "react";
 import { supabase } from "@/integrations/supabase/client";
 import { useAuth } from "@/hooks/useAuth";
 import { topicLabel, type Board } from "@/lib/game";
@@ -34,6 +35,11 @@ export const Route = createFileRoute("/_authenticated/learn/")({
 
 function LearnIndex() {
   const { user, isTeacher } = useAuth();
+  // Free to switch, same as Practice - AQA isn't extra content behind a
+  // teacher's say-so, it's an alternate view of the same GCSE track, and
+  // teachers in particular have no class-membership row of their own to
+  // auto-detect a board from, so they need a manual way in to preview it.
+  const [board, setBoard] = useState<Board>("ocr");
 
   const { data: passed = new Set<string>() } = useQuery({
     queryKey: ["passed-slugs", user?.id],
@@ -66,25 +72,18 @@ function LearnIndex() {
   // locked until their teacher assigns them, on top of the mastery gate.
   // Teachers/admins are exempt (see isTeacher use below) - they need to
   // freely browse every lesson, not progress through it like a student.
-  const { data: memberships = [] } = useQuery({
+  const { data: classIds = [] } = useQuery({
     queryKey: ["class-ids", user?.id],
     enabled: !!user && !isTeacher,
     queryFn: async () => {
       const { data } = await supabase
         .from("class_members")
-        .select("class_id, classes(board, track)")
+        .select("class_id")
         .eq("student_id", user!.id);
-      return data ?? [];
+      return (data ?? []).map((r) => r.class_id);
     },
   });
-  const classIds = memberships.map((m) => m.class_id);
   const enrolled = classIds.length > 0;
-  // Same "any AQA class -> show AQA content" rule as the dashboard.
-  const gcseBoard: Board = memberships.some(
-    (m) => m.classes?.track === "gcse" && m.classes?.board === "aqa",
-  )
-    ? "aqa"
-    : "ocr";
 
   const { data: assignedSlugs = new Set<string>() } = useQuery({
     queryKey: ["assigned-lesson-slugs", classIds],
@@ -98,7 +97,7 @@ function LearnIndex() {
     },
   });
 
-  const topics = topicsWithLessons("gcse", gcseBoard);
+  const topics = topicsWithLessons("gcse", board);
   const roadmap: RoadmapTopic[] = topics.map((topic, i) => {
     const complete = isTopicComplete("gcse", topic, passed, quizPassed);
     const prevComplete =
@@ -113,9 +112,27 @@ function LearnIndex() {
   return (
     <div className="space-y-8">
       <div>
-        <p className="font-mono text-xs tracking-[0.2em] text-muted-foreground uppercase">
-          GCSE · {gcseBoard.toUpperCase()}
-        </p>
+        <div className="flex flex-wrap items-center gap-2">
+          <p className="font-mono text-xs tracking-[0.2em] text-muted-foreground uppercase">
+            GCSE ·
+          </p>
+          <div className="flex overflow-hidden rounded-md border border-border">
+            {(["ocr", "aqa"] as const).map((b) => (
+              <button
+                key={b}
+                type="button"
+                onClick={() => setBoard(b)}
+                className={`px-2.5 py-1 font-mono text-xs ${
+                  board === b
+                    ? "bg-primary text-primary-foreground"
+                    : "bg-card text-muted-foreground hover:text-foreground"
+                }`}
+              >
+                {b.toUpperCase()}
+              </button>
+            ))}
+          </div>
+        </div>
         <h1 className="mt-2 text-3xl font-semibold">Lesson paths</h1>
         <p className="mt-2 max-w-2xl text-sm text-muted-foreground">
           Each topic runs from teaching notes and a worked example through to exam-style wording.
