@@ -484,13 +484,32 @@ function Practice() {
                   </div>
                 );
               }
+              const seededProjects = t.projects.filter((p) => seededProjectSlugs?.has(p.slug));
+              // Multi-part projects (group set) build one program bit by bit -
+              // each part is one card with its parts listed in order, later
+              // parts locked until the one before them is passed. Single-part
+              // projects (no group) render exactly as before.
+              const seenGroups = new Set<string>();
+              const items: { group: string | null; parts: typeof seededProjects }[] = [];
+              for (const p of seededProjects) {
+                if (p.group) {
+                  if (seenGroups.has(p.group)) continue;
+                  seenGroups.add(p.group);
+                  const parts = seededProjects
+                    .filter((x) => x.group === p.group)
+                    .sort((a, b) => (a.part ?? "").localeCompare(b.part ?? ""));
+                  items.push({ group: p.group, parts });
+                } else {
+                  items.push({ group: null, parts: [p] });
+                }
+              }
               return (
                 <div key={t.key}>
                   <p className="mb-2 text-sm font-semibold text-muted-foreground">{t.label}</p>
                   <div className="space-y-3">
-                    {t.projects
-                      .filter((p) => seededProjectSlugs?.has(p.slug))
-                      .map((p) => {
+                    {items.map((item) => {
+                      if (!item.group) {
+                        const p = item.parts[0]!;
                         const done = data?.passedSlugs.has(p.slug) ?? false;
                         return (
                           <div key={p.slug} className="panel flex flex-wrap items-center gap-3 p-4">
@@ -514,7 +533,63 @@ function Practice() {
                             </Button>
                           </div>
                         );
-                      })}
+                      }
+
+                      const doneCount = item.parts.filter((p) =>
+                        data?.passedSlugs.has(p.slug),
+                      ).length;
+                      const groupTitle = item.parts[0]!.title.split(" — ")[0];
+                      return (
+                        <div key={item.group} className="panel p-4">
+                          <div className="mb-3 flex flex-wrap items-center justify-between gap-2">
+                            <p className="font-medium">{groupTitle}</p>
+                            <span className="font-mono text-xs text-muted-foreground">
+                              {doneCount}/{item.parts.length} parts done
+                            </span>
+                          </div>
+                          <div className="space-y-2">
+                            {item.parts.map((p, i) => {
+                              const done = data?.passedSlugs.has(p.slug) ?? false;
+                              const priorDone =
+                                i === 0 || (data?.passedSlugs.has(item.parts[i - 1]!.slug) ?? false);
+                              const locked = !done && !priorDone;
+                              const partLabel = p.title.split(" — ")[1] ?? p.title;
+                              return (
+                                <div
+                                  key={p.slug}
+                                  className={`flex flex-wrap items-center gap-3 rounded-md bg-secondary/40 p-3 ${locked ? "opacity-50" : ""}`}
+                                >
+                                  <span className={done ? "text-success" : "text-muted-foreground"}>
+                                    {done ? "✓" : locked ? "🔒" : "🏗"}
+                                  </span>
+                                  <div className="flex-1">
+                                    <p className="text-sm font-medium">{partLabel}</p>
+                                    <p className="font-mono text-xs text-muted-foreground">
+                                      difficulty {p.difficulty}/5 · {p.xp} XP
+                                    </p>
+                                  </div>
+                                  {locked ? (
+                                    <Button size="sm" variant="secondary" disabled>
+                                      Locked
+                                    </Button>
+                                  ) : (
+                                    <Button asChild size="sm" variant={done ? "secondary" : "default"}>
+                                      <Link
+                                        to="/play/$slug"
+                                        params={{ slug: p.slug }}
+                                        search={{ mode: "project", track: "gcse", topic: t.key }}
+                                      >
+                                        {done ? "Redo" : "Start"}
+                                      </Link>
+                                    </Button>
+                                  )}
+                                </div>
+                              );
+                            })}
+                          </div>
+                        </div>
+                      );
+                    })}
                   </div>
                 </div>
               );

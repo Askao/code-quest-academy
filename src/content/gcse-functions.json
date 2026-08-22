@@ -241,19 +241,19 @@
   "projectTasks": [
     { "slug": "gcse-functions-proj1a", "tier": 4, "difficulty": 3, "xp": 30, "group": "gcse-functions-bigproj1", "part": "A",
       "title": "Shape area calculator — Part A: rectangles",
-      "brief": "A DIY app is building a shape area calculator, split into three parts.\n\n**Part A.** Write a function `rectangle_area(width, height)` that returns the area of a rectangle. Read a width and a height. Print the area, using your function, in the format `Area: <n>`.",
+      "brief": "A DIY app is building a shape area calculator, split into three parts — each part builds directly on the code you write for the one before it, so keep what you've written rather than starting over.\n\n**Part A.** Write a function `rectangle_area(width, height)` that returns the area of a rectangle. Read a width and a height. Print the area, using your function, in the format `Area: <n>`.",
       "starter": "", "hints": ["A function that returns width * height, called with the two values you read.", "def rectangle_area(width, height): return width * height - then call it and print the result in an f-string."],
       "tests": [{ "stdin": "4\n5", "expect": "Area: 20.0" }, { "stdin": "3\n3", "expect": "Area: 9.0" }] },
     { "slug": "gcse-functions-proj1b", "tier": 4, "difficulty": 4, "xp": 40, "group": "gcse-functions-bigproj1", "part": "B",
       "title": "Shape area calculator — Part B: triangles too",
-      "brief": "**Part B.** Continuing the calculator: also write a function `triangle_area(base, height)` that returns 0.5 × base × height. Read a shape type (`rectangle` or `triangle`), then its two dimensions. Call the matching function and print the area, in the format `Area: <n>`.",
-      "starter": "", "hints": ["Keep rectangle_area from Part A, add a second function for triangles, then use an if to decide which one to call.", "Read the shape type first, then read the two numbers, then call rectangle_area or triangle_area depending on which shape was read."],
-      "tests": [{ "stdin": "rectangle\n4\n5", "expect": "Area: 20.0" }, { "stdin": "triangle\n6\n4", "expect": "Area: 12.0" }] },
+      "brief": "**Part B.** Your code carries on from Part A — keep everything you already wrote and add to it. Also write a function `triangle_area(base, height)` that returns 0.5 × base × height. After your Part A line, read one more line: `triangle` if the user also wants a triangle's area worked out, or `none` if not. If it's `triangle`, read a base and a height, call your new function, and print a second area line in the format `Area: <n>`. If it's `none`, print nothing more.",
+      "starter": "", "hints": ["Don't delete your Part A code — keep rectangle_area and the rectangle's Area line exactly as they are, then add the new function and the new input below it.", "shape2 = input(); if shape2 == \"triangle\": base2 = float(input()); height2 = float(input()); print(f\"Area: {triangle_area(base2, height2)}\") — added after your existing Part A lines."],
+      "tests": [{ "stdin": "4\n5\ntriangle\n6\n4", "expect": "Area: 20.0\nArea: 12.0" }, { "stdin": "3\n3\nnone", "expect": "Area: 9.0" }] },
     { "slug": "gcse-functions-proj1c", "tier": 4, "difficulty": 5, "xp": 50, "group": "gcse-functions-bigproj1", "part": "C",
       "title": "Shape area calculator — Part C: circles too",
-      "brief": "**Part C.** Continuing the calculator: also write a function `circle_area(radius)` that returns round(3.14159 × radius², 2). Read a shape type (`rectangle`, `triangle` or `circle`). For a circle, read just the radius; for the other two shapes, read their two dimensions as in Part B. Call the matching function and print the area, in the format `Area: <n>`.",
-      "starter": "", "hints": ["A circle only needs one number read, not two - the amount you read depends on which shape type was given.", "Keep both functions from Part B, add circle_area, then use an if/elif/else on the shape type, reading either one or two numbers before calling the matching function."],
-      "tests": [{ "stdin": "circle\n3", "expect": "Area: 28.27" }, { "stdin": "rectangle\n4\n5", "expect": "Area: 20.0" }] }
+      "brief": "**Part C.** Keep everything from Parts A and B. Also write a function `circle_area(radius)` that returns round(3.14159 × radius², 2). After your Part B lines, read one more line: `circle` if the user also wants a circle's area worked out, or `none` if not. If it's `circle`, read a radius, call your new function, and print another area line in the format `Area: <n>`. If it's `none`, print nothing more.",
+      "starter": "", "hints": ["Don't touch your Part A or Part B code - just add the new function and a matching check underneath.", "shape3 = input(); if shape3 == \"circle\": radius = float(input()); print(f\"Area: {circle_area(radius)}\") — added after your existing Part B lines."],
+      "tests": [{ "stdin": "4\n5\ntriangle\n6\n4\ncircle\n3", "expect": "Area: 20.0\nArea: 12.0\nArea: 28.27" }, { "stdin": "3\n3\nnone\nnone", "expect": "Area: 9.0" }] }
   ],
   "practiceTasks": [
     { "slug": "gcse-functions-p-01", "tier": 1, "difficulty": 1, "xp": 10, "title": "Greet function",

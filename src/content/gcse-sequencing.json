@@ -334,18 +334,18 @@
   "projectTasks": [
     { "slug": "gcse-sequencing-proj1a", "tier": 4, "difficulty": 2, "xp": 30, "group": "gcse-sequencing-bigproj1", "part": "A",
       "title": "Bakery order receipt — Part A: the item",
-      "brief": "A bakery is building a till system, split into three parts.\n\n**Part A.** Read an item's name. Read the quantity bought, a whole number. Print both in the format `Item: <name> x<quantity>`.",
+      "brief": "A bakery is building a till system, split into three parts — each part builds directly on the code you write for the one before it, so keep what you've written rather than starting over.\n\n**Part A.** Read an item's name. Read the quantity bought, a whole number. Print both in the format `Item: <name> x<quantity>`.",
       "starter": "", "hints": ["Read the name first, then the quantity, storing each in its own variable.", "Cast the quantity to a whole number, then build the output with an f-string."],
       "tests": [{ "stdin": "Croissant\n4", "expect": "Item: Croissant x4" }, { "stdin": "Bread\n2", "expect": "Item: Bread x2" }] },
     { "slug": "gcse-sequencing-proj1b", "tier": 4, "difficulty": 3, "xp": 35, "group": "gcse-sequencing-bigproj1", "part": "B",
       "title": "Bakery order receipt — Part B: the subtotal",
-      "brief": "**Part B.** Continuing the till system: read the quantity bought, a whole number, then the price per item, which may include pence. Print the subtotal (quantity × price), rounded to 2 decimal places, in the format `Subtotal: £<amount>`.",
-      "starter": "", "hints": ["Multiply the quantity by the price per item.", "Cast both inputs, multiply them, round to 2 decimal places, then build the output with an f-string."],
-      "tests": [{ "stdin": "4\n2.50", "expect": "Subtotal: £10.0" }, { "stdin": "3\n1.20", "expect": "Subtotal: £3.6" }] },
+      "brief": "**Part B.** Your code carries on from Part A — keep everything you already wrote and add to it. Also read the price per item, which may include pence. After your Part A line, print the subtotal (quantity × price), rounded to 2 decimal places, as a new line in the format `Subtotal: £<amount>`.",
+      "starter": "", "hints": ["Don't delete your Part A code — just add the new price input and a new print statement after it.", "price = float(input()); subtotal = round(qty * price, 2); print(f\"Subtotal: £{subtotal}\") — added after your existing Part A lines."],
+      "tests": [{ "stdin": "Croissant\n4\n2.50", "expect": "Item: Croissant x4\nSubtotal: £10.0" }, { "stdin": "Bread\n2\n1.20", "expect": "Item: Bread x2\nSubtotal: £2.4" }] },
     { "slug": "gcse-sequencing-proj1c", "tier": 4, "difficulty": 4, "xp": 40, "group": "gcse-sequencing-bigproj1", "part": "C",
       "title": "Bakery order receipt — Part C: adding VAT",
-      "brief": "**Part C.** Continuing the till system: read the quantity bought and the price per item, as before. VAT is charged at 20% of the subtotal. Print the VAT amount, then the final total (subtotal plus VAT), each rounded to 2 decimal places, in the format `VAT: £<amount>` then `Total: £<amount>`.",
-      "starter": "", "hints": ["Work out the subtotal first, then the VAT is 20% of that subtotal, then the total is subtotal plus VAT.", "Cast both inputs, calculate the subtotal, then the VAT, then the total, rounding each printed amount to 2 decimal places."],
-      "tests": [{ "stdin": "4\n2.50", "expect": "VAT: £2.0\nTotal: £12.0" }, { "stdin": "3\n1.20", "expect": "VAT: £0.72\nTotal: £4.32" }] }
+      "brief": "**Part C.** Keep everything from Parts A and B. No new input this time — VAT is charged at 20% of the subtotal you already calculated. After your Part B lines, print the VAT amount, then the final total (subtotal plus VAT), each rounded to 2 decimal places, as new lines in the format `VAT: £<amount>` then `Total: £<amount>`.",
+      "starter": "", "hints": ["Reuse the subtotal variable from Part B rather than reading anything new.", "vat = round(subtotal * 0.2, 2); total = round(subtotal + vat, 2) — then print both, added after your existing Part B lines."],
+      "tests": [{ "stdin": "Croissant\n4\n2.50", "expect": "Item: Croissant x4\nSubtotal: £10.0\nVAT: £2.0\nTotal: £12.0" }, { "stdin": "Bread\n2\n1.20", "expect": "Item: Bread x2\nSubtotal: £2.4\nVAT: £0.48\nTotal: £2.88" }] }
   ]
 }

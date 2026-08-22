@@ -148,9 +148,39 @@ function Play() {
     },
   });
 
+  // Projects: each part builds directly on the code written for the part
+  // before it (unlike the Cinema Booking lesson task, which also uses
+  // group/part but keeps each part a fresh, self-contained program - so
+  // this only applies in "project" mode). A student can't open Part B/C
+  // until they've actually passed the part before it, and when they do,
+  // the editor starts from their own last passing submission for that
+  // part rather than a blank slate, so "add to it" is literally true.
+  const isProjectPart = !!challenge?.group && search.mode === "project";
+  const groupParts = isProjectPart ? tasksInGroup(challenge!.group!) : [];
+  const myPartIndex = groupParts.findIndex((p) => p.slug === challenge?.slug);
+  const priorPart = isProjectPart && myPartIndex > 0 ? groupParts[myPartIndex - 1] : null;
+
+  const { data: priorAttempt, isLoading: priorLoading } = useQuery({
+    queryKey: ["prior-part-attempt", user?.id, priorPart?.slug],
+    enabled: !!user && !!priorPart,
+    queryFn: async () => {
+      const { data } = await supabase
+        .from("attempts")
+        .select("code, created_at, challenges!inner(slug)")
+        .eq("user_id", user!.id)
+        .eq("passed", true)
+        .eq("challenges.slug", priorPart!.slug)
+        .order("created_at", { ascending: false })
+        .limit(1)
+        .maybeSingle();
+      return data;
+    },
+  });
+  const partLocked = !!priorPart && !priorLoading && !priorAttempt;
+
   useEffect(() => {
     if (challenge) {
-      setCode(challenge.starter_code || "");
+      setCode(priorAttempt?.code ?? challenge.starter_code ?? "");
       setOutcome(null);
       setSolved(false);
       setTries(0);
@@ -163,7 +193,7 @@ function Play() {
       setPendingAnswer("");
       startedAt.current = Date.now();
     }
-  }, [challenge]);
+  }, [challenge, priorAttempt]);
 
   useEffect(() => {
     if (!challenge) return;
@@ -396,6 +426,27 @@ function Play() {
     return <p className="text-muted-foreground">Loading challenge…</p>;
   }
 
+  if (priorPart && priorLoading) {
+    return <p className="text-muted-foreground">Loading…</p>;
+  }
+
+  if (priorPart && partLocked) {
+    return (
+      <div className="panel p-6">
+        <p className="text-lg font-semibold">🔒 Complete Part {priorPart.part} first</p>
+        <p className="mt-2 text-muted-foreground">
+          This part builds directly on the code you write for Part {priorPart.part} — finish that
+          one first, then come back here.
+        </p>
+        <Button asChild size="sm" className="mt-4">
+          <Link to="/play/$slug" params={{ slug: priorPart.slug }} search={search}>
+            Go to Part {priorPart.part}
+          </Link>
+        </Button>
+      </div>
+    );
+  }
+
   const isSql = isSqlTopic(challenge.topic);
 
   // Came from a lesson's task list: show where this task sits in that
@@ -466,6 +517,12 @@ function Play() {
             <p className="mt-3 whitespace-pre-wrap text-muted-foreground">
               {inline(challenge.brief)}
             </p>
+            {priorPart ? (
+              <p className="mt-3 rounded-md bg-secondary px-3 py-2 text-xs text-muted-foreground">
+                🧩 The editor below starts from your own Part {priorPart.part} code — add to it,
+                don't replace it.
+              </p>
+            ) : null}
           </div>
 
           <div className="panel p-5">
@@ -680,7 +737,10 @@ function Play() {
                   ? "Testing…"
                   : "✅ Test"}
             </Button>
-            <Button variant="secondary" onClick={() => setCode(challenge.starter_code || "")}>
+            <Button
+              variant="secondary"
+              onClick={() => setCode(priorAttempt?.code ?? challenge.starter_code ?? "")}
+            >
               Reset
             </Button>
             {solved ? (
