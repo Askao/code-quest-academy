@@ -264,5 +264,22 @@
       "brief": "Build a 3x3 grid (a 2D list) of whole numbers, entered one row at a time, 3 values per row, 9 values in total. Print the value in the exact middle of the grid.",
       "starter": "", "hints": ["The middle cell of a 3x3 grid is at row 1, column 1, counting from 0.", "Build the 2D list with a loop inside a loop, then print grid[1][1]."],
       "tests": [{ "stdin": "1\n2\n3\n4\n5\n6\n7\n8\n9", "expect": "5" }, { "stdin": "0\n0\n0\n0\n9\n0\n0\n0\n0", "expect": "9" }] }
+  ],
+  "projectTasks": [
+    { "slug": "gcse-lists-proj1a", "tier": 4, "difficulty": 3, "xp": 30, "group": "gcse-lists-bigproj1", "part": "A",
+      "title": "Exam marks analyser — Part A: the highest mark",
+      "brief": "A teacher is building a marks analyser, split into three parts.\n\n**Part A.** Read the number of students. Then read that many marks, one per line, storing them in a list. Print the highest mark, in the format `Highest: <n>`.",
+      "starter": "", "hints": ["Build the list first with a loop, then use a built-in on the finished list.", "Read the count, then append() each mark to a list inside a loop, then print max(list)."],
+      "tests": [{ "stdin": "5\n60\n75\n40\n90\n55", "expect": "Highest: 90" }, { "stdin": "4\n50\n50\n50\n50", "expect": "Highest: 50" }] },
+    { "slug": "gcse-lists-proj1b", "tier": 4, "difficulty": 4, "xp": 40, "group": "gcse-lists-bigproj1", "part": "B",
+      "title": "Exam marks analyser — Part B: lowest and mean",
+      "brief": "**Part B.** Continuing the analyser: read the marks exactly as in Part A. Print the highest mark, then the lowest mark, then the mean of all the marks rounded to 1 decimal place, in the format `Highest: <n>`, `Lowest: <n>`, `Mean: <n>`.",
+      "starter": "", "hints": ["max(), min() and sum() all work directly on the finished list.", "Build the list as in Part A, then print max(list), min(list), and round(sum(list) / len(list), 1) on their own lines."],
+      "tests": [{ "stdin": "5\n60\n75\n40\n90\n55", "expect": "Highest: 90\nLowest: 40\nMean: 64.0" }, { "stdin": "4\n50\n50\n50\n50", "expect": "Highest: 50\nLowest: 50\nMean: 50.0" }] },
+    { "slug": "gcse-lists-proj1c", "tier": 4, "difficulty": 5, "xp": 50, "group": "gcse-lists-bigproj1", "part": "C",
+      "title": "Exam marks analyser — Part C: above average",
+      "brief": "**Part C.** Continuing the analyser: read the marks and print the same three lines as Part B. Then also count how many marks are strictly above the mean, and print it as a final line, `Above average: <n>`.",
+      "starter": "", "hints": ["Work out the mean first, then loop through the list a second time comparing each mark to it.", "After printing the Part B lines, loop over the list counting marks greater than the (unrounded) mean, then print the count."],
+      "tests": [{ "stdin": "5\n60\n75\n40\n90\n55", "expect": "Highest: 90\nLowest: 40\nMean: 64.0\nAbove average: 2" }, { "stdin": "4\n50\n50\n50\n50", "expect": "Highest: 50\nLowest: 50\nMean: 50.0\nAbove average: 0" }] }
   ]
 }

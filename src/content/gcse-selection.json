@@ -315,5 +315,22 @@
       "brief": "Input a whole number age. Input whether coursework has been submitted (yes or no). Print `Entered` if the student is at least 16 and has submitted coursework, otherwise print `Not entered`.",
       "starter": "", "hints": ["Both conditions must hold at once, so join them with and.", "The pattern is `if age >= 16 and coursework == \"yes\": ... else: ...`."],
       "tests": [{ "stdin": "17\nyes", "expect": "Entered" }, { "stdin": "17\nno", "expect": "Not entered" }] }
+  ],
+  "projectTasks": [
+    { "slug": "gcse-selection-proj1a", "tier": 4, "difficulty": 2, "xp": 30, "group": "gcse-selection-bigproj1", "part": "A",
+      "title": "Parcel delivery estimator — Part A: heavy or standard",
+      "brief": "A courier is building a delivery cost estimator, split into three parts.\n\n**Part A.** Read a parcel's weight in kg, which may include decimals. Print `Heavy parcel` if it weighs more than 5kg, otherwise print `Standard parcel`.",
+      "starter": "", "hints": ["Compare the weight to 5 using an if/else.", "Cast the input to a float, then check if it's greater than 5 before printing the matching message."],
+      "tests": [{ "stdin": "6", "expect": "Heavy parcel" }, { "stdin": "3", "expect": "Standard parcel" }] },
+    { "slug": "gcse-selection-proj1b", "tier": 4, "difficulty": 3, "xp": 35, "group": "gcse-selection-bigproj1", "part": "B",
+      "title": "Parcel delivery estimator — Part B: the cost",
+      "brief": "**Part B.** Continuing the estimator: standard parcels (5kg or under) cost a flat £3.50. Heavy parcels cost £3.50 plus £1.20 for every kg over 5. Read the weight, as before. Print the delivery cost, rounded to 2 decimal places, in the format `Cost: £<amount>`.",
+      "starter": "", "hints": ["Work out which price band applies first, then calculate the cost for that band.", "If the weight is over 5, add 1.20 times the amount over 5 to the base 3.50; otherwise the cost is just 3.50."],
+      "tests": [{ "stdin": "3", "expect": "Cost: £3.5" }, { "stdin": "8", "expect": "Cost: £7.1" }] },
+    { "slug": "gcse-selection-proj1c", "tier": 4, "difficulty": 4, "xp": 40, "group": "gcse-selection-bigproj1", "part": "C",
+      "title": "Parcel delivery estimator — Part C: next-day surcharge",
+      "brief": "**Part C.** Continuing the estimator: read the weight, then whether next-day delivery is wanted (`yes` or `no`). Work out the cost exactly as in Part B, then add a flat £4.00 surcharge if next-day delivery was chosen. Print the final cost, rounded to 2 decimal places, in the format `Cost: £<amount>`.",
+      "starter": "", "hints": ["Work out the base cost first using the same rule as Part B, then add the surcharge afterwards if needed.", "Read both inputs, calculate the weight-based cost, then add 4.00 only if the next-day answer is \"yes\"."],
+      "tests": [{ "stdin": "3\nno", "expect": "Cost: £3.5" }, { "stdin": "8\nyes", "expect": "Cost: £11.1" }] }
   ]
 }

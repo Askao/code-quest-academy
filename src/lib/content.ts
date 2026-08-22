@@ -203,10 +203,17 @@ export function practiceTasksForTopic(track: TrackKey, topic: string) {
 }
 
 /** Tasks sharing a `group` are ordered steps (Part A, B, ...) of one bigger problem. */
+/**
+ * Searches every task pool, not just the ordinary lesson tasks - multi-part
+ * projects (e.g. gcse-sequencing-proj1a/b/c) use group/part too, and only
+ * live in PROJECT_TASKS. A group is only ever entirely within one pool in
+ * practice, but checking all of them means this doesn't silently return
+ * nothing the moment group/part gets used somewhere new.
+ */
 export function tasksInGroup(group: string) {
-  return TASKS.filter((t) => t.group === group).sort((a, b) =>
-    (a.part ?? "").localeCompare(b.part ?? ""),
-  );
+  return [...TASKS, ...HOMEWORK_TASKS, ...PROJECT_TASKS, ...PRACTICE_TASKS]
+    .filter((t) => t.group === group)
+    .sort((a, b) => (a.part ?? "").localeCompare(b.part ?? ""));
 }
 
 /**

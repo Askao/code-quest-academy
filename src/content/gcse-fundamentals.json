@@ -313,5 +313,22 @@
       "brief": "Read a price from the user as text — do not cast it on the way in. Print it exactly as it was read. Then convert it to a float and print that instead, on the next line. Notice a trailing zero in the original text may disappear once it's a float.",
       "starter": "", "hints": ["The raw text keeps exactly what was typed; casting to float can change how it displays.", "text = input(), num = float(text), then print(text) followed by print(num)."],
       "tests": [{ "stdin": "12.50", "expect": "12.50\n12.5" }, { "stdin": "9.00", "expect": "9.00\n9.0" }] }
+  ],
+  "projectTasks": [
+    { "slug": "gcse-fundamentals-proj1a", "tier": 4, "difficulty": 2, "xp": 30, "group": "gcse-fundamentals-bigproj1", "part": "A",
+      "title": "Currency exchange kiosk — Part A: converting",
+      "brief": "A currency exchange kiosk is building a till system, split into three parts.\n\n**Part A.** Read an amount in pounds, which may include pence. Read today's exchange rate for US dollars. Print the converted amount in dollars, rounded to 2 decimal places, in the format `$<amount>`.",
+      "starter": "", "hints": ["Multiply the amount in pounds by the exchange rate.", "Cast both inputs to floats, multiply them, round to 2 decimal places, then build the output with an f-string."],
+      "tests": [{ "stdin": "100\n1.25", "expect": "$125.0" }, { "stdin": "40\n1.3", "expect": "$52.0" }] },
+    { "slug": "gcse-fundamentals-proj1b", "tier": 4, "difficulty": 3, "xp": 35, "group": "gcse-fundamentals-bigproj1", "part": "B",
+      "title": "Currency exchange kiosk — Part B: the handling fee",
+      "brief": "**Part B.** Continuing the kiosk: it charges a flat £1.50 handling fee, taken off the pounds amount before converting. Read the amount in pounds and the exchange rate, as before. Print the converted amount after the fee, rounded to 2 decimal places, in the format `$<amount>`.",
+      "starter": "", "hints": ["Subtract £1.50 from the amount before multiplying by the exchange rate.", "Cast both inputs, subtract the fee from the amount, multiply by the rate, then round to 2 decimal places."],
+      "tests": [{ "stdin": "100\n1.25", "expect": "$123.12" }, { "stdin": "50\n1.2", "expect": "$58.2" }] },
+    { "slug": "gcse-fundamentals-proj1c", "tier": 4, "difficulty": 4, "xp": 40, "group": "gcse-fundamentals-bigproj1", "part": "C",
+      "title": "Currency exchange kiosk — Part C: a customer ID",
+      "brief": "**Part C.** Continuing the kiosk: read the amount in pounds and the exchange rate, as before. Read a customer ID, typed as text, and cast it to a whole number. Print the customer ID and the converted amount after the £1.50 fee, rounded to 2 decimal places, in the format `Customer <id>: $<amount>`.",
+      "starter": "", "hints": ["The ID is typed as text, so it needs casting to a number before it can be used - though here you only need to print it back.", "Cast the ID with int(), work out the converted amount exactly as in Part B, then build the output with an f-string."],
+      "tests": [{ "stdin": "100\n1.25\n4021", "expect": "Customer 4021: $123.12" }, { "stdin": "50\n1.2\n88", "expect": "Customer 88: $58.2" }] }
   ]
 }

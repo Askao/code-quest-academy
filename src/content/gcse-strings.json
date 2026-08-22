@@ -224,5 +224,22 @@
       "brief": "Input a word. Print it with alternating case: the first letter upper case, the second lower case, the third upper case, and so on, regardless of how it was originally typed.",
       "starter": "", "hints": ["Loop through the word by index, checking whether each position is even or odd to decide the case.", "Build up a result string one character at a time, using .upper() or .lower() depending on the position."],
       "tests": [{ "stdin": "hello", "expect": "HeLlO" }, { "stdin": "abc", "expect": "AbC" }] }
+  ],
+  "projectTasks": [
+    { "slug": "gcse-strings-proj1a", "tier": 4, "difficulty": 3, "xp": 30, "group": "gcse-strings-bigproj1", "part": "A",
+      "title": "Password strength checker — Part A: the length",
+      "brief": "A website is building a password strength checker, split into three parts.\n\n**Part A.** Read a proposed password. Print its length, in the format `Length: <n>`.",
+      "starter": "", "hints": ["len() gives the number of characters in a string.", "Read the password, then print f\"Length: {len(password)}\"."],
+      "tests": [{ "stdin": "hello123", "expect": "Length: 8" }, { "stdin": "cat", "expect": "Length: 3" }] },
+    { "slug": "gcse-strings-proj1b", "tier": 4, "difficulty": 4, "xp": 40, "group": "gcse-strings-bigproj1", "part": "B",
+      "title": "Password strength checker — Part B: checking for a digit",
+      "brief": "**Part B.** Continuing the checker: read the password, as before. Check every character to see if any of them is a digit. Print the length, as in Part A, then whether it contains a digit, in the format `Length: <n>` then `Has digit: Yes` or `Has digit: No`.",
+      "starter": "", "hints": ["Loop over every character in the password, using .isdigit() to test each one.", "Set a flag to False before the loop, set it to True inside the loop whenever a character's .isdigit() is True, then print Yes or No based on the flag afterwards."],
+      "tests": [{ "stdin": "hello123", "expect": "Length: 8\nHas digit: Yes" }, { "stdin": "cat", "expect": "Length: 3\nHas digit: No" }] },
+    { "slug": "gcse-strings-proj1c", "tier": 4, "difficulty": 5, "xp": 50, "group": "gcse-strings-bigproj1", "part": "C",
+      "title": "Password strength checker — Part C: strong or weak",
+      "brief": "**Part C.** Continuing the checker: read the password and print the same two lines as Part B. A password counts as strong if it is at least 8 characters long **and** contains a digit. Print a final line, `Strength: Strong` or `Strength: Weak`.",
+      "starter": "", "hints": ["Work out the length and the has-digit flag exactly as in Part B, then combine both conditions with and.", "Use an if that checks len(password) >= 8 and the digit flag together, printing Strong only when both are true, otherwise Weak."],
+      "tests": [{ "stdin": "hello123", "expect": "Length: 8\nHas digit: Yes\nStrength: Strong" }, { "stdin": "cat", "expect": "Length: 3\nHas digit: No\nStrength: Weak" }] }
   ]
 }

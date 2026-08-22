@@ -151,5 +151,22 @@
       "hints": ["Two separate validations are needed: one for the number of parcels, and a second while loop for each individual weight.", "Work out each parcel's own cost (with its own handling fee if it applies) before adding it to the running total."],
       "tests": [{ "stdin": "2\n5.0\n15.0", "expect": "45.0" }, { "stdin": "25\n0\n1\n-2\n8.0", "expect": "16.0" }]
     }
+  ],
+  "projectTasks": [
+    { "slug": "gcse-combining-techniques-proj1a", "tier": 4, "difficulty": 3, "xp": 30, "group": "gcse-combining-techniques-bigproj1", "part": "A",
+      "title": "Class attendance tracker — Part A: counting present",
+      "brief": "A school is building an attendance tracker, split into three parts.\n\n**Part A.** Read the number of students in a class. Then, for each student, read whether they were `present` or `absent`. Print how many were present, in the format `Present: <n>`.",
+      "starter": "", "hints": ["Use a for loop to read one status per student, counting how many say \"present\" as you go.", "Set a counter to 0 before the loop, add 1 to it inside the loop whenever the status equals \"present\", then print it after the loop ends."],
+      "tests": [{ "stdin": "5\npresent\npresent\nabsent\npresent\npresent", "expect": "Present: 4" }, { "stdin": "6\nabsent\nabsent\npresent\npresent\npresent\nabsent", "expect": "Present: 3" }] },
+    { "slug": "gcse-combining-techniques-proj1b", "tier": 4, "difficulty": 4, "xp": 40, "group": "gcse-combining-techniques-bigproj1", "part": "B",
+      "title": "Class attendance tracker — Part B: attendance rating",
+      "brief": "**Part B.** Continuing the tracker: read the class size and each student's status exactly as in Part A. Print the number present, then the number absent, then `Low attendance` if more than 20% of the class was absent, otherwise `Good attendance`.",
+      "starter": "", "hints": ["The number absent is the class size minus the number present.", "Work out present and absent counts as in Part A, then compare absent to 20% of the class size (size * 0.2) to decide which message to print."],
+      "tests": [{ "stdin": "5\npresent\npresent\nabsent\npresent\npresent", "expect": "Present: 4\nAbsent: 1\nGood attendance" }, { "stdin": "6\nabsent\nabsent\npresent\npresent\npresent\nabsent", "expect": "Present: 3\nAbsent: 3\nLow attendance" }] },
+    { "slug": "gcse-combining-techniques-proj1c", "tier": 4, "difficulty": 5, "xp": 50, "group": "gcse-combining-techniques-bigproj1", "part": "C",
+      "title": "Class attendance tracker — Part C: longest streak",
+      "brief": "**Part C.** Continuing the tracker: read the class size and each student's status exactly as in Part B, printing the same four lines as Part B. Then also work out the longest run of consecutive `present` entries in a row, and print it as a final line, `Longest streak: <n>`.",
+      "starter": "", "hints": ["Keep a running \"current streak\" that grows by 1 on each present and resets to 0 on each absent, and remember the biggest it ever reached.", "Track two counters through the loop: one for the current run of presents (reset to 0 on any absent), and one for the longest run seen so far, updated whenever the current run beats it."],
+      "tests": [{ "stdin": "5\npresent\npresent\nabsent\npresent\npresent", "expect": "Present: 4\nAbsent: 1\nGood attendance\nLongest streak: 2" }, { "stdin": "6\nabsent\nabsent\npresent\npresent\npresent\nabsent", "expect": "Present: 3\nAbsent: 3\nLow attendance\nLongest streak: 3" }] }
   ]
 }
