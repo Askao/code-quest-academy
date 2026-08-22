@@ -4,7 +4,6 @@ import { useEffect, useRef, useState } from "react";
 import { toast } from "sonner";
 import CodeMirror from "@uiw/react-codemirror";
 import type { EditorView } from "@codemirror/view";
-import { indentLess, indentMore } from "@codemirror/commands";
 import { supabase } from "@/integrations/supabase/client";
 import { useAuth } from "@/hooks/useAuth";
 import { Button } from "@/components/ui/button";
@@ -392,27 +391,6 @@ function Play() {
 
   const isSql = isSqlTopic(challenge.topic);
 
-  // Mobile keyboards have no Tab key and bury most of this row behind a
-  // symbols-page switch - each tap here does what one keypress does on a
-  // physical keyboard, so typing real code on a phone doesn't mean constant
-  // keyboard-switching. Desktop already has both, so this stays lg:hidden.
-  const mobileSymbols = isSql
-    ? ["(", ")", ",", "'", "=", "*", ";", "%"]
-    : ["(", ")", ":", "_", '"', "'", "[", "]", "=", "."];
-  const insertAtCursor = (text: string) => {
-    const view = editorViewRef.current;
-    if (!view) return;
-    const { from, to } = view.state.selection.main;
-    view.dispatch({ changes: { from, to, insert: text }, selection: { anchor: from + text.length } });
-    view.focus();
-  };
-  const indent = () => {
-    if (editorViewRef.current) indentMore(editorViewRef.current);
-  };
-  const outdent = () => {
-    if (editorViewRef.current) indentLess(editorViewRef.current);
-  };
-
   // Came from a lesson's task list: show where this task sits in that
   // lesson so it doesn't feel like an anonymous challenge dropped in
   // isolation.
@@ -665,35 +643,6 @@ function Play() {
               placeholder={isSql ? "-- write your SQL here" : "# write your Python here"}
               basicSetup={{ tabSize: 4 }}
             />
-          </div>
-          <div className="scrollbar-none flex items-center gap-1.5 overflow-x-auto lg:hidden">
-            <button
-              type="button"
-              onClick={outdent}
-              title="Outdent"
-              className="shrink-0 rounded-md border border-border px-2.5 py-1.5 font-mono text-sm text-muted-foreground transition-colors hover:bg-secondary/40"
-            >
-              ⇤
-            </button>
-            <button
-              type="button"
-              onClick={indent}
-              title="Indent"
-              className="shrink-0 rounded-md border border-border px-2.5 py-1.5 font-mono text-sm text-muted-foreground transition-colors hover:bg-secondary/40"
-            >
-              ⇥
-            </button>
-            <span className="h-5 w-px shrink-0 bg-border" />
-            {mobileSymbols.map((s) => (
-              <button
-                key={s}
-                type="button"
-                onClick={() => insertAtCursor(s)}
-                className="shrink-0 rounded-md border border-border px-3 py-1.5 font-mono text-sm text-foreground transition-colors hover:bg-secondary/40"
-              >
-                {s}
-              </button>
-            ))}
           </div>
           {syntaxError ? (
             <div className="rounded-lg border border-destructive/40 bg-destructive/10 px-4 py-3 font-mono text-sm text-destructive">
