@@ -1,5 +1,6 @@
 import { Fragment } from "react";
 import { inline } from "@/lib/markdown";
+import { IdeMock } from "@/components/IdeMock";
 
 function tableRow(line: string) {
   return line
@@ -62,6 +63,44 @@ const EXAM_WORDING_RE = /exam wording/i;
 /** Same idea for a "here's the mistake people make" aside - **Watch out:** / **Careful:** / **Important:** lead-ins. */
 const WARNING_RE = /^\*\*(Watch out|Careful|Important)[:.]?\*\*/;
 
+type Token =
+  | { kind: "text"; text: string }
+  | { kind: "code"; code: string }
+  | { kind: "ide"; code: string; output: string; error: boolean };
+
+/**
+ * ```ide / ```ide-error fences are a small IDE mockup instead of a plain
+ * code block: the part before a lone `===` line is the code, the part
+ * after is the console output it produces (authored, not executed - see
+ * IdeMock). Plain ``` / ```python fences still render as an ordinary code
+ * block, unchanged.
+ */
+function tokenize(notes: string): Token[] {
+  const tokens: Token[] = [];
+  const fenceRe = /```(python|ide-error|ide)?\n([\s\S]*?)```\n?/g;
+  let lastIndex = 0;
+  let m: RegExpExecArray | null;
+  while ((m = fenceRe.exec(notes))) {
+    if (m.index > lastIndex) tokens.push({ kind: "text", text: notes.slice(lastIndex, m.index) });
+    const lang = m[1];
+    const body = m[2]!.replace(/\n$/, "");
+    if (lang === "ide" || lang === "ide-error") {
+      const [code, output] = body.split(/\n===\n/);
+      tokens.push({
+        kind: "ide",
+        code: (code ?? "").trim(),
+        output: (output ?? "").trim(),
+        error: lang === "ide-error",
+      });
+    } else {
+      tokens.push({ kind: "code", code: body });
+    }
+    lastIndex = fenceRe.lastIndex;
+  }
+  if (lastIndex < notes.length) tokens.push({ kind: "text", text: notes.slice(lastIndex) });
+  return tokens;
+}
+
 /**
  * `skipInlineCallout` is set when this body is already inside a `---` box
  * that took its colour from the same content (e.g. a section that's
@@ -70,18 +109,24 @@ const WARNING_RE = /^\*\*(Watch out|Careful|Important)[:.]?\*\*/;
  * a warning box inside a warning box for no added information.
  */
 function renderBody(text: string, keyPrefix: string, skipInlineCallout = false) {
-  const blocks = text.split(/```(?:python)?\n?/);
-  return blocks.map((block, i) =>
-    i % 2 === 1 ? (
-      <pre
-        key={`${keyPrefix}-${i}`}
-        className="overflow-x-auto rounded-lg border border-border bg-secondary/40 p-4 text-sm text-foreground"
-      >
-        <code>{block.replace(/\n$/, "")}</code>
-      </pre>
-    ) : (
+  const tokens = tokenize(text);
+  return tokens.map((token, i) => {
+    if (token.kind === "ide") {
+      return <IdeMock key={`${keyPrefix}-${i}`} code={token.code} output={token.output} error={token.error} />;
+    }
+    if (token.kind === "code") {
+      return (
+        <pre
+          key={`${keyPrefix}-${i}`}
+          className="overflow-x-auto rounded-lg border border-border bg-secondary/40 p-4 text-sm text-foreground"
+        >
+          <code>{token.code}</code>
+        </pre>
+      );
+    }
+    return (
       <Fragment key={`${keyPrefix}-${i}`}>
-        {block
+        {token.text
           .split(/\n{2,}/)
           .map((p) => p.trim())
           .filter(Boolean)
@@ -175,8 +220,8 @@ function renderBody(text: string, keyPrefix: string, skipInlineCallout = false) 
             );
           })}
       </Fragment>
-    ),
-  );
+    );
+  });
 }
 
 /** A line that's just three or more dashes on its own marks a section break - splits notes into separate boxes instead of one long scroll, for lessons dense enough to need it. Opt-in: notes with no `---` render exactly as before. */
