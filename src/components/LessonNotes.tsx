@@ -62,7 +62,14 @@ const EXAM_WORDING_RE = /exam wording/i;
 /** Same idea for a "here's the mistake people make" aside - **Watch out:** / **Careful:** / **Important:** lead-ins. */
 const WARNING_RE = /^\*\*(Watch out|Careful|Important)[:.]?\*\*/;
 
-function renderBody(text: string, keyPrefix: string) {
+/**
+ * `skipInlineCallout` is set when this body is already inside a `---` box
+ * that took its colour from the same content (e.g. a section that's
+ * nothing but a "Watch out" paragraph) - re-drawing the identical callout
+ * a second time, nested inside its own already-tinted box, would just be
+ * a warning box inside a warning box for no added information.
+ */
+function renderBody(text: string, keyPrefix: string, skipInlineCallout = false) {
   const blocks = text.split(/```(?:python)?\n?/);
   return blocks.map((block, i) =>
     i % 2 === 1 ? (
@@ -142,7 +149,7 @@ function renderBody(text: string, keyPrefix: string) {
               );
             }
 
-            if (WARNING_RE.test(p)) {
+            if (!skipInlineCallout && WARNING_RE.test(p)) {
               return (
                 <div key={j} className="rounded-lg border border-warning/40 bg-warning/5 p-4">
                   <p className="mt-1.5 text-sm whitespace-pre-wrap">{inline(p)}</p>
@@ -150,7 +157,7 @@ function renderBody(text: string, keyPrefix: string) {
               );
             }
 
-            if (EXAM_WORDING_RE.test(p)) {
+            if (!skipInlineCallout && EXAM_WORDING_RE.test(p)) {
               return (
                 <div key={j} className="rounded-lg border border-accent/30 bg-accent/5 p-4">
                   <p className="font-mono text-xs font-medium tracking-wide text-accent uppercase">
@@ -175,6 +182,37 @@ function renderBody(text: string, keyPrefix: string) {
 /** A line that's just three or more dashes on its own marks a section break - splits notes into separate boxes instead of one long scroll, for lessons dense enough to need it. Opt-in: notes with no `---` render exactly as before. */
 const SECTION_BREAK_RE = /\n-{3,}\n/;
 
+/**
+ * Each box gets its own colour so neighbouring boxes read as visually
+ * distinct chunks, not just the same grey card repeated - reusing the same
+ * four-colour set the lesson page's own section badges use. A box whose
+ * content is itself a "Watch out"/"Careful" aside or an exam-wording note
+ * takes that colour regardless of position, so the colour still means
+ * something rather than just cycling; everything else rotates through the
+ * remaining three in order.
+ */
+type Tint = "primary" | "accent" | "success" | "warning";
+const TINT_CLASSES: Record<Tint, { border: string; bg: string; bar: string }> = {
+  primary: { border: "border-primary/25", bg: "bg-primary/[0.05]", bar: "bg-primary" },
+  accent: { border: "border-accent/25", bg: "bg-accent/[0.05]", bar: "bg-accent" },
+  success: { border: "border-success/25", bg: "bg-success/[0.05]", bar: "bg-success" },
+  warning: { border: "border-warning/30", bg: "bg-warning/[0.06]", bar: "bg-warning" },
+};
+// Excludes primary: this theme's primary and warning hues sit only 8°
+// apart on the wheel (see styles.css), so a "primary" plain box and a
+// "Watch out" box would look nearly identical - exactly the opposite of
+// what these colours are for. Accent and success stay clearly apart from
+// warning and each other.
+const PLAIN_ROTATION: Tint[] = ["accent", "success"];
+const SECTION_WARNING_RE = /\*\*(Watch out|Careful|Important)[:.]?\*\*/;
+
+/** Returns the tint a section's own content calls for, or null if it should just take the next colour in rotation. */
+function sectionTintOverride(text: string): Tint | null {
+  if (SECTION_WARNING_RE.test(text)) return "warning";
+  if (EXAM_WORDING_RE.test(text)) return "accent";
+  return null;
+}
+
 export function LessonNotes({ notes }: { notes: string }) {
   const sections = notes
     .split(SECTION_BREAK_RE)
@@ -189,16 +227,24 @@ export function LessonNotes({ notes }: { notes: string }) {
     );
   }
 
+  let plainIndex = 0;
   return (
     <div className="space-y-4">
-      {sections.map((section, i) => (
-        <div
-          key={i}
-          className="space-y-5 rounded-lg border border-border bg-secondary/20 p-4 text-base leading-relaxed text-muted-foreground"
-        >
-          {renderBody(section, `s${i}`)}
-        </div>
-      ))}
+      {sections.map((section, i) => {
+        const override = sectionTintOverride(section);
+        const tint = override ?? PLAIN_ROTATION[plainIndex++ % PLAIN_ROTATION.length]!;
+        const c = TINT_CLASSES[tint];
+        return (
+          <div key={i} className={`overflow-hidden rounded-lg border ${c.border} ${c.bg}`}>
+            <div className="flex">
+              <span className={`w-1 shrink-0 ${c.bar}`} />
+              <div className="min-w-0 flex-1 space-y-5 p-4 text-base leading-relaxed text-muted-foreground">
+                {renderBody(section, `s${i}`, override !== null)}
+              </div>
+            </div>
+          </div>
+        );
+      })}
     </div>
   );
 }

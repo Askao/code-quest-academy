@@ -4,7 +4,7 @@ import { traceWorkedExample } from "@/lib/trace-runner";
 
 const STEP_DELAY_MS = 1300;
 const LOOP_PAUSE_MS = 1800;
-const TYPE_MS_PER_CHAR = 45;
+const TYPE_MS_PER_CHAR = 90;
 
 /**
  * A step-through visualisation of a lesson's worked example: real code,
@@ -109,6 +109,10 @@ export function WorkedExampleTrace({
   const currentLine = index === -1 ? steps[0]!.line : steps[index]!.line;
   const started = index >= 0;
   const finished = index === steps.length - 1;
+  // Solid while characters are actively landing, blinking once it catches
+  // up - the same distinction a real terminal cursor makes, so the console
+  // reads as "someone typing" rather than just text fading into place.
+  const isTyping = targetConsole.startsWith(displayed) && displayed.length < targetConsole.length;
 
   const toggleLine = () => {
     setPlaying(false);
@@ -190,7 +194,11 @@ export function WorkedExampleTrace({
             {displayed ? (
               <pre className="whitespace-pre-wrap">
                 {displayed}
-                <span className="animate-pulse text-primary">▍</span>
+                <span
+                  className={`ml-0.5 inline-block h-3.5 w-1.5 -translate-y-0.5 bg-primary align-middle ${
+                    isTyping ? "" : "motion-safe:animate-blink"
+                  }`}
+                />
               </pre>
             ) : (
               <p className="text-muted-foreground">Nothing has run yet.</p>
