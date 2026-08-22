@@ -37,12 +37,22 @@ function AuthPage() {
   const [schoolName, setSchoolName] = useState("");
   const [schoolCode, setSchoolCode] = useState("");
   const [busy, setBusy] = useState(false);
+  // Defaults to hidden - only shown once we positively confirm no admin
+  // exists yet, so there's no flash of the message on a normal deployment
+  // (which is every deployment past its very first signup).
+  const [showAdminNotice, setShowAdminNotice] = useState(false);
 
   useEffect(() => {
     void supabase.auth.getSession().then(({ data }) => {
       if (data.session) void navigate({ to: "/dashboard" });
     });
   }, [navigate]);
+
+  useEffect(() => {
+    void supabase.rpc("admin_exists").then(({ data }) => {
+      if (data === false) setShowAdminNotice(true);
+    });
+  }, []);
 
   const submit = async (e: React.FormEvent) => {
     e.preventDefault();
@@ -205,9 +215,11 @@ function AuthPage() {
         >
           {mode === "signup" ? "Already have an account? Sign in" : "New here? Create an account"}
         </button>
-        <p className="mt-4 text-center font-mono text-xs text-muted-foreground">
-          The first account created on a fresh install becomes the admin.
-        </p>
+        {showAdminNotice ? (
+          <p className="mt-4 text-center font-mono text-xs text-muted-foreground">
+            The first account created on a fresh install becomes the admin.
+          </p>
+        ) : null}
       </div>
     </div>
   );

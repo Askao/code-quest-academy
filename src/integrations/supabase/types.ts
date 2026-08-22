@@ -724,6 +724,10 @@ export type Database = {
           teacher_id: string
         }
       }
+      admin_exists: {
+        Args: Record<PropertyKey, never>
+        Returns: boolean
+      }
       can_view_user: {
         Args: { _target: string; _viewer: string }
         Returns: boolean
