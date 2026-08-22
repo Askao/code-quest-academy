@@ -23,6 +23,7 @@ import {
   practiceTasksForTopic,
   projectsForTopic,
   QUIZZES,
+  tasksInGroup,
 } from "@/lib/content";
 
 export const Route = createFileRoute("/_authenticated/practice")({
@@ -182,6 +183,17 @@ function Practice() {
         isLessonComplete(l.slug, data?.passedSlugs ?? new Set(), data?.quizPassed ?? new Set()),
       )
     );
+  };
+
+  // Capstone Projects has no lessons of its own, so the usual "finish a
+  // lesson in this topic" unlock rule doesn't apply (and would trivially
+  // unlock it for everyone, since lessons.length === 0 above). It unlocks
+  // instead once the Functions/Subprograms project is fully complete - a
+  // real prerequisite-skill checkpoint rather than a lesson.
+  const capstoneUnlocked = () => {
+    if (isTeacher) return true;
+    const parts = tasksInGroup("gcse-functions-bigproj1");
+    return parts.length > 0 && parts.every((p) => data?.passedSlugs.has(p.slug));
   };
 
   // Some GCSE topics are lesson-only (see practiceExcluded in game.ts) - they
@@ -569,13 +581,15 @@ function Practice() {
           </p>
           <div className="space-y-6">
             {topicsWithProjects.map((t) => {
-              const unlocked = topicUnlocked(t.key);
+              const unlocked = t.key === "capstone" ? capstoneUnlocked() : topicUnlocked(t.key);
               if (!unlocked) {
                 return (
                   <div key={t.key} className="panel p-5 opacity-50">
                     <p className="font-semibold">🔒 {t.label}</p>
                     <p className="mt-1 text-sm text-muted-foreground">
-                      Finish a lesson in this topic to unlock its projects.
+                      {t.key === "capstone"
+                        ? "Finish the Subprograms project to unlock Capstone Projects."
+                        : "Finish a lesson in this topic to unlock its projects."}
                     </p>
                   </div>
                 );

@@ -41,6 +41,16 @@ export const GCSE_TOPICS = [
     // rather than being available to every GCSE class like the rest.
     boards: ["aqa"] as const,
   },
+  {
+    key: "capstone",
+    label: "Capstone Projects",
+    blurb: "Bigger, harder builds that combine everything you've learned",
+    // No lessons of its own and no random practice pool - Projects only,
+    // reached from the Projects section once its own unlock condition
+    // (finishing the Subprograms project, not a lesson) is met. See the
+    // special-cased unlock check for this one topic in practice.tsx.
+    practiceExcluded: true,
+  },
 ] as const;
 
 export const ALEVEL_TOPICS = [

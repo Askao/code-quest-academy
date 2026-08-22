@@ -3,6 +3,7 @@
  * edited, reviewed and self-hosted without touching the database. The database only
  * stores the identity and metadata of each lesson/task plus student progress.
  */
+import capstone from "@/content/gcse-capstone.json";
 import combiningTechniques from "@/content/gcse-combining-techniques.json";
 import files from "@/content/gcse-files.json";
 import fundamentals from "@/content/gcse-fundamentals.json";
@@ -118,6 +119,7 @@ const RAW = [
   functions,
   files,
   databases,
+  capstone,
 ] as unknown as RawTopic[];
 
 export const LESSONS: LessonContent[] = RAW.flatMap((t) =>
