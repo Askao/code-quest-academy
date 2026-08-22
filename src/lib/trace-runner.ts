@@ -15,23 +15,42 @@
 import { getPyodide } from "./python-runner";
 
 export type TraceVar = { value: string; type: string };
-export type TraceStep = { line: number; vars: Record<string, TraceVar> };
+/** `console` is the full terminal transcript (echoed input + printed output) up to and including this line. */
+export type TraceStep = { line: number; vars: Record<string, TraceVar>; console: string };
 export type TraceResult = { steps: TraceStep[]; error?: string };
 
 const TRACE_SNIPPET = `
 import sys, json as __json__, builtins as __builtins__
 
+class __ConsoleBuffer__:
+    def __init__(self):
+        self.text = ""
+    def write(self, s):
+        self.text += s
+    def flush(self):
+        pass
+
+__console__ = __ConsoleBuffer__()
+__real_stdout__ = sys.stdout
+sys.stdout = __console__
+
 __demo_cursor__ = [0]
 def __fake_input__(prompt=""):
+    if prompt:
+        __console__.write(str(prompt))
     i = __demo_cursor__[0]
     __demo_cursor__[0] += 1
-    return __demo_inputs__[i] if i < len(__demo_inputs__) else ""
+    answer = __demo_inputs__[i] if i < len(__demo_inputs__) else ""
+    # Echo the "typed" answer, same as a real terminal would - without this
+    # the console would silently skip straight to whatever prints next.
+    __console__.write(answer + "\\n")
+    return answer
 __builtins__.input = __fake_input__
 
 __steps__ = []
 __pending__ = [None]
 
-def __snapshot__(g):
+def __snapshot_vars__(g):
     out = {}
     for k, v in g.items():
         if k.startswith("__"):
@@ -49,11 +68,11 @@ def __tracer__(frame, event, arg):
         return None
     if event == "line":
         if __pending__[0] is not None:
-            __steps__.append({"line": __pending__[0], "vars": __snapshot__(frame.f_globals)})
+            __steps__.append({"line": __pending__[0], "vars": __snapshot_vars__(frame.f_globals), "console": __console__.text})
         __pending__[0] = frame.f_lineno
     elif event == "return":
         if __pending__[0] is not None:
-            __steps__.append({"line": __pending__[0], "vars": __snapshot__(frame.f_globals)})
+            __steps__.append({"line": __pending__[0], "vars": __snapshot_vars__(frame.f_globals), "console": __console__.text})
             __pending__[0] = None
     return __tracer__
 
@@ -66,6 +85,7 @@ except Exception as __e__:
     __trace_error__ = str(__e__)
 finally:
     sys.settrace(None)
+    sys.stdout = __real_stdout__
 
 __json__.dumps({"steps": __steps__, "error": __trace_error__})
 `;

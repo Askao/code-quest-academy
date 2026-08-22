@@ -1,25 +1,26 @@
 import { useEffect, useRef, useState } from "react";
 import { useQuery } from "@tanstack/react-query";
-import { traceWorkedExample, type TraceStep } from "@/lib/trace-runner";
+import { traceWorkedExample } from "@/lib/trace-runner";
 
 const STEP_DELAY_MS = 1300;
 const LOOP_PAUSE_MS = 1800;
+const TYPE_MS_PER_CHAR = 18;
 
 /**
  * A step-through visualisation of a lesson's worked example: real code,
- * really executed (via Pyodide), one line at a time, with a small table
- * showing each variable's value at that point in the run.
+ * really executed (via Pyodide), one line at a time, next to a console
+ * that fills in as the program actually runs - the same console the
+ * practice IDE uses (play.$slug.tsx), so it looks like something students
+ * already recognise rather than a new abstraction to learn. Started as a
+ * variables table; swapped to this after piloting, since a concrete
+ * "what does it print" view reads as more approachable than an abstract
+ * variable-state table for a first pass at this lesson.
  *
- * Deliberately narrow in scope - variables only, no output panel, no call
- * stack - on the research behind PRIMM (Sentance & Waite) that tracing code
- * before writing it is what builds a novice's mental model, and separate
- * work on notional-machine visualisations warning that packing in every
- * runtime detail at once (stack frames, memory addresses) can anchor
- * beginners to mechanics instead of the concept being taught. Manual
- * stepping is the default rather than autoplay, so a student predicts each
- * line before seeing the answer instead of just watching it go by.
+ * Manual stepping stays the default over autoplay - PRIMM-style research
+ * (Sentance & Waite) on tracing before writing code favours the student
+ * predicting each line before seeing the answer, not just watching it run.
  */
-export function VariableTrace({
+export function WorkedExampleTrace({
   source,
   demoInput,
 }: {
@@ -39,10 +40,42 @@ export function VariableTrace({
   const [playing, setPlaying] = useState(false);
   const timerRef = useRef<ReturnType<typeof setTimeout> | null>(null);
 
+  const targetConsole = index === -1 ? "" : (steps[index]?.console ?? "");
+  const [displayed, setDisplayed] = useState("");
+  const typingRef = useRef<ReturnType<typeof setInterval> | null>(null);
+
   useEffect(() => {
     setIndex(-1);
     setPlaying(false);
+    setDisplayed("");
   }, [source, demoInput]);
+
+  // Types out only the newly-revealed tail when stepping forward; jumps
+  // straight there on Back/Restart, since un-typing text reads as a glitch
+  // rather than a rewind.
+  useEffect(() => {
+    if (typingRef.current) clearInterval(typingRef.current);
+    if (displayed === targetConsole) return;
+    // Anything that isn't a straightforward "type on the new tail" - going
+    // back, restarting, or jumping - snaps instantly instead of animating.
+    if (!targetConsole.startsWith(displayed)) {
+      setDisplayed(targetConsole);
+      return;
+    }
+    typingRef.current = setInterval(() => {
+      setDisplayed((d) => {
+        if (d.length >= targetConsole.length) {
+          if (typingRef.current) clearInterval(typingRef.current);
+          return d;
+        }
+        return targetConsole.slice(0, d.length + 1);
+      });
+    }, TYPE_MS_PER_CHAR);
+    return () => {
+      if (typingRef.current) clearInterval(typingRef.current);
+    };
+    // eslint-disable-next-line react-hooks/exhaustive-deps
+  }, [targetConsole]);
 
   useEffect(() => {
     if (!playing || steps.length === 0) return;
@@ -74,8 +107,6 @@ export function VariableTrace({
   }
 
   const currentLine = index === -1 ? steps[0]!.line : steps[index]!.line;
-  const currentVars = index === -1 ? {} : steps[index]!.vars;
-  const previousVars: TraceStep["vars"] = index <= 0 ? {} : steps[index - 1]!.vars;
   const started = index >= 0;
   const finished = index === steps.length - 1;
 
@@ -100,7 +131,7 @@ export function VariableTrace({
             ? "Predict what the first line will do, then click Step."
             : finished
               ? "That's every line — Restart to watch it again."
-              : "What do you think the next line changes?"}
+              : "What do you think this line will print or ask for?"}
         </p>
         <div className="flex items-center gap-1.5">
           <button
@@ -137,7 +168,7 @@ export function VariableTrace({
         </div>
       </div>
 
-      <div className="mt-3 grid gap-3 md:grid-cols-[minmax(0,1.35fr)_minmax(0,1fr)]">
+      <div className="mt-3 grid gap-3 md:grid-cols-[minmax(0,1.2fr)_minmax(0,1fr)]">
         <pre className="overflow-x-auto rounded-md border border-border bg-background/60 p-3 text-xs leading-relaxed">
           <code>
             {lines.map((line, i) => (
@@ -154,38 +185,17 @@ export function VariableTrace({
         </pre>
 
         <div className="rounded-md border border-border bg-background/60 p-3">
-          <p className="font-mono text-[0.65rem] tracking-wide text-muted-foreground uppercase">
-            Variables
-          </p>
-          {!started ? (
-            <p className="mt-2 text-xs text-muted-foreground">Nothing has run yet.</p>
-          ) : Object.keys(currentVars).length === 0 ? (
-            <p className="mt-2 text-xs text-muted-foreground">No variables stored yet.</p>
-          ) : (
-            <ul className="mt-2 space-y-1.5">
-              {Object.entries(currentVars).map(([name, v]) => {
-                const changed = previousVars[name]?.value !== v.value;
-                return (
-                  <li
-                    key={name}
-                    className={`flex items-center justify-between gap-2 rounded-md border px-2 py-1 text-xs transition-colors ${
-                      changed
-                        ? "border-primary/50 bg-primary/10"
-                        : "border-border bg-transparent"
-                    }`}
-                  >
-                    <span className="font-mono font-medium">{name}</span>
-                    <span className="flex items-center gap-1.5 truncate">
-                      <span className="truncate font-mono text-foreground">{v.value}</span>
-                      <span className="font-mono text-[0.65rem] text-muted-foreground">
-                        {v.type}
-                      </span>
-                    </span>
-                  </li>
-                );
-              })}
-            </ul>
-          )}
+          <p className="text-sm font-semibold">Console</p>
+          <div className="mt-2 font-mono text-xs">
+            {displayed ? (
+              <pre className="whitespace-pre-wrap">
+                {displayed}
+                <span className="animate-pulse text-primary">▍</span>
+              </pre>
+            ) : (
+              <p className="text-muted-foreground">Nothing has run yet.</p>
+            )}
+          </div>
         </div>
       </div>
 

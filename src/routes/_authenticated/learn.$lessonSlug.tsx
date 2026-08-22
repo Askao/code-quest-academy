@@ -6,7 +6,7 @@ import { supabase } from "@/integrations/supabase/client";
 import { useAuth } from "@/hooks/useAuth";
 import { Button } from "@/components/ui/button";
 import { LessonNotes } from "@/components/LessonNotes";
-import { VariableTrace } from "@/components/VariableTrace";
+import { WorkedExampleTrace } from "@/components/WorkedExampleTrace";
 import { topicLabel, type Board } from "@/lib/game";
 import {
   getLesson,
@@ -382,37 +382,35 @@ function LessonPage() {
         </span>
       </div>
 
-      <div className="grid gap-6 lg:grid-cols-[minmax(0,1.15fr)_minmax(0,1fr)]">
-        <div className="space-y-6">
-          <section className="panel p-6">
-            <h1 className="text-3xl font-semibold">{lesson.title}</h1>
-            <p className="mt-2 text-sm text-muted-foreground">{lesson.summary}</p>
-            <div className="mt-5">
-              <LessonNotes notes={lesson.notes} />
-            </div>
-          </section>
+      <div className="space-y-6">
+        <section className="panel p-6">
+          <h1 className="text-3xl font-semibold">{lesson.title}</h1>
+          <p className="mt-2 text-sm text-muted-foreground">{lesson.summary}</p>
+          <div className="mt-5">
+            <LessonNotes notes={lesson.notes} />
+          </div>
+        </section>
 
-          <section className="panel p-6">
-            <h2 className="text-lg font-semibold">Worked example</h2>
-            {lesson.worked_example_demo_input ? (
-              <VariableTrace
-                source={lesson.worked_example}
-                demoInput={lesson.worked_example_demo_input}
-              />
-            ) : (
-              <pre className="mt-3 overflow-x-auto rounded-lg border border-border bg-secondary/40 p-4 text-xs">
-                <code>{lesson.worked_example}</code>
-              </pre>
-            )}
-            {lesson.worked_example_note ? (
-              <p className="mt-3 text-sm text-muted-foreground">{lesson.worked_example_note}</p>
-            ) : null}
-          </section>
+        <section className="panel p-6">
+          <h2 className="text-lg font-semibold">Worked example</h2>
+          {lesson.worked_example_demo_input ? (
+            <WorkedExampleTrace
+              source={lesson.worked_example}
+              demoInput={lesson.worked_example_demo_input}
+            />
+          ) : (
+            <pre className="mt-3 overflow-x-auto rounded-lg border border-border bg-secondary/40 p-4 text-xs">
+              <code>{lesson.worked_example}</code>
+            </pre>
+          )}
+          {lesson.worked_example_note ? (
+            <p className="mt-3 text-sm text-muted-foreground">{lesson.worked_example_note}</p>
+          ) : null}
+        </section>
 
-          <QuickCheck lessonSlug={lesson.slug} alreadyPassed={quizPassed.has(lesson.slug)} />
-        </div>
+        <QuickCheck lessonSlug={lesson.slug} alreadyPassed={quizPassed.has(lesson.slug)} />
 
-        <section className="panel h-fit p-6">
+        <section className="panel p-6">
           <div className="flex items-baseline justify-between">
             <h2 className="text-lg font-semibold">Practice tasks</h2>
             <span className="font-mono text-xs text-muted-foreground">
