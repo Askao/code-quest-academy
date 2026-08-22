@@ -24,6 +24,8 @@ import {
   getLesson,
   isLessonComplete,
   lessonsForTopic,
+  practiceTasksForTopic,
+  projectGroupsForTopic,
   tasksForLesson,
   topicsWithLessons,
 } from "@/lib/content";
@@ -71,6 +73,8 @@ function ClassDetail() {
     queryKey: ["class", classId],
     queryFn: async () => {
       const cls = await supabase.from("classes").select("*").eq("id", classId).maybeSingle();
+      const trackLocal = (cls.data?.track ?? "gcse") as TrackKey;
+      const boardLocal = (cls.data?.board ?? "ocr") as Board;
       const coTeachersRes = await supabase
         .from("class_co_teachers")
         .select("id, teacher_id")
@@ -140,10 +144,12 @@ function ClassDetail() {
 
       // Same `isLessonComplete` the student-facing gate uses, so this
       // tracker and the actual unlock condition can never disagree about
-      // what "done" means. Scoped to only the lessons actually assigned,
-      // so classes with nothing assigned yet skip these fetches entirely.
+      // what "done" means. The passed-task-slugs fetch also feeds the
+      // practice/project completion below, so it runs whenever there are
+      // students at all, not just when a lesson's been assigned - the quiz
+      // fetch stays lesson-gated since nothing else uses it.
       const [passedTasksRes, quizPassedRes] = await Promise.all([
-        ids.length && assignedLessonSlugs.length
+        ids.length
           ? supabase
               .from("attempts")
               .select("user_id, challenges!inner(slug)")
@@ -185,6 +191,38 @@ function ClassDetail() {
         // (see consecutive_fails in src/lib/progress.ts) - surfaced here
         // instead of relying on a student to self-report being stuck.
         const struggling = mine.some((k) => (k.consecutive_fails ?? 0) >= STRUGGLING_THRESHOLD);
+
+        // Practice and Projects sit outside the lesson path entirely, so
+        // they were previously invisible on this page even though they're
+        // real progress a teacher would want to see - computed per topic
+        // (for the expanded student row) and summed (for the roster's
+        // quick-glance columns) from the same passed-slugs set the lesson
+        // tracker above already builds, against the topic's authored pool
+        // (see practiceTasksForTopic/projectGroupsForTopic in content.ts).
+        const passedSlugs = passedTaskSlugsByUser.get(p.id) ?? new Set<string>();
+        const practiceByTopic: Record<string, { done: number; total: number }> = {};
+        const projectsByTopic: Record<string, { done: number; total: number }> = {};
+        for (const t of topicsFor(trackLocal, boardLocal)) {
+          const pool = practiceTasksForTopic(trackLocal, t.key);
+          practiceByTopic[t.key] = {
+            done: pool.filter((task) => passedSlugs.has(task.slug)).length,
+            total: pool.length,
+          };
+          const groups = projectGroupsForTopic(trackLocal, t.key);
+          projectsByTopic[t.key] = {
+            done: groups.filter((g) => g.slugs.every((slug) => passedSlugs.has(slug))).length,
+            total: groups.length,
+          };
+        }
+        const practiceTotals = Object.values(practiceByTopic).reduce(
+          (acc, v) => ({ done: acc.done + v.done, total: acc.total + v.total }),
+          { done: 0, total: 0 },
+        );
+        const projectTotals = Object.values(projectsByTopic).reduce(
+          (acc, v) => ({ done: acc.done + v.done, total: acc.total + v.total }),
+          { done: 0, total: 0 },
+        );
+
         return {
           id: p.id,
           name: p.full_name ?? p.email ?? "Student",
@@ -195,6 +233,10 @@ function ClassDetail() {
           lastActive: s?.last_active,
           skills: mine,
           struggling,
+          practiceByTopic,
+          projectsByTopic,
+          practiceTotals,
+          projectTotals,
         };
       });
 
@@ -737,6 +779,8 @@ function ClassDetail() {
                   <th className="p-3">Level</th>
                   <th className="p-3">Accuracy</th>
                   <th className="p-3">Avg skill</th>
+                  <th className="p-3">Practice</th>
+                  <th className="p-3">Projects</th>
                   <th className="p-3">Last active</th>
                   <th className="p-3"></th>
                 </tr>
@@ -761,6 +805,14 @@ function ClassDetail() {
                       </td>
                       <td className="p-3 font-mono text-xs">{s.accuracy}%</td>
                       <td className="p-3 font-mono text-xs">{skillPercent(s.avg)}%</td>
+                      <td className="p-3 font-mono text-xs">
+                        {s.practiceTotals.done}/{s.practiceTotals.total}
+                      </td>
+                      <td className="p-3 font-mono text-xs">
+                        {s.projectTotals.total > 0
+                          ? `${s.projectTotals.done}/${s.projectTotals.total}`
+                          : "—"}
+                      </td>
                       <td className="p-3 font-mono text-xs text-muted-foreground">
                         {s.lastActive ? new Date(s.lastActive).toLocaleDateString("en-GB") : "—"}
                       </td>
@@ -770,22 +822,34 @@ function ClassDetail() {
                     </tr>
                     {expandedStudent === s.id ? (
                       <tr className="border-b border-border/60 bg-secondary/10">
-                        <td colSpan={6} className="p-4">
+                        <td colSpan={8} className="p-4">
                           <div className="grid gap-3 sm:grid-cols-2 lg:grid-cols-3">
                             {topicsFor(track, board).map((t) => {
                               const lvl = Number(
                                 s.skills.find((k) => k.topic === t.key && k.track === track)
                                   ?.level ?? 1,
                               );
+                              const practice = s.practiceByTopic[t.key];
+                              const projects = s.projectsByTopic[t.key];
                               return (
-                                <div key={t.key}>
-                                  <div className="flex justify-between text-xs">
+                                <div key={t.key} className="panel-tint p-3">
+                                  <div className="flex justify-between text-sm font-medium">
                                     <span>{t.label}</span>
                                     <span className="font-mono text-muted-foreground">
                                       {skillPercent(lvl)}%
                                     </span>
                                   </div>
-                                  <Progress value={skillPercent(lvl)} className="mt-1" />
+                                  <Progress value={skillPercent(lvl)} className="mt-1.5" />
+                                  <div className="mt-2 flex items-center justify-between font-mono text-xs text-muted-foreground">
+                                    <span>
+                                      Practice: {practice ? `${practice.done}/${practice.total}` : "0/0"}
+                                    </span>
+                                    {projects && projects.total > 0 ? (
+                                      <span>
+                                        Projects: {projects.done}/{projects.total}
+                                      </span>
+                                    ) : null}
+                                  </div>
                                   <ResetProgressControl
                                     userId={s.id}
                                     track={track}
@@ -970,17 +1034,17 @@ function ClassDetail() {
                     ) : null}
                     {isExpanded && a.completion.length > 0 ? (
                       <div className="mt-3 overflow-x-auto border-t border-border pt-3">
-                        <table className="text-xs">
+                        <table className="text-sm">
                           <thead>
                             <tr>
-                              <th className="p-1.5 text-left font-normal text-muted-foreground">
+                              <th className="p-2.5 text-left font-normal text-muted-foreground">
                                 Student
                               </th>
                               {a.tasks.map((t, i) => (
                                 <th
                                   key={t.slug}
                                   title={t.title}
-                                  className="p-1.5 text-center font-mono font-normal text-muted-foreground"
+                                  className="p-2.5 text-center font-mono font-normal text-muted-foreground"
                                 >
                                   {t.stretch ? "★" : i + 1}
                                 </th>
@@ -990,11 +1054,11 @@ function ClassDetail() {
                           <tbody>
                             {a.completion.map((c) => (
                               <tr key={c.id} className="border-t border-border/60">
-                                <td className="p-1.5 whitespace-nowrap">{c.name}</td>
+                                <td className="p-2.5 font-medium whitespace-nowrap">{c.name}</td>
                                 {c.taskResults.map((passed, i) => (
                                   <td
                                     key={a.tasks[i]!.slug}
-                                    className={`p-1.5 text-center ${passed ? "text-success" : "text-muted-foreground"}`}
+                                    className={`p-2.5 text-center text-base ${passed ? "text-success" : "text-muted-foreground"}`}
                                   >
                                     {passed ? "✓" : "○"}
                                   </td>
@@ -1162,21 +1226,21 @@ function ClassDetail() {
                     ) : null}
                     {isExpanded && sorted.length > 0 ? (
                       <div className="mt-3 overflow-x-auto border-t border-border pt-3">
-                        <table className="text-xs">
+                        <table className="text-sm">
                           <thead>
                             <tr>
-                              <th className="p-1.5 text-left font-normal text-muted-foreground">
+                              <th className="p-2.5 text-left font-normal text-muted-foreground">
                                 Student
                               </th>
                               {Array.from({ length: perStudentCount }, (_, i) => (
                                 <th
                                   key={i}
-                                  className="p-1.5 text-center font-mono font-normal text-muted-foreground"
+                                  className="p-2.5 text-center font-mono font-normal text-muted-foreground"
                                 >
                                   {i + 1}
                                 </th>
                               ))}
-                              <th className="p-1.5 text-center font-mono font-normal text-muted-foreground">
+                              <th className="p-2.5 text-center font-mono font-normal text-muted-foreground">
                                 Done
                               </th>
                             </tr>
@@ -1187,14 +1251,14 @@ function ClassDetail() {
                                 key={c.id}
                                 className="border-t border-border/60 hover:bg-secondary/20"
                               >
-                                <td className="p-1.5 whitespace-nowrap font-medium">{c.name}</td>
+                                <td className="p-2.5 font-medium whitespace-nowrap">{c.name}</td>
                                 {Array.from({ length: perStudentCount }, (_, i) => {
                                   const t = c.tasks[i];
                                   return (
                                     <td
                                       key={i}
                                       title={t?.title}
-                                      className={`p-1.5 text-center ${
+                                      className={`p-2.5 text-center text-base ${
                                         t?.passed ? "text-success" : "text-muted-foreground"
                                       }`}
                                     >
@@ -1202,7 +1266,7 @@ function ClassDetail() {
                                     </td>
                                   );
                                 })}
-                                <td className="p-1.5 text-center font-mono whitespace-nowrap text-muted-foreground">
+                                <td className="p-2.5 text-center font-mono whitespace-nowrap text-muted-foreground">
                                   {c.done}/{c.total}
                                 </td>
                               </tr>

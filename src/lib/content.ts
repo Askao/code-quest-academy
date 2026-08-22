@@ -202,6 +202,36 @@ export function practiceTasksForTopic(track: TrackKey, topic: string) {
   return PRACTICE_TASKS.filter((p) => p.track === track && p.topic === topic);
 }
 
+export type ProjectGroup = { title: string; slugs: string[] };
+
+/**
+ * A topic's projects collapsed into distinct project units rather than
+ * individual part rows - a multi-part project (group/part set, e.g.
+ * gcse-sequencing-proj1a/b/c) becomes one unit spanning every part, a
+ * single-part project becomes a unit of one. Used anywhere "how many of
+ * this topic's projects has X finished" needs to count whole projects,
+ * not parts - a project only counts as done once every part in it does.
+ * See the teacher class overview's per-student project progress.
+ */
+export function projectGroupsForTopic(track: TrackKey, topic: string): ProjectGroup[] {
+  const tasks = projectsForTopic(track, topic);
+  const seen = new Set<string>();
+  const groups: ProjectGroup[] = [];
+  for (const t of tasks) {
+    if (t.group) {
+      if (seen.has(t.group)) continue;
+      seen.add(t.group);
+      const parts = tasks
+        .filter((x) => x.group === t.group)
+        .sort((a, b) => (a.part ?? "").localeCompare(b.part ?? ""));
+      groups.push({ title: parts[0]!.title.split(" — ")[0]!, slugs: parts.map((p) => p.slug) });
+    } else {
+      groups.push({ title: t.title, slugs: [t.slug] });
+    }
+  }
+  return groups;
+}
+
 /** Tasks sharing a `group` are ordered steps (Part A, B, ...) of one bigger problem. */
 /**
  * Searches every task pool, not just the ordinary lesson tasks - multi-part
