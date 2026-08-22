@@ -19,6 +19,7 @@ import {
   completedTaskSlugs,
   isLessonComplete,
   lessonsForTopic,
+  practiceTasksForTopic,
   projectsForTopic,
   QUIZZES,
 } from "@/lib/content";
@@ -54,6 +55,7 @@ function Practice() {
   // any self-learner can explore it same as an AQA class's students would.
   const [board, setBoard] = useState<Board>("ocr");
   const [quizAnswer, setQuizAnswer] = useState<string | null>(null);
+  const [browsingTopic, setBrowsingTopic] = useState<string | null>(null);
 
   const { data } = useQuery({
     queryKey: ["practice-context", user?.id],
@@ -177,14 +179,35 @@ function Practice() {
     );
   };
 
-  const onlySlugs =
-    track === "gcse" && data
-      ? completedTaskSlugs(track, data.passedSlugs, data.quizPassed)
+  // Some GCSE topics are lesson-only (see practiceExcluded in game.ts) - they
+  // don't teach a skill of their own to randomly practise, so they're left
+  // out of this grid, "Surprise me" and boss battles entirely, even though
+  // their lessons are still reachable normally through /learn.
+  const practiceTopics = topicsFor(track, board).filter(
+    (t) => !("practiceExcluded" in t && t.practiceExcluded),
+  );
+
+  // Practice draws from each topic's dedicated practice-task pool, not the
+  // tasks already shown in that topic's lessons - pickChallenge transparently
+  // falls back to the ordinary pool for a topic that has no practice tasks
+  // authored yet, so this stays safe while that content is still being
+  // written topic by topic. A topic only reaches these buttons once
+  // topicUnlocked(t.key) is already true, so single-topic practice/boss
+  // needs no further slug restriction - only the topic-less "mixed" battle
+  // (which spans every unlocked topic at once) needs one, to keep it from
+  // reaching into a topic the student hasn't even started.
+  const mixedPracticeSlugs =
+    track === "gcse"
+      ? new Set(
+          practiceTopics
+            .filter((t) => topicUnlocked(t.key))
+            .flatMap((t) => practiceTasksForTopic(track, t.key).map((p) => p.slug)),
+        )
       : undefined;
 
   const start = async (topic: string | undefined, mode: "practice" | "boss") => {
     // Mixed boss battles (no single topic) pull from every topic they've
-    // completed at once - pitched a notch above their current average so
+    // unlocked at once - pitched a notch above their current average so
     // it's a genuine stretch, not their everyday level.
     const level = topic ? levelFor(topic) : Math.min(5, overallLevel() + 1);
     const challenge = await pickChallenge({
@@ -192,12 +215,13 @@ function Practice() {
       ...(topic ? { topic } : {}),
       level,
       excludeIds: data?.recent ?? [],
-      ...(onlySlugs && !isTeacher ? { onlySlugs } : {}),
+      practiceOnly: true,
+      ...(!topic && mixedPracticeSlugs && !isTeacher ? { onlySlugs: mixedPracticeSlugs } : {}),
     });
     if (!challenge) {
       toast.error(
         track === "gcse"
-          ? "Finish a lesson in this topic first — Practice only covers material you've learned."
+          ? "No practice tasks for this topic yet — check back soon"
           : "No challenges available for that topic yet",
       );
       return;
@@ -221,14 +245,6 @@ function Practice() {
   };
 
   const alevelLocked = track === "alevel" && !data?.allowAlevel && !isTeacher;
-
-  // Some GCSE topics are lesson-only (see practiceExcluded in game.ts) - they
-  // don't teach a skill of their own to randomly practise, so they're left
-  // out of this grid, "Surprise me" and boss battles entirely, even though
-  // their lessons are still reachable normally through /learn.
-  const practiceTopics = topicsFor(track, board).filter(
-    (t) => !("practiceExcluded" in t && t.practiceExcluded),
-  );
 
   const topicsWithProjects = topicsFor("gcse", board)
     .map((t) => ({ ...t, projects: projectsForTopic("gcse", t.key) }))
@@ -407,6 +423,42 @@ function Practice() {
                   Boss ⚔
                 </Button>
               </div>
+              <button
+                type="button"
+                onClick={() => setBrowsingTopic(browsingTopic === t.key ? null : t.key)}
+                className="mt-3 text-left font-mono text-xs text-muted-foreground underline decoration-dotted hover:text-foreground"
+              >
+                {browsingTopic === t.key ? "▲ Hide task list" : "🔍 Find a specific task"}
+              </button>
+              {browsingTopic === t.key ? (
+                <div className="mt-2 max-h-72 space-y-1 overflow-y-auto rounded-md border border-border p-3">
+                  {practiceTasksForTopic(track, t.key).map((task) => {
+                    const done = data?.passedSlugs.has(task.slug) ?? false;
+                    return (
+                      <Link
+                        key={task.slug}
+                        to="/play/$slug"
+                        params={{ slug: task.slug }}
+                        search={{ mode: "practice" as const, track, topic: t.key }}
+                        className={`flex items-center gap-2 rounded px-1.5 py-1 text-sm hover:bg-secondary/40 ${
+                          done ? "text-muted-foreground" : "text-foreground"
+                        }`}
+                      >
+                        <span className={done ? "text-success" : "text-muted-foreground"}>
+                          {done ? "✓" : "○"}
+                        </span>
+                        {task.title}
+                      </Link>
+                    );
+                  })}
+                  {practiceTasksForTopic(track, t.key).length === 0 ? (
+                    <p className="text-sm text-muted-foreground">
+                      No dedicated practice tasks for this topic yet — "Practise" above still works,
+                      picking from the wider question bank.
+                    </p>
+                  ) : null}
+                </div>
+              ) : null}
             </div>
           );
         })}

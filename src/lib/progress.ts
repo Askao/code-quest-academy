@@ -208,8 +208,15 @@ export async function recordAttempt(opts: {
 /**
  * Pick a challenge matched to the student's current skill level, avoiding
  * repeats. When `onlySlugs` is given, the candidate pool is restricted to
- * those slugs first - used by Practice/Recap to stay within material the
- * student has actually covered (see `completedTaskSlugs` in content.ts).
+ * those slugs first - used by Recap to stay within material the student
+ * has actually covered (see `completedTaskSlugs` in content.ts).
+ *
+ * `practiceOnly` restricts to the dedicated practice-task pool (never the
+ * same tasks shown in a lesson's own list) - but a topic whose practice
+ * pool hasn't been authored yet transparently falls back to the ordinary
+ * pool instead of coming back empty, so this is safe to roll a topic's
+ * practice content out on its own, without breaking Practice for every
+ * other topic in the meantime.
  */
 export async function pickChallenge(opts: {
   track: TrackKey;
@@ -217,16 +224,26 @@ export async function pickChallenge(opts: {
   level: number;
   excludeIds?: string[];
   onlySlugs?: Set<string>;
+  practiceOnly?: boolean;
 }): Promise<Challenge | null> {
-  let query = supabase
-    .from("challenges")
-    .select("*")
-    .eq("track", opts.track)
-    .eq("homework_only", false)
-    .eq("is_project", false);
-  if (opts.topic) query = query.eq("topic", opts.topic);
-  const { data } = await query;
-  if (!data || data.length === 0) return null;
+  const runQuery = async (practiceOnly: boolean) => {
+    let query = supabase
+      .from("challenges")
+      .select("*")
+      .eq("track", opts.track)
+      .eq("homework_only", false)
+      .eq("is_project", false)
+      .eq("practice_only", practiceOnly);
+    if (opts.topic) query = query.eq("topic", opts.topic);
+    const { data } = await query;
+    return data ?? [];
+  };
+
+  let data = await runQuery(opts.practiceOnly ?? false);
+  if (opts.practiceOnly && data.length === 0) {
+    data = await runQuery(false);
+  }
+  if (data.length === 0) return null;
 
   let candidates = data;
   if (opts.onlySlugs) {

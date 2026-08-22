@@ -112,6 +112,7 @@ export type Database = {
           homework_only: boolean
           id: string
           is_project: boolean
+          practice_only: boolean
           lesson_id: string | null
           lesson_order: number
           slug: string
@@ -131,6 +132,7 @@ export type Database = {
           homework_only?: boolean
           id?: string
           is_project?: boolean
+          practice_only?: boolean
           lesson_id?: string | null
           lesson_order?: number
           slug: string
@@ -150,6 +152,7 @@ export type Database = {
           homework_only?: boolean
           id?: string
           is_project?: boolean
+          practice_only?: boolean
           lesson_id?: string | null
           lesson_order?: number
           slug?: string

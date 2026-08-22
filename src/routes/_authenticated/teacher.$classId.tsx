@@ -18,7 +18,7 @@ import {
   type Board,
   type TrackKey,
 } from "@/lib/game";
-import { pickHomeworkSet } from "@/lib/progress";
+import { pickHomeworkSet, resetProgress } from "@/lib/progress";
 import { downloadCsv } from "@/lib/csv";
 import {
   getLesson,
@@ -61,6 +61,8 @@ function ClassDetail() {
   const [activeTab, setActiveTab] = useState("overview");
   const [expandedStudent, setExpandedStudent] = useState<string | null>(null);
   const [expandedLesson, setExpandedLesson] = useState<string | null>(null);
+  const [confirmUnassign, setConfirmUnassign] = useState<string | null>(null);
+  const [unassigning, setUnassigning] = useState(false);
   const [expandedHomework, setExpandedHomework] = useState<string | null>(null);
   const [coTeacherEmail, setCoTeacherEmail] = useState("");
   const [addingCoTeacher, setAddingCoTeacher] = useState(false);
@@ -900,14 +902,72 @@ function ClassDetail() {
                       <Button
                         size="sm"
                         variant="secondary"
-                        onClick={async () => {
-                          await supabase.from("lesson_assignments").delete().eq("id", a.id);
-                          void qc.invalidateQueries({ queryKey: ["class", classId] });
-                        }}
+                        onClick={() => setConfirmUnassign(confirmUnassign === a.id ? null : a.id)}
                       >
                         Unassign
                       </Button>
                     </div>
+                    {confirmUnassign === a.id ? (
+                      <div className="mt-3 space-y-2 rounded-md border border-destructive/30 bg-destructive/5 p-3">
+                        <p className="text-xs text-muted-foreground">
+                          Removes this lesson from the class and resets every student's progress on
+                          it — their attempts on {a.tasks.length} task{a.tasks.length === 1 ? "" : "s"}{" "}
+                          and its quiz result. Their skill level and Practice progress aren't
+                          touched. Can't be undone.
+                        </p>
+                        <div className="flex gap-2">
+                          <Button
+                            size="sm"
+                            variant="destructive"
+                            disabled={unassigning}
+                            onClick={async () => {
+                              setUnassigning(true);
+                              try {
+                                await supabase.from("lesson_assignments").delete().eq("id", a.id);
+                                if (lesson) {
+                                  const taskSlugs = a.tasks.map((t) => t.slug);
+                                  const results = await Promise.all(
+                                    a.completion.map((c) =>
+                                      resetProgress({
+                                        userId: c.id,
+                                        track: lesson.track,
+                                        topic: lesson.topic,
+                                        lessonSlug: a.lessonSlug,
+                                        taskSlugs,
+                                      }),
+                                    ),
+                                  );
+                                  const failed = results.filter((r) => !r.ok).length;
+                                  if (failed > 0) {
+                                    toast.error(
+                                      `Unassigned, but progress reset failed for ${failed} student(s)`,
+                                    );
+                                  } else {
+                                    toast.success("Lesson unassigned and student progress reset");
+                                  }
+                                } else {
+                                  toast.success("Lesson unassigned");
+                                }
+                              } finally {
+                                setUnassigning(false);
+                                setConfirmUnassign(null);
+                                void qc.invalidateQueries({ queryKey: ["class", classId] });
+                              }
+                            }}
+                          >
+                            {unassigning ? "Unassigning…" : "Confirm unassign & reset"}
+                          </Button>
+                          <Button
+                            size="sm"
+                            variant="secondary"
+                            disabled={unassigning}
+                            onClick={() => setConfirmUnassign(null)}
+                          >
+                            Cancel
+                          </Button>
+                        </div>
+                      </div>
+                    ) : null}
                     {isExpanded && a.completion.length > 0 ? (
                       <div className="mt-3 overflow-x-auto border-t border-border pt-3">
                         <table className="text-xs">

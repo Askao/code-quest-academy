@@ -369,6 +369,12 @@ function Play() {
       }
     }
 
+    // Practice/Boss draw their "next" pick from the dedicated practice-task
+    // pool too, same as the topic buttons on /practice - falls back to the
+    // ordinary pool automatically for a topic with no practice tasks
+    // authored yet (see pickChallenge). Other modes (duel, recap, homework,
+    // project) keep pulling from the ordinary covered-material pool.
+    const isPracticeFamily = search.mode === "practice" || search.mode === "boss";
     const next = await pickChallenge({
       track: (search.track ?? challenge.track) as TrackKey,
       ...((search.topic ?? (search.mode === "boss" ? undefined : challenge.topic))
@@ -376,7 +382,8 @@ function Play() {
         : {}),
       level: challenge.difficulty,
       excludeIds: [challenge.id],
-      ...(onlySlugs ? { onlySlugs } : {}),
+      practiceOnly: isPracticeFamily,
+      ...(onlySlugs && !isPracticeFamily ? { onlySlugs } : {}),
     });
     if (!next) {
       toast.error("No more challenges here yet");

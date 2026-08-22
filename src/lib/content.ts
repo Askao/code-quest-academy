@@ -76,6 +76,17 @@ export type HomeworkTaskContent = Omit<TaskContent, "lesson" | "lessonSlug">;
  */
 export type ProjectTaskContent = Omit<TaskContent, "lesson" | "lessonSlug">;
 
+/**
+ * A task that only ever surfaces through Practice (topic practice, boss
+ * battles, the "find a specific task" browse list) - never shown in a
+ * lesson's own task list, so practising a topic never just re-serves the
+ * same tasks a student already met while learning it. See practiceOnly in
+ * pickChallenge (src/lib/progress.ts): topics without any dedicated
+ * practice tasks yet transparently fall back to the ordinary task pool,
+ * so this is safe to roll out one topic at a time.
+ */
+export type PracticeTaskContent = Omit<TaskContent, "lesson" | "lessonSlug">;
+
 export type QuizQuestion = {
   lessonSlug: string;
   question: string;
@@ -91,6 +102,7 @@ type RawTopic = {
   tasks: Omit<TaskContent, "lessonSlug" | "track" | "topic">[];
   homeworkTasks?: Omit<HomeworkTaskContent, "track" | "topic">[];
   projectTasks?: Omit<ProjectTaskContent, "track" | "topic">[];
+  practiceTasks?: Omit<PracticeTaskContent, "track" | "topic">[];
   quiz?: QuizQuestion[];
 };
 
@@ -142,12 +154,21 @@ export const PROJECT_TASKS: ProjectTaskContent[] = RAW.flatMap((t) =>
   })),
 );
 
+export const PRACTICE_TASKS: PracticeTaskContent[] = RAW.flatMap((t) =>
+  (t.practiceTasks ?? []).map((task) => ({
+    ...task,
+    track: t.track as TrackKey,
+    topic: t.topic,
+  })),
+);
+
 export const QUIZZES: QuizQuestion[] = RAW.flatMap((t) => t.quiz ?? []);
 
 const lessonBySlug = new Map(LESSONS.map((l) => [l.slug, l]));
-const taskBySlug = new Map<string, TaskContent | HomeworkTaskContent | ProjectTaskContent>(
-  [...TASKS, ...HOMEWORK_TASKS, ...PROJECT_TASKS].map((t) => [t.slug, t]),
-);
+const taskBySlug = new Map<
+  string,
+  TaskContent | HomeworkTaskContent | ProjectTaskContent | PracticeTaskContent
+>([...TASKS, ...HOMEWORK_TASKS, ...PROJECT_TASKS, ...PRACTICE_TASKS].map((t) => [t.slug, t]));
 
 export function getLesson(slug: string) {
   return lessonBySlug.get(slug) ?? null;
@@ -174,6 +195,11 @@ export function projectsForTopic(track: TrackKey, topic: string) {
   return PROJECT_TASKS.filter((p) => p.track === track && p.topic === topic).sort(
     (a, b) => a.difficulty - b.difficulty,
   );
+}
+
+/** A topic's dedicated practice-only tasks - empty until that topic's pool has been authored. */
+export function practiceTasksForTopic(track: TrackKey, topic: string) {
+  return PRACTICE_TASKS.filter((p) => p.track === track && p.topic === topic);
 }
 
 /** Tasks sharing a `group` are ordered steps (Part A, B, ...) of one bigger problem. */
