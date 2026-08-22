@@ -51,21 +51,21 @@
     },
     {
       "lessonSlug": "gcse-fundamentals-2",
-      "question": "Which OCR data type would you use to store a person's height in metres, e.g. 1.75?",
+      "question": "Which data type would you use to store a person's height in metres, e.g. 1.75?",
       "options": ["Integer", "Float", "String", "Boolean"],
       "answer": "Float",
       "explanation": "A value with a decimal part is a float. Integer is for whole numbers only."
     },
     {
       "lessonSlug": "gcse-fundamentals-2",
-      "question": "Which of these is NOT a Python data type, even though OCR's pseudocode lists it separately?",
+      "question": "Which of these is NOT a Python data type, even though exam pseudocode often lists it separately?",
       "options": ["Integer", "Character", "String", "Boolean"],
       "answer": "Character",
       "explanation": "Python has no separate character type — a single character is just a string of length 1."
     },
     {
       "lessonSlug": "gcse-fundamentals-2",
-      "question": "Which OCR data type would you use for a value that is exactly True or False?",
+      "question": "Which data type would you use for a value that is exactly True or False?",
       "options": ["Boolean", "Integer", "String", "Float"],
       "answer": "Boolean",
       "explanation": "A value that can only ever be True or False is a Boolean — Python's bool type."
@@ -79,10 +79,10 @@
     },
     {
       "lessonSlug": "gcse-fundamentals-3",
-      "question": "An OCR question says \"the program should display the total cost\". Which Python function does this describe?",
+      "question": "An exam question says \"the program should display the total cost\". Which Python function does this describe?",
       "options": ["input()", "print()", "int()", "str()"],
       "answer": "print()",
-      "explanation": "\"Display\", \"output\" and \"report\" all describe print() in OCR's exam wording."
+      "explanation": "\"Display\", \"output\" and \"report\" all describe print() in exam wording."
     },
     {
       "lessonSlug": "gcse-fundamentals-3",
