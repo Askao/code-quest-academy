@@ -8,7 +8,8 @@
       "summary": "Read data in, store it, print it back out.",
       "notes": "A program runs one line at a time, top to bottom. That order is called **sequence**.\n\n- `input()` reads one line of text typed by the user.\n- A **variable** stores a value so you can use it later: `name = input()`.\n- `print()` sends a value to the screen.\n- Everything `input()` gives you is a **string**. Use `int()` or `float()` to turn it into a number before doing maths.\n\nIn OCR exam wording, look for the words *read*, *accept*, *ask the user* (they mean `input()`) and *display*, *output*, *report* (they mean `print()`).",
       "worked_example": "# Ask for a name and an age, then report back\nname = input()\nage = int(input())\nnext_year = age + 1\nprint(f\"{name} will be {next_year} next year\")",
-      "worked_example_note": "`int(input())` reads a line and converts it to a whole number in one step. The f-string drops the variables straight into the message."
+      "worked_example_note": "`int(input())` reads a line and converts it to a whole number in one step. The f-string drops the variables straight into the message.",
+      "worked_example_demo_input": ["Ada", "15"]
     },
     {
       "slug": "gcse-sequencing-2",

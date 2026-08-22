@@ -6,6 +6,7 @@ import { supabase } from "@/integrations/supabase/client";
 import { useAuth } from "@/hooks/useAuth";
 import { Button } from "@/components/ui/button";
 import { LessonNotes } from "@/components/LessonNotes";
+import { VariableTrace } from "@/components/VariableTrace";
 import { topicLabel, type Board } from "@/lib/game";
 import {
   getLesson,
@@ -393,9 +394,16 @@ function LessonPage() {
 
           <section className="panel p-6">
             <h2 className="text-lg font-semibold">Worked example</h2>
-            <pre className="mt-3 overflow-x-auto rounded-lg border border-border bg-secondary/40 p-4 text-xs">
-              <code>{lesson.worked_example}</code>
-            </pre>
+            {lesson.worked_example_demo_input ? (
+              <VariableTrace
+                source={lesson.worked_example}
+                demoInput={lesson.worked_example_demo_input}
+              />
+            ) : (
+              <pre className="mt-3 overflow-x-auto rounded-lg border border-border bg-secondary/40 p-4 text-xs">
+                <code>{lesson.worked_example}</code>
+              </pre>
+            )}
             {lesson.worked_example_note ? (
               <p className="mt-3 text-sm text-muted-foreground">{lesson.worked_example_note}</p>
             ) : null}

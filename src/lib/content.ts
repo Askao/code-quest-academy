@@ -23,6 +23,14 @@ export type LessonContent = {
   notes: string;
   worked_example: string;
   worked_example_note: string;
+  /**
+   * Canned answers standing in for whatever the worked example's input()
+   * calls would read at runtime, so its execution can be traced into a
+   * fixed, deliberately-chosen story. Optional - only lessons piloting the
+   * step-through variable trace need it; everything else still renders the
+   * plain static code block.
+   */
+  worked_example_demo_input?: string[];
   track: TrackKey;
   topic: string;
   order: number;
