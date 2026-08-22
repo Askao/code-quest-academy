@@ -8,7 +8,8 @@
       "summary": "Putting an if/elif/else check inside a loop that repeats a known number of times.",
       "notes": "A loop's body can contain **any** statement — including a whole `if` / `elif` / `else` block. This is how OCR-style \"read N items and classify each one\" questions work: the loop controls how many times you repeat, and the selection inside it decides what happens each time.\n\n```python\nfor i in range(5):\n    temp = int(input())\n    if temp >= 25:\n        print(\"Hot\")\n    else:\n        print(\"Cold\")\n```\n\nThe decision runs fresh on every single pass, using whatever value was just read that time round.",
       "worked_example": "for i in range(5):\n    temp = int(input())\n    if temp >= 25:\n        print(\"Hot\")\n    elif temp >= 15:\n        print(\"Mild\")\n    else:\n        print(\"Cold\")",
-      "worked_example_note": "Each of the 5 readings gets its own fresh if/elif/else check — nothing is remembered between passes."
+      "worked_example_note": "Each of the 5 readings gets its own fresh if/elif/else check — nothing is remembered between passes.",
+      "worked_example_demo_input": ["30", "18", "5", "26", "15"]
     },
     {
       "slug": "gcse-combining-techniques-2",
@@ -16,7 +17,8 @@
       "summary": "Tracking more than one running value at once, with decisions guiding what gets counted.",
       "notes": "Longer problems often need several trackers going through the same loop at once — a running total *and* a count *and* something decided by an if statement. Set every tracker up **before** the loop starts, then update whichever ones apply on each pass.\n\n```python\ntotal = 0\nabove = 0\nfor i in range(n):\n    score = int(input())\n    total = total + score\n    if score > 50:\n        above = above + 1\n```\n\n`total` updates on every pass. `above` only updates when the if condition is true.",
       "worked_example": "n = int(input())\ntotal = 0\nabove = 0\nfor i in range(n):\n    score = int(input())\n    total = total + score\n    if score > 50:\n        above = above + 1\nprint(total)\nprint(above)",
-      "worked_example_note": "Two separate trackers, both set up before the loop — only `above` depends on the if check."
+      "worked_example_note": "Two separate trackers, both set up before the loop — only `above` depends on the if check.",
+      "worked_example_demo_input": ["3", "60", "40", "70"]
     },
     {
       "slug": "gcse-combining-techniques-3",
@@ -24,7 +26,8 @@
       "summary": "Choosing the right loop, tracking what's needed, and branching — all in one program.",
       "notes": "Combined exam questions ask the same planning question as before, just with more moving parts: **do I know how many times?** — but now you may also need a *validation* while loop first (for a count that must be in range), before the main for loop that reads and classifies each item.\n\nBuild longer scenarios in stages: get the count validated first, set up every tracker you'll need, then write the loop body last.",
       "worked_example": "n = int(input())\nwhile n < 1 or n > 30:\n    n = int(input())\npassed = 0\nfailed = 0\nfor i in range(n):\n    score = int(input())\n    if score >= 40:\n        passed = passed + 1\n    else:\n        failed = failed + 1\nprint(f\"Passed: {passed}\")\nprint(f\"Failed: {failed}\")",
-      "worked_example_note": "The validation while loop and the counting for loop are two separate loops, one after another — not nested inside each other."
+      "worked_example_note": "The validation while loop and the counting for loop are two separate loops, one after another — not nested inside each other.",
+      "worked_example_demo_input": ["50", "3", "45", "30", "60"]
     }
   ],
   "quiz": [

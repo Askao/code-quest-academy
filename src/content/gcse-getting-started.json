@@ -8,7 +8,8 @@
       "summary": "Writing your first line of code and displaying output on the screen.",
       "notes": "The **IDE** is the code editor on this page — it's where you type Python code.\n\nHere's how it works:\n1. Type your code in the editor.\n2. Click **Run**.\n3. Look at the **Console** — that's where your output shows up.\n\nThe easiest thing a program can do is show something on the screen. You do that with **print()**:\n\n```\nprint(\"Hello, world!\")\n```\n\nText always goes inside **quotes** — either \"double\" or 'single'. Quotes tell Python: *this is just text, don't try to run it as code.*\n\nNumbers don't need quotes:\n\n```\nprint(7)\n```\n\nEvery print() makes a new line of output. Want to show two things? Use print() twice:\n\n```\nprint(\"Line one\")\nprint(\"Line two\")\n```\n\n**Watch out:** if you forget the quotes, Python thinks you're naming something instead of writing text. `print(hello)` looks for something called `hello` — and since that doesn't exist, your program crashes.",
       "worked_example": "print(\"Hello, world!\")\nprint(\"This is my first Python program.\")\nprint(42)",
-      "worked_example_note": "Each print() adds one new line of output. \"Hello, world!\" needs quotes because it's text. 42 doesn't, because it's a number."
+      "worked_example_note": "Each print() adds one new line of output. \"Hello, world!\" needs quotes because it's text. 42 doesn't, because it's a number.",
+      "worked_example_demo_input": []
     },
     {
       "slug": "gcse-getting-started-2",
@@ -16,7 +17,8 @@
       "summary": "Giving a value a name, so your program can use it again later.",
       "notes": "A **variable** stores a value while your program runs. Think of it like a labelled box:\n- the label is the name you pick\n- whatever's inside is the value\n\nYou make a variable with `=`:\n\n```\nscore = 10\n```\n\nThis doesn't mean \"score equals 10\", like in maths. It means: *put 10 in the box called score.*\n\nOnce a variable has a value, print it using its name:\n\n```\nscore = 10\nprint(score)\n```\n\n**Important:** `score` has no quotes here. Quotes are only for text you type out yourself, like \"Hello\". A name on its own tells Python: *go and look up what's stored there.*\n\n- `print(score)` shows **10** — the value inside the box\n- `print(\"score\")` shows the word **score** — just text\n\nYou can change the box's contents by assigning again:\n\n```\nscore = 10\nscore = 20\nprint(score)\n```\n\nThis prints **20**. The new value replaces the old one.",
       "worked_example": "score = 10\nprint(score)\nscore = 20\nprint(score)",
-      "worked_example_note": "The first print(score) shows 10. Then score = 20 changes what's in the box. The second print(score) shows 20, not 10."
+      "worked_example_note": "The first print(score) shows 10. Then score = 20 changes what's in the box. The second print(score) shows 20, not 10.",
+      "worked_example_demo_input": []
     },
     {
       "slug": "gcse-getting-started-3",
@@ -24,7 +26,8 @@
       "summary": "input() lets your program ask a question and wait for an answer.",
       "notes": "**input()** lets your program ask a question and wait for an answer.\n\nHere's what happens:\n1. Python reaches `input()`.\n2. The program **pauses**.\n3. The user types something and presses Enter.\n4. Whatever they typed comes back as the answer.\n\nThe simplest way to use it: print it straight away.\n\n```\nprint(input())\n```\n\nThis just echoes back whatever was typed.\n\nYou already know how to store things in a variable — do the same here, so you can use the answer more than once:\n\n```\nname = input()\nprint(name)\n```\n\nIt's good practice to print a question first, so the user knows what to type:\n\n```\nprint(\"What's your name?\")\nname = input()\nprint(name)\n```",
       "worked_example": "print(\"What's your name?\")\nname = input()\nprint(name)",
-      "worked_example_note": "The program pauses at input(). It waits until the user types something and presses Enter. Whatever they typed gets stored under name, so print(name) can show it."
+      "worked_example_note": "The program pauses at input(). It waits until the user types something and presses Enter. Whatever they typed gets stored under name, so print(name) can show it.",
+      "worked_example_demo_input": ["Ada"]
     },
     {
       "slug": "gcse-getting-started-4",
@@ -32,7 +35,8 @@
       "summary": "Using + to glue pieces of text into one.",
       "notes": "**Concatenation** means joining pieces of text together. In Python, you do this with `+`:\n\n```\nprint(\"Py\" + \"thon\")\n```\n\nThis prints `Python`. The two pieces are glued together — nothing extra gets added.\n\nWant a space between them? You have to add it yourself:\n\n```\nprint(\"Hello\" + \" \" + \"World\")\n```\n\nThis prints `Hello World`, not `HelloWorld`.\n\nConcatenation is handy for mixing fixed text with something the user typed:\n\n```\nname = input()\nprint(\"Hello, \" + name)\n```\n\n**Careful:** `+` only works when both sides are text. Joining text and a number, like `\"Score: \" + 7`, causes an error. You'll learn how to fix that — it's called casting — in the next topic.",
       "worked_example": "name = input()\nprint(\"Hello, \" + name)",
-      "worked_example_note": "\"Hello, \" already has the comma and space built in. + just glues name onto the end — nothing extra gets added."
+      "worked_example_note": "\"Hello, \" already has the comma and space built in. + just glues name onto the end — nothing extra gets added.",
+      "worked_example_demo_input": ["Ada"]
     }
   ],
   "quiz": [

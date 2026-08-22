@@ -48,7 +48,14 @@ def __fake_input__(prompt=""):
 __builtins__.input = __fake_input__
 
 __steps__ = []
-__pending__ = [None]
+# Keyed by id(frame), not a single shared cursor - a worked example that
+# defines and calls a function opens a second frame partway through, and a
+# single shared "pending line" gets wiped by the callee's own return event,
+# silently losing whatever the caller's frame does right after the call
+# returns (e.g. dropping the print() in "print(add(x, y))" - the callee's
+# return clears the shared cursor before the caller's own final return can
+# flush it). Tracking pending state per frame keeps the two independent.
+__pending__ = {}
 
 def __snapshot_vars__(g):
     out = {}
@@ -66,14 +73,15 @@ def __snapshot_vars__(g):
 def __tracer__(frame, event, arg):
     if frame.f_code.co_filename != "<worked_example>":
         return None
+    fid = id(frame)
     if event == "line":
-        if __pending__[0] is not None:
-            __steps__.append({"line": __pending__[0], "vars": __snapshot_vars__(frame.f_globals), "console": __console__.text})
-        __pending__[0] = frame.f_lineno
+        if fid in __pending__:
+            __steps__.append({"line": __pending__[fid], "vars": __snapshot_vars__(frame.f_globals), "console": __console__.text})
+        __pending__[fid] = frame.f_lineno
     elif event == "return":
-        if __pending__[0] is not None:
-            __steps__.append({"line": __pending__[0], "vars": __snapshot_vars__(frame.f_globals), "console": __console__.text})
-            __pending__[0] = None
+        if fid in __pending__:
+            __steps__.append({"line": __pending__[fid], "vars": __snapshot_vars__(frame.f_globals), "console": __console__.text})
+            del __pending__[fid]
     return __tracer__
 
 __trace_error__ = None

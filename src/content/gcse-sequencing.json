@@ -17,7 +17,8 @@
       "summary": "Calculations, integer division and formatting numbers.",
       "notes": "Python arithmetic operators you need for OCR:\n\n| Operator | Meaning | Example |\n| --- | --- | --- |\n| `+ - * /` | add, subtract, multiply, divide | `7 / 2` is `3.5` |\n| `//` | integer (whole) division | `7 // 2` is `3` |\n| `%` | remainder (modulus) | `7 % 2` is `1` |\n| `**` | to the power of | `3 ** 2` is `9` |\n\n`round(value, 2)` rounds to 2 decimal places. Watch the difference between `/` (always gives a decimal) and `//` (drops the decimal part completely).",
       "worked_example": "# Convert a number of minutes into hours and minutes\ntotal = int(input())\nhours = total // 60\nmins = total % 60\nprint(f\"{hours} hours {mins} minutes\")",
-      "worked_example_note": "`//` and `%` work as a pair: one gives how many whole lots fit, the other gives what is left over."
+      "worked_example_note": "`//` and `%` work as a pair: one gives how many whole lots fit, the other gives what is left over.",
+      "worked_example_demo_input": ["150"]
     },
     {
       "slug": "gcse-sequencing-3",
@@ -25,7 +26,8 @@
       "summary": "Longer scenarios where you decide the steps yourself.",
       "notes": "Exam questions rarely say \"use a variable\". They describe a situation and leave you to work out the steps.\n\nA reliable method:\n1. Underline every value the program must **read in**.\n2. Underline every value it must **output**, and the exact wording.\n3. Write the calculation that gets from one to the other.\n\nIf the question gives an example of the output, copy the format exactly — spaces, capital letters and units all count. Where a question shows a specific example value, remember your program has to work for *any* valid input, not just that one example.",
       "worked_example": "# A shop adds 20% VAT to every price.\n# Read a price and display the price including VAT to 2 decimal places.\nprice = float(input())\nwith_vat = price * 1.2\nprint(round(with_vat, 2))",
-      "worked_example_note": "Adding 20% is the same as multiplying by 1.2. Rounding happens last, after the maths."
+      "worked_example_note": "Adding 20% is the same as multiplying by 1.2. Rounding happens last, after the maths.",
+      "worked_example_demo_input": ["25"]
     }
   ],
   "quiz": [

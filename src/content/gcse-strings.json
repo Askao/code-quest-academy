@@ -8,7 +8,8 @@
       "summary": "Every character in a string has a position — how to grab one, or a section.",
       "notes": "A **string** is a sequence of characters. Each character has a position, called an **index**, starting at 0 (not 1).\n\n```python\nword = \"Python\"\nprint(word[0])    # P - the first character\nprint(word[-1])   # n - the last character, counting from the end\nprint(len(word))  # 6 - how many characters in total\n```\n\nA **slice** takes a section of a string: `word[start:end]` gives everything from `start` up to (but not including) `end`.\n\n```python\nprint(word[0:3])  # Pyt\nprint(word[2:])   # thon - leaving off the end means \"to the end\"\nprint(word[:2])   # Py - leaving off the start means \"from the start\"\n```\n\nOCR's pseudocode calls this `SUBSTRING` or `MID` — a Python slice does the same job.",
       "worked_example": "name = input()\nprint(name[0])\nprint(name[-1])\nprint(name[0:3])",
-      "worked_example_note": "Indexing starts at 0, so name[0] is the first letter, not name[1]. In name[0:3], index 3 itself is not included — you get exactly 3 characters."
+      "worked_example_note": "Indexing starts at 0, so name[0] is the first letter, not name[1]. In name[0:3], index 3 itself is not included — you get exactly 3 characters.",
+      "worked_example_demo_input": ["Python"]
     },
     {
       "slug": "gcse-strings-2",
@@ -16,7 +17,8 @@
       "summary": "upper(), lower(), strip(), replace(), split() and checking with in.",
       "notes": "Python strings come with useful built-in methods:\n\n| Method | What it does | Example |\n| --- | --- | --- |\n| `.upper()` | capital letters | `\"hi\".upper()` → `\"HI\"` |\n| `.lower()` | lower-case letters | `\"HI\".lower()` → `\"hi\"` |\n| `.strip()` | removes spaces from each end | `\" hi \".strip()` → `\"hi\"` |\n| `.replace(a, b)` | swaps every `a` for `b` | `\"cat\".replace(\"c\", \"b\")` → `\"bat\"` |\n| `.split()` | splits into a list of words | `\"a b c\".split()` → `[\"a\", \"b\", \"c\"]` |\n\nA method doesn't change the original string — it hands back a **new** one, so you usually need to store the result: `name = name.strip()`.\n\nUse `in` to check whether one string appears inside another: `\"cat\" in \"concatenate\"` is `True`.\n\nJoin text and variables together with an f-string: `f\"Hello {name}\"`.",
       "worked_example": "text = input()\nclean = text.strip().lower()\nprint(clean)",
-      "worked_example_note": "Methods can be chained: .strip() runs first, then .lower() runs on its result. The original text variable is left unchanged — clean is a separate new string."
+      "worked_example_note": "Methods can be chained: .strip() runs first, then .lower() runs on its result. The original text variable is left unchanged — clean is a separate new string.",
+      "worked_example_demo_input": ["  Hello World  "]
     },
     {
       "slug": "gcse-strings-3",
@@ -24,7 +26,8 @@
       "summary": "Combining checks and transformations to validate or build text.",
       "notes": "String questions usually combine a few of these ideas:\n\n1. **Read** — get the text with `input()`\n2. **Check** — inspect it (length, whether it contains something, comparing characters)\n3. **Transform** — build a new string (slicing, methods, joining pieces together)\n4. **Report** — print the result in the format asked for\n\nA common OCR-style task is validation: checking a piece of text meets some rules before accepting it. It's the same shape as the number validation from the Iteration topic — you're just checking a property of text (like its length) instead of whether a number is in range.",
       "worked_example": "# A username must be at least 5 characters long\nusername = input()\nif len(username) >= 5:\n    print(\"Valid\")\nelse:\n    print(\"Too short\")",
-      "worked_example_note": "len() counts every character, including spaces. This is exactly the same validation shape you've already used for numbers, just checking a different property."
+      "worked_example_note": "len() counts every character, including spaces. This is exactly the same validation shape you've already used for numbers, just checking a different property.",
+      "worked_example_demo_input": ["ada99"]
     }
   ],
   "quiz": [

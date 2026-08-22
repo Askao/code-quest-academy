@@ -8,7 +8,8 @@
       "summary": "Storing many values under one name.",
       "notes": "A **list** (OCR calls it an array) stores many values in order.\n\n```python\nscores = [10, 20, 30]\nprint(scores[0])   # 10 - counting starts at 0\nscores[1] = 25     # change an item\nscores.append(40)  # add to the end\nprint(len(scores)) # how many items\n```\n\nThe last item is at index `len(list) - 1`. Going past it gives an *index out of range* error.\n\nLoop over a list either by item or by index:\n\n```python\nfor score in scores:      # each value\nfor i in range(len(scores)):  # each position\n```",
       "worked_example": "values = []\nfor i in range(3):\n    values.append(int(input()))\nprint(values[0])\nprint(len(values))",
-      "worked_example_note": "Start with an empty list and `append()` inside the loop to build it from user input."
+      "worked_example_note": "Start with an empty list and `append()` inside the loop to build it from user input.",
+      "worked_example_demo_input": ["4", "9", "2"]
     },
     {
       "slug": "gcse-lists-2",
@@ -16,7 +17,8 @@
       "summary": "Linear search, aggregation and lists of lists.",
       "notes": "A **linear search** checks each item in turn:\n\n```python\nfound = False\nfor item in items:\n    if item == target:\n        found = True\n```\n\nUseful built-ins: `sum(list)`, `max(list)`, `min(list)`, `len(list)`, `sorted(list)`, `list.index(value)`.\n\nA **2D list** is a list of lists — a grid:\n\n```python\ngrid = [[1, 2], [3, 4]]\nprint(grid[1][0])  # 3  -> row 1, column 0\n```\n\nOCR writes 2D arrays as `array[row][column]`, so read the row first.",
       "worked_example": "names = [\"ada\", \"alan\", \"grace\"]\ntarget = input()\nif target in names:\n    print(names.index(target))\nelse:\n    print(-1)",
-      "worked_example_note": "`in` performs the search for you; `index()` then reports the position. An exam answer may need the loop written out in full."
+      "worked_example_note": "`in` performs the search for you; `index()` then reports the position. An exam answer may need the loop written out in full.",
+      "worked_example_demo_input": ["alan"]
     },
     {
       "slug": "gcse-lists-3",
@@ -24,7 +26,8 @@
       "summary": "Building, filtering and reporting on data sets.",
       "notes": "Most list questions are a variation of four jobs:\n\n1. **Build** — read values into a list\n2. **Search** — find one value or its position\n3. **Aggregate** — total, average, biggest, smallest, count how many match\n4. **Report** — print the results in a stated format\n\nDecide which jobs the question needs, then write them one after another. Be careful with output order, and whether the question wants the value, the position, or both.",
       "worked_example": "# Read 5 marks and report how many were at least 40\nmarks = []\nfor i in range(5):\n    marks.append(int(input()))\npassed = 0\nfor mark in marks:\n    if mark >= 40:\n        passed = passed + 1\nprint(f\"{passed} passed out of {len(marks)}\")",
-      "worked_example_note": "Build first, then process. Keeping the two loops separate makes the logic easier to follow and to mark."
+      "worked_example_note": "Build first, then process. Keeping the two loops separate makes the logic easier to follow and to mark.",
+      "worked_example_demo_input": ["45", "30", "60", "38", "70"]
     }
   ],
   "quiz": [

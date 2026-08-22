@@ -8,7 +8,8 @@
       "summary": "for loops and range().",
       "notes": "A **count-controlled** loop repeats a known number of times.\n\n```python\nfor i in range(5):        # 0,1,2,3,4\nfor i in range(1, 6):     # 1,2,3,4,5\nfor i in range(10, 0, -1) # counts down\n```\n\n`range(a, b)` stops **before** `b` — that off-by-one is the most common exam error.\n\nA running total is set up before the loop and updated inside it:\n\n```python\ntotal = 0\nfor i in range(1, 6):\n    total = total + i\n```",
       "worked_example": "n = int(input())\ntotal = 0\nfor i in range(1, n + 1):\n    total = total + i\nprint(total)",
-      "worked_example_note": "`n + 1` makes the loop include `n` itself. `total` must exist before the loop starts."
+      "worked_example_note": "`n + 1` makes the loop include `n` itself. `total` must exist before the loop starts.",
+      "worked_example_demo_input": ["5"]
     },
     {
       "slug": "gcse-iteration-4",
@@ -16,7 +17,8 @@
       "summary": "More for loop and range() practice before moving on to while loops.",
       "notes": "A quick recap: `range(a, b)` counts from `a` up to, but **not including**, `b`. `range(a, b, step)` adds a step size, which can be negative to count down.\n\nA loop can do more than just print — it can build up a running total, or count how many values meet some condition, using a variable set up before the loop and updated inside it.",
       "worked_example": "n = int(input())\ncount = 0\nfor i in range(1, n + 1):\n    if i % 5 == 0:\n        count = count + 1\nprint(count)",
-      "worked_example_note": "count only increases when the if condition inside the loop is true — the loop still runs every time, but the counter doesn't."
+      "worked_example_note": "count only increases when the if condition inside the loop is true — the loop still runs every time, but the counter doesn't.",
+      "worked_example_demo_input": ["12"]
     },
     {
       "slug": "gcse-iteration-2",
@@ -24,7 +26,8 @@
       "summary": "while loops, sentinel values and validation.",
       "notes": "A **condition-controlled** loop repeats until something becomes false.\n\n```python\nvalue = int(input())\nwhile value != 0:\n    print(value)\n    value = int(input())\n```\n\nThat pattern — read, loop, read again at the bottom — is how OCR expects a **sentinel value** (a special value such as 0 or `stop` that ends the input) to be handled.\n\nInput validation uses the same shape:\n\n```python\nage = int(input())\nwhile age < 0:\n    age = int(input())\n```\n\nIf you forget to read a new value inside the loop, it never ends.",
       "worked_example": "count = 0\nword = input()\nwhile word != \"stop\":\n    count = count + 1\n    word = input()\nprint(count)",
-      "worked_example_note": "The sentinel `stop` is not counted, because the loop checks the value before doing anything with it."
+      "worked_example_note": "The sentinel `stop` is not counted, because the loop checks the value before doing anything with it.",
+      "worked_example_demo_input": ["cat", "dog", "stop"]
     },
     {
       "slug": "gcse-iteration-5",
@@ -32,7 +35,8 @@
       "summary": "More while loop, sentinel and validation practice before the exam-style problems.",
       "notes": "Recap the shape: **read, loop, read again inside it**. That's true whether you're using a sentinel value to end input, or validating that a value is in range.\n\n```python\ntotal = 0\nvalue = int(input())\nwhile value != 0:\n    total = total + value\n    value = int(input())\nprint(total)\n```\n\nThe sentinel itself (0 here) is never added to the total — the loop's condition is checked *before* anything inside it runs.",
       "worked_example": "attempts = 0\nguess = int(input())\nattempts = attempts + 1\nwhile guess != 7:\n    guess = int(input())\n    attempts = attempts + 1\nprint(attempts)",
-      "worked_example_note": "The first guess is read and counted before the loop even starts, since the loop's condition needs a value to check."
+      "worked_example_note": "The first guess is read and counted before the loop even starts, since the loop's condition needs a value to check.",
+      "worked_example_demo_input": ["3", "7"]
     },
     {
       "slug": "gcse-iteration-3",
@@ -40,7 +44,8 @@
       "summary": "Choosing the right loop and tracking several values at once.",
       "notes": "Ask one question to choose your loop: **do I know how many times?**\n\n- Yes → `for`\n- No, it depends on the data → `while`\n\nLonger questions often need more than one variable tracked through the loop — for example a total *and* a count *and* the largest so far. Set them all up before the loop starts, and update each one inside it.\n\nWhen the question says *keep asking until*, that is a `while` with a sentinel. When it says *for each of the 10 readings*, that is a `for`.",
       "worked_example": "# Read 5 numbers and report the largest\nlargest = int(input())\nfor i in range(4):\n    value = int(input())\n    if value > largest:\n        largest = value\nprint(largest)",
-      "worked_example_note": "Starting `largest` at the first real value avoids guessing a starting number that might be too big."
+      "worked_example_note": "Starting `largest` at the first real value avoids guessing a starting number that might be too big.",
+      "worked_example_demo_input": ["10", "25", "7", "30", "18"]
     }
   ],
   "quiz": [
