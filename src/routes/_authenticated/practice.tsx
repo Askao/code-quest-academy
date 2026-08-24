@@ -7,6 +7,7 @@ import { useAuth } from "@/hooks/useAuth";
 import { Button } from "@/components/ui/button";
 import { Progress } from "@/components/ui/progress";
 import { pickChallenge, pickRecapChallenge, resetProgress } from "@/lib/progress";
+import { generateVerifiedBossTask } from "@/lib/boss-task";
 import {
   skillLabel,
   skillPercent,
@@ -222,19 +223,55 @@ function Practice() {
         )
       : undefined;
 
+  // The topic the student is weakest in among the ones they've actually
+  // unlocked - the AI boss task targets this, not just an average, so a
+  // strong topic dragging the overall average up never hides a genuinely
+  // weak one.
+  const weakestUnlockedTopic = () => {
+    const unlocked = practiceTopics.filter((t) => topicUnlocked(t.key));
+    if (unlocked.length === 0) return null;
+    return unlocked.reduce((weakest, t) =>
+      levelFor(t.key) < levelFor(weakest.key) ? t : weakest,
+    );
+  };
+
   const start = async (topic: string | undefined, mode: "practice" | "boss") => {
     // Mixed boss battles (no single topic) pull from every topic they've
     // unlocked at once - pitched a notch above their current average so
     // it's a genuine stretch, not their everyday level.
     const level = topic ? levelFor(topic) : Math.min(5, overallLevel() + 1);
-    const challenge = await pickChallenge({
-      track,
-      ...(topic ? { topic } : {}),
-      level,
-      excludeIds: data?.recent ?? [],
-      practiceOnly: true,
-      ...(!topic && mixedPracticeSlugs && !isTeacher ? { onlySlugs: mixedPracticeSlugs } : {}),
-    });
+
+    // The mixed boss battle's opening task is AI-generated, targeting
+    // whichever unlocked topic the student is weakest in - falls straight
+    // back to the ordinary pool if generation/verification fails for any
+    // reason (see generateVerifiedBossTask), so a flaky AI response never
+    // blocks starting the battle.
+    let challenge = null as Awaited<ReturnType<typeof pickChallenge>>;
+    let bossWeakTopic: { key: string; label: string; blurb: string } | null = null;
+    if (!topic && mode === "boss" && track === "gcse" && !isTeacher) {
+      const weak = weakestUnlockedTopic();
+      if (weak) {
+        challenge = await generateVerifiedBossTask({
+          track,
+          topic: weak.key,
+          topicLabel: weak.label,
+          topicBlurb: weak.blurb,
+          level: Math.min(5, levelFor(weak.key) + 1),
+        });
+        if (challenge) bossWeakTopic = weak;
+      }
+    }
+
+    if (!challenge) {
+      challenge = await pickChallenge({
+        track,
+        ...(topic ? { topic } : {}),
+        level,
+        excludeIds: data?.recent ?? [],
+        practiceOnly: true,
+        ...(!topic && mixedPracticeSlugs && !isTeacher ? { onlySlugs: mixedPracticeSlugs } : {}),
+      });
+    }
     if (!challenge) {
       toast.error(
         track === "gcse"
@@ -251,6 +288,13 @@ function Practice() {
           score: 0,
           track,
           topic: topic ?? null,
+          ...(bossWeakTopic
+            ? {
+                aiTopic: bossWeakTopic.key,
+                aiTopicLabel: bossWeakTopic.label,
+                aiTopicBlurb: bossWeakTopic.blurb,
+              }
+            : {}),
         }),
       );
     }
