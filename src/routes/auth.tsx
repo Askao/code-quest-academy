@@ -45,6 +45,12 @@ function AuthPage() {
   const [recovering, setRecovering] = useState(false);
   const [newPassword, setNewPassword] = useState("");
   const [confirmNewPassword, setConfirmNewPassword] = useState("");
+  // A client-side cooldown between signup attempts, purely for UX (a clear
+  // "wait a moment" instead of a raw error) - the real, unbypassable defense
+  // against spam signups is GOTRUE_RATE_LIMIT_OTP, enforced server-side per
+  // client IP.
+  const [signupCooldownUntil, setSignupCooldownUntil] = useState<number | null>(null);
+  const [cooldownTick, setCooldownTick] = useState(Date.now());
   // Defaults to hidden - only shown once we positively confirm no admin
   // exists yet, so there's no flash of the message on a normal deployment
   // (which is every deployment past its very first signup).
@@ -73,12 +79,23 @@ function AuthPage() {
     });
   }, []);
 
+  useEffect(() => {
+    if (!signupCooldownUntil) return;
+    const id = setInterval(() => setCooldownTick(Date.now()), 500);
+    return () => clearInterval(id);
+  }, [signupCooldownUntil]);
+
+  const signupCooldownRemaining = signupCooldownUntil
+    ? Math.max(0, Math.ceil((signupCooldownUntil - cooldownTick) / 1000))
+    : 0;
+
   const submit = async (e: React.FormEvent) => {
     e.preventDefault();
     if (mode === "signup" && password !== confirmPassword) {
       toast.error("Passwords don't match");
       return;
     }
+    if (mode === "signup" && signupCooldownRemaining > 0) return;
     setBusy(true);
     try {
       if (mode === "forgot") {
@@ -138,6 +155,7 @@ function AuthPage() {
     } catch (err) {
       toast.error(err instanceof Error ? err.message : "Something went wrong");
     } finally {
+      if (mode === "signup") setSignupCooldownUntil(Date.now() + 30_000);
       setBusy(false);
     }
   };
@@ -337,14 +355,20 @@ function AuthPage() {
               Forgot password?
             </button>
           ) : null}
-          <Button type="submit" className="w-full" disabled={busy}>
+          <Button
+            type="submit"
+            className="w-full"
+            disabled={busy || (mode === "signup" && signupCooldownRemaining > 0)}
+          >
             {busy
               ? "Please wait…"
-              : mode === "signup"
-                ? "Create account"
-                : mode === "forgot"
-                  ? "Send reset link"
-                  : "Sign in"}
+              : mode === "signup" && signupCooldownRemaining > 0
+                ? `Try again in ${signupCooldownRemaining}s`
+                : mode === "signup"
+                  ? "Create account"
+                  : mode === "forgot"
+                    ? "Send reset link"
+                    : "Sign in"}
           </Button>
         </form>
 
