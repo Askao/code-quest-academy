@@ -32,6 +32,11 @@ export const GCSE_TOPICS = [
   { key: "functions", label: "Subprograms", blurb: "Functions and procedures" },
   { key: "files", label: "File handling", blurb: "Reading and writing text files" },
   {
+    key: "searching-sorting",
+    label: "Searching & Sorting",
+    blurb: "Linear & binary search, bubble, insertion & merge sort",
+  },
+  {
     key: "databases",
     label: "Databases & SQL",
     blurb: "Relational databases, tables and SQL queries",

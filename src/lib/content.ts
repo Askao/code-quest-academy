@@ -11,6 +11,7 @@ import functions from "@/content/gcse-functions.json";
 import gettingStarted from "@/content/gcse-getting-started.json";
 import iteration from "@/content/gcse-iteration.json";
 import lists from "@/content/gcse-lists.json";
+import searchingSorting from "@/content/gcse-searching-sorting.json";
 import selection from "@/content/gcse-selection.json";
 import sequencing from "@/content/gcse-sequencing.json";
 import strings from "@/content/gcse-strings.json";
@@ -118,6 +119,7 @@ const RAW = [
   strings,
   functions,
   files,
+  searchingSorting,
   databases,
   capstone,
 ] as unknown as RawTopic[];
