@@ -35,16 +35,24 @@ function Admin() {
   const { user, isAdmin } = useAuth();
   const qc = useQueryClient();
   const [settings, setSettings] = useState<Record<string, string>>({});
-  const [deleteTarget, setDeleteTarget] = useState<{ id: string; email: string } | null>(null);
-  const [confirmEmail, setConfirmEmail] = useState("");
+  const [deleteTarget, setDeleteTarget] = useState<{
+    id: string;
+    maskedName: string;
+    maskedEmail: string;
+  } | null>(null);
+  const [confirmText, setConfirmText] = useState("");
   const [deleting, setDeleting] = useState(false);
 
   const { data } = useQuery({
     queryKey: ["admin"],
     enabled: isAdmin,
     queryFn: async () => {
+      // Masking happens inside admin_list_users() itself (in Postgres),
+      // not here - unmasked names/emails never leave the database for an
+      // admin's browser, so there's nothing to redact client-side and
+      // nothing sensitive sitting in a network response to inspect.
       const [profiles, roles, appSettings, challenges, classes] = await Promise.all([
-        supabase.from("profiles").select("*").order("created_at", { ascending: false }).limit(200),
+        supabase.rpc("admin_list_users"),
         supabase.from("user_roles").select("*"),
         supabase.from("app_settings").select("*"),
         supabase.from("challenges").select("id, track"),
@@ -88,7 +96,7 @@ function Admin() {
   };
 
   const deleteUser = async () => {
-    if (!deleteTarget || confirmEmail.trim() !== deleteTarget.email) return;
+    if (!deleteTarget || confirmText.trim() !== "DELETE") return;
     setDeleting(true);
     const { error } = await supabase.rpc("delete_user_account", { _user_id: deleteTarget.id });
     setDeleting(false);
@@ -96,9 +104,9 @@ function Admin() {
       toast.error(error.message);
       return;
     }
-    toast.success(`${deleteTarget.email} deleted`);
+    toast.success(`${deleteTarget.maskedName || deleteTarget.maskedEmail} deleted`);
     setDeleteTarget(null);
-    setConfirmEmail("");
+    setConfirmText("");
     void qc.invalidateQueries({ queryKey: ["admin"] });
   };
 
@@ -205,8 +213,8 @@ function Admin() {
             <tbody>
               {(data?.profiles ?? []).map((p) => (
                 <tr key={p.id} className="border-b border-border/60">
-                  <td className="p-3 font-medium">{p.full_name ?? "—"}</td>
-                  <td className="p-3 text-muted-foreground">{p.email}</td>
+                  <td className="p-3 font-medium">{p.masked_name ?? "—"}</td>
+                  <td className="p-3 text-muted-foreground">{p.masked_email ?? "—"}</td>
                   <td className="p-3">
                     <select
                       className="rounded-md border border-border bg-card px-2 py-1 text-sm"
@@ -224,8 +232,12 @@ function Admin() {
                         size="sm"
                         variant="destructive"
                         onClick={() => {
-                          setDeleteTarget({ id: p.id, email: p.email ?? "" });
-                          setConfirmEmail("");
+                          setDeleteTarget({
+                            id: p.id,
+                            maskedName: p.masked_name ?? "",
+                            maskedEmail: p.masked_email ?? "",
+                          });
+                          setConfirmText("");
                         }}
                       >
                         Delete
@@ -244,7 +256,7 @@ function Admin() {
         onOpenChange={(open) => {
           if (!open) {
             setDeleteTarget(null);
-            setConfirmEmail("");
+            setConfirmText("");
           }
         }}
       >
@@ -252,21 +264,23 @@ function Admin() {
           <AlertDialogHeader>
             <AlertDialogTitle>Delete this account?</AlertDialogTitle>
             <AlertDialogDescription>
-              This permanently deletes <strong>{deleteTarget?.email}</strong> — their profile,
-              progress, class membership and login are gone for good. This can't be undone.
+              This permanently deletes{" "}
+              <strong>{deleteTarget?.maskedName || deleteTarget?.maskedEmail}</strong> — their
+              profile, progress, class membership and login are gone for good. This can't be
+              undone.
             </AlertDialogDescription>
           </AlertDialogHeader>
           <div className="space-y-2">
             <label className="text-sm">
-              Type <strong>{deleteTarget?.email}</strong> to confirm
+              Type <strong>DELETE</strong> to confirm
             </label>
-            <Input value={confirmEmail} onChange={(e) => setConfirmEmail(e.target.value)} />
+            <Input value={confirmText} onChange={(e) => setConfirmText(e.target.value)} />
           </div>
           <AlertDialogFooter>
             <AlertDialogCancel>Cancel</AlertDialogCancel>
             <AlertDialogAction
               className="bg-destructive text-destructive-foreground hover:bg-destructive/90"
-              disabled={deleting || confirmEmail.trim() !== deleteTarget?.email}
+              disabled={deleting || confirmText.trim() !== "DELETE"}
               onClick={(e) => {
                 e.preventDefault();
                 void deleteUser();
