@@ -19,7 +19,6 @@ import { getSqlJs, runSqlOnce, runSqlTests, type SqlRunOutcome } from "@/lib/sql
 import { highlightErrorLine, pythonEditorExtensions } from "@/lib/python-lint";
 import { sqlEditorExtensions } from "@/lib/sql-lang";
 import { pickChallenge, recordAttempt, type Challenge } from "@/lib/progress";
-import { generateVerifiedBossTask } from "@/lib/boss-task";
 import {
   completedTaskSlugs,
   projectsForTopic,
@@ -39,18 +38,7 @@ type Search = {
   lesson?: string;
 };
 
-type BossState = {
-  endsAt: number;
-  score: number;
-  track: TrackKey;
-  topic: string | null;
-  // Set only for a mixed boss battle whose opening task was AI-generated -
-  // carries the targeted weak topic through the rest of the battle so
-  // every subsequent task targets the same one, not just the first.
-  aiTopic?: string;
-  aiTopicLabel?: string;
-  aiTopicBlurb?: string;
-};
+type BossState = { endsAt: number; score: number; track: TrackKey; topic: string | null };
 
 export const Route = createFileRoute("/_authenticated/play/$slug")({
   validateSearch: (s: Record<string, unknown>): Search => ({
@@ -425,44 +413,22 @@ function Play() {
       }
     }
 
-    // A mixed boss battle whose opening task was AI-generated keeps
-    // targeting the same weak topic for every task that follows, not just
-    // the first - falls straight through to the ordinary pool below if
-    // generation/verification fails for any reason (see
-    // generateVerifiedBossTask), so a flaky AI response never stalls the
-    // battle.
-    let next: Challenge | null = null;
-    if (search.mode === "boss" && !search.topic) {
-      const boss = readBoss();
-      if (boss?.aiTopic && boss.aiTopicLabel && boss.aiTopicBlurb) {
-        next = await generateVerifiedBossTask({
-          track: (search.track ?? challenge.track) as TrackKey,
-          topic: boss.aiTopic,
-          topicLabel: boss.aiTopicLabel,
-          topicBlurb: boss.aiTopicBlurb,
-          level: challenge.difficulty,
-        });
-      }
-    }
-
     // Practice/Boss draw their "next" pick from the dedicated practice-task
     // pool too, same as the topic buttons on /practice - falls back to the
     // ordinary pool automatically for a topic with no practice tasks
     // authored yet (see pickChallenge). Other modes (duel, recap, homework,
     // project) keep pulling from the ordinary covered-material pool.
     const isPracticeFamily = search.mode === "practice" || search.mode === "boss";
-    if (!next) {
-      next = await pickChallenge({
-        track: (search.track ?? challenge.track) as TrackKey,
-        ...((search.topic ?? (search.mode === "boss" ? undefined : challenge.topic))
-          ? { topic: search.topic ?? challenge.topic }
-          : {}),
-        level: challenge.difficulty,
-        excludeIds: [challenge.id],
-        practiceOnly: isPracticeFamily,
-        ...(onlySlugs && !isPracticeFamily ? { onlySlugs } : {}),
-      });
-    }
+    const next = await pickChallenge({
+      track: (search.track ?? challenge.track) as TrackKey,
+      ...((search.topic ?? (search.mode === "boss" ? undefined : challenge.topic))
+        ? { topic: search.topic ?? challenge.topic }
+        : {}),
+      level: challenge.difficulty,
+      excludeIds: [challenge.id],
+      practiceOnly: isPracticeFamily,
+      ...(onlySlugs && !isPracticeFamily ? { onlySlugs } : {}),
+    });
     if (!next) {
       toast.error("No more challenges here yet");
       return;
