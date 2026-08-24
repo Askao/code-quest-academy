@@ -47,12 +47,17 @@ function isH3SwallowedErrorBody(body: string): boolean {
 
 export default {
   async fetch(request: Request, env: unknown, ctx: unknown) {
-    if (request.method === "POST" && new URL(request.url).pathname === AUTH_EMAIL_HOOK_PATH) {
+    if (request.method === "POST") {
       try {
-        return await handleAuthEmailHook(request);
+        if (new URL(request.url).pathname === AUTH_EMAIL_HOOK_PATH) {
+          return await handleAuthEmailHook(request);
+        }
       } catch (error) {
         console.error(error);
-        return new Response("Internal error", { status: 500 });
+        return new Response(JSON.stringify({ error: "Internal error" }), {
+          status: 500,
+          headers: { "content-type": "application/json" },
+        });
       }
     }
     try {

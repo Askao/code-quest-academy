@@ -16,6 +16,17 @@ import { createHmac, timingSafeEqual } from "node:crypto";
 
 export const AUTH_EMAIL_HOOK_PATH = "/api/auth/send-email-hook";
 
+// GoTrue's hook client validates the Content-Type of the hook's HTTP
+// response (even on success) and fails the whole auth request with
+// "Invalid Content-Type: Missing Content-Type header" if it's absent -
+// every response from this handler needs one, not just error bodies.
+function jsonResponse(body: unknown, status: number): Response {
+  return new Response(JSON.stringify(body), {
+    status,
+    headers: { "content-type": "application/json" },
+  });
+}
+
 type EmailActionType =
   | "signup"
   | "invite"
@@ -127,7 +138,7 @@ export async function handleAuthEmailHook(request: Request): Promise<Response> {
     console.error(
       "[auth-email-hook] Missing GOTRUE_HOOK_SEND_EMAIL_SECRETS / RESEND_API_KEY / GOTRUE_EXTERNAL_URL",
     );
-    return new Response("Server misconfigured", { status: 500 });
+    return jsonResponse({ error: "Server misconfigured" }, 500);
   }
 
   const body = await request.text();
@@ -135,22 +146,22 @@ export async function handleAuthEmailHook(request: Request): Promise<Response> {
   const timestamp = request.headers.get("webhook-timestamp") ?? "";
   const signature = request.headers.get("webhook-signature") ?? "";
   if (!id || !timestamp || !signature) {
-    return new Response("Missing signature headers", { status: 401 });
+    return jsonResponse({ error: "Missing signature headers" }, 401);
   }
 
   const tsSeconds = Number(timestamp);
   if (!Number.isFinite(tsSeconds) || Math.abs(Date.now() / 1000 - tsSeconds) > 300) {
-    return new Response("Stale or invalid timestamp", { status: 401 });
+    return jsonResponse({ error: "Stale or invalid timestamp" }, 401);
   }
   if (!verifySignature(secretsEnv, id, timestamp, body, signature)) {
-    return new Response("Invalid signature", { status: 401 });
+    return jsonResponse({ error: "Invalid signature" }, 401);
   }
 
   let payload: HookPayload;
   try {
     payload = JSON.parse(body) as HookPayload;
   } catch {
-    return new Response("Bad payload", { status: 400 });
+    return jsonResponse({ error: "Bad payload" }, 400);
   }
 
   const { user, email_data } = payload;
@@ -173,7 +184,7 @@ export async function handleAuthEmailHook(request: Request): Promise<Response> {
   });
   if (!res.ok) {
     console.error("[auth-email-hook] Resend send failed:", res.status, await res.text());
-    return new Response("Email send failed", { status: 500 });
+    return jsonResponse({ error: "Email send failed" }, 500);
   }
-  return new Response(null, { status: 200 });
+  return jsonResponse({}, 200);
 }
