@@ -57,21 +57,26 @@ function AuthPage() {
   const [showAdminNotice, setShowAdminNotice] = useState(false);
 
   useEffect(() => {
-    const { data: sub } = supabase.auth.onAuthStateChange((event) => {
-      if (event === "PASSWORD_RECOVERY") setRecovering(true);
+    // Both decisions - "show the recovery form" and "already signed in,
+    // bounce to dashboard" - have to be made from the same event stream,
+    // not a PASSWORD_RECOVERY listener racing a separate getSession() call:
+    // getSession() awaits the client's own URL-session-detection internally,
+    // so its promise can still resolve with a closure where `recovering` was
+    // captured as false, even after the PASSWORD_RECOVERY event has already
+    // fired elsewhere - that race is exactly what sent recovery links
+    // straight to the dashboard instead of the set-new-password form.
+    // onAuthStateChange fires INITIAL_SESSION once on subscribe with
+    // whatever session already exists, so nothing extra is needed to cover
+    // the plain "already signed in" case.
+    const { data: sub } = supabase.auth.onAuthStateChange((event, session) => {
+      if (event === "PASSWORD_RECOVERY") {
+        setRecovering(true);
+        return;
+      }
+      if (session) void navigate({ to: "/dashboard" });
     });
     return () => sub.subscription.unsubscribe();
-  }, []);
-
-  useEffect(() => {
-    void supabase.auth.getSession().then(({ data }) => {
-      // A recovery session is still a real session, so the plain "already
-      // signed in, bounce to dashboard" check has to skip it - otherwise
-      // the set-new-password form the PASSWORD_RECOVERY listener is about
-      // to show never gets a chance to render.
-      if (data.session && !recovering) void navigate({ to: "/dashboard" });
-    });
-  }, [navigate, recovering]);
+  }, [navigate]);
 
   useEffect(() => {
     void supabase.rpc("admin_exists").then(({ data }) => {
