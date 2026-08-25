@@ -1,5 +1,5 @@
 import { createFileRoute, useNavigate, Link } from "@tanstack/react-router";
-import { useEffect, useState } from "react";
+import { useEffect, useRef, useState } from "react";
 import { toast } from "sonner";
 import { supabase } from "@/integrations/supabase/client";
 import { Button } from "@/components/ui/button";
@@ -43,6 +43,15 @@ function AuthPage() {
   // link redirects back here, so this can't be reached by just navigating to
   // a mode= search param the way signin/signup/forgot can.
   const [recovering, setRecovering] = useState(false);
+  // The onAuthStateChange callback below is created once on mount and never
+  // recreated (its effect only depends on `navigate`), so it closes over
+  // `recovering` as it was at that moment - forever. A plain state check
+  // inside it would stay stale even after setRecovering(true) runs, letting
+  // a later event on the same recovery session (Supabase fires a
+  // TOKEN_REFRESHED a couple of seconds after establishing one) slip past
+  // the gate and navigate to the dashboard anyway. A ref has no such
+  // staleness: reading .current always sees the latest value.
+  const recoveringRef = useRef(false);
   const [newPassword, setNewPassword] = useState("");
   const [confirmNewPassword, setConfirmNewPassword] = useState("");
   // A client-side cooldown between signup attempts, purely for UX (a clear
@@ -70,10 +79,11 @@ function AuthPage() {
     // the plain "already signed in" case.
     const { data: sub } = supabase.auth.onAuthStateChange((event, session) => {
       if (event === "PASSWORD_RECOVERY") {
+        recoveringRef.current = true;
         setRecovering(true);
         return;
       }
-      if (session) void navigate({ to: "/dashboard" });
+      if (session && !recoveringRef.current) void navigate({ to: "/dashboard" });
     });
     return () => sub.subscription.unsubscribe();
   }, [navigate]);
