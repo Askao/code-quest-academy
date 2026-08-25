@@ -38,11 +38,21 @@ function AuthPage() {
   const [schoolName, setSchoolName] = useState("");
   const [schoolCode, setSchoolCode] = useState("");
   const [busy, setBusy] = useState(false);
-  // Set only by a PASSWORD_RECOVERY auth event - Supabase fires this itself
-  // once it detects a recovery-type session in the URL after the reset-email
-  // link redirects back here, so this can't be reached by just navigating to
-  // a mode= search param the way signin/signup/forgot can.
-  const [recovering, setRecovering] = useState(false);
+  // Whether this page load is a password-recovery redirect, decided
+  // synchronously from the URL hash itself rather than waiting on
+  // Supabase's own PASSWORD_RECOVERY event - that event is dispatched from
+  // inside the client's _initialize() via setTimeout(fn, 0) (confirmed in
+  // the installed @supabase/supabase-js source), a deferred macrotask with
+  // no ordering guarantee relative to when this component's own listener
+  // subscribes. The global AuthProvider higher up the tree creates the
+  // Supabase client (and so triggers _initialize()) the moment anything
+  // touches supabase.auth, which can easily happen before this component's
+  // effect runs - so a subscription-based check can miss the event
+  // entirely and never learn recovery mode is active. Reading the hash
+  // directly can't race with anything.
+  const isRecoveryUrl = () =>
+    typeof window !== "undefined" && window.location.hash.includes("type=recovery");
+  const [recovering, setRecovering] = useState(isRecoveryUrl);
   // The onAuthStateChange callback below is created once on mount and never
   // recreated (its effect only depends on `navigate`), so it closes over
   // `recovering` as it was at that moment - forever. A plain state check
@@ -51,7 +61,7 @@ function AuthPage() {
   // TOKEN_REFRESHED a couple of seconds after establishing one) slip past
   // the gate and navigate to the dashboard anyway. A ref has no such
   // staleness: reading .current always sees the latest value.
-  const recoveringRef = useRef(false);
+  const recoveringRef = useRef(isRecoveryUrl());
   const [newPassword, setNewPassword] = useState("");
   const [confirmNewPassword, setConfirmNewPassword] = useState("");
   // A client-side cooldown between signup attempts, purely for UX (a clear
