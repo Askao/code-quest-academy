@@ -1,0 +1,24 @@
+name: Send fortnightly progress reports
+
+on:
+  schedule:
+    # 08:00 UTC on the 1st and 15th of every month - close enough to a
+    # 14-day cadence with a plain cron expression, and it self-corrects
+    # every month rather than drifting.
+    - cron: "0 8 1,15 * *"
+  workflow_dispatch: {}
+
+jobs:
+  send-reports:
+    runs-on: ubuntu-latest
+    steps:
+      - name: POST to the reports endpoint
+        run: |
+          status=$(curl -s -o /tmp/response.txt -w "%{http_code}" \
+            -X POST "https://www.hcodeacademy.co.uk/api/reports/send-fortnightly" \
+            -H "Authorization: Bearer ${{ secrets.REPORTS_CRON_SECRET }}")
+          cat /tmp/response.txt
+          if [ "$status" -ge 300 ]; then
+            echo "Request failed with status $status"
+            exit 1
+          fi

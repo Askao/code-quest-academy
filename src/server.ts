@@ -3,6 +3,7 @@ import "./lib/error-capture";
 import { consumeLastCapturedError } from "./lib/error-capture";
 import { renderErrorPage } from "./lib/error-page";
 import { AUTH_EMAIL_HOOK_PATH, handleAuthEmailHook } from "./lib/auth-email-hook.server";
+import { REPORTS_HOOK_PATH, handleSendFortnightlyReports } from "./lib/reports.server";
 
 type ServerEntry = {
   fetch: (request: Request, env: unknown, ctx: unknown) => Promise<Response> | Response;
@@ -49,8 +50,12 @@ export default {
   async fetch(request: Request, env: unknown, ctx: unknown) {
     if (request.method === "POST") {
       try {
-        if (new URL(request.url).pathname === AUTH_EMAIL_HOOK_PATH) {
+        const pathname = new URL(request.url).pathname;
+        if (pathname === AUTH_EMAIL_HOOK_PATH) {
           return await handleAuthEmailHook(request);
+        }
+        if (pathname === REPORTS_HOOK_PATH) {
+          return await handleSendFortnightlyReports(request);
         }
       } catch (error) {
         console.error(error);
