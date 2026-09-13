@@ -809,7 +809,15 @@ function Play() {
                       value={pendingAnswer}
                       onChange={(e) => setPendingAnswer(e.target.value)}
                       onKeyDown={(e) => {
-                        if (e.key === "Enter") void submitConsoleAnswer();
+                        // An empty submission reaches whatever the student's
+                        // code did with input() unchanged - for the very
+                        // common int(input())/float(input()) pattern that's
+                        // an immediate ValueError shown as a raw traceback,
+                        // long before anything about exceptions is taught.
+                        // Require actually typing something instead.
+                        if (e.key === "Enter" && pendingAnswer.trim() !== "") {
+                          void submitConsoleAnswer();
+                        }
                       }}
                       autoFocus
                     />
