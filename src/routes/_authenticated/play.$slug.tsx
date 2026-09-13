@@ -333,6 +333,15 @@ function Play() {
         if (search.mode === "duel" && search.duel) {
           await submitDuelTime(search.duel, user.id, Date.now() - startedAt.current);
         }
+
+        // Reached via a lesson's task list - tell them plainly and send them
+        // back to Lessons automatically rather than waiting on a manual
+        // "Next challenge" click, since that button already only ever
+        // continues within this one lesson (see nextChallenge below).
+        if (search.lesson) {
+          toast.success("Challenge complete! Taking you back to Lessons…");
+          setTimeout(() => void navigate({ to: "/learn" }), 1600);
+        }
       } else if (!result.passed) {
         await recordAttempt({
           userId: user.id,
