@@ -78,18 +78,20 @@ function QuickCheck({ lessonSlug, alreadyPassed }: { lessonSlug: string; already
   const { user } = useAuth();
   const qc = useQueryClient();
   const questions = quizForLesson(lessonSlug);
-  // Authored content mostly lists the correct answer first (options[0]) -
-  // shuffle per question so it isn't a giveaway, but only once per lesson
-  // visit (not on every re-render triggered by picking an answer) so the
-  // choices don't visibly reorder under the student mid-attempt.
-  const shuffledOptions = useMemo(
-    () => questions.map((q) => shuffle(q.options)),
-    // eslint-disable-next-line react-hooks/exhaustive-deps
-    [lessonSlug],
-  );
   const [answers, setAnswers] = useState<Record<number, string>>({});
   const [submitted, setSubmitted] = useState(false);
   const [score, setScore] = useState(0);
+  // Authored content mostly lists the correct answer first (options[0]) -
+  // shuffle per question so it isn't a giveaway, but only once per attempt
+  // (not on every re-render triggered by picking an answer) so the choices
+  // don't visibly reorder under the student mid-attempt. Bumping this on
+  // retry re-shuffles rather than showing the same laid-out order again.
+  const [attempt, setAttempt] = useState(0);
+  const shuffledOptions = useMemo(
+    () => questions.map((q) => shuffle(q.options)),
+    // eslint-disable-next-line react-hooks/exhaustive-deps
+    [lessonSlug, attempt],
+  );
 
   if (questions.length === 0) return null;
 
@@ -118,6 +120,7 @@ function QuickCheck({ lessonSlug, alreadyPassed }: { lessonSlug: string; already
     setAnswers({});
     setSubmitted(false);
     setScore(0);
+    setAttempt((a) => a + 1);
   };
 
   return (
@@ -205,7 +208,7 @@ function QuickCheck({ lessonSlug, alreadyPassed }: { lessonSlug: string; already
  */
 function RecapCheck({ pool, onPassed }: { pool: QuizQuestion[]; onPassed: () => void }) {
   const [question] = useState(() => pool[Math.floor(Math.random() * pool.length)]!);
-  const [options] = useState(() => shuffle(question.options));
+  const [options, setOptions] = useState(() => shuffle(question.options));
   const [answer, setAnswer] = useState<string | null>(null);
   const [submitted, setSubmitted] = useState(false);
   const correct = answer === question.answer;
@@ -218,6 +221,7 @@ function RecapCheck({ pool, onPassed }: { pool: QuizQuestion[]; onPassed: () => 
   const retry = () => {
     setAnswer(null);
     setSubmitted(false);
+    setOptions(shuffle(question.options));
   };
 
   return (
