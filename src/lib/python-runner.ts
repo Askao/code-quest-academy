@@ -25,14 +25,15 @@ export type RunOutcome = {
   durationMs: number;
 };
 
+type PyDict = { set: (key: string, value: unknown) => void };
+
 type Pyodide = {
   runPython: (code: string, options?: { globals?: unknown }) => unknown;
   runPythonAsync: (code: string, options?: { globals?: unknown }) => Promise<unknown>;
-  setStdin: (options: { stdin: () => string; isatty?: boolean }) => void;
   setStdout: (options: { batched: (s: string) => void } | { raw: (byte: number) => void }) => void;
   setStderr: (options: { batched: (s: string) => void } | { raw: (byte: number) => void }) => void;
   globals: {
-    get: (name: string) => (() => unknown) | undefined;
+    get: (name: string) => ((...args: unknown[]) => unknown) | undefined;
     set: (name: string, value: unknown) => void;
   };
 };
@@ -102,17 +103,29 @@ function cleanTraceback(message: string) {
   return lines.slice(-4).join("\n");
 }
 
-// Python's sys.stdin is a buffered TextIOWrapper that persists across
-// separate runPythonAsync calls in this one shared interpreter - only the
-// JS-level callback feeding it gets swapped by setStdin(), not the wrapper
-// object itself. If a previous run left anything in that buffer (confirmed
-// via logging: a later run's input() was satisfied without ever calling the
-// freshly-registered JS stdin callback at all), a new run can silently read
-// stale bytes instead of the stdin just configured for it. Rebuilding
-// sys.stdin from scratch before every run discards any such leftover state.
-const RESET_STDIN_SNIPPET = `
-import sys as __sys__, io as __io__
-__sys__.stdin = __io__.TextIOWrapper(__io__.BufferedReader(__io__.FileIO(0, "rb", closefd=False)), encoding="utf-8", newline="\\n")
+// input() is deliberately never satisfied via Pyodide's real stdin device
+// (setStdin + sys.stdin). That stream is one persistent, buffered object
+// shared by every run in this one interpreter, and it can silently serve a
+// later run's input() from leftover internal state instead of ever calling
+// back into JS for the stdin just configured for that run - confirmed by
+// logging: the JS stdin callback was never invoked at all for a call that
+// nonetheless returned "". Rebuilding sys.stdin fresh before each run was
+// tried and did not fully close the gap either. Instead, input() itself is
+// replaced with a plain Python closure injected straight into this run's
+// own fresh namespace - it never touches sys.stdin, so there is no shared
+// state left for a future run to accidentally inherit.
+const MAKE_TEST_INPUT_SNIPPET = `
+import json as __json__
+def __make_test_input__(lines_json):
+    __lines = __json__.loads(lines_json)
+    __cursor = [0]
+    def input(prompt=""):
+        if __cursor[0] < len(__lines):
+            __value = __lines[__cursor[0]]
+            __cursor[0] += 1
+            return __value
+        return ""
+    return input
 `;
 
 /** Run the student's program once against a single stdin payload. */
@@ -120,16 +133,18 @@ export function runOnce(code: string, stdin: string) {
   return runExclusive(async () => {
     const pyodide = await getPyodide();
     const inputLines = stdin.length ? stdin.replace(/\r\n/g, "\n").split("\n") : [];
-    let cursor = 0;
     const out: string[] = [];
 
-    pyodide.setStdin({ stdin: () => (cursor < inputLines.length ? inputLines[cursor++]! : "") });
     pyodide.setStdout({ batched: (s) => out.push(s) });
     pyodide.setStderr({ batched: (s) => out.push(s) });
-    pyodide.runPython(RESET_STDIN_SNIPPET);
 
+    pyodide.runPython(MAKE_TEST_INPUT_SNIPPET);
+    const makeInput = pyodide.globals.get("__make_test_input__");
     const makeDict = pyodide.globals.get("dict");
-    const namespace = makeDict ? makeDict() : undefined;
+    const namespace = makeDict ? (makeDict() as PyDict) : undefined;
+    if (namespace && makeInput) {
+      namespace.set("input", makeInput(JSON.stringify(inputLines)));
+    }
 
     try {
       await pyodide.runPythonAsync(code, namespace ? { globals: namespace } : undefined);
@@ -143,14 +158,33 @@ export function runOnce(code: string, stdin: string) {
   });
 }
 
-class StdinExhausted extends Error {}
-
 export type InteractiveOutcome = {
   output: string;
   error?: string;
   /** True if the program is paused on an input() call with no value supplied yet. */
   waiting: boolean;
 };
+
+// Unique marker so the "no more answers yet" case can be told apart from a
+// genuine EOFError in the student's own code, without depending on it being
+// the *only* exception in flight (see the JS-thrown-exception problem this
+// replaced, below).
+const STDIN_EXHAUSTED_MARKER = "__STDIN_EXHAUSTED__";
+
+const MAKE_INTERACTIVE_INPUT_SNIPPET = `
+import json as __json__
+def __make_interactive_input__(known_json, echo):
+    __known = __json__.loads(known_json)
+    __cursor = [0]
+    def input(prompt=""):
+        if __cursor[0] < len(__known):
+            __value = __known[__cursor[0]]
+            __cursor[0] += 1
+            echo(__value)
+            return __value
+        raise EOFError("${STDIN_EXHAUSTED_MARKER}")
+    return input
+`;
 
 /**
  * Run the student's program against a growing list of already-known input()
@@ -159,29 +193,19 @@ export type InteractiveOutcome = {
  * can prompt for one more value and re-run with it appended - this is what
  * lets the IDE's console page ask for input right where the program needs
  * it, without a full Worker/SharedArrayBuffer-based pause/resume engine.
+ *
+ * Like runOnce, input() is a plain Python closure injected into this run's
+ * own namespace rather than real stdin - see MAKE_TEST_INPUT_SNIPPET above
+ * for why. Raising a real EOFError (tagged with a marker to identify it)
+ * unwinds through the student's code exactly like a genuine one would,
+ * which is more predictable than the previous approach of throwing a JS
+ * error out of Pyodide's own C-level stdin-reading loop.
  */
 export function runInteractive(code: string, answers: string[]): Promise<InteractiveOutcome> {
   return runExclusive(async () => {
     const pyodide = await getPyodide();
-    let cursor = 0;
-    let waiting = false;
     const out: string[] = [];
 
-    pyodide.setStdin({
-      stdin: () => {
-        if (cursor < answers.length) {
-          const value = answers[cursor++]!;
-          // A real terminal echoes what you type; our fake stdin doesn't, so
-          // without this the typed answer never appears in the console at
-          // all and whatever the program prints next looks like it's sharing
-          // the prompt's line instead of following the (invisible) answer.
-          out.push(`${value}\n`);
-          return value;
-        }
-        waiting = true;
-        throw new StdinExhausted();
-      },
-    });
     // Pyodide's "batched" stdout only flushes on a newline, so a prompt like
     // input("Name? ") - which never ends in \n - would sit stuck in its
     // internal buffer forever. Decode raw bytes instead so partial lines
@@ -201,22 +225,28 @@ export function runInteractive(code: string, answers: string[]): Promise<Interac
       },
     });
 
+    pyodide.runPython(MAKE_INTERACTIVE_INPUT_SNIPPET);
+    const makeInput = pyodide.globals.get("__make_interactive_input__");
     const makeDict = pyodide.globals.get("dict");
-    const namespace = makeDict ? makeDict() : undefined;
-    pyodide.runPython(RESET_STDIN_SNIPPET);
+    const namespace = makeDict ? (makeDict() as PyDict) : undefined;
+    if (namespace && makeInput) {
+      // A real terminal echoes what you type; our fake stdin doesn't, so
+      // without this the typed answer never appears in the console at all
+      // and whatever the program prints next looks like it's sharing the
+      // prompt's line instead of following the (invisible) answer.
+      const echo = (value: string) => out.push(`${value}\n`);
+      namespace.set("input", makeInput(JSON.stringify(answers), echo));
+    }
 
     try {
       await pyodide.runPythonAsync(code, namespace ? { globals: namespace } : undefined);
       return { output: out.join(""), waiting: false };
     } catch (err) {
-      if (waiting) {
+      const message = err instanceof Error ? err.message : String(err);
+      if (message.includes(STDIN_EXHAUSTED_MARKER)) {
         return { output: out.join(""), waiting: true };
       }
-      return {
-        output: out.join(""),
-        waiting: false,
-        error: cleanTraceback(err instanceof Error ? err.message : String(err)),
-      };
+      return { output: out.join(""), waiting: false, error: cleanTraceback(message) };
     }
   });
 }
