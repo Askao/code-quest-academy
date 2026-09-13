@@ -334,13 +334,20 @@ function Play() {
           await submitDuelTime(search.duel, user.id, Date.now() - startedAt.current);
         }
 
-        // Reached via a lesson's task list - tell them plainly and send them
-        // back to Lessons automatically rather than waiting on a manual
-        // "Next challenge" click, since that button already only ever
-        // continues within this one lesson (see nextChallenge below).
+        // Reached via a lesson's task list - only the LAST task auto-redirects
+        // back to Lessons (tell them plainly, then send them there rather than
+        // waiting on a manual click). Any earlier task keeps the normal
+        // "Next challenge" flow, which already advances to the next task
+        // within this same lesson (see nextChallenge below) - auto-redirecting
+        // after every task would bounce them out of the lesson constantly.
         if (search.lesson) {
-          toast.success("Challenge complete! Taking you back to Lessons…");
-          setTimeout(() => void navigate({ to: "/learn" }), 1600);
+          const lessonTasks = tasksForLesson(search.lesson);
+          const myIndex = lessonTasks.findIndex((t) => t.slug === challenge.slug);
+          const isLastLessonTask = myIndex === -1 || myIndex === lessonTasks.length - 1;
+          if (isLastLessonTask) {
+            toast.success("Challenge complete! Taking you back to Lessons…");
+            setTimeout(() => void navigate({ to: "/learn" }), 1600);
+          }
         }
       } else if (!result.passed) {
         await recordAttempt({
