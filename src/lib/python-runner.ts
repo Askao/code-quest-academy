@@ -26,6 +26,7 @@ export type RunOutcome = {
 };
 
 type Pyodide = {
+  runPython: (code: string, options?: { globals?: unknown }) => unknown;
   runPythonAsync: (code: string, options?: { globals?: unknown }) => Promise<unknown>;
   setStdin: (options: { stdin: () => string; isatty?: boolean }) => void;
   setStdout: (options: { batched: (s: string) => void } | { raw: (byte: number) => void }) => void;
@@ -101,6 +102,19 @@ function cleanTraceback(message: string) {
   return lines.slice(-4).join("\n");
 }
 
+// Python's sys.stdin is a buffered TextIOWrapper that persists across
+// separate runPythonAsync calls in this one shared interpreter - only the
+// JS-level callback feeding it gets swapped by setStdin(), not the wrapper
+// object itself. If a previous run left anything in that buffer (confirmed
+// via logging: a later run's input() was satisfied without ever calling the
+// freshly-registered JS stdin callback at all), a new run can silently read
+// stale bytes instead of the stdin just configured for it. Rebuilding
+// sys.stdin from scratch before every run discards any such leftover state.
+const RESET_STDIN_SNIPPET = `
+import sys as __sys__, io as __io__
+__sys__.stdin = __io__.TextIOWrapper(__io__.BufferedReader(__io__.FileIO(0, "rb", closefd=False)), encoding="utf-8", newline="\\n")
+`;
+
 /** Run the student's program once against a single stdin payload. */
 export function runOnce(code: string, stdin: string) {
   return runExclusive(async () => {
@@ -109,21 +123,10 @@ export function runOnce(code: string, stdin: string) {
     let cursor = 0;
     const out: string[] = [];
 
-    // TEMPORARY diagnostic logging - tracking down an intermittent bug where
-    // a later input() call gets "" despite real stdin being configured for
-    // this run. Remove once the cause is confirmed.
-    console.log("[runOnce] starting with inputLines=", JSON.stringify(inputLines));
-    pyodide.setStdin({
-      stdin: () => {
-        const value = cursor < inputLines.length ? inputLines[cursor++]! : "";
-        console.log(
-          `[runOnce] stdin() call #${cursor} -> ${JSON.stringify(value)} (inputLines.length=${inputLines.length})`,
-        );
-        return value;
-      },
-    });
+    pyodide.setStdin({ stdin: () => (cursor < inputLines.length ? inputLines[cursor++]! : "") });
     pyodide.setStdout({ batched: (s) => out.push(s) });
     pyodide.setStderr({ batched: (s) => out.push(s) });
+    pyodide.runPython(RESET_STDIN_SNIPPET);
 
     const makeDict = pyodide.globals.get("dict");
     const namespace = makeDict ? makeDict() : undefined;
@@ -200,6 +203,7 @@ export function runInteractive(code: string, answers: string[]): Promise<Interac
 
     const makeDict = pyodide.globals.get("dict");
     const namespace = makeDict ? makeDict() : undefined;
+    pyodide.runPython(RESET_STDIN_SNIPPET);
 
     try {
       await pyodide.runPythonAsync(code, namespace ? { globals: namespace } : undefined);
