@@ -109,7 +109,19 @@ export function runOnce(code: string, stdin: string) {
     let cursor = 0;
     const out: string[] = [];
 
-    pyodide.setStdin({ stdin: () => (cursor < inputLines.length ? inputLines[cursor++]! : "") });
+    // TEMPORARY diagnostic logging - tracking down an intermittent bug where
+    // a later input() call gets "" despite real stdin being configured for
+    // this run. Remove once the cause is confirmed.
+    console.log("[runOnce] starting with inputLines=", JSON.stringify(inputLines));
+    pyodide.setStdin({
+      stdin: () => {
+        const value = cursor < inputLines.length ? inputLines[cursor++]! : "";
+        console.log(
+          `[runOnce] stdin() call #${cursor} -> ${JSON.stringify(value)} (inputLines.length=${inputLines.length})`,
+        );
+        return value;
+      },
+    });
     pyodide.setStdout({ batched: (s) => out.push(s) });
     pyodide.setStderr({ batched: (s) => out.push(s) });
 
