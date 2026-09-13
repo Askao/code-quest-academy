@@ -68,6 +68,25 @@ export function getPyodide(): Promise<Pyodide> {
   return pyodidePromise;
 }
 
+// Pyodide is a single shared interpreter with global stdin/stdout/stderr
+// hooks - there's no per-call isolation. The UI already disables Run/Test
+// while either is in flight, but that's a render away from a fast
+// double-click landing both dispatches before React commits the disabled
+// state, and two overlapping executions clobber each other's I/O hooks
+// mid-run (observed as one test's real pass ALSO reporting a stray
+// exception from the other run). Queuing every Pyodide-touching call here,
+// underneath the UI layer, closes that gap regardless of how it's triggered.
+let pyodideQueue: Promise<unknown> = Promise.resolve();
+
+function runExclusive<T>(fn: () => Promise<T>): Promise<T> {
+  const result = pyodideQueue.then(fn, fn);
+  pyodideQueue = result.then(
+    () => undefined,
+    () => undefined,
+  );
+  return result;
+}
+
 function normalise(text: string) {
   return text
     .replace(/\r\n/g, "\n")
@@ -83,28 +102,30 @@ function cleanTraceback(message: string) {
 }
 
 /** Run the student's program once against a single stdin payload. */
-export async function runOnce(code: string, stdin: string) {
-  const pyodide = await getPyodide();
-  const inputLines = stdin.length ? stdin.replace(/\r\n/g, "\n").split("\n") : [];
-  let cursor = 0;
-  const out: string[] = [];
+export function runOnce(code: string, stdin: string) {
+  return runExclusive(async () => {
+    const pyodide = await getPyodide();
+    const inputLines = stdin.length ? stdin.replace(/\r\n/g, "\n").split("\n") : [];
+    let cursor = 0;
+    const out: string[] = [];
 
-  pyodide.setStdin({ stdin: () => (cursor < inputLines.length ? inputLines[cursor++]! : "") });
-  pyodide.setStdout({ batched: (s) => out.push(s) });
-  pyodide.setStderr({ batched: (s) => out.push(s) });
+    pyodide.setStdin({ stdin: () => (cursor < inputLines.length ? inputLines[cursor++]! : "") });
+    pyodide.setStdout({ batched: (s) => out.push(s) });
+    pyodide.setStderr({ batched: (s) => out.push(s) });
 
-  const makeDict = pyodide.globals.get("dict");
-  const namespace = makeDict ? makeDict() : undefined;
+    const makeDict = pyodide.globals.get("dict");
+    const namespace = makeDict ? makeDict() : undefined;
 
-  try {
-    await pyodide.runPythonAsync(code, namespace ? { globals: namespace } : undefined);
-    return { output: out.join("\n"), error: undefined as string | undefined };
-  } catch (err) {
-    return {
-      output: out.join("\n"),
-      error: cleanTraceback(err instanceof Error ? err.message : String(err)),
-    };
-  }
+    try {
+      await pyodide.runPythonAsync(code, namespace ? { globals: namespace } : undefined);
+      return { output: out.join("\n"), error: undefined as string | undefined };
+    } catch (err) {
+      return {
+        output: out.join("\n"),
+        error: cleanTraceback(err instanceof Error ? err.message : String(err)),
+      };
+    }
+  });
 }
 
 class StdinExhausted extends Error {}
@@ -124,62 +145,64 @@ export type InteractiveOutcome = {
  * lets the IDE's console page ask for input right where the program needs
  * it, without a full Worker/SharedArrayBuffer-based pause/resume engine.
  */
-export async function runInteractive(code: string, answers: string[]): Promise<InteractiveOutcome> {
-  const pyodide = await getPyodide();
-  let cursor = 0;
-  let waiting = false;
-  const out: string[] = [];
+export function runInteractive(code: string, answers: string[]): Promise<InteractiveOutcome> {
+  return runExclusive(async () => {
+    const pyodide = await getPyodide();
+    let cursor = 0;
+    let waiting = false;
+    const out: string[] = [];
 
-  pyodide.setStdin({
-    stdin: () => {
-      if (cursor < answers.length) {
-        const value = answers[cursor++]!;
-        // A real terminal echoes what you type; our fake stdin doesn't, so
-        // without this the typed answer never appears in the console at
-        // all and whatever the program prints next looks like it's sharing
-        // the prompt's line instead of following the (invisible) answer.
-        out.push(`${value}\n`);
-        return value;
+    pyodide.setStdin({
+      stdin: () => {
+        if (cursor < answers.length) {
+          const value = answers[cursor++]!;
+          // A real terminal echoes what you type; our fake stdin doesn't, so
+          // without this the typed answer never appears in the console at
+          // all and whatever the program prints next looks like it's sharing
+          // the prompt's line instead of following the (invisible) answer.
+          out.push(`${value}\n`);
+          return value;
+        }
+        waiting = true;
+        throw new StdinExhausted();
+      },
+    });
+    // Pyodide's "batched" stdout only flushes on a newline, so a prompt like
+    // input("Name? ") - which never ends in \n - would sit stuck in its
+    // internal buffer forever. Decode raw bytes instead so partial lines
+    // (i.e. every input() prompt) show up immediately.
+    const stdoutDecoder = new TextDecoder();
+    const stderrDecoder = new TextDecoder();
+    pyodide.setStdout({
+      raw: (byte) => {
+        const chunk = stdoutDecoder.decode(new Uint8Array([byte]), { stream: true });
+        if (chunk) out.push(chunk);
+      },
+    });
+    pyodide.setStderr({
+      raw: (byte) => {
+        const chunk = stderrDecoder.decode(new Uint8Array([byte]), { stream: true });
+        if (chunk) out.push(chunk);
+      },
+    });
+
+    const makeDict = pyodide.globals.get("dict");
+    const namespace = makeDict ? makeDict() : undefined;
+
+    try {
+      await pyodide.runPythonAsync(code, namespace ? { globals: namespace } : undefined);
+      return { output: out.join(""), waiting: false };
+    } catch (err) {
+      if (waiting) {
+        return { output: out.join(""), waiting: true };
       }
-      waiting = true;
-      throw new StdinExhausted();
-    },
-  });
-  // Pyodide's "batched" stdout only flushes on a newline, so a prompt like
-  // input("Name? ") - which never ends in \n - would sit stuck in its
-  // internal buffer forever. Decode raw bytes instead so partial lines
-  // (i.e. every input() prompt) show up immediately.
-  const stdoutDecoder = new TextDecoder();
-  const stderrDecoder = new TextDecoder();
-  pyodide.setStdout({
-    raw: (byte) => {
-      const chunk = stdoutDecoder.decode(new Uint8Array([byte]), { stream: true });
-      if (chunk) out.push(chunk);
-    },
-  });
-  pyodide.setStderr({
-    raw: (byte) => {
-      const chunk = stderrDecoder.decode(new Uint8Array([byte]), { stream: true });
-      if (chunk) out.push(chunk);
-    },
-  });
-
-  const makeDict = pyodide.globals.get("dict");
-  const namespace = makeDict ? makeDict() : undefined;
-
-  try {
-    await pyodide.runPythonAsync(code, namespace ? { globals: namespace } : undefined);
-    return { output: out.join(""), waiting: false };
-  } catch (err) {
-    if (waiting) {
-      return { output: out.join(""), waiting: true };
+      return {
+        output: out.join(""),
+        waiting: false,
+        error: cleanTraceback(err instanceof Error ? err.message : String(err)),
+      };
     }
-    return {
-      output: out.join(""),
-      waiting: false,
-      error: cleanTraceback(err instanceof Error ? err.message : String(err)),
-    };
-  }
+  });
 }
 
 const SYNTAX_CHECK_SNIPPET = `
@@ -199,16 +222,18 @@ __check_result__
  * shown live, before they hit "Run tests". Fails open (returns null) on any
  * unexpected runner error - this must never block editing.
  */
-export async function checkSyntax(code: string): Promise<{ line: number; message: string } | null> {
-  try {
-    const pyodide = await getPyodide();
-    pyodide.globals.set("__student_code__", code);
-    const raw = await pyodide.runPythonAsync(SYNTAX_CHECK_SNIPPET);
-    if (!raw) return null;
-    return JSON.parse(raw as string) as { line: number; message: string };
-  } catch {
-    return null;
-  }
+export function checkSyntax(code: string): Promise<{ line: number; message: string } | null> {
+  return runExclusive(async () => {
+    try {
+      const pyodide = await getPyodide();
+      pyodide.globals.set("__student_code__", code);
+      const raw = await pyodide.runPythonAsync(SYNTAX_CHECK_SNIPPET);
+      if (!raw) return null;
+      return JSON.parse(raw as string) as { line: number; message: string };
+    } catch {
+      return null;
+    }
+  });
 }
 
 /** Run every hidden test case and mark the submission. */

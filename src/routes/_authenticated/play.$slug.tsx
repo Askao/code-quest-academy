@@ -740,7 +740,11 @@ function Play() {
             <Button
               variant="secondary"
               onClick={runConsole}
-              disabled={consoleRunning || !engineReady}
+              // Pyodide is one shared interpreter with global stdin/stdout
+              // hooks - Run and Test must never execute concurrently, or
+              // one's output/input handlers can clobber the other mid-flight
+              // (seen as a passing test also reporting a stray ValueError).
+              disabled={consoleRunning || running || !engineReady}
               title="Try it out and see what it prints — doesn't count as an attempt"
             >
               {!engineReady
@@ -751,7 +755,7 @@ function Play() {
             </Button>
             <Button
               onClick={run}
-              disabled={running || !engineReady}
+              disabled={running || consoleRunning || !engineReady}
               title="Check your answer against the real tests"
             >
               {!engineReady
