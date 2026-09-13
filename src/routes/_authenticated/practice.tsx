@@ -1,11 +1,12 @@
 import { createFileRoute, useNavigate, Link } from "@tanstack/react-router";
 import { useQuery, useQueryClient } from "@tanstack/react-query";
-import { useState } from "react";
+import { useMemo, useState } from "react";
 import { toast } from "sonner";
 import { supabase } from "@/integrations/supabase/client";
 import { useAuth } from "@/hooks/useAuth";
 import { Button } from "@/components/ui/button";
 import { Progress } from "@/components/ui/progress";
+import { shuffle } from "@/lib/utils";
 import { pickChallenge, pickRecapChallenge, resetProgress } from "@/lib/progress";
 import {
   skillLabel,
@@ -142,6 +143,15 @@ function Practice() {
       return { doneToday: (doneToday.count ?? 0) > 0, challenge, quiz };
     },
   });
+
+  // Stable per-fetch shuffle - authored quiz content mostly lists the
+  // correct answer first, and recap.quiz's identity only changes when this
+  // query actually refetches, not on every render from picking an answer.
+  const quizOptions = useMemo(
+    () => (recap?.quiz ? shuffle(recap.quiz.options) : []),
+    // eslint-disable-next-line react-hooks/exhaustive-deps
+    [recap?.quiz],
+  );
 
   const { data: seededProjectSlugs } = useQuery({
     queryKey: ["seeded-project-slugs"],
@@ -350,7 +360,7 @@ function Practice() {
                 <>
                   <p className="mt-2 text-sm font-medium">{recap.quiz.question}</p>
                   <div className="mt-3 space-y-1.5">
-                    {recap.quiz.options.map((option) => {
+                    {quizOptions.map((option) => {
                       const chosen = quizAnswer === option;
                       const isCorrect = option === recap.quiz!.answer;
                       return (

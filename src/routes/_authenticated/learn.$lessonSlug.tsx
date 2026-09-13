@@ -1,10 +1,11 @@
 import { createFileRoute, Link } from "@tanstack/react-router";
 import { useQuery, useQueryClient } from "@tanstack/react-query";
-import { useEffect, useState } from "react";
+import { useEffect, useMemo, useState } from "react";
 import { toast } from "sonner";
 import { supabase } from "@/integrations/supabase/client";
 import { useAuth } from "@/hooks/useAuth";
 import { Button } from "@/components/ui/button";
+import { shuffle } from "@/lib/utils";
 import { LessonNotes } from "@/components/LessonNotes";
 import { WorkedExampleTrace } from "@/components/WorkedExampleTrace";
 import { topicLabel, type Board } from "@/lib/game";
@@ -77,6 +78,15 @@ function QuickCheck({ lessonSlug, alreadyPassed }: { lessonSlug: string; already
   const { user } = useAuth();
   const qc = useQueryClient();
   const questions = quizForLesson(lessonSlug);
+  // Authored content mostly lists the correct answer first (options[0]) -
+  // shuffle per question so it isn't a giveaway, but only once per lesson
+  // visit (not on every re-render triggered by picking an answer) so the
+  // choices don't visibly reorder under the student mid-attempt.
+  const shuffledOptions = useMemo(
+    () => questions.map((q) => shuffle(q.options)),
+    // eslint-disable-next-line react-hooks/exhaustive-deps
+    [lessonSlug],
+  );
   const [answers, setAnswers] = useState<Record<number, string>>({});
   const [submitted, setSubmitted] = useState(false);
   const [score, setScore] = useState(0);
@@ -127,7 +137,7 @@ function QuickCheck({ lessonSlug, alreadyPassed }: { lessonSlug: string; already
           <li key={i}>
             <p className="text-base font-medium">{q.question}</p>
             <div className="mt-2.5 space-y-2">
-              {q.options.map((option) => {
+              {shuffledOptions[i]!.map((option) => {
                 const chosen = answers[i] === option;
                 const showResult = submitted;
                 const isCorrect = option === q.answer;
@@ -195,6 +205,7 @@ function QuickCheck({ lessonSlug, alreadyPassed }: { lessonSlug: string; already
  */
 function RecapCheck({ pool, onPassed }: { pool: QuizQuestion[]; onPassed: () => void }) {
   const [question] = useState(() => pool[Math.floor(Math.random() * pool.length)]!);
+  const [options] = useState(() => shuffle(question.options));
   const [answer, setAnswer] = useState<string | null>(null);
   const [submitted, setSubmitted] = useState(false);
   const correct = answer === question.answer;
@@ -217,7 +228,7 @@ function RecapCheck({ pool, onPassed }: { pool: QuizQuestion[]; onPassed: () => 
       </p>
       <p className="mt-3 text-sm font-medium">{question.question}</p>
       <div className="mt-2 space-y-1.5">
-        {question.options.map((option) => {
+        {options.map((option) => {
           const chosen = answer === option;
           const isCorrect = option === question.answer;
           return (
