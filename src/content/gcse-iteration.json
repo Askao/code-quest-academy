@@ -146,7 +146,7 @@
       "tests": [{ "stdin": "1\n2\n3\n4\n5", "expect": "15" }, { "stdin": "10\n10\n10\n10\n10", "expect": "50" }]
     },
     {
-      "slug": "gcse-iteration-t2-02", "lesson": 2, "tier": 2, "difficulty": 3, "xp": 20,
+      "slug": "gcse-iteration-t2-02", "lesson": 3, "tier": 2, "difficulty": 3, "xp": 20,
       "title": "Password retry",
       "brief": "A system keeps asking for a password until the user types `open`. Once they do, display how many attempts were needed in total (including the successful one), in the format `<count> attempts`.\n\nAlways write \"attempts\" even for 1 (don't worry about \"attempt\" vs \"attempts\" grammar).\n\nFor example, if the correct password is entered on the third try, print `3 attempts`.",
       "starter": "",
@@ -154,7 +154,7 @@
       "tests": [{ "stdin": "open", "expect": "1 attempts" }, { "stdin": "no\nnope\nopen", "expect": "3 attempts" }]
     },
     {
-      "slug": "gcse-iteration-t2-03", "lesson": 2, "tier": 2, "difficulty": 3, "xp": 20,
+      "slug": "gcse-iteration-t2-03", "lesson": 3, "tier": 2, "difficulty": 3, "xp": 20,
       "title": "Validate a mark",
       "brief": "A mark must be between 0 and 100 inclusive. Keep asking the user for a whole number until they enter a valid mark. Display the valid mark in the format `Accepted: <mark>`.\n\nFor example, if 55 is the first (valid) number entered, print `Accepted: 55`.",
       "starter": "",
@@ -162,7 +162,7 @@
       "tests": [{ "stdin": "55", "expect": "Accepted: 55" }, { "stdin": "120\n-4\n0", "expect": "Accepted: 0" }]
     },
     {
-      "slug": "gcse-iteration-t2-stretch", "lesson": 2, "tier": 4, "difficulty": 5, "xp": 40, "stretch": true,
+      "slug": "gcse-iteration-t2-stretch", "lesson": 3, "tier": 4, "difficulty": 5, "xp": 40, "stretch": true,
       "title": "Count the even numbers",
       "brief": "Read whole numbers, one per line, until the sentinel value 0 is entered. The 0 itself is not counted.\n\nCount how many of the numbers read before the 0 are even. Print the count.\n\nFor example, 3, 4, 6, 7, 0 has two even numbers before the sentinel (4 and 6), so print 2.",
       "starter": "",

@@ -59,7 +59,7 @@
       "brief": "Input two lines of text. Write the first line to a file called `data.txt`. Then write the second line to `data.txt` again, still in write mode (not append) — this replaces the first line entirely. Read the file back and print its contents.\n\nThis demonstrates that \"w\" mode empties the file every time it's opened, so only the second line should remain.",
       "starter": "", "hints": ["Both writes use \"w\" mode - the second one starts the file empty again before writing, so the first line is gone.", "Opening the same file with \"w\" mode a second time empties it before the new write happens."],
       "tests": [{ "stdin": "first\nsecond", "expect": "second" }] },
-    { "slug": "gcse-files-t1-04", "lesson": 1, "tier": 1, "difficulty": 2, "xp": 15,
+    { "slug": "gcse-files-t1-04", "lesson": 2, "tier": 1, "difficulty": 2, "xp": 15,
       "title": "Read line by line",
       "brief": "Input 3 lines of text. Write each one to its own line in a file called `poem.txt` (remember to add \\n after each one). Reopen the file and use .readlines() to read it back as a list. Print how many lines that list contains.",
       "starter": "", "hints": [".readlines() gives back a list with one entry per line - len() on that list gives the line count.", "Write each line with a newline character at the end, then reopen the file and call .readlines() to get a list you can measure with len()."],
