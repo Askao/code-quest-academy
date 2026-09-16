@@ -23,6 +23,7 @@ import { downloadCsv } from "@/lib/csv";
 import {
   corePracticeTasksForTopic,
   getLesson,
+  homeworkSlugsUpToLesson,
   isLessonComplete,
   lessonsForTopic,
   projectGroupsForTopic,
@@ -54,6 +55,10 @@ function ClassDetail() {
   const [instructions, setInstructions] = useState("");
   const [dueAt, setDueAt] = useState("");
   const [selectedTopics, setSelectedTopics] = useState<string[]>([]);
+  // Only meaningful (and only shown) with exactly one topic selected, since
+  // lesson numbers are relative to a single topic's own lesson list. "" =
+  // no cap, draw from that topic's whole homework pool as before.
+  const [homeworkMaxLesson, setHomeworkMaxLesson] = useState<number | "">("");
   const [effort, setEffort] = useState("medium");
   const [assignTopic, setAssignTopic] = useState("");
   const [assignLessonSlug, setAssignLessonSlug] = useState("");
@@ -439,11 +444,24 @@ function ClassDetail() {
     // a student has already met in a lesson or Practice.
     let query = supabase
       .from("challenges")
-      .select("id, difficulty, topic")
+      .select("id, slug, difficulty, topic")
       .eq("track", track)
       .eq("homework_only", true);
     if (selectedTopics.length > 0) query = query.in("topic", selectedTopics);
-    const { data: pool } = await query;
+    const { data: rawPool } = await query;
+    // A lesson cap only makes sense against a single topic's own lesson
+    // list - only applied when exactly one topic is selected, so it can't
+    // silently narrow a multi-topic pool by a lesson number from the wrong
+    // topic.
+    const pool =
+      selectedTopics.length === 1 && homeworkMaxLesson !== ""
+        ? (() => {
+            const allowed = new Set(
+              homeworkSlugsUpToLesson(track, selectedTopics[0]!, homeworkMaxLesson),
+            );
+            return (rawPool ?? []).filter((c) => allowed.has(c.slug));
+          })()
+        : rawPool;
     if (!pool || pool.length === 0) {
       toast.error("No homework tasks available for those topics yet");
       return;
@@ -499,6 +517,7 @@ function ClassDetail() {
     setInstructions("");
     setDueAt("");
     setSelectedTopics([]);
+    setHomeworkMaxLesson("");
     void qc.invalidateQueries({ queryKey: ["class", classId] });
   };
 
@@ -1140,17 +1159,39 @@ function ClassDetail() {
                         type="checkbox"
                         className="accent-primary"
                         checked={checked}
-                        onChange={() =>
+                        onChange={() => {
                           setSelectedTopics((prev) =>
                             checked ? prev.filter((k) => k !== t.key) : [...prev, t.key],
-                          )
-                        }
+                          );
+                          // A lesson cap only means anything against a single
+                          // topic's own lesson numbers - drop it the moment
+                          // the selection stops being exactly one topic,
+                          // rather than silently carrying a stale cap into a
+                          // different (or mixed) topic next time.
+                          setHomeworkMaxLesson("");
+                        }}
                       />
                       {t.label}
                     </label>
                   );
                 })}
               </div>
+              {selectedTopics.length === 1 ? (
+                <select
+                  className="w-full rounded-md border border-border bg-card px-3 py-2 text-sm"
+                  value={homeworkMaxLesson}
+                  onChange={(e) =>
+                    setHomeworkMaxLesson(e.target.value === "" ? "" : Number(e.target.value))
+                  }
+                >
+                  <option value="">Up to lesson… (all lessons)</option>
+                  {lessonsForTopic(track, selectedTopics[0]!).map((l) => (
+                    <option key={l.slug} value={l.order}>
+                      Up to Lesson {l.order}: {l.title}
+                    </option>
+                  ))}
+                </select>
+              ) : null}
             </div>
             <select
               className="rounded-md border border-border bg-card px-3 py-2 text-sm"

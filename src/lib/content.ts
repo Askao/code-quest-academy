@@ -66,8 +66,16 @@ export type TaskContent = {
  * homework_only = false unless explicitly asked for the homework pool).
  * Keeps homework meaningfully different from what a student has already
  * drilled elsewhere, rather than re-serving the same 150 tasks.
+ *
+ * `lesson` here tags the earliest lesson (within this task's own topic)
+ * whose material it actually needs - not which lesson "talks about" its
+ * theme. It exists so a teacher can cap homework to "up to lesson N" (see
+ * homeworkSlugsUpToLesson below) for a class that hasn't finished a topic
+ * yet, the same premature-technique problem already fixed for lesson/
+ * Practice tasks by hand for a few slugs earlier - this is that fix,
+ * generalised across the whole homework pool.
  */
-export type HomeworkTaskContent = Omit<TaskContent, "lesson" | "lessonSlug">;
+export type HomeworkTaskContent = Omit<TaskContent, "lessonSlug">;
 
 /**
  * A longer, harder assessment task that pulls together everything a topic
@@ -188,6 +196,23 @@ export function lessonsForTopic(track: TrackKey, topic: string) {
 
 export function tasksForLesson(lessonSlug: string) {
   return TASKS.filter((t) => t.lessonSlug === lessonSlug);
+}
+
+/**
+ * Homework slugs for a topic, optionally capped to "up to lesson N" - the
+ * pool teacher.$classId.tsx's setHomework draws from once a teacher picks
+ * a specific topic and how far the class has actually got. Omitting
+ * maxLesson returns the topic's whole homework pool, same as today.
+ */
+export function homeworkSlugsUpToLesson(
+  track: TrackKey,
+  topic: string,
+  maxLesson?: number,
+): string[] {
+  return HOMEWORK_TASKS.filter(
+    (t) =>
+      t.track === track && t.topic === topic && (maxLesson == null || t.lesson <= maxLesson),
+  ).map((t) => t.slug);
 }
 
 export function quizForLesson(lessonSlug: string) {
