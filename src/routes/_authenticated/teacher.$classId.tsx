@@ -73,6 +73,9 @@ function ClassDetail() {
   const [expandedHomework, setExpandedHomework] = useState<string | null>(null);
   const [coTeacherEmail, setCoTeacherEmail] = useState("");
   const [addingCoTeacher, setAddingCoTeacher] = useState(false);
+  const [renamingClass, setRenamingClass] = useState(false);
+  const [classNameDraft, setClassNameDraft] = useState("");
+  const [savingClassName, setSavingClassName] = useState(false);
 
   const { data } = useQuery({
     queryKey: ["class", classId],
@@ -562,6 +565,33 @@ function ClassDetail() {
     toast.success("Join link copied");
   };
 
+  const startRenamingClass = () => {
+    setClassNameDraft(data?.cls?.name ?? "");
+    setRenamingClass(true);
+  };
+
+  const saveClassName = async () => {
+    const name = classNameDraft.trim();
+    if (!name) {
+      toast.error("Give the class a name");
+      return;
+    }
+    if (name === data?.cls?.name) {
+      setRenamingClass(false);
+      return;
+    }
+    setSavingClassName(true);
+    const { error } = await supabase.from("classes").update({ name }).eq("id", classId);
+    setSavingClassName(false);
+    if (error) {
+      toast.error(error.message);
+      return;
+    }
+    toast.success("Class renamed");
+    setRenamingClass(false);
+    void qc.invalidateQueries({ queryKey: ["class", classId] });
+  };
+
   const addCoTeacher = async () => {
     if (!coTeacherEmail.trim()) return;
     setAddingCoTeacher(true);
@@ -678,7 +708,35 @@ function ClassDetail() {
   return (
     <div className="space-y-8">
       <div>
-        <h1 className="text-3xl font-bold">{data?.cls?.name ?? "Class"}</h1>
+        {renamingClass ? (
+          <div className="flex flex-wrap items-center gap-2">
+            <Input
+              autoFocus
+              className="max-w-xs text-2xl font-bold"
+              value={classNameDraft}
+              onChange={(e) => setClassNameDraft(e.target.value)}
+              onKeyDown={(e) => {
+                if (e.key === "Enter") void saveClassName();
+                if (e.key === "Escape") setRenamingClass(false);
+              }}
+            />
+            <Button size="sm" onClick={saveClassName} disabled={savingClassName}>
+              {savingClassName ? "Saving…" : "Save"}
+            </Button>
+            <Button size="sm" variant="secondary" onClick={() => setRenamingClass(false)}>
+              Cancel
+            </Button>
+          </div>
+        ) : (
+          <div className="flex flex-wrap items-center gap-2">
+            <h1 className="text-3xl font-bold">{data?.cls?.name ?? "Class"}</h1>
+            {isPrimaryOwner ? (
+              <Button size="sm" variant="secondary" onClick={startRenamingClass}>
+                Rename
+              </Button>
+            ) : null}
+          </div>
+        )}
         <p className="mt-1 font-mono text-sm text-muted-foreground">
           {track === "gcse" ? `GCSE · ${board.toUpperCase()}` : "A LEVEL"} · code{" "}
           <span className="text-primary">{data?.cls?.join_code}</span>
