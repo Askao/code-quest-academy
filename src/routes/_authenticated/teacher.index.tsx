@@ -85,6 +85,99 @@ function Teacher() {
     },
   });
 
+  // One row per homework, across every class this teacher can see (owned,
+  // co-taught or same-school) - a class-by-class breakdown already exists
+  // on each class's own Homework tab, but there was nowhere to see "what's
+  // outstanding across everything I teach" at a glance. Mirrors the exact
+  // "fully done" definition teacher.$classId.tsx uses (every one of a
+  // student's own assigned challenges passed, not just some of them) so
+  // the two views can never disagree about what "done" means.
+  const classIds = (classes ?? []).map((c) => c.id);
+  const { data: homeworkReport } = useQuery({
+    queryKey: ["teacher-homework-report", classIds.slice().sort().join(",")],
+    enabled: classIds.length > 0,
+    queryFn: async () => {
+      const [homeworkRes, membersRes] = await Promise.all([
+        supabase
+          .from("homework")
+          .select("id, class_id, title, due_at, challenge_ids, created_at")
+          .in("class_id", classIds)
+          .order("created_at", { ascending: false }),
+        supabase.from("class_members").select("class_id, student_id").in("class_id", classIds),
+      ]);
+      const homeworkIds = (homeworkRes.data ?? []).map((h) => h.id);
+      const membersByClass = new Map<string, string[]>();
+      for (const m of membersRes.data ?? []) {
+        const list = membersByClass.get(m.class_id) ?? [];
+        list.push(m.student_id);
+        membersByClass.set(m.class_id, list);
+      }
+
+      const [assignmentsRes, helpRes] = await Promise.all([
+        homeworkIds.length
+          ? supabase
+              .from("homework_assignments")
+              .select("homework_id, student_id, challenge_ids")
+              .in("homework_id", homeworkIds)
+          : Promise.resolve({ data: [] }),
+        homeworkIds.length
+          ? supabase
+              .from("homework_help_requests")
+              .select("homework_id, resolved")
+              .in("homework_id", homeworkIds)
+          : Promise.resolve({ data: [] }),
+      ]);
+      const assignmentByKey = new Map(
+        (assignmentsRes.data ?? []).map((a) => [`${a.homework_id}:${a.student_id}`, a.challenge_ids]),
+      );
+      const allChallengeIds = Array.from(
+        new Set([
+          ...(homeworkRes.data ?? []).flatMap((h) => h.challenge_ids ?? []),
+          ...(assignmentsRes.data ?? []).flatMap((a) => a.challenge_ids ?? []),
+        ]),
+      );
+      const allStudentIds = Array.from(new Set([...membersByClass.values()].flat()));
+      const passedRes =
+        allStudentIds.length && allChallengeIds.length
+          ? await supabase
+              .from("attempts")
+              .select("user_id, challenge_id")
+              .in("user_id", allStudentIds)
+              .in("challenge_id", allChallengeIds)
+              .eq("passed", true)
+          : { data: [] };
+      const passedSet = new Set(
+        (passedRes.data ?? []).map((a) => `${a.user_id}:${a.challenge_id}`),
+      );
+      const openHelpByHomework = new Map<string, number>();
+      for (const r of helpRes.data ?? []) {
+        if (!r.resolved) {
+          openHelpByHomework.set(r.homework_id, (openHelpByHomework.get(r.homework_id) ?? 0) + 1);
+        }
+      }
+
+      return (homeworkRes.data ?? []).map((h) => {
+        const studentIds = membersByClass.get(h.class_id) ?? [];
+        const perStudent = studentIds.map((sid) => {
+          const challengeIds = assignmentByKey.get(`${h.id}:${sid}`) ?? h.challenge_ids ?? [];
+          const done = challengeIds.filter((cid) => passedSet.has(`${sid}:${cid}`)).length;
+          return { done, total: challengeIds.length };
+        });
+        const fullyDone = perStudent.filter((p) => p.total > 0 && p.done === p.total).length;
+        return {
+          id: h.id,
+          classId: h.class_id,
+          title: h.title,
+          dueAt: h.due_at as string | null,
+          createdAt: h.created_at,
+          studentCount: studentIds.length,
+          fullyDone,
+          openHelp: openHelpByHomework.get(h.id) ?? 0,
+        };
+      });
+    },
+  });
+
   const { data: school } = useQuery({
     queryKey: ["teacher-school", schoolId],
     enabled: !!schoolId,
@@ -389,6 +482,59 @@ function Teacher() {
         {(classes ?? []).length === 0 ? (
           <p className="text-muted-foreground">No classes yet — create your first one above.</p>
         ) : null}
+      </div>
+
+      <div className="panel space-y-3 p-5">
+        <h2 className="text-lg font-semibold">Homework report</h2>
+        <p className="text-sm text-muted-foreground">
+          Every homework you've set, across every class you teach — a class-by-class breakdown is
+          still on that class's own Homework tab.
+        </p>
+        <div className="space-y-2">
+          {(homeworkReport ?? []).map((h) => {
+            const cls = (classes ?? []).find((c) => c.id === h.classId);
+            const overdue = !!h.dueAt && new Date(h.dueAt) < new Date() && h.fullyDone < h.studentCount;
+            return (
+              <div
+                key={h.id}
+                className="space-y-2 rounded-lg border border-border p-3 text-sm"
+              >
+                <div>
+                  <p className="font-medium">{h.title}</p>
+                  <p className="text-xs text-muted-foreground">{cls?.name ?? "Unknown class"}</p>
+                </div>
+                <div className="flex flex-wrap items-center gap-x-3 gap-y-1.5">
+                  {h.openHelp > 0 ? (
+                    <span className="rounded-full bg-warning/15 px-2 py-0.5 font-mono text-xs text-warning">
+                      ✋ {h.openHelp} asked for help
+                    </span>
+                  ) : null}
+                  <span className="font-mono text-xs text-muted-foreground">
+                    {h.fullyDone}/{h.studentCount} students done
+                    {h.dueAt ? (
+                      <>
+                        {" · "}
+                        <span className={overdue ? "text-destructive" : undefined}>
+                          due {new Date(h.dueAt).toLocaleDateString("en-GB")}
+                        </span>
+                      </>
+                    ) : null}
+                  </span>
+                  <Button asChild size="sm" variant="secondary" className="ml-auto">
+                    <Link to="/teacher/$classId" params={{ classId: h.classId }}>
+                      Open class
+                    </Link>
+                  </Button>
+                </div>
+              </div>
+            );
+          })}
+          {(homeworkReport ?? []).length === 0 ? (
+            <p className="text-sm text-muted-foreground">
+              No homework set yet — set some from inside a class's own Homework tab.
+            </p>
+          ) : null}
+        </div>
       </div>
 
       <div className="panel p-5">
