@@ -165,10 +165,29 @@ export async function handleAuthEmailHook(request: Request): Promise<Response> {
   }
 
   const { user, email_data } = payload;
-  const link =
-    `${authExternalUrl.replace(/\/$/, "")}/verify?token=${encodeURIComponent(email_data.token_hash)}` +
-    `&type=${encodeURIComponent(email_data.email_action_type)}` +
-    `&redirect_to=${encodeURIComponent(email_data.redirect_to)}`;
+  // Point at our own site's /confirm-email page (which verifies the token
+  // from the browser on a button press) rather than the auth server's
+  // /verify: school networks block the auth server's *.railway.app host, and
+  // mail scanners pre-fetch links and burn one-time tokens. Falls back to the
+  // old auth-server link only if redirect_to isn't a usable URL.
+  // GoTrue substitutes its own SITE_URL for a redirect_to it doesn't have on
+  // its allow-list, and that has been a stale *.railway.app address - so a
+  // railway origin here is never trusted, the real domain is used instead.
+  let siteOrigin: string | null = null;
+  try {
+    const origin = new URL(email_data.redirect_to).origin;
+    siteOrigin = origin.endsWith(".railway.app")
+      ? (process.env["SITE_URL"] ?? "https://www.hcodeacademy.co.uk").replace(/\/$/, "")
+      : origin;
+  } catch {
+    siteOrigin = null;
+  }
+  const link = siteOrigin
+    ? `${siteOrigin}/confirm-email?token_hash=${encodeURIComponent(email_data.token_hash)}` +
+      `&type=${encodeURIComponent(email_data.email_action_type)}`
+    : `${authExternalUrl.replace(/\/$/, "")}/verify?token=${encodeURIComponent(email_data.token_hash)}` +
+      `&type=${encodeURIComponent(email_data.email_action_type)}` +
+      `&redirect_to=${encodeURIComponent(email_data.redirect_to)}`;
   const copy = copyFor(email_data.email_action_type);
   const html = renderEmailHtml(link, user.user_metadata?.full_name, copy);
 

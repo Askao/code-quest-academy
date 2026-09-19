@@ -99,6 +99,14 @@ function AuthPage() {
   }, [navigate]);
 
   useEffect(() => {
+    if (window.location.hash.includes("error_code=")) {
+      toast.error(
+        "That link has expired or already been used. Use “Forgot password?” to get a new one.",
+      );
+    }
+  }, []);
+
+  useEffect(() => {
     void supabase.rpc("admin_exists").then(({ data }) => {
       if (data === false) setShowAdminNotice(true);
     });
