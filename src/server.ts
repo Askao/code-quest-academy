@@ -62,6 +62,13 @@ export default {
     const url = new URL(request.url);
     if (url.hostname === APEX_HOST) {
       url.hostname = CANONICAL_HOST;
+      // Railway terminates TLS in front of this container and forwards the
+      // request over plain HTTP, so request.url (and the "http:" it carries)
+      // doesn't reflect what the visitor's browser actually used. Redirecting
+      // with that scheme sends them to http://www... for one extra hop before
+      // Railway's own edge upgrades it back to https - forcing https here
+      // skips that hop instead of momentarily downgrading a secure request.
+      url.protocol = "https:";
       return Response.redirect(url.toString(), 301);
     }
     if (request.method === "POST") {
