@@ -392,20 +392,24 @@ function LessonPage() {
   const previousSibling = siblings.find((l) => l.order === lesson.order - 1);
   const previousLessonComplete =
     !previousSibling || isLessonComplete(previousSibling.slug, passed, quizPassed);
+  // Enrolled: assignment alone decides access, both ways - it can open a
+  // lesson before earlier ones are done, and (unlike the mastery gate) can
+  // still hold one back that's otherwise ready. Everyone else keeps the
+  // original in-order gate. See isLessonAssigned's doc comment.
   const masteryLocked = !previousTopicComplete || !previousLessonComplete;
   const notAssigned = enrolled && !isLessonAssigned(lesson.slug, assignedSlugs);
-  const locked = !isTeacher && (masteryLocked || notAssigned);
+  const locked = !isTeacher && (enrolled ? notAssigned : masteryLocked);
 
   if (locked) {
     return (
       <div className="panel p-6">
         <p className="font-medium">🔒 This lesson is locked.</p>
         <p className="mt-2 text-sm text-muted-foreground">
-          {!previousTopicComplete
-            ? `Finish ${topicLabel(topicOrder[topicIndex - 1]!)} first.`
-            : !previousLessonComplete
-              ? `Finish "${previousSibling?.title}" first.`
-              : "Your teacher hasn't set this lesson yet."}
+          {enrolled
+            ? "Your teacher hasn't set this lesson yet."
+            : !previousTopicComplete
+              ? `Finish ${topicLabel(topicOrder[topicIndex - 1]!)} first.`
+              : `Finish "${previousSibling?.title}" first.`}
         </p>
         <Button asChild className="mt-4">
           <Link to="/learn">Back to lessons</Link>

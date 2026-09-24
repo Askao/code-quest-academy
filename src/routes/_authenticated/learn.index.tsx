@@ -100,8 +100,15 @@ function LearnIndex() {
   const topics = topicsWithLessons("gcse", board);
   const roadmap: RoadmapTopic[] = topics.map((topic, i) => {
     const complete = isTopicComplete("gcse", topic, passed, quizPassed);
+    // Enrolled students are gated per-lesson by teacher assignment instead
+    // of topic order (see isLessonAssigned's doc comment) - a topic section
+    // is never shown as locked to them, so an assigned lesson in it is
+    // reachable regardless of what's come before.
     const prevComplete =
-      isTeacher || i === 0 || isTopicComplete("gcse", topics[i - 1]!, passed, quizPassed);
+      isTeacher ||
+      enrolled ||
+      i === 0 ||
+      isTopicComplete("gcse", topics[i - 1]!, passed, quizPassed);
     return {
       key: topic,
       label: topicLabel(topic),
@@ -147,7 +154,7 @@ function LearnIndex() {
           const lessons = LESSONS.filter((l) => l.track === "gcse" && l.topic === topic);
           const all = lessons.flatMap((l) => tasksForLesson(l.slug));
           const done = all.filter((t) => passed.has(t.slug)).length;
-          const topicLocked = roadmap[topicIndex]!.state === "locked";
+          const topicLocked = !enrolled && roadmap[topicIndex]!.state === "locked";
           return (
             <section
               key={topic}
@@ -177,11 +184,15 @@ function LearnIndex() {
                   {lessons.map((lesson, lessonIndex) => {
                     const tasks = tasksForLesson(lesson.slug);
                     const lessonDone = tasks.filter((t) => passed.has(t.slug)).length;
+                    // Enrolled: assignment alone decides access, in either
+                    // direction - it can open a lesson early or (unlike the
+                    // mastery gate) still hold one back that's otherwise
+                    // ready. Everyone else keeps the original in-order gate.
+                    const notAssigned = enrolled && !isLessonAssigned(lesson.slug, assignedSlugs);
                     const masteryLocked =
                       lessonIndex > 0 &&
                       !isLessonComplete(lessons[lessonIndex - 1]!.slug, passed, quizPassed);
-                    const notAssigned = enrolled && !isLessonAssigned(lesson.slug, assignedSlugs);
-                    const lessonLocked = !isTeacher && (masteryLocked || notAssigned);
+                    const lessonLocked = !isTeacher && (enrolled ? notAssigned : masteryLocked);
                     return (
                       <li key={lesson.slug}>
                         {lessonLocked ? (
@@ -191,9 +202,9 @@ function LearnIndex() {
                             </span>
                             <h3 className="mt-1 font-medium">{lesson.title}</h3>
                             <p className="mt-1 text-xs text-muted-foreground">
-                              {masteryLocked
-                                ? `Complete lesson ${lesson.order - 1} first`
-                                : "Your teacher hasn't set this lesson yet"}
+                              {enrolled
+                                ? "Your teacher hasn't set this lesson yet"
+                                : `Complete lesson ${lesson.order - 1} first`}
                             </p>
                           </div>
                         ) : (

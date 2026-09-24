@@ -356,10 +356,13 @@ export function completedTaskSlugs(
 }
 
 /**
- * Students who belong to a class (any `class_members` row) get a
- * teacher-controlled gate on top of the mastery gate above: a lesson stays
- * locked until their teacher has assigned it, even once they'd otherwise be
- * ready. Self-signed-up users with no class rows skip this check entirely.
+ * Students who belong to a class (any `class_members` row) are gated by
+ * their teacher's say-so instead of the mastery gate above: a lesson is
+ * locked until assigned, but once assigned it opens immediately, even if
+ * earlier lessons/topics aren't done - the teacher may be teaching topics
+ * out of the site's default order, or skipping ones the class already
+ * knows. Self-signed-up users with no class rows aren't affected by this at
+ * all and keep working through lessons in order via the mastery gate.
  */
 export function isLessonAssigned(lessonSlug: string, assignedSlugs: Set<string>): boolean {
   return assignedSlugs.has(lessonSlug);
