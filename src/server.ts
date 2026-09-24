@@ -46,8 +46,24 @@ function isH3SwallowedErrorBody(body: string): boolean {
   }
 }
 
+// The apex domain (added as its own Railway custom domain so it resolves
+// at all - some school networks/browsers otherwise fail outright on a bare
+// domain typed without "www") now serves the identical app as
+// www.hcodeacademy.co.uk. Left as two live copies, that's duplicate content
+// to search engines and splits SEO signal across two hostnames for no
+// reason. A 301 here picks www as the one canonical host: the apex still
+// resolves and loads correctly (one redirect hop), but only www ever gets
+// indexed or credited.
+const APEX_HOST = "hcodeacademy.co.uk";
+const CANONICAL_HOST = "www.hcodeacademy.co.uk";
+
 export default {
   async fetch(request: Request, env: unknown, ctx: unknown) {
+    const url = new URL(request.url);
+    if (url.hostname === APEX_HOST) {
+      url.hostname = CANONICAL_HOST;
+      return Response.redirect(url.toString(), 301);
+    }
     if (request.method === "POST") {
       try {
         const pathname = new URL(request.url).pathname;
