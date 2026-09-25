@@ -396,7 +396,10 @@ export type Database = {
           due_at: string | null
           id: string
           instructions: string
+          pool_ids: string[]
+          task_count: number | null
           title: string
+          topics: string[]
         }
         Insert: {
           adaptive?: boolean
@@ -406,7 +409,10 @@ export type Database = {
           due_at?: string | null
           id?: string
           instructions?: string
+          pool_ids?: string[]
+          task_count?: number | null
           title: string
+          topics?: string[]
         }
         Update: {
           adaptive?: boolean
@@ -416,7 +422,10 @@ export type Database = {
           due_at?: string | null
           id?: string
           instructions?: string
+          pool_ids?: string[]
+          task_count?: number | null
           title?: string
+          topics?: string[]
         }
         Relationships: [
           {
@@ -734,6 +743,10 @@ export type Database = {
       can_view_user: {
         Args: { _target: string; _viewer: string }
         Returns: boolean
+      }
+      claim_homework_assignment: {
+        Args: { _challenge_ids: string[]; _homework_id: string }
+        Returns: undefined
       }
       class_for_join_code: {
         Args: { _code: string }

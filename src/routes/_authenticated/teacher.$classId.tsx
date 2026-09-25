@@ -21,7 +21,9 @@ import {
   type Board,
   type TrackKey,
 } from "@/lib/game";
-import { pickHomeworkSet, resetProgress } from "@/lib/progress";
+import { resetProgress } from "@/lib/progress";
+import { pickFreshHomeworkSet } from "@/lib/homework-picks";
+import { assignedHomeworkTaskIds, passedHomeworkTaskIds } from "@/lib/homework-history";
 import { downloadCsv } from "@/lib/csv";
 import {
   corePracticeTasksForTopic,
@@ -480,30 +482,27 @@ function ClassDetail() {
     }
     const count = EFFORT_COUNT[effort] ?? 4;
 
-    const { data: hw, error: hwError } = await supabase
-      .from("homework")
-      .insert({
-        class_id: classId,
-        title: title.trim(),
-        instructions: instructions.trim(),
-        adaptive: true,
-        ...(dueAt ? { due_at: new Date(dueAt).toISOString() } : {}),
-      })
-      .select("id")
-      .single();
-    if (hwError || !hw) {
-      toast.error(hwError?.message ?? "Could not create homework");
+    // Never re-set a task a student has already passed (in an earlier
+    // homework or anywhere else), and prefer ones they haven't been given
+    // before - see pickFreshHomeworkSet. Each student gets challenges picked
+    // at their own level for the selected topics (their overall average
+    // level when no topic is selected, meaning "all topics") - not the same
+    // list for the whole class. With several topics selected, level is the
+    // average of their skill across just those topics, and the picker draws
+    // a genuine mix across them.
+    let passedBy: Map<string, Set<string>>;
+    let assignedBy: Map<string, Set<string>>;
+    try {
+      [passedBy, assignedBy] = await Promise.all([
+        passedHomeworkTaskIds(students.map((s) => s.id)),
+        assignedHomeworkTaskIds({ classId }),
+      ]);
+    } catch (e) {
+      toast.error(e instanceof Error ? e.message : "Could not check what students have already done");
       return;
     }
-
-    // Each student gets challenges picked at their own level for the
-    // selected topics (their overall average level when no topic is
-    // selected, meaning "all topics") — not the same list for the whole
-    // class. With several topics selected, level is the average of their
-    // skill across just those topics, and pickHomeworkSet draws a genuine
-    // mix across them rather than clumping in whichever topic scores
-    // closest on difficulty.
-    const assignments = students.map((s) => {
+    const none = new Set<string>();
+    const picks = students.map((s) => {
       const level =
         selectedTopics.length > 0
           ? selectedTopics.reduce(
@@ -513,18 +512,68 @@ function ClassDetail() {
             ) / selectedTopics.length
           : s.avg || 2;
       return {
-        homework_id: hw.id,
-        student_id: s.id,
-        challenge_ids: pickHomeworkSet(pool, level, count),
+        student: s,
+        ids: pickFreshHomeworkSet({
+          pool,
+          level,
+          count,
+          passed: passedBy.get(s.id) ?? none,
+          alreadyAssigned: assignedBy.get(s.id) ?? none,
+        }),
       };
     });
-    const { error } = await supabase.from("homework_assignments").insert(assignments);
+    const withTasks = picks.filter((p) => p.ids.length > 0);
+    if (withTasks.length === 0) {
+      toast.error(
+        "Every student in this class has already completed all the tasks in that selection. Choose another topic or a later lesson.",
+      );
+      return;
+    }
+
+    const { data: hw, error: hwError } = await supabase
+      .from("homework")
+      .insert({
+        class_id: classId,
+        title: title.trim(),
+        instructions: instructions.trim(),
+        adaptive: true,
+        // Remembered so a student who joins the class later can be given
+        // their own list from the same pool (see claim_homework_assignment).
+        pool_ids: pool.map((c) => c.id),
+        topics: selectedTopics,
+        task_count: count,
+        ...(dueAt ? { due_at: new Date(dueAt).toISOString() } : {}),
+      })
+      .select("id")
+      .single();
+    if (hwError || !hw) {
+      toast.error(hwError?.message ?? "Could not create homework");
+      return;
+    }
+
+    const { error } = await supabase.from("homework_assignments").insert(
+      withTasks.map((p) => ({
+        homework_id: hw.id,
+        student_id: p.student.id,
+        challenge_ids: p.ids,
+      })),
+    );
     if (error) {
       await supabase.from("homework").delete().eq("id", hw.id);
       toast.error(error.message);
       return;
     }
-    toast.success("Homework set");
+    const short = picks.filter((p) => p.ids.length < count);
+    if (short.length > 0) {
+      toast.warning(
+        `Homework set - but ${short.length} student${short.length === 1 ? "" : "s"} got fewer than ${count} tasks (or none) because they've already done most of this pool: ${short
+          .map((p) => p.student.name)
+          .join(", ")}`,
+        { duration: 12000 },
+      );
+    } else {
+      toast.success("Homework set");
+    }
     setTitle("");
     setInstructions("");
     setDueAt("");

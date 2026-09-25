@@ -3,6 +3,7 @@ import { useState, type ReactNode } from "react";
 import { Menu, X, UserRound } from "lucide-react";
 import { supabase } from "@/integrations/supabase/client";
 import { useAuth } from "@/hooks/useAuth";
+import { useFillMissingHomework } from "@/hooks/useFillMissingHomework";
 import { Button } from "@/components/ui/button";
 import { ThemeToggle } from "@/components/ThemeToggle";
 
@@ -21,6 +22,7 @@ function NavLink({ to, children, onClick }: { to: string; children: ReactNode; o
 
 export function AppShell({ children }: { children: ReactNode }) {
   const { user, isTeacher, isAdmin, fullName } = useAuth();
+  useFillMissingHomework();
   const navigate = useNavigate();
   const [menuOpen, setMenuOpen] = useState(false);
 
