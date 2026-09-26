@@ -13,6 +13,8 @@ import { AssessmentsPanel } from "@/components/AssessmentsPanel";
 import { ClassReport } from "@/components/ClassReport";
 import { notifyHomeworkSet, notifyMessage } from "@/lib/homework-notify";
 import { fillMissingHomeworkForClass } from "@/lib/homework-late-join";
+import { FlagsGuide } from "@/components/FlagsGuide";
+import { STRUGGLING_THRESHOLD, strugglingTooltip, strugglingTopics } from "@/lib/flags";
 import { teacherHomeworkArchiveReason } from "@/lib/archive";
 import { ResetProgressControl } from "@/components/ResetProgressControl";
 import {
@@ -39,7 +41,6 @@ import {
 } from "@/lib/content";
 
 const EFFORT_COUNT: Record<string, number> = { low: 4, medium: 6, high: 8 };
-const STRUGGLING_THRESHOLD = 3;
 
 export const Route = createFileRoute("/_authenticated/teacher/$classId")({
   head: () => ({
@@ -204,7 +205,8 @@ function ClassDetail() {
         // Automatic struggling detection: three fails in a row on any topic
         // (see consecutive_fails in src/lib/progress.ts) - surfaced here
         // instead of relying on a student to self-report being stuck.
-        const struggling = mine.some((k) => (k.consecutive_fails ?? 0) >= STRUGGLING_THRESHOLD);
+        const strugglingIn = strugglingTopics(mine);
+        const struggling = strugglingIn.length > 0;
 
         // Practice and Projects sit outside the lesson path entirely, so
         // they were previously invisible on this page even though they're
@@ -258,6 +260,7 @@ function ClassDetail() {
           lastActive: s?.last_active,
           skills: mine,
           struggling,
+          strugglingTopics: strugglingIn,
           readyForMore,
           practiceByTopic,
           projectsByTopic,
@@ -986,6 +989,7 @@ function ClassDetail() {
               </Button>
             ) : null}
           </div>
+          <FlagsGuide />
           <div className="panel overflow-x-auto">
             <table className="w-full text-sm">
               <thead className="border-b border-border text-left font-mono text-xs text-muted-foreground">
@@ -1010,12 +1014,18 @@ function ClassDetail() {
                       <td className="p-3 font-medium">
                         {s.name}
                         {s.struggling ? (
-                          <span className="ml-2 rounded-full bg-destructive/15 px-2 py-0.5 font-mono text-xs text-destructive">
+                          <span
+                            title={strugglingTooltip(s.strugglingTopics, topicLabel)}
+                            className="ml-2 rounded-full bg-destructive/15 px-2 py-0.5 font-mono text-xs text-destructive"
+                          >
                             🔴 Struggling
                           </span>
                         ) : null}
                         {s.readyForMore ? (
-                          <span className="ml-2 rounded-full bg-warning/15 px-2 py-0.5 font-mono text-xs text-warning">
+                          <span
+                            title="Has passed every core practice task in every topic."
+                            className="ml-2 rounded-full bg-warning/15 px-2 py-0.5 font-mono text-xs text-warning"
+                          >
                             🟡 Ready for more
                           </span>
                         ) : null}

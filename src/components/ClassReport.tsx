@@ -18,6 +18,8 @@ import {
 } from "@/lib/class-report";
 import { downloadCsv } from "@/lib/csv";
 import { levelFromXp, topicLabel } from "@/lib/game";
+import { FlagsGuide } from "@/components/FlagsGuide";
+import { STRUGGLING_THRESHOLD, strugglingTooltip } from "@/lib/flags";
 import { BAND_LABEL, bandFor, type Band } from "@/lib/results-analysis";
 import { fetchQuestions, sb, type BankQuestion } from "@/lib/assessments-db";
 
@@ -425,6 +427,8 @@ function ClassSummaryBox({
         <h3 className="text-lg font-semibold">The whole class at a glance</h3>
       </div>
 
+      <FlagsGuide showWatchList />
+
       <div className="grid gap-3 sm:grid-cols-2 lg:grid-cols-4">
         <Tile
           label="Assessments"
@@ -828,12 +832,18 @@ function StudentCard({
             <span className="mr-1 text-muted-foreground">{open ? "▼" : "▶"}</span>
             {s.name}
             {s.struggling ? (
-              <span className="ml-2 rounded-full bg-destructive/15 px-2 py-0.5 font-mono text-xs font-normal text-destructive">
+              <span
+                title={strugglingTooltip(s.strugglingTopics, topicLabel)}
+                className="ml-2 rounded-full bg-destructive/15 px-2 py-0.5 font-mono text-xs font-normal text-destructive"
+              >
                 🔴 Struggling
               </span>
             ) : null}
             {s.readyForMore ? (
-              <span className="ml-2 rounded-full bg-warning/15 px-2 py-0.5 font-mono text-xs font-normal text-warning">
+              <span
+                title="Has passed every core practice task in every topic."
+                className="ml-2 rounded-full bg-warning/15 px-2 py-0.5 font-mono text-xs font-normal text-warning"
+              >
                 🟡 Ready for more
               </span>
             ) : null}
@@ -841,6 +851,16 @@ function StudentCard({
           <p className="mt-0.5 font-mono text-xs text-muted-foreground">
             Level {levelFromXp(s.xp).level} · {s.xp} XP · last active {fmtDay(s.lastActive)}
           </p>
+          {s.struggling ? (
+            <p className="mt-1 text-sm text-destructive">
+              {s.strugglingTopics && s.strugglingTopics.length > 0
+                ? `Struggling in ${s.strugglingTopics.map(topicLabel).join(", ")}`
+                : "Struggling"}{" "}
+              <span className="text-muted-foreground">
+                — {STRUGGLING_THRESHOLD}+ failed tests in a row. A pass in that topic clears it.
+              </span>
+            </p>
+          ) : null}
         </button>
         <div className="flex items-center gap-4">
           <div className="text-right">

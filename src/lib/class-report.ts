@@ -79,6 +79,8 @@ export type ReportStudent = {
   avg: number;
   lastActive: string | null | undefined;
   struggling: boolean;
+  /** The topics behind the Struggling flag, for the tooltip and the student's card. */
+  strugglingTopics?: string[];
   readyForMore: boolean;
   skills: { topic: string; track: string; level: number | string }[];
   practiceTotals: { done: number; total: number };
