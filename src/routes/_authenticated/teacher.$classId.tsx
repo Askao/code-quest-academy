@@ -10,6 +10,7 @@ import { Label } from "@/components/ui/label";
 import { Progress } from "@/components/ui/progress";
 import { Tabs, TabsContent, TabsList, TabsTrigger } from "@/components/ui/tabs";
 import { AssessmentsPanel } from "@/components/AssessmentsPanel";
+import { teacherHomeworkArchiveReason } from "@/lib/archive";
 import { ResetProgressControl } from "@/components/ResetProgressControl";
 import {
   levelFromXp,
@@ -1281,131 +1282,169 @@ function ClassDetail() {
           <section>
             <h2 className="mb-3 text-xl font-semibold">Homework set</h2>
             <div className="space-y-3">
-              {(data?.homework ?? []).map((h) => {
-                const sorted = [...h.completion].sort((a, b) => a.done - b.done);
-                const perStudentCount = Math.max(0, ...sorted.map((c) => c.total));
-                const doneCount = sorted.filter((c) => c.total > 0 && c.done === c.total).length;
-                const isExpanded = expandedHomework === h.id;
-                const openHelp = h.helpRequests.filter((r) => !r.resolved);
-                return (
-                  <div key={h.id} className="panel p-4 text-sm">
-                    <div className="flex flex-wrap items-center gap-3">
-                      <button
-                        className="flex-1 text-left font-medium"
-                        onClick={() => setExpandedHomework(isExpanded ? null : h.id)}
-                      >
-                        {isExpanded ? "▼ " : "▶ "}
-                        {h.title}
-                        {openHelp.length > 0 ? (
-                          <span className="ml-2 rounded-full bg-warning/15 px-2 py-0.5 font-mono text-xs text-warning">
-                            ✋ {openHelp.length} asked for help
-                          </span>
-                        ) : null}
-                      </button>
-                      <span className="font-mono text-xs text-muted-foreground">
-                        {doneCount}/{sorted.length} students done · {perStudentCount} challenges
-                        each
-                        {h.due_at ? ` · due ${new Date(h.due_at).toLocaleDateString("en-GB")}` : ""}
-                      </span>
-                      <Button size="sm" variant="secondary" onClick={() => exportHomework(h)}>
-                        Export
-                      </Button>
-                      <Button
-                        size="sm"
-                        variant="secondary"
-                        onClick={async () => {
-                          await supabase.from("homework").delete().eq("id", h.id);
-                          void qc.invalidateQueries({ queryKey: ["class", classId] });
-                        }}
-                      >
-                        Delete
-                      </Button>
-                    </div>
-                    {openHelp.length > 0 ? (
-                      <div className="mt-3 space-y-2 border-t border-border pt-3">
-                        {openHelp.map((r) => (
-                          <div
-                            key={r.id}
-                            className="flex flex-wrap items-center justify-between gap-2 rounded-md border border-warning/40 bg-warning/5 p-2 text-xs"
-                          >
-                            <div>
-                              <span className="font-medium">{r.studentName}</span>{" "}
-                              <span className="text-muted-foreground">
-                                ({r.tasksDone}/{r.tasksTotal} done when they asked)
-                              </span>
-                              {r.message ? (
-                                <p className="mt-1 text-muted-foreground">"{r.message}"</p>
-                              ) : null}
-                            </div>
-                            <Button
-                              size="sm"
-                              variant="secondary"
-                              onClick={() => resolveHelpRequest(r.id)}
+              {(() => {
+                type HW = NonNullable<typeof data>["homework"][number];
+                const renderHomework = (h: HW) => {
+                  const sorted = [...h.completion].sort((a, b) => a.done - b.done);
+                  const perStudentCount = Math.max(0, ...sorted.map((c) => c.total));
+                  const doneCount = sorted.filter((c) => c.total > 0 && c.done === c.total).length;
+                  const isExpanded = expandedHomework === h.id;
+                  const openHelp = h.helpRequests.filter((r) => !r.resolved);
+                  return (
+                    <div key={h.id} className="panel p-4 text-sm">
+                      <div className="flex flex-wrap items-center gap-3">
+                        <button
+                          className="flex-1 text-left font-medium"
+                          onClick={() => setExpandedHomework(isExpanded ? null : h.id)}
+                        >
+                          {isExpanded ? "▼ " : "▶ "}
+                          {h.title}
+                          {openHelp.length > 0 ? (
+                            <span className="ml-2 rounded-full bg-warning/15 px-2 py-0.5 font-mono text-xs text-warning">
+                              ✋ {openHelp.length} asked for help
+                            </span>
+                          ) : null}
+                        </button>
+                        <span className="font-mono text-xs text-muted-foreground">
+                          {doneCount}/{sorted.length} students done · {perStudentCount} challenges
+                          each
+                          {h.due_at ? ` · due ${new Date(h.due_at).toLocaleDateString("en-GB")}` : ""}
+                        </span>
+                        <Button size="sm" variant="secondary" onClick={() => exportHomework(h)}>
+                          Export
+                        </Button>
+                        <Button
+                          size="sm"
+                          variant="secondary"
+                          onClick={async () => {
+                            await supabase.from("homework").delete().eq("id", h.id);
+                            void qc.invalidateQueries({ queryKey: ["class", classId] });
+                          }}
+                        >
+                          Delete
+                        </Button>
+                      </div>
+                      {openHelp.length > 0 ? (
+                        <div className="mt-3 space-y-2 border-t border-border pt-3">
+                          {openHelp.map((r) => (
+                            <div
+                              key={r.id}
+                              className="flex flex-wrap items-center justify-between gap-2 rounded-md border border-warning/40 bg-warning/5 p-2 text-xs"
                             >
-                              Mark resolved
-                            </Button>
-                          </div>
-                        ))}
-                      </div>
-                    ) : null}
-                    {isExpanded && sorted.length > 0 ? (
-                      <div className="mt-3 overflow-x-auto border-t border-border pt-3">
-                        <table className="text-sm">
-                          <thead>
-                            <tr>
-                              <th className="p-2.5 text-left font-normal text-muted-foreground">
-                                Student
-                              </th>
-                              {Array.from({ length: perStudentCount }, (_, i) => (
-                                <th
-                                  key={i}
-                                  className="p-2.5 text-center font-mono font-normal text-muted-foreground"
-                                >
-                                  {i + 1}
-                                </th>
-                              ))}
-                              <th className="p-2.5 text-center font-mono font-normal text-muted-foreground">
-                                Done
-                              </th>
-                            </tr>
-                          </thead>
-                          <tbody>
-                            {sorted.map((c) => (
-                              <tr
-                                key={c.id}
-                                className="border-t border-border/60 hover:bg-secondary/20"
+                              <div>
+                                <span className="font-medium">{r.studentName}</span>{" "}
+                                <span className="text-muted-foreground">
+                                  ({r.tasksDone}/{r.tasksTotal} done when they asked)
+                                </span>
+                                {r.message ? (
+                                  <p className="mt-1 text-muted-foreground">"{r.message}"</p>
+                                ) : null}
+                              </div>
+                              <Button
+                                size="sm"
+                                variant="secondary"
+                                onClick={() => resolveHelpRequest(r.id)}
                               >
-                                <td className="p-2.5 font-medium whitespace-nowrap">{c.name}</td>
-                                {Array.from({ length: perStudentCount }, (_, i) => {
-                                  const t = c.tasks[i];
-                                  return (
-                                    <td
-                                      key={i}
-                                      title={t?.title}
-                                      className={`p-2.5 text-center text-base ${
-                                        t?.passed ? "text-success" : "text-muted-foreground"
-                                      }`}
-                                    >
-                                      {t ? (t.passed ? "✓" : "○") : ""}
-                                    </td>
-                                  );
-                                })}
-                                <td className="p-2.5 text-center font-mono whitespace-nowrap text-muted-foreground">
-                                  {c.done}/{c.total}
-                                </td>
+                                Mark resolved
+                              </Button>
+                            </div>
+                          ))}
+                        </div>
+                      ) : null}
+                      {isExpanded && sorted.length > 0 ? (
+                        <div className="mt-3 overflow-x-auto border-t border-border pt-3">
+                          <table className="text-sm">
+                            <thead>
+                              <tr>
+                                <th className="p-2.5 text-left font-normal text-muted-foreground">
+                                  Student
+                                </th>
+                                {Array.from({ length: perStudentCount }, (_, i) => (
+                                  <th
+                                    key={i}
+                                    className="p-2.5 text-center font-mono font-normal text-muted-foreground"
+                                  >
+                                    {i + 1}
+                                  </th>
+                                ))}
+                                <th className="p-2.5 text-center font-mono font-normal text-muted-foreground">
+                                  Done
+                                </th>
                               </tr>
-                            ))}
-                          </tbody>
-                        </table>
-                        <p className="mt-2 text-xs text-muted-foreground">
-                          Each student's homework is personalised, so column N isn't the same task
-                          for everyone — hover a cell to see which task it is.
+                            </thead>
+                            <tbody>
+                              {sorted.map((c) => (
+                                <tr
+                                  key={c.id}
+                                  className="border-t border-border/60 hover:bg-secondary/20"
+                                >
+                                  <td className="p-2.5 font-medium whitespace-nowrap">{c.name}</td>
+                                  {Array.from({ length: perStudentCount }, (_, i) => {
+                                    const t = c.tasks[i];
+                                    return (
+                                      <td
+                                        key={i}
+                                        title={t?.title}
+                                        className={`p-2.5 text-center text-base ${
+                                          t?.passed ? "text-success" : "text-muted-foreground"
+                                        }`}
+                                      >
+                                        {t ? (t.passed ? "✓" : "○") : ""}
+                                      </td>
+                                    );
+                                  })}
+                                  <td className="p-2.5 text-center font-mono whitespace-nowrap text-muted-foreground">
+                                    {c.done}/{c.total}
+                                  </td>
+                                </tr>
+                              ))}
+                            </tbody>
+                          </table>
+                          <p className="mt-2 text-xs text-muted-foreground">
+                            Each student's homework is personalised, so column N isn't the same task
+                            for everyone — hover a cell to see which task it is.
+                          </p>
+                        </div>
+                      ) : null}
+                    </div>
+                  );
+                };
+                // Active until every student has finished it or its deadline
+                // passes; then it moves to Archived (still fully openable).
+                const now = new Date();
+                const isArchived = (h: HW) =>
+                  !!teacherHomeworkArchiveReason(
+                    {
+                      dueAt: h.due_at,
+                      doneCount: h.completion.filter((c) => c.total > 0 && c.done === c.total)
+                        .length,
+                      studentCount: h.completion.length,
+                    },
+                    now,
+                  );
+                const all = data?.homework ?? [];
+                const active = all.filter((h) => !isArchived(h));
+                const archived = all.filter(isArchived);
+                return (
+                  <>
+                    {active.map(renderHomework)}
+                    {archived.length > 0 ? (
+                      <details className="pt-2">
+                        <summary className="cursor-pointer text-lg font-semibold select-none">
+                          Archived{" "}
+                          <span className="font-mono text-sm text-muted-foreground">
+                            ({archived.length})
+                          </span>
+                        </summary>
+                        <p className="mt-1 mb-3 text-sm text-muted-foreground">
+                          Homework whose deadline has passed or that every student has finished.
                         </p>
-                      </div>
+                        <div className="space-y-3">{archived.map(renderHomework)}</div>
+                      </details>
                     ) : null}
-                  </div>
+                  </>
                 );
-              })}
+              })()}
               {(data?.homework ?? []).length === 0 ? (
                 <p className="text-muted-foreground">No homework set yet.</p>
               ) : null}

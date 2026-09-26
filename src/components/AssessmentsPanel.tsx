@@ -25,6 +25,7 @@ import {
   type BoardKey,
 } from "@/lib/assessments-db";
 import { useAuth } from "@/hooks/useAuth";
+import { teacherAssessmentArchiveReason } from "@/lib/archive";
 
 const fmt = (iso: string) =>
   new Date(iso).toLocaleString("en-GB", { dateStyle: "medium", timeStyle: "short" });
@@ -442,67 +443,112 @@ export function AssessmentsPanel({
           <p className="text-sm text-muted-foreground">None yet.</p>
         ) : null}
         <div className="space-y-3">
-          {(list ?? []).map((a) => {
-            const statuses = a.attempts.map((t) =>
-              attemptStatus(
-                { startedAt: t.started_at, submittedAt: t.submitted_at, markedAt: t.marked_at },
-                a.time_limit_minutes,
-              ),
-            );
-            const n = (s: string) => statuses.filter((x) => x === s).length;
-            return (
-              <div key={a.id} className="panel space-y-3 p-4 text-sm">
-                <div className="flex flex-wrap items-start justify-between gap-3">
-                  <div className="min-w-0">
-                    <p className="font-medium">{a.title}</p>
-                    <p className="font-mono text-xs text-muted-foreground">
-                      {a.board.toUpperCase()} · {a.topics.map(topicLabel).join(", ") || "Mixed"} ·{" "}
-                      {a.question_count} questions · {a.total_marks} marks · {a.time_limit_minutes}{" "}
-                      min
-                    </p>
-                    {a.opens_at || a.closes_at ? (
+          {(() => {
+            type Row = NonNullable<typeof list>[number];
+            const statusesOf = (a: Row) =>
+              a.attempts.map((t) =>
+                attemptStatus(
+                  { startedAt: t.started_at, submittedAt: t.submitted_at, markedAt: t.marked_at },
+                  a.time_limit_minutes,
+                ),
+              );
+            const renderAssessment = (a: Row) => {
+              const statuses = statusesOf(a);
+              const n = (s: string) => statuses.filter((x) => x === s).length;
+              return (
+                <div key={a.id} className="panel space-y-3 p-4 text-sm">
+                  <div className="flex flex-wrap items-start justify-between gap-3">
+                    <div className="min-w-0">
+                      <p className="font-medium">{a.title}</p>
                       <p className="font-mono text-xs text-muted-foreground">
-                        {a.opens_at ? `Opens ${fmt(a.opens_at)}` : ""}
-                        {a.opens_at && a.closes_at ? " · " : ""}
-                        {a.closes_at ? `Start by ${fmt(a.closes_at)}` : ""}
+                        {a.board.toUpperCase()} · {a.topics.map(topicLabel).join(", ") || "Mixed"} ·{" "}
+                        {a.question_count} questions · {a.total_marks} marks ·{" "}
+                        {a.time_limit_minutes} min
                       </p>
-                    ) : null}
+                      {a.opens_at || a.closes_at ? (
+                        <p className="font-mono text-xs text-muted-foreground">
+                          {a.opens_at ? `Opens ${fmt(a.opens_at)}` : ""}
+                          {a.opens_at && a.closes_at ? " · " : ""}
+                          {a.closes_at ? `Start by ${fmt(a.closes_at)}` : ""}
+                        </p>
+                      ) : null}
+                    </div>
+                    <p className="font-mono text-xs text-muted-foreground">
+                      {n("marked")} marked · {n("handed_in")} to mark · {n("writing")} writing ·{" "}
+                      {Math.max(0, studentCount - a.attempts.length)} not started
+                    </p>
                   </div>
-                  <p className="font-mono text-xs text-muted-foreground">
-                    {n("marked")} marked · {n("handed_in")} to mark · {n("writing")} writing ·{" "}
-                    {Math.max(0, studentCount - a.attempts.length)} not started
-                  </p>
-                </div>
-                <div className="flex flex-wrap items-center gap-2">
-                  <Button asChild size="sm">
-                    <Link to="/mark/$assessmentId" params={{ assessmentId: a.id }}>
-                      {n("handed_in") > 0 ? `Mark (${n("handed_in")} waiting)` : "Open marking"}
-                    </Link>
-                  </Button>
-                  <Button size="sm" variant="secondary" onClick={() => void toggleRelease(a)}>
-                    {a.results_released ? "Hide results" : "Release results"}
-                  </Button>
-                  {confirmDelete === a.id ? (
-                    <>
-                      <span className="text-xs text-destructive">
-                        Deletes every student's answers and marks.
-                      </span>
-                      <Button size="sm" variant="destructive" onClick={() => void del(a)}>
-                        Confirm delete
-                      </Button>
-                      <Button size="sm" variant="secondary" onClick={() => setConfirmDelete(null)}>
-                        Cancel
-                      </Button>
-                    </>
-                  ) : (
-                    <Button size="sm" variant="secondary" onClick={() => setConfirmDelete(a.id)}>
-                      Delete
+                  <div className="flex flex-wrap items-center gap-2">
+                    <Button asChild size="sm">
+                      <Link to="/mark/$assessmentId" params={{ assessmentId: a.id }}>
+                        {n("handed_in") > 0 ? `Mark (${n("handed_in")} waiting)` : "Open marking"}
+                      </Link>
                     </Button>
-                  )}
+                    <Button size="sm" variant="secondary" onClick={() => void toggleRelease(a)}>
+                      {a.results_released ? "Hide results" : "Release results"}
+                    </Button>
+                    {confirmDelete === a.id ? (
+                      <>
+                        <span className="text-xs text-destructive">
+                          Deletes every student's answers and marks.
+                        </span>
+                        <Button size="sm" variant="destructive" onClick={() => void del(a)}>
+                          Confirm delete
+                        </Button>
+                        <Button
+                          size="sm"
+                          variant="secondary"
+                          onClick={() => setConfirmDelete(null)}
+                        >
+                          Cancel
+                        </Button>
+                      </>
+                    ) : (
+                      <Button size="sm" variant="secondary" onClick={() => setConfirmDelete(a.id)}>
+                        Delete
+                      </Button>
+                    )}
+                  </div>
                 </div>
-              </div>
+              );
+            };
+            // Moves to Archived once the marks have been released, or the
+            // start window has closed with nothing left to mark. Still fully
+            // openable - Mark, results and delete all work from there.
+            const now = new Date();
+            const isArchived = (a: Row) =>
+              !!teacherAssessmentArchiveReason(
+                {
+                  resultsReleased: a.results_released,
+                  closesAt: a.closes_at,
+                  statuses: statusesOf(a),
+                },
+                now,
+              );
+            const all = list ?? [];
+            const active = all.filter((a) => !isArchived(a));
+            const archived = all.filter(isArchived);
+            return (
+              <>
+                {active.map(renderAssessment)}
+                {archived.length > 0 ? (
+                  <details className="pt-2">
+                    <summary className="cursor-pointer text-lg font-semibold select-none">
+                      Archived{" "}
+                      <span className="font-mono text-sm text-muted-foreground">
+                        ({archived.length})
+                      </span>
+                    </summary>
+                    <p className="mt-1 mb-3 text-sm text-muted-foreground">
+                      Assessments whose results have been released, or that have closed with nothing
+                      left to mark.
+                    </p>
+                    <div className="space-y-3">{archived.map(renderAssessment)}</div>
+                  </details>
+                ) : null}
+              </>
             );
-          })}
+          })()}
         </div>
       </section>
     </div>

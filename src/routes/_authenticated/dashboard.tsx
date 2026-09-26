@@ -1,4 +1,9 @@
-import { StudentAssessments } from "@/components/StudentAssessments";
+import {
+  StudentArchive,
+  StudentAssessments,
+  type ArchivedHomework,
+} from "@/components/StudentAssessments";
+import { studentHomeworkArchiveReason } from "@/lib/archive";
 import { createFileRoute, Link } from "@tanstack/react-router";
 import { useQuery, useQueryClient } from "@tanstack/react-query";
 import { supabase } from "@/integrations/supabase/client";
@@ -176,11 +181,33 @@ function Dashboard() {
     ? "aqa"
     : "ocr";
 
-  const currentHomework = (data?.homework ?? []).filter((hw) => hw.completed < hw.total || hw.total === 0);
-  const completedHomework = (data?.homework ?? [])
-    .filter((hw) => hw.total > 0 && hw.completed >= hw.total)
-    .slice()
-    .reverse();
+  // Homework is "current" until it's finished or its deadline passes; then it
+  // moves to the Archive (still openable) - see lib/archive.ts.
+  const nowDate = new Date();
+  const homeworkWithReason = (data?.homework ?? []).map((hw) => ({
+    hw,
+    reason: studentHomeworkArchiveReason(
+      { completed: hw.completed, total: hw.total, dueAt: hw.due_at },
+      nowDate,
+    ),
+  }));
+  const currentHomework = homeworkWithReason.filter((x) => !x.reason).map((x) => x.hw);
+  const archivedHomework: ArchivedHomework[] = homeworkWithReason.flatMap(({ hw, reason }) =>
+    reason
+      ? [
+          {
+            id: hw.id,
+            title: hw.title,
+            className: hw.classes?.name ?? null,
+            dueAt: hw.due_at,
+            createdAt: hw.created_at,
+            completed: hw.completed,
+            total: hw.total,
+            reason,
+          },
+        ]
+      : [],
+  );
 
   // Long-term shape of the whole course, not just today - a topic counts
   // "mastered" once every core practice task in it is passed (stretch
@@ -387,32 +414,7 @@ function Dashboard() {
         </section>
       ) : null}
 
-      {completedHomework.length > 0 ? (
-        <section>
-          <h2 className="mb-3 text-xl font-semibold">Completed homework</h2>
-          <div className="space-y-3">
-            {completedHomework.map((hw) => (
-              <div key={hw.id} className="panel flex flex-wrap items-center gap-3 p-4">
-                <div className="flex-1">
-                  <p className="font-medium">
-                    {hw.title} <span className="text-success">✓</span>
-                  </p>
-                  <p className="text-sm text-muted-foreground">
-                    {hw.classes?.name}
-                    {hw.due_at ? ` · Due ${new Date(hw.due_at).toLocaleDateString("en-GB")}` : ""}
-                    {` · ${hw.completed}/${hw.total} done`}
-                  </p>
-                </div>
-                <Button asChild size="sm" variant="secondary">
-                  <Link to="/homework/$homeworkId" params={{ homeworkId: hw.id }}>
-                    Review
-                  </Link>
-                </Button>
-              </div>
-            ))}
-          </div>
-        </section>
-      ) : null}
+      <StudentArchive homework={archivedHomework} />
 
       <section>
         <h2 className="mb-3 text-xl font-semibold">Your skill levels</h2>

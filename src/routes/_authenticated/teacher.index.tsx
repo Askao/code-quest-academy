@@ -1,3 +1,4 @@
+import { teacherHomeworkArchiveReason } from "@/lib/archive";
 import { createFileRoute, Link } from "@tanstack/react-router";
 import { useQuery, useQueryClient } from "@tanstack/react-query";
 import { useState } from "react";
@@ -491,44 +492,86 @@ function Teacher() {
           still on that class's own Homework tab.
         </p>
         <div className="space-y-2">
-          {(homeworkReport ?? []).map((h) => {
-            const cls = (classes ?? []).find((c) => c.id === h.classId);
-            const overdue = !!h.dueAt && new Date(h.dueAt) < new Date() && h.fullyDone < h.studentCount;
-            return (
-              <div
-                key={h.id}
-                className="space-y-2 rounded-lg border border-border p-3 text-sm"
-              >
-                <div>
-                  <p className="font-medium">{h.title}</p>
-                  <p className="text-xs text-muted-foreground">{cls?.name ?? "Unknown class"}</p>
-                </div>
-                <div className="flex flex-wrap items-center gap-x-3 gap-y-1.5">
-                  {h.openHelp > 0 ? (
-                    <span className="rounded-full bg-warning/15 px-2 py-0.5 font-mono text-xs text-warning">
-                      ✋ {h.openHelp} asked for help
-                    </span>
-                  ) : null}
-                  <span className="font-mono text-xs text-muted-foreground">
-                    {h.fullyDone}/{h.studentCount} students done
-                    {h.dueAt ? (
-                      <>
-                        {" · "}
-                        <span className={overdue ? "text-destructive" : undefined}>
-                          due {new Date(h.dueAt).toLocaleDateString("en-GB")}
-                        </span>
-                      </>
+          {(() => {
+            type Item = NonNullable<typeof homeworkReport>[number];
+            const renderItem = (h: Item) => {
+              const cls = (classes ?? []).find((c) => c.id === h.classId);
+              const overdue = !!h.dueAt && new Date(h.dueAt) < new Date() && h.fullyDone < h.studentCount;
+              return (
+                <div
+                  key={h.id}
+                  className="space-y-2 rounded-lg border border-border p-3 text-sm"
+                >
+                  <div>
+                    <p className="font-medium">{h.title}</p>
+                    <p className="text-xs text-muted-foreground">{cls?.name ?? "Unknown class"}</p>
+                  </div>
+                  <div className="flex flex-wrap items-center gap-x-3 gap-y-1.5">
+                    {h.openHelp > 0 ? (
+                      <span className="rounded-full bg-warning/15 px-2 py-0.5 font-mono text-xs text-warning">
+                        ✋ {h.openHelp} asked for help
+                      </span>
                     ) : null}
-                  </span>
-                  <Button asChild size="sm" variant="secondary" className="ml-auto">
-                    <Link to="/teacher/$classId" params={{ classId: h.classId }}>
-                      Open class
-                    </Link>
-                  </Button>
+                    <span className="font-mono text-xs text-muted-foreground">
+                      {h.fullyDone}/{h.studentCount} students done
+                      {h.dueAt ? (
+                        <>
+                          {" · "}
+                          <span className={overdue ? "text-destructive" : undefined}>
+                            due {new Date(h.dueAt).toLocaleDateString("en-GB")}
+                          </span>
+                        </>
+                      ) : null}
+                    </span>
+                    <Button asChild size="sm" variant="secondary" className="ml-auto">
+                      <Link to="/teacher/$classId" params={{ classId: h.classId }}>
+                        Open class
+                      </Link>
+                    </Button>
+                  </div>
                 </div>
-              </div>
+              );
+            };
+            // Homework leaves the active list once every student has finished
+            // it or its deadline has passed (see lib/archive.ts) - it is still
+            // here, just tucked away. An overdue homework some students never
+            // finished is exactly what a teacher wants to notice, so the
+            // Archived heading says how many of those there are.
+            const now = new Date();
+            const isArchived = (h: Item) =>
+              !!teacherHomeworkArchiveReason(
+                { dueAt: h.dueAt, doneCount: h.fullyDone, studentCount: h.studentCount },
+                now,
+              );
+            const all = homeworkReport ?? [];
+            const active = all.filter((h) => !isArchived(h));
+            const archived = all.filter(isArchived);
+            const unfinished = archived.filter((h) => h.fullyDone < h.studentCount).length;
+            return (
+              <>
+                {active.map(renderItem)}
+                {archived.length > 0 ? (
+                  <details className="pt-2">
+                    <summary className="cursor-pointer font-semibold select-none">
+                      Archived{" "}
+                      <span className="font-mono text-sm font-normal text-muted-foreground">
+                        ({archived.length})
+                      </span>
+                      {unfinished > 0 ? (
+                        <span className="ml-2 font-mono text-xs font-normal text-destructive">
+                          {unfinished} with unfinished students
+                        </span>
+                      ) : null}
+                    </summary>
+                    <p className="mt-1 mb-2 text-xs text-muted-foreground">
+                      Past their deadline, or finished by every student.
+                    </p>
+                    <div className="space-y-2">{archived.map(renderItem)}</div>
+                  </details>
+                ) : null}
+              </>
             );
-          })}
+          })()}
           {(homeworkReport ?? []).length === 0 ? (
             <p className="text-sm text-muted-foreground">
               No homework set yet — set some from inside a class's own Homework tab.
