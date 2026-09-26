@@ -84,3 +84,25 @@ export function pickFreshHomeworkSet(opts: {
   const reusable = notPassed.filter((c) => !taken.has(c.id));
   return [...picked, ...pickHomeworkSet(reusable, level, count - picked.length)];
 }
+
+/**
+ * The skill level to pick a student's homework at: their average across the
+ * topics the homework covers (2 for a topic they haven't started), or their
+ * overall average when it covers every topic. Same rule whether the list is
+ * built when the homework is set or later for someone who joined the class
+ * afterwards.
+ */
+export function homeworkLevel(
+  skills: { topic: string; track: string; level: number | string }[],
+  track: string,
+  topics: string[],
+): number {
+  const mine = skills.filter((k) => k.track === track);
+  if (topics.length > 0) {
+    return (
+      topics.reduce((sum, t) => sum + Number(mine.find((k) => k.topic === t)?.level ?? 2), 0) /
+      topics.length
+    );
+  }
+  return mine.length ? mine.reduce((sum, k) => sum + Number(k.level), 0) / mine.length : 1;
+}

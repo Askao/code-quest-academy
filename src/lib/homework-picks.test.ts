@@ -113,3 +113,25 @@ test("with nothing done it behaves like before: full-size distinct list", () => 
   assert.equal(got.length, 5);
   assert.equal(new Set(got).size, 5);
 });
+
+import { homeworkLevel } from "./homework-picks.ts";
+
+test("homework level: averages the chosen topics, 2 for one not started", () => {
+  const skills = [
+    { topic: "iteration", track: "gcse", level: 4 },
+    { topic: "lists", track: "gcse", level: "3" },
+    { topic: "iteration", track: "alevel", level: 5 },
+  ];
+  assert.equal(homeworkLevel(skills, "gcse", ["iteration", "lists"]), 3.5);
+  assert.equal(homeworkLevel(skills, "gcse", ["iteration", "strings"]), 3, "strings not started counts as 2");
+});
+
+test("homework level: no topics chosen means the overall average for that track", () => {
+  const skills = [
+    { topic: "iteration", track: "gcse", level: 4 },
+    { topic: "lists", track: "gcse", level: 2 },
+    { topic: "iteration", track: "alevel", level: 5 },
+  ];
+  assert.equal(homeworkLevel(skills, "gcse", []), 3);
+  assert.equal(homeworkLevel([], "gcse", []), 1, "a brand new student starts at 1");
+});

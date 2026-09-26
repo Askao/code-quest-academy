@@ -1,6 +1,6 @@
 import { createFileRoute, useNavigate, Link } from "@tanstack/react-router";
 import { useQuery, useQueryClient } from "@tanstack/react-query";
-import { Fragment, useState } from "react";
+import { Fragment, useEffect, useRef, useState } from "react";
 import { toast } from "sonner";
 import { supabase } from "@/integrations/supabase/client";
 import { useAuth } from "@/hooks/useAuth";
@@ -12,6 +12,7 @@ import { Tabs, TabsContent, TabsList, TabsTrigger } from "@/components/ui/tabs";
 import { AssessmentsPanel } from "@/components/AssessmentsPanel";
 import { ClassReport } from "@/components/ClassReport";
 import { notifyHomeworkSet, notifyMessage } from "@/lib/homework-notify";
+import { fillMissingHomeworkForClass } from "@/lib/homework-late-join";
 import { teacherHomeworkArchiveReason } from "@/lib/archive";
 import { ResetProgressControl } from "@/components/ResetProgressControl";
 import {
@@ -442,6 +443,28 @@ function ClassDetail() {
   const isCoTeacher = (data?.coTeachers ?? []).some((t) => t.teacherId === user?.id);
   const isSameSchool = !!data?.cls?.school_id && !!schoolId && data.cls.school_id === schoolId;
   const hasAccess = isPrimaryOwner || isCoTeacher || isSameSchool;
+
+  // A student who joined after some homework was set has no task list for it
+  // until one is built. Build them here, for everyone in the class at once,
+  // so a late joiner never shows up as "no tasks" just because they haven't
+  // logged in yet (they'd also get theirs on their own next login).
+  const lateJoinKey = `${data?.students.length ?? 0}:${data?.homework.length ?? 0}`;
+  const lateJoinChecked = useRef<string | null>(null);
+  useEffect(() => {
+    if (!data || !hasAccess || data.homework.length === 0 || data.students.length === 0) return;
+    const key = `${classId}:${lateJoinKey}`;
+    if (lateJoinChecked.current === key) return;
+    lateJoinChecked.current = key;
+    fillMissingHomeworkForClass(classId)
+      .then((created) => {
+        if (created === 0) return;
+        toast.info(
+          `Set the homework for ${created} student${created === 1 ? "" : "s"} who joined after it was set.`,
+        );
+        void qc.invalidateQueries({ queryKey: ["class", classId] });
+      })
+      .catch((e) => console.error("fillMissingHomeworkForClass failed", e));
+  }, [data, hasAccess, classId, lateJoinKey, qc]);
 
   const setHomework = async () => {
     if (!title.trim()) {
