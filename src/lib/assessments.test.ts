@@ -10,6 +10,9 @@ import {
   questionScore,
   replaceQuestion,
   sortForPaper,
+  splitQuestionParts,
+  joinPartAnswers,
+  splitPartAnswers,
   suggestedMinutes,
   type Ability,
   type BankQuestionMeta,
@@ -308,4 +311,71 @@ test("sortForPaper is stable and does not change its input", () => {
     ["a", "b"],
   );
   assert.deepEqual(input, copy);
+});
+
+const F = "```";
+const threeParts = `The following program is written in pseudo-code.\n\n${F}\nx ← 1\n\ny ← 2\n${F}\n\n(a) State the value of x. [1]\n\n(b) State the value of y. [1]\n\n(c) State the sum. [1]`;
+
+test("a question with (a) (b) (c) splits into a stem and one part each", () => {
+  const q = splitQuestionParts(threeParts)!;
+  assert.deepEqual(
+    q.parts.map((p) => p.label),
+    ["a", "b", "c"],
+  );
+  assert.ok(
+    q.stem.includes("x ← 1") && q.stem.includes("y ← 2"),
+    "the code stays in the stem, blank line and all",
+  );
+  assert.equal(q.parts[0]!.text, "(a) State the value of x. [1]");
+  assert.equal(q.parts[2]!.text, "(c) State the sum. [1]");
+});
+
+test("trailing text after the last part stays with that part", () => {
+  const q = splitQuestionParts(
+    "Intro.\n\n(a) Write a function. [4]\n\n(b) Write the program. [2]\n\nYou may use pseudocode.",
+  )!;
+  assert.equal(q.parts.length, 2);
+  assert.ok(q.parts[1]!.text.endsWith("You may use pseudocode."));
+});
+
+test("ordinary questions and stray '(a)' text are not split", () => {
+  assert.equal(splitQuestionParts("State what is meant by selection. [1]"), null);
+  assert.equal(splitQuestionParts("Explain option (a) in the table. [2]"), null);
+  assert.equal(
+    splitQuestionParts("Intro.\n\n(a) Only one part. [2]"),
+    null,
+    "one part is not a split",
+  );
+  assert.equal(
+    splitQuestionParts("(b) First. [1]\n\n(a) Second. [1]"),
+    null,
+    "parts must run a, b, c in order",
+  );
+});
+
+test("part answers join under their labels and split back exactly", () => {
+  const labels = ["a", "b", "c"];
+  const joined = joinPartAnswers(labels, ["10", "4 times", "It adds them up"]);
+  assert.equal(joined, "(a) 10\n\n(b) 4 times\n\n(c) It adds them up");
+  assert.deepEqual(splitPartAnswers(joined, labels), ["10", "4 times", "It adds them up"]);
+});
+
+test("a blank middle part, multi-line code and text that mentions '(b)' all survive a round trip", () => {
+  const labels = ["a", "b", "c"];
+  const values = ["", "for i = 1 to 3\n    print(i)\n\nnext i", "see (b) above, and (c) too"];
+  const back = splitPartAnswers(joinPartAnswers(labels, values), labels);
+  assert.deepEqual(back, values);
+});
+
+test("nothing written in any part is stored as empty so it counts as unanswered", () => {
+  assert.equal(joinPartAnswers(["a", "b"], ["", "  \n"]), "");
+  assert.deepEqual(splitPartAnswers("", ["a", "b"]), ["", ""]);
+});
+
+test("an answer not stored in part form goes into the first box instead of being lost", () => {
+  assert.deepEqual(splitPartAnswers("just one lump of text", ["a", "b", "c"]), [
+    "just one lump of text",
+    "",
+    "",
+  ]);
 });

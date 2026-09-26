@@ -6,7 +6,13 @@ import { useAuth } from "@/hooks/useAuth";
 import { Button } from "@/components/ui/button";
 import { Textarea } from "@/components/ui/textarea";
 import { QuestionText } from "@/components/QuestionText";
-import { formatClock, GRACE_MS } from "@/lib/assessments";
+import {
+  formatClock,
+  GRACE_MS,
+  joinPartAnswers,
+  splitPartAnswers,
+  splitQuestionParts,
+} from "@/lib/assessments";
 import { topicLabel } from "@/lib/game";
 import {
   sb,
@@ -211,6 +217,46 @@ function PaperView({ attemptId, assessment }: { attemptId: string; assessment: A
   );
 }
 
+/** One answer box. Code answers are monospace and Tab indents instead of jumping to the next box. */
+function AnswerBox({
+  label,
+  value,
+  code,
+  rows,
+  onChange,
+  onBlur,
+}: {
+  label: string;
+  value: string;
+  code: boolean;
+  rows: number;
+  onChange: (value: string) => void;
+  onBlur: () => void;
+}) {
+  return (
+    <Textarea
+      aria-label={label}
+      value={value}
+      onChange={(e) => onChange(e.target.value)}
+      onBlur={onBlur}
+      onKeyDown={(e) => {
+        if (!code || e.key !== "Tab") return;
+        e.preventDefault();
+        const el = e.currentTarget;
+        const { selectionStart: from, selectionEnd: to } = el;
+        onChange(el.value.slice(0, from) + "    " + el.value.slice(to));
+        requestAnimationFrame(() => el.setSelectionRange(from + 4, from + 4));
+      }}
+      rows={rows}
+      spellCheck={!code}
+      autoCapitalize="off"
+      autoCorrect="off"
+      className={code ? "font-mono text-sm" : ""}
+      placeholder={code ? "Write your program here…" : "Write your answer here…"}
+    />
+  );
+}
+
 function Sitting({
   attemptId,
   assessment,
@@ -370,51 +416,76 @@ function Sitting({
                   {q.marks} mark{q.marks === 1 ? "" : "s"}
                 </span>
               </div>
-              <QuestionText text={q.question} />
-              <div>
-                <Textarea
-                  aria-label={`Answer to question ${i + 1}`}
-                  value={answers[q.question_id] ?? ""}
-                  onChange={(e) => change(q.question_id, e.target.value)}
-                  onBlur={() => void saveOne(q.question_id)}
-                  onKeyDown={(e) => {
-                    // Code answers: Tab indents instead of jumping to the next box.
-                    if (q.answer_format !== "code" || e.key !== "Tab") return;
-                    e.preventDefault();
-                    const el = e.currentTarget;
-                    const { selectionStart: s, selectionEnd: en } = el;
-                    const next = el.value.slice(0, s) + "    " + el.value.slice(en);
-                    change(q.question_id, next);
-                    requestAnimationFrame(() => el.setSelectionRange(s + 4, s + 4));
-                  }}
-                  rows={
-                    q.answer_format === "code" ? Math.max(8, q.marks + 4) : Math.max(3, q.marks + 1)
-                  }
-                  spellCheck={q.answer_format !== "code"}
-                  autoCapitalize="off"
-                  autoCorrect="off"
-                  className={q.answer_format === "code" ? "font-mono text-sm" : ""}
-                  placeholder={
-                    q.answer_format === "code"
-                      ? "Write your program here…"
-                      : "Write your answer here…"
-                  }
-                />
-                <p
-                  className={`mt-1.5 h-4 font-mono text-xs ${
-                    state === "error" ? "text-destructive" : "text-muted-foreground"
-                  }`}
-                  aria-live="polite"
-                >
-                  {state === "saving"
-                    ? "Saving…"
-                    : state === "saved"
-                      ? "✓ Saved"
-                      : state === "error"
-                        ? "Couldn't save - check your connection; it will try again"
-                        : ""}
-                </p>
-              </div>
+              {(() => {
+                const split = splitQuestionParts(q.question);
+                const code = q.answer_format === "code";
+                const status = (
+                  <p
+                    className={`mt-1.5 h-4 font-mono text-xs ${
+                      state === "error" ? "text-destructive" : "text-muted-foreground"
+                    }`}
+                    aria-live="polite"
+                  >
+                    {state === "saving"
+                      ? "Saving…"
+                      : state === "saved"
+                        ? "✓ Saved"
+                        : state === "error"
+                          ? "Couldn't save - check your connection; it will try again"
+                          : ""}
+                  </p>
+                );
+                if (!split) {
+                  return (
+                    <>
+                      <QuestionText text={q.question} />
+                      <div>
+                        <AnswerBox
+                          label={`Answer to question ${i + 1}`}
+                          value={answers[q.question_id] ?? ""}
+                          code={code}
+                          rows={code ? Math.max(8, q.marks + 4) : Math.max(3, q.marks + 1)}
+                          onChange={(v) => change(q.question_id, v)}
+                          onBlur={() => void saveOne(q.question_id)}
+                        />
+                        {status}
+                      </div>
+                    </>
+                  );
+                }
+                // A question with parts (a), (b), (c) gets a box per part, so
+                // the answers can't run together. They're stored in the one
+                // answer field, joined under their labels.
+                const labels = split.parts.map((p) => p.label);
+                const values = splitPartAnswers(answers[q.question_id] ?? "", labels);
+                return (
+                  <>
+                    {split.stem ? <QuestionText text={split.stem} /> : null}
+                    {split.parts.map((part, pi) => (
+                      <div key={part.label} className="space-y-2 border-t border-border pt-4">
+                        <QuestionText text={part.text} />
+                        <AnswerBox
+                          label={`Answer to question ${i + 1}, part (${part.label})`}
+                          value={values[pi] ?? ""}
+                          code={code}
+                          rows={code ? 8 : 2}
+                          onChange={(v) =>
+                            change(
+                              q.question_id,
+                              joinPartAnswers(
+                                labels,
+                                values.map((old, k) => (k === pi ? v : old)),
+                              ),
+                            )
+                          }
+                          onBlur={() => void saveOne(q.question_id)}
+                        />
+                      </div>
+                    ))}
+                    {status}
+                  </>
+                );
+              })()}
             </section>
           );
         })}

@@ -240,3 +240,71 @@ export function formatClock(ms: number): string {
   const ss = String(s).padStart(2, "0");
   return h > 0 ? `${h}:${String(m).padStart(2, "0")}:${ss}` : `${m}:${ss}`;
 }
+
+export type QuestionParts = {
+  /** Everything before "(a)" - the scenario and any code the parts refer to. */
+  stem: string;
+  parts: { label: string; text: string }[];
+};
+
+/**
+ * A question written as "(a) ... (b) ... (c) ..." gets one answer box per
+ * part instead of one box for the lot, so a student's answers to different
+ * parts can't run together. Returns null for an ordinary single-part
+ * question. Only genuine parts count: they must start a paragraph and run
+ * (a), (b), (c)... in order with at least two of them - a stray "(a)" in
+ * the middle of a sentence is left alone.
+ */
+export function splitQuestionParts(question: string): QuestionParts | null {
+  const markers = [...question.matchAll(/(?:^|\n\n)\(([a-z])\) /g)];
+  if (markers.length < 2) return null;
+  const labels = markers.map((m) => m[1]!);
+  const inOrder = labels.every((l, i) => l === String.fromCharCode(97 + i));
+  if (!inOrder) return null;
+  const startOf = (i: number) => markers[i]!.index! + (markers[i]![0].startsWith("\n") ? 2 : 0);
+  return {
+    stem: question.slice(0, markers[0]!.index!).trimEnd(),
+    parts: markers.map((m, i) => ({
+      label: m[1]!,
+      text: question
+        .slice(startOf(i), i + 1 < markers.length ? markers[i + 1]!.index! : undefined)
+        .trim(),
+    })),
+  };
+}
+
+/**
+ * How a multi-part answer is stored: the parts joined under their labels,
+ * "(a) ...\n\n(b) ...", in the single answer field the database already has.
+ * It reads naturally to the teacher marking it, and needs no schema change.
+ * All parts blank is stored as "" so a question with nothing written counts as
+ * unanswered.
+ */
+export function joinPartAnswers(labels: string[], values: string[]): string {
+  if (values.every((v) => v.trim() === "")) return "";
+  return labels.map((l, i) => `(${l}) ${values[i] ?? ""}`).join("\n\n");
+}
+
+/** The inverse of joinPartAnswers. An answer that wasn't stored in that
+ * shape (e.g. written before a question was split into parts) lands in the
+ * first box rather than being lost. */
+export function splitPartAnswers(answer: string, labels: string[]): string[] {
+  const out = labels.map(() => "");
+  if (answer === "") return out;
+  if (!answer.startsWith(`(${labels[0]}) `)) {
+    out[0] = answer;
+    return out;
+  }
+  let cursor = `(${labels[0]}) `.length;
+  for (let i = 0; i < labels.length; i++) {
+    const next = labels[i + 1];
+    const marker = next === undefined ? -1 : answer.indexOf(`\n\n(${next}) `, cursor);
+    if (marker === -1) {
+      out[i] = answer.slice(cursor);
+      break;
+    }
+    out[i] = answer.slice(cursor, marker);
+    cursor = marker + `\n\n(${next}) `.length;
+  }
+  return out;
+}
