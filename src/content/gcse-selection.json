@@ -1968,6 +1968,404 @@
       ]
     },
     {
+      "slug": "gcse-selection-p-11",
+      "tier": 1,
+      "difficulty": 1,
+      "xp": 10,
+      "title": "Old enough to drive?",
+      "brief": "You can start driving lessons at 17. Input a person's age (a whole number). Print `Can drive` if they are 17 or over, otherwise print `Too young`.",
+      "starter": "",
+      "hints": [
+        "Convert the age with `int()`, then compare it with 17.",
+        "\"17 or over\" includes 17, so use `>=`."
+      ],
+      "tests": [
+        {
+          "stdin": "20",
+          "expect": "Can drive"
+        },
+        {
+          "stdin": "17",
+          "expect": "Can drive"
+        },
+        {
+          "stdin": "16",
+          "expect": "Too young"
+        },
+        {
+          "stdin": "0",
+          "expect": "Too young"
+        },
+        {
+          "stdin": "45",
+          "expect": "Can drive"
+        }
+      ]
+    },
+    {
+      "slug": "gcse-selection-p-12",
+      "tier": 1,
+      "difficulty": 1,
+      "xp": 10,
+      "title": "Same or different?",
+      "brief": "Input two whole numbers, one per line. Print `Same` if they are equal, otherwise print `Different`.",
+      "starter": "",
+      "hints": [
+        "Read both numbers first.",
+        "Use `==` to test whether two values are equal (one `=` is for storing a value)."
+      ],
+      "tests": [
+        {
+          "stdin": "4\n4",
+          "expect": "Same"
+        },
+        {
+          "stdin": "4\n5",
+          "expect": "Different"
+        },
+        {
+          "stdin": "0\n0",
+          "expect": "Same"
+        },
+        {
+          "stdin": "-3\n3",
+          "expect": "Different"
+        },
+        {
+          "stdin": "10\n1",
+          "expect": "Different"
+        }
+      ]
+    },
+    {
+      "slug": "gcse-selection-p-13",
+      "tier": 2,
+      "difficulty": 2,
+      "xp": 15,
+      "title": "The bigger number",
+      "brief": "Input two whole numbers, one per line. Print the bigger one. If the two numbers are equal, print `Equal` instead.\n\nFor example, `7` and `3` prints `7`, and `5` and `5` prints `Equal`.",
+      "starter": "",
+      "hints": [
+        "There are three cases: the first is bigger, the second is bigger, or they are equal.",
+        "Use `if` / `elif` / `else` and check for equality first, or last."
+      ],
+      "tests": [
+        {
+          "stdin": "7\n3",
+          "expect": "7"
+        },
+        {
+          "stdin": "3\n7",
+          "expect": "7"
+        },
+        {
+          "stdin": "5\n5",
+          "expect": "Equal"
+        },
+        {
+          "stdin": "-2\n-9",
+          "expect": "-2"
+        },
+        {
+          "stdin": "0\n1",
+          "expect": "1"
+        }
+      ]
+    },
+    {
+      "slug": "gcse-selection-p-14",
+      "tier": 2,
+      "difficulty": 2,
+      "xp": 15,
+      "title": "What to wear",
+      "brief": "Input the temperature in degrees (a whole number) and print what to wear:\n- below 10: `Wear a coat`\n- 10 to 20 (including both 10 and 20): `Wear a jumper`\n- above 20: `T-shirt weather`",
+      "starter": "",
+      "hints": [
+        "Check the coldest range first, then the next, and let `else` catch the rest.",
+        "`if temp < 10:` ... `elif temp <= 20:` ... `else:`. The second test only runs if the first was False, so 10 is already covered."
+      ],
+      "tests": [
+        {
+          "stdin": "5",
+          "expect": "Wear a coat"
+        },
+        {
+          "stdin": "10",
+          "expect": "Wear a jumper"
+        },
+        {
+          "stdin": "20",
+          "expect": "Wear a jumper"
+        },
+        {
+          "stdin": "21",
+          "expect": "T-shirt weather"
+        },
+        {
+          "stdin": "-4",
+          "expect": "Wear a coat"
+        },
+        {
+          "stdin": "35",
+          "expect": "T-shirt weather"
+        }
+      ]
+    },
+    {
+      "slug": "gcse-selection-p-15",
+      "tier": 2,
+      "difficulty": 2,
+      "xp": 15,
+      "title": "Exam result band",
+      "brief": "Input a mark out of 100 (a whole number) and print the result:\n- 80 or more: `Distinction`\n- 60 to 79: `Merit`\n- 40 to 59: `Pass`\n- below 40: `Fail`",
+      "starter": "",
+      "hints": [
+        "Start with the highest band and work down, using `elif` for each.",
+        "You only need to write the lower limit of each band: `>= 80`, then `>= 60`, then `>= 40`."
+      ],
+      "tests": [
+        {
+          "stdin": "95",
+          "expect": "Distinction"
+        },
+        {
+          "stdin": "80",
+          "expect": "Distinction"
+        },
+        {
+          "stdin": "79",
+          "expect": "Merit"
+        },
+        {
+          "stdin": "60",
+          "expect": "Merit"
+        },
+        {
+          "stdin": "59",
+          "expect": "Pass"
+        },
+        {
+          "stdin": "40",
+          "expect": "Pass"
+        },
+        {
+          "stdin": "39",
+          "expect": "Fail"
+        },
+        {
+          "stdin": "0",
+          "expect": "Fail"
+        }
+      ]
+    },
+    {
+      "slug": "gcse-selection-p-16",
+      "tier": 3,
+      "difficulty": 3,
+      "xp": 20,
+      "title": "Leap year",
+      "brief": "A year is a leap year if it is divisible by 4, EXCEPT that a year divisible by 100 is not a leap year, UNLESS it is also divisible by 400.\n\nInput a year (a whole number). Print `Leap year` or `Not a leap year`.\n\nFor example, 2024 and 2000 are leap years; 1900 and 2023 are not.",
+      "starter": "",
+      "hints": [
+        "Work out the rule in words first: divisible by 400 is always a leap year; otherwise divisible by 100 is never one; otherwise divisible by 4 is.",
+        "A number is divisible by 4 when `year % 4 == 0`. Test the 400 case first, then 100, then 4."
+      ],
+      "tests": [
+        {
+          "stdin": "2024",
+          "expect": "Leap year"
+        },
+        {
+          "stdin": "2000",
+          "expect": "Leap year"
+        },
+        {
+          "stdin": "1900",
+          "expect": "Not a leap year"
+        },
+        {
+          "stdin": "2023",
+          "expect": "Not a leap year"
+        },
+        {
+          "stdin": "2100",
+          "expect": "Not a leap year"
+        },
+        {
+          "stdin": "1996",
+          "expect": "Leap year"
+        },
+        {
+          "stdin": "2400",
+          "expect": "Leap year"
+        }
+      ]
+    },
+    {
+      "slug": "gcse-selection-p-17",
+      "tier": 3,
+      "difficulty": 3,
+      "xp": 20,
+      "title": "Bus fare",
+      "brief": "A bus company charges by age:\n- under 5: free\n- 5 to 15: £2\n- 16 to 64: £4\n- 65 or over: £1\n\nInput a passenger's age (a whole number) and print the fare exactly as shown above: `Free`, `£2`, `£4` or `£1`.",
+      "starter": "",
+      "hints": [
+        "Work through the bands in order from youngest to oldest with `elif`.",
+        "The upper limits are 4, 15 and 64. The last band, 65 and over, can be the `else`."
+      ],
+      "tests": [
+        {
+          "stdin": "3",
+          "expect": "Free"
+        },
+        {
+          "stdin": "4",
+          "expect": "Free"
+        },
+        {
+          "stdin": "5",
+          "expect": "£2"
+        },
+        {
+          "stdin": "15",
+          "expect": "£2"
+        },
+        {
+          "stdin": "16",
+          "expect": "£4"
+        },
+        {
+          "stdin": "64",
+          "expect": "£4"
+        },
+        {
+          "stdin": "65",
+          "expect": "£1"
+        },
+        {
+          "stdin": "90",
+          "expect": "£1"
+        }
+      ]
+    },
+    {
+      "slug": "gcse-selection-p-18",
+      "tier": 3,
+      "difficulty": 3,
+      "xp": 20,
+      "title": "Login check",
+      "brief": "The only user is `admin` and the password is `1234`.\n\nInput a username, then a password. Print:\n- `Welcome` if both are correct\n- `Wrong password` if the username is right but the password is wrong\n- `Unknown user` if the username is not `admin` (whatever the password is)",
+      "starter": "",
+      "hints": [
+        "Check the username first. Only if it is right do you need to look at the password.",
+        "Use an `if` inside an `if`, or check `username != \"admin\"` first with `elif` for the password."
+      ],
+      "tests": [
+        {
+          "stdin": "admin\n1234",
+          "expect": "Welcome"
+        },
+        {
+          "stdin": "admin\nabcd",
+          "expect": "Wrong password"
+        },
+        {
+          "stdin": "bob\n1234",
+          "expect": "Unknown user"
+        },
+        {
+          "stdin": "bob\nabcd",
+          "expect": "Unknown user"
+        },
+        {
+          "stdin": "Admin\n1234",
+          "expect": "Unknown user"
+        }
+      ]
+    },
+    {
+      "slug": "gcse-selection-p-19",
+      "tier": 3,
+      "difficulty": 3,
+      "xp": 20,
+      "title": "Largest of three",
+      "brief": "Input three whole numbers, one per line. Print the largest of the three.\n\nFor example, `4`, `9` and `2` prints `9`. If two or more numbers are tied for the largest, just print that value.",
+      "starter": "",
+      "hints": [
+        "Compare the numbers against each other. The largest is the one that is at least as big as both of the others.",
+        "One way: assume the first is the largest, then replace it if the second is bigger, then replace it if the third is bigger than that."
+      ],
+      "tests": [
+        {
+          "stdin": "4\n9\n2",
+          "expect": "9"
+        },
+        {
+          "stdin": "9\n4\n2",
+          "expect": "9"
+        },
+        {
+          "stdin": "2\n4\n9",
+          "expect": "9"
+        },
+        {
+          "stdin": "5\n5\n3",
+          "expect": "5"
+        },
+        {
+          "stdin": "7\n7\n7",
+          "expect": "7"
+        },
+        {
+          "stdin": "-1\n-5\n-3",
+          "expect": "-1"
+        }
+      ]
+    },
+    {
+      "slug": "gcse-selection-p-20",
+      "tier": 4,
+      "difficulty": 4,
+      "xp": 30,
+      "title": "Parcel postage",
+      "brief": "A post office charges by the weight of a parcel and where it is going.\n\nInput the weight in kilograms (a whole number), then the destination, which is either `UK` or `EU`.\n\nUK prices: up to 1 kg costs £3, over 1 kg and up to 5 kg costs £6, over 5 kg costs £10. Sending to the EU costs double the UK price.\n\nPrint the price in the form `£<amount>`, for example `£12`.",
+      "starter": "",
+      "hints": [
+        "Work out the UK price from the weight first and store it in a variable.",
+        "Then, if the destination is `EU`, double the variable, before you print it."
+      ],
+      "tests": [
+        {
+          "stdin": "1\nUK",
+          "expect": "£3"
+        },
+        {
+          "stdin": "1\nEU",
+          "expect": "£6"
+        },
+        {
+          "stdin": "3\nUK",
+          "expect": "£6"
+        },
+        {
+          "stdin": "5\nEU",
+          "expect": "£12"
+        },
+        {
+          "stdin": "6\nUK",
+          "expect": "£10"
+        },
+        {
+          "stdin": "6\nEU",
+          "expect": "£20"
+        },
+        {
+          "stdin": "2\nUK",
+          "expect": "£6"
+        }
+      ]
+    },
+    {
       "slug": "gcse-selection-p-s1",
       "tier": 4,
       "difficulty": 5,
@@ -2056,6 +2454,106 @@
         {
           "stdin": "0",
           "expect": "Tax owed: £0"
+        }
+      ]
+    },
+    {
+      "slug": "gcse-selection-p-s3",
+      "tier": 4,
+      "difficulty": 5,
+      "xp": 40,
+      "stretch": true,
+      "title": "🌟 Is the shop open?",
+      "brief": "A shop opens at these times:\n- Monday to Friday: 9 to 17 (open from 9 o'clock up to, but not including, 17 o'clock)\n- Saturday: 10 to 14 (from 10 up to, but not including, 14)\n- Sunday: closed all day\n\nInput the day as a lower case word (`monday`, `tuesday`, ... `sunday`), then the hour as a whole number from 0 to 23. Print `Open` or `Closed`.",
+      "starter": "",
+      "hints": [
+        "Split the week into three cases: Monday to Friday, Saturday, and Sunday. You can check a weekday with `day in [\"monday\", \"tuesday\", ...]`.",
+        "For each case, test the hour against the opening range. Remember the closing hour itself is already closed, so use `<` for it."
+      ],
+      "tests": [
+        {
+          "stdin": "monday\n9",
+          "expect": "Open"
+        },
+        {
+          "stdin": "monday\n8",
+          "expect": "Closed"
+        },
+        {
+          "stdin": "friday\n16",
+          "expect": "Open"
+        },
+        {
+          "stdin": "friday\n17",
+          "expect": "Closed"
+        },
+        {
+          "stdin": "saturday\n10",
+          "expect": "Open"
+        },
+        {
+          "stdin": "saturday\n13",
+          "expect": "Open"
+        },
+        {
+          "stdin": "saturday\n14",
+          "expect": "Closed"
+        },
+        {
+          "stdin": "saturday\n9",
+          "expect": "Closed"
+        },
+        {
+          "stdin": "sunday\n12",
+          "expect": "Closed"
+        }
+      ]
+    },
+    {
+      "slug": "gcse-selection-p-s4",
+      "tier": 4,
+      "difficulty": 5,
+      "xp": 40,
+      "stretch": true,
+      "title": "🌟 Which quadrant?",
+      "brief": "The x and y axes split a graph into four quadrants:\n- x and y both positive: `Quadrant 1`\n- x negative, y positive: `Quadrant 2`\n- x and y both negative: `Quadrant 3`\n- x positive, y negative: `Quadrant 4`\n\nInput the x coordinate, then the y coordinate (both whole numbers). Print the quadrant. If the point is on an axis (x or y is 0) but not at the origin, print `On an axis`. If both are 0, print `Origin`.",
+      "starter": "",
+      "hints": [
+        "Deal with the special cases first: both zero, then either one zero.",
+        "After that, the point must be in a quadrant, so check the signs of x and y."
+      ],
+      "tests": [
+        {
+          "stdin": "3\n4",
+          "expect": "Quadrant 1"
+        },
+        {
+          "stdin": "-3\n4",
+          "expect": "Quadrant 2"
+        },
+        {
+          "stdin": "-3\n-4",
+          "expect": "Quadrant 3"
+        },
+        {
+          "stdin": "3\n-4",
+          "expect": "Quadrant 4"
+        },
+        {
+          "stdin": "0\n5",
+          "expect": "On an axis"
+        },
+        {
+          "stdin": "5\n0",
+          "expect": "On an axis"
+        },
+        {
+          "stdin": "0\n0",
+          "expect": "Origin"
+        },
+        {
+          "stdin": "-1\n0",
+          "expect": "On an axis"
         }
       ]
     }

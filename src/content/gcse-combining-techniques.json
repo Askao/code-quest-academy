@@ -700,6 +700,350 @@
           "expect": "4\n4"
         }
       ]
+    },
+    {
+      "slug": "gcse-combining-techniques-p-06",
+      "tier": 2,
+      "difficulty": 2,
+      "xp": 15,
+      "title": "Count the passes",
+      "brief": "Input a whole number N (at least 1), then N test marks (whole numbers, one per line). A mark of 50 or more is a pass. Print `Passes: ` followed by how many of the marks were passes.\n\nFor example, `3` followed by `70`, `40`, `50` prints `Passes: 2`.",
+      "starter": "",
+      "hints": [
+        "You need a loop to read the marks and a selection inside it to test each one.",
+        "Keep a counter, `passes = 0`, and add 1 when `mark >= 50`."
+      ],
+      "tests": [
+        {
+          "stdin": "3\n70\n40\n50",
+          "expect": "Passes: 2"
+        },
+        {
+          "stdin": "1\n49",
+          "expect": "Passes: 0"
+        },
+        {
+          "stdin": "4\n100\n0\n50\n49",
+          "expect": "Passes: 2"
+        },
+        {
+          "stdin": "2\n80\n90",
+          "expect": "Passes: 2"
+        }
+      ]
+    },
+    {
+      "slug": "gcse-combining-techniques-p-07",
+      "tier": 2,
+      "difficulty": 2,
+      "xp": 15,
+      "title": "Fizz and buzz",
+      "brief": "Input a whole number N (at least 1). For every number from 1 to N, print a line:\n- `FizzBuzz` if the number is divisible by both 3 and 5\n- `Fizz` if it is divisible by 3 (but not 5)\n- `Buzz` if it is divisible by 5 (but not 3)\n- otherwise, the number itself\n\nFor example, `5` prints `1`, `2`, `Fizz`, `4`, `Buzz` on five lines.",
+      "starter": "",
+      "hints": [
+        "Loop from 1 to N. Inside the loop, check the 'both' case FIRST, otherwise it would be caught by one of the others.",
+        "A number is divisible by 3 when `i % 3 == 0`. Use `if` / `elif` / `elif` / `else`."
+      ],
+      "tests": [
+        {
+          "stdin": "5",
+          "expect": "1\n2\nFizz\n4\nBuzz"
+        },
+        {
+          "stdin": "1",
+          "expect": "1"
+        },
+        {
+          "stdin": "15",
+          "expect": "1\n2\nFizz\n4\nBuzz\nFizz\n7\n8\nFizz\nBuzz\n11\nFizz\n13\n14\nFizzBuzz"
+        },
+        {
+          "stdin": "16",
+          "expect": "1\n2\nFizz\n4\nBuzz\nFizz\n7\n8\nFizz\nBuzz\n11\nFizz\n13\n14\nFizzBuzz\n16"
+        },
+        {
+          "stdin": "3",
+          "expect": "1\n2\nFizz"
+        }
+      ]
+    },
+    {
+      "slug": "gcse-combining-techniques-p-08",
+      "tier": 3,
+      "difficulty": 3,
+      "xp": 20,
+      "title": "Pass, merit or fail count",
+      "brief": "Input a whole number N (at least 1), then N marks out of 100 (one per line). Each mark is a `Merit` if 70 or more, a `Pass` if 40 to 69, and a `Fail` if below 40.\n\nPrint three lines: `Merit: <count>`, `Pass: <count>` and `Fail: <count>`.",
+      "starter": "",
+      "hints": [
+        "Use three separate counters, all starting at 0.",
+        "Inside the loop use `if / elif / else` to decide which counter to add 1 to."
+      ],
+      "tests": [
+        {
+          "stdin": "3\n80\n50\n10",
+          "expect": "Merit: 1\nPass: 1\nFail: 1"
+        },
+        {
+          "stdin": "1\n70",
+          "expect": "Merit: 1\nPass: 0\nFail: 0"
+        },
+        {
+          "stdin": "5\n70\n69\n40\n39\n0",
+          "expect": "Merit: 1\nPass: 2\nFail: 2"
+        },
+        {
+          "stdin": "4\n90\n95\n100\n99",
+          "expect": "Merit: 4\nPass: 0\nFail: 0"
+        }
+      ]
+    },
+    {
+      "slug": "gcse-combining-techniques-p-09",
+      "tier": 3,
+      "difficulty": 3,
+      "xp": 20,
+      "title": "Stop on the word stop",
+      "brief": "Input words, one per line, until the word `stop` is entered. The word `stop` itself is not counted. Print `Words: ` followed by how many words were entered before `stop`, and then `Longest: ` followed by the longest of those words (if two are tied, the first). If `stop` is the first word, print `Words: 0` and `Longest: none`.",
+      "starter": "",
+      "hints": [
+        "You do not know how many words there will be, so use a `while` loop that reads a word each time round.",
+        "Keep a counter and a variable for the longest word so far. Replace the longest only when the new word is strictly longer."
+      ],
+      "tests": [
+        {
+          "stdin": "cat\nelephant\ndog\nstop",
+          "expect": "Words: 3\nLongest: elephant"
+        },
+        {
+          "stdin": "stop",
+          "expect": "Words: 0\nLongest: none"
+        },
+        {
+          "stdin": "hi\nstop",
+          "expect": "Words: 1\nLongest: hi"
+        },
+        {
+          "stdin": "one\ntwo\nsix\nstop",
+          "expect": "Words: 3\nLongest: one"
+        },
+        {
+          "stdin": "a\nbb\nccc\nstop",
+          "expect": "Words: 3\nLongest: ccc"
+        }
+      ]
+    },
+    {
+      "slug": "gcse-combining-techniques-p-10",
+      "tier": 3,
+      "difficulty": 3,
+      "xp": 20,
+      "title": "Times table check",
+      "brief": "Input a times table number from 1 to 12. Then input three answers, one per line: the answers a student gave to table × 1, table × 2 and table × 3, in that order.\n\nFor each answer print `Correct` if it is right or `Wrong` if it is not. Finish by printing `Score: ` followed by how many were correct, then `/3`.\n\nFor example, the table `5` with the answers `5`, `11` and `15` prints `Correct`, `Wrong`, `Correct` and `Score: 2/3`.",
+      "starter": "",
+      "hints": [
+        "Read the table number first, then use a `for` loop with `i` from 1 to 3. The correct answer for question `i` is `table * i`.",
+        "Compare each answer with `table * i`, print `Correct` or `Wrong`, and keep a score counter that goes up when it is correct."
+      ],
+      "tests": [
+        {
+          "stdin": "5\n5\n10\n15",
+          "expect": "Correct\nCorrect\nCorrect\nScore: 3/3"
+        },
+        {
+          "stdin": "5\n5\n11\n15",
+          "expect": "Correct\nWrong\nCorrect\nScore: 2/3"
+        },
+        {
+          "stdin": "3\n0\n0\n0",
+          "expect": "Wrong\nWrong\nWrong\nScore: 0/3"
+        },
+        {
+          "stdin": "12\n12\n24\n35",
+          "expect": "Correct\nCorrect\nWrong\nScore: 2/3"
+        },
+        {
+          "stdin": "7\n7\n14\n21",
+          "expect": "Correct\nCorrect\nCorrect\nScore: 3/3"
+        }
+      ]
+    },
+    {
+      "slug": "gcse-combining-techniques-p-11",
+      "tier": 3,
+      "difficulty": 3,
+      "xp": 20,
+      "title": "Vowels and consonants",
+      "brief": "Input a word in lower case (letters only). Print two lines: `Vowels: ` followed by how many of its letters are a, e, i, o or u, and `Consonants: ` followed by how many of its letters are not.\n\nFor example, `python` prints `Vowels: 1` and `Consonants: 5`.",
+      "starter": "",
+      "hints": [
+        "Loop through the letters of the word. Each letter is either a vowel or a consonant.",
+        "Two counters. `if letter in \"aeiou\":` add to the vowel counter, `else:` add to the consonant counter."
+      ],
+      "tests": [
+        {
+          "stdin": "python",
+          "expect": "Vowels: 1\nConsonants: 5"
+        },
+        {
+          "stdin": "aeiou",
+          "expect": "Vowels: 5\nConsonants: 0"
+        },
+        {
+          "stdin": "rhythm",
+          "expect": "Vowels: 0\nConsonants: 6"
+        },
+        {
+          "stdin": "banana",
+          "expect": "Vowels: 3\nConsonants: 3"
+        },
+        {
+          "stdin": "a",
+          "expect": "Vowels: 1\nConsonants: 0"
+        }
+      ]
+    },
+    {
+      "slug": "gcse-combining-techniques-p-12",
+      "tier": 4,
+      "difficulty": 4,
+      "xp": 30,
+      "title": "Bank balance",
+      "brief": "A bank account starts with a balance of £100. Input a whole number N (at least 1). Then input N transactions, one per line. Each is a whole number: a positive number is money paid in and a negative number is money taken out.\n\nA withdrawal is only allowed if it would not take the balance below £0. If it would, print `Refused` for it and leave the balance unchanged. Otherwise apply it. When all transactions are done, print `Balance: £` followed by the balance.\n\nFor example, `2` transactions of `-30` and `-90` prints `Refused` and then `Balance: £70`.",
+      "starter": "",
+      "hints": [
+        "Start with `balance = 100` and loop through the transactions. Add each one to the balance, but check first.",
+        "Work out `new_balance = balance + amount`. If `new_balance < 0`, print `Refused`; otherwise set `balance = new_balance`."
+      ],
+      "tests": [
+        {
+          "stdin": "2\n-30\n-90",
+          "expect": "Refused\nBalance: £70"
+        },
+        {
+          "stdin": "1\n50",
+          "expect": "Balance: £150"
+        },
+        {
+          "stdin": "3\n-100\n10\n-10",
+          "expect": "Balance: £0"
+        },
+        {
+          "stdin": "3\n-101\n-100\n5",
+          "expect": "Refused\nBalance: £5"
+        },
+        {
+          "stdin": "4\n20\n-50\n-80\n-70",
+          "expect": "Refused\nBalance: £0"
+        }
+      ]
+    },
+    {
+      "slug": "gcse-combining-techniques-p-13",
+      "tier": 4,
+      "difficulty": 4,
+      "xp": 30,
+      "title": "Positive, negative and zero",
+      "brief": "Input whole numbers, one per line, until the number 999 is entered (the 999 is not counted). Print three lines: `Positive: <count>`, `Negative: <count>` and `Zero: <count>`, counting how many of the numbers were above 0, below 0, and equal to 0.",
+      "starter": "",
+      "hints": [
+        "Use a `while` loop that keeps reading numbers until it gets 999. Use three counters.",
+        "Read a number before the loop, then `while number != 999:` test it with `if / elif / else`, update a counter, and read the next number at the bottom of the loop."
+      ],
+      "tests": [
+        {
+          "stdin": "5\n-3\n0\n999",
+          "expect": "Positive: 1\nNegative: 1\nZero: 1"
+        },
+        {
+          "stdin": "999",
+          "expect": "Positive: 0\nNegative: 0\nZero: 0"
+        },
+        {
+          "stdin": "1\n2\n3\n999",
+          "expect": "Positive: 3\nNegative: 0\nZero: 0"
+        },
+        {
+          "stdin": "0\n0\n-1\n999",
+          "expect": "Positive: 0\nNegative: 1\nZero: 2"
+        },
+        {
+          "stdin": "-5\n5\n0\n7\n-7\n999",
+          "expect": "Positive: 2\nNegative: 2\nZero: 1"
+        }
+      ]
+    },
+    {
+      "slug": "gcse-combining-techniques-p-s1",
+      "tier": 4,
+      "difficulty": 5,
+      "xp": 40,
+      "stretch": true,
+      "title": "🌟 Guessing game",
+      "brief": "The secret number is 42. Input guesses (whole numbers), one per line, until the guess is correct. For each wrong guess print `Too low` if it is below 42 or `Too high` if it is above 42. When the guess is correct print `Correct in <n> guesses`, where `<n>` is how many guesses were made in total. Always write the word `guesses` like this, even for 1.\n\nFor example, the guesses `10`, `50`, `42` print `Too low`, `Too high` and `Correct in 3 guesses`.",
+      "starter": "",
+      "hints": [
+        "Use a `while` loop with a counter for the number of guesses. Read a guess, add 1 to the counter, then test it.",
+        "Inside the loop: if the guess is 42, print the result. Otherwise use another `if` to choose between `Too low` and `Too high`. Stop the loop after a correct guess."
+      ],
+      "tests": [
+        {
+          "stdin": "42",
+          "expect": "Correct in 1 guesses"
+        },
+        {
+          "stdin": "10\n50\n42",
+          "expect": "Too low\nToo high\nCorrect in 3 guesses"
+        },
+        {
+          "stdin": "1\n2\n3\n100\n42",
+          "expect": "Too low\nToo low\nToo low\nToo high\nCorrect in 5 guesses"
+        },
+        {
+          "stdin": "43\n41\n42",
+          "expect": "Too high\nToo low\nCorrect in 3 guesses"
+        },
+        {
+          "stdin": "0\n99\n42",
+          "expect": "Too low\nToo high\nCorrect in 3 guesses"
+        }
+      ]
+    },
+    {
+      "slug": "gcse-combining-techniques-p-s2",
+      "tier": 4,
+      "difficulty": 5,
+      "xp": 40,
+      "stretch": true,
+      "title": "🌟 Word statistics",
+      "brief": "Input a whole number N (at least 1), then N words (one per line). Print three lines:\n- `Longest: ` followed by the longest word (if two are tied, the first)\n- `Shortest: ` followed by the shortest word (if two are tied, the first)\n- `Average length: ` followed by the mean length of the words, rounded to 1 decimal place\n\nFor example, `cat`, `elephant`, `dog` prints `Longest: elephant`, `Shortest: cat` and `Average length: 4.7`.",
+      "starter": "",
+      "hints": [
+        "Read the words into a list first. Then you can go through it as many times as you need.",
+        "Start with `longest = words[0]` and `shortest = words[0]`, then compare `len(word)` for every other word using `>` and `<`. For the mean, add up all the lengths and divide by N."
+      ],
+      "tests": [
+        {
+          "stdin": "3\ncat\nelephant\ndog",
+          "expect": "Longest: elephant\nShortest: cat\nAverage length: 4.7"
+        },
+        {
+          "stdin": "1\nhello",
+          "expect": "Longest: hello\nShortest: hello\nAverage length: 5.0"
+        },
+        {
+          "stdin": "4\na\nbb\nccc\ndd",
+          "expect": "Longest: ccc\nShortest: a\nAverage length: 2.0"
+        },
+        {
+          "stdin": "3\nred\nblue\ngrey",
+          "expect": "Longest: blue\nShortest: red\nAverage length: 3.7"
+        },
+        {
+          "stdin": "2\nabc\nxyz",
+          "expect": "Longest: abc\nShortest: abc\nAverage length: 3.0"
+        }
+      ]
     }
   ]
 }

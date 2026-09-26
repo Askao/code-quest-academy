@@ -1603,6 +1603,344 @@
       ]
     },
     {
+      "slug": "gcse-sequencing-p-11",
+      "tier": 1,
+      "difficulty": 1,
+      "xp": 10,
+      "title": "Cube it",
+      "brief": "Input a whole number. Print the number multiplied by itself, then multiplied by itself again (the number \"cubed\").\n\nFor example, `3` prints `27` (3 × 3 × 3).",
+      "starter": "",
+      "hints": [
+        "Convert the input with `int()` first.",
+        "You can write `n * n * n`, or use `**` for \"to the power of\": `n ** 3`."
+      ],
+      "tests": [
+        {
+          "stdin": "3",
+          "expect": "27"
+        },
+        {
+          "stdin": "1",
+          "expect": "1"
+        },
+        {
+          "stdin": "10",
+          "expect": "1000"
+        },
+        {
+          "stdin": "0",
+          "expect": "0"
+        },
+        {
+          "stdin": "-2",
+          "expect": "-8"
+        }
+      ]
+    },
+    {
+      "slug": "gcse-sequencing-p-12",
+      "tier": 1,
+      "difficulty": 1,
+      "xp": 10,
+      "title": "The remainder",
+      "brief": "Input two whole numbers, one per line. Print the remainder when the first number is divided by the second.\n\nFor example, `17` and `5` prints `2`, because 17 = 3 × 5 + 2.",
+      "starter": "",
+      "hints": [
+        "Python has an operator that gives the remainder of a division directly.",
+        "It is `%`, so `a % b` is the remainder of `a` divided by `b`."
+      ],
+      "tests": [
+        {
+          "stdin": "17\n5",
+          "expect": "2"
+        },
+        {
+          "stdin": "20\n4",
+          "expect": "0"
+        },
+        {
+          "stdin": "7\n10",
+          "expect": "7"
+        },
+        {
+          "stdin": "100\n7",
+          "expect": "2"
+        }
+      ]
+    },
+    {
+      "slug": "gcse-sequencing-p-13",
+      "tier": 2,
+      "difficulty": 2,
+      "xp": 15,
+      "title": "Whole-number division",
+      "brief": "Input two whole numbers, one per line. Print how many whole times the second number fits into the first (ignore any remainder).\n\nFor example, `17` and `5` prints `3`, because 5 fits into 17 three whole times.",
+      "starter": "",
+      "hints": [
+        "The normal `/` gives a decimal answer with a fractional part. You want only the whole part.",
+        "`//` divides and throws away the remainder: `a // b`."
+      ],
+      "tests": [
+        {
+          "stdin": "17\n5",
+          "expect": "3"
+        },
+        {
+          "stdin": "20\n4",
+          "expect": "5"
+        },
+        {
+          "stdin": "7\n10",
+          "expect": "0"
+        },
+        {
+          "stdin": "100\n7",
+          "expect": "14"
+        }
+      ]
+    },
+    {
+      "slug": "gcse-sequencing-p-14",
+      "tier": 2,
+      "difficulty": 2,
+      "xp": 15,
+      "title": "Perimeter of a rectangle",
+      "brief": "Input the width of a rectangle, then its height (both whole numbers). Print the perimeter: the distance all the way around the outside, which is 2 × (width + height).\n\nFor example, width `4` and height `3` prints `14`.",
+      "starter": "",
+      "hints": [
+        "Add the width and the height first, then double the result.",
+        "Brackets make Python do the addition first: `2 * (width + height)`."
+      ],
+      "tests": [
+        {
+          "stdin": "4\n3",
+          "expect": "14"
+        },
+        {
+          "stdin": "10\n10",
+          "expect": "40"
+        },
+        {
+          "stdin": "1\n1",
+          "expect": "4"
+        },
+        {
+          "stdin": "7\n2",
+          "expect": "18"
+        }
+      ]
+    },
+    {
+      "slug": "gcse-sequencing-p-15",
+      "tier": 2,
+      "difficulty": 2,
+      "xp": 15,
+      "title": "Bill with a fixed tip",
+      "brief": "A restaurant adds a £2 tip to every bill. Input the bill in pounds (it may include pence). Print `Total: £` followed by the bill plus the £2 tip, rounded to 2 decimal places.\n\nFor example, `15.50` prints `Total: £17.5`.",
+      "starter": "",
+      "hints": [
+        "Use `float()` because the bill may have pence.",
+        "`round(bill + 2, 2)`, joined onto the text with `str()`."
+      ],
+      "tests": [
+        {
+          "stdin": "15.50",
+          "expect": "Total: £17.5"
+        },
+        {
+          "stdin": "8",
+          "expect": "Total: £10.0"
+        },
+        {
+          "stdin": "0",
+          "expect": "Total: £2.0"
+        },
+        {
+          "stdin": "22.75",
+          "expect": "Total: £24.75"
+        },
+        {
+          "stdin": "100",
+          "expect": "Total: £102.0"
+        }
+      ]
+    },
+    {
+      "slug": "gcse-sequencing-p-16",
+      "tier": 3,
+      "difficulty": 3,
+      "xp": 20,
+      "title": "Days into weeks",
+      "brief": "Input a number of days (a whole number). Print how many whole weeks that is and how many days are left over, in this form: `<weeks> weeks and <days> days`.\n\nFor example, `17` prints `2 weeks and 3 days`. Always write the words `weeks` and `days` like this, even when a number is 1 or 0.",
+      "starter": "",
+      "hints": [
+        "There are 7 days in a week. The whole weeks come from `//` and the days left over come from `%`.",
+        "`weeks = days // 7` and `left = days % 7`, then join them into the sentence."
+      ],
+      "tests": [
+        {
+          "stdin": "17",
+          "expect": "2 weeks and 3 days"
+        },
+        {
+          "stdin": "7",
+          "expect": "1 weeks and 0 days"
+        },
+        {
+          "stdin": "6",
+          "expect": "0 weeks and 6 days"
+        },
+        {
+          "stdin": "100",
+          "expect": "14 weeks and 2 days"
+        },
+        {
+          "stdin": "0",
+          "expect": "0 weeks and 0 days"
+        }
+      ]
+    },
+    {
+      "slug": "gcse-sequencing-p-17",
+      "tier": 3,
+      "difficulty": 3,
+      "xp": 20,
+      "title": "Average speed",
+      "brief": "Speed is distance ÷ time. Input a distance in miles, then a time in hours (both may include decimals). Print the speed rounded to 1 decimal place, followed by ` mph`.\n\nFor example, `150` miles in `2.5` hours prints `60.0 mph`.",
+      "starter": "",
+      "hints": [
+        "Both numbers may have decimals, so use `float()` for each.",
+        "`round(distance / time, 1)`, then join `\" mph\"` on the end."
+      ],
+      "tests": [
+        {
+          "stdin": "150\n2.5",
+          "expect": "60.0 mph"
+        },
+        {
+          "stdin": "100\n4",
+          "expect": "25.0 mph"
+        },
+        {
+          "stdin": "26.2\n3.5",
+          "expect": "7.5 mph"
+        },
+        {
+          "stdin": "5\n0.5",
+          "expect": "10.0 mph"
+        },
+        {
+          "stdin": "60\n1",
+          "expect": "60.0 mph"
+        }
+      ]
+    },
+    {
+      "slug": "gcse-sequencing-p-18",
+      "tier": 3,
+      "difficulty": 3,
+      "xp": 20,
+      "title": "Tens and units",
+      "brief": "Input a two-digit whole number (from 10 to 99). Print two lines: `Tens: ` followed by its tens digit, then `Units: ` followed by its units digit.\n\nFor example, `47` prints `Tens: 4` and `Units: 7`.",
+      "starter": "",
+      "hints": [
+        "The tens digit is how many whole tens fit into the number. The units digit is what is left over.",
+        "`n // 10` gives the tens digit and `n % 10` gives the units digit."
+      ],
+      "tests": [
+        {
+          "stdin": "47",
+          "expect": "Tens: 4\nUnits: 7"
+        },
+        {
+          "stdin": "10",
+          "expect": "Tens: 1\nUnits: 0"
+        },
+        {
+          "stdin": "99",
+          "expect": "Tens: 9\nUnits: 9"
+        },
+        {
+          "stdin": "60",
+          "expect": "Tens: 6\nUnits: 0"
+        },
+        {
+          "stdin": "81",
+          "expect": "Tens: 8\nUnits: 1"
+        }
+      ]
+    },
+    {
+      "slug": "gcse-sequencing-p-19",
+      "tier": 3,
+      "difficulty": 3,
+      "xp": 20,
+      "title": "Discount, then VAT",
+      "brief": "A shop takes 10% off the price, and then adds 20% VAT to the reduced price. Input the original price (it may include pence). Print `Final: £` followed by the final price, rounded to 2 decimal places.\n\nDo it in that order: discount first, then VAT on the new price. For example, `100` prints `Final: £108.0`.",
+      "starter": "",
+      "hints": [
+        "Taking 10% off is the same as multiplying by 0.9. Adding 20% is the same as multiplying by 1.2.",
+        "`price * 0.9 * 1.2`, then round to 2 decimal places."
+      ],
+      "tests": [
+        {
+          "stdin": "100",
+          "expect": "Final: £108.0"
+        },
+        {
+          "stdin": "50",
+          "expect": "Final: £54.0"
+        },
+        {
+          "stdin": "19.99",
+          "expect": "Final: £21.59"
+        },
+        {
+          "stdin": "0",
+          "expect": "Final: £0.0"
+        },
+        {
+          "stdin": "7.5",
+          "expect": "Final: £8.1"
+        }
+      ]
+    },
+    {
+      "slug": "gcse-sequencing-p-20",
+      "tier": 4,
+      "difficulty": 4,
+      "xp": 30,
+      "title": "Sum of three squares",
+      "brief": "Input three whole numbers, one per line. Print `Sum of squares: ` followed by each number multiplied by itself, all added together.\n\nFor example, `1`, `2` and `3` prints `Sum of squares: 14` (1 + 4 + 9).",
+      "starter": "",
+      "hints": [
+        "A number squared is the number multiplied by itself.",
+        "`a * a + b * b + c * c` (multiplication is done before addition, so no brackets are needed)."
+      ],
+      "tests": [
+        {
+          "stdin": "1\n2\n3",
+          "expect": "Sum of squares: 14"
+        },
+        {
+          "stdin": "0\n0\n0",
+          "expect": "Sum of squares: 0"
+        },
+        {
+          "stdin": "5\n5\n5",
+          "expect": "Sum of squares: 75"
+        },
+        {
+          "stdin": "-2\n3\n4",
+          "expect": "Sum of squares: 29"
+        },
+        {
+          "stdin": "10\n1\n1",
+          "expect": "Sum of squares: 102"
+        }
+      ]
+    },
+    {
       "slug": "gcse-sequencing-p-s1",
       "tier": 3,
       "difficulty": 5,
@@ -1671,6 +2009,78 @@
         {
           "stdin": "4\n1\n1",
           "expect": "Total: £5.0\nEach pays: £5.0\nLeftover: £0.0"
+        }
+      ]
+    },
+    {
+      "slug": "gcse-sequencing-p-s3",
+      "tier": 4,
+      "difficulty": 5,
+      "xp": 40,
+      "stretch": true,
+      "title": "🌟 Sharing sweets",
+      "brief": "A teacher shares sweets equally between children. Any sweets that cannot be shared equally are left over.\n\nInput the number of sweets, then the number of children (both whole numbers, and there is at least one child). Print two lines: `Each child gets: ` followed by how many sweets each child gets, then `Left over: ` followed by how many sweets are left.\n\nFor example, `23` sweets and `5` children prints `Each child gets: 4` and `Left over: 3`.",
+      "starter": "",
+      "hints": [
+        "Use `//` for the whole number each child gets and `%` for what is left.",
+        "`sweets // children` and `sweets % children`. Check: each child's share × children + left over = sweets."
+      ],
+      "tests": [
+        {
+          "stdin": "23\n5",
+          "expect": "Each child gets: 4\nLeft over: 3"
+        },
+        {
+          "stdin": "20\n4",
+          "expect": "Each child gets: 5\nLeft over: 0"
+        },
+        {
+          "stdin": "3\n10",
+          "expect": "Each child gets: 0\nLeft over: 3"
+        },
+        {
+          "stdin": "100\n7",
+          "expect": "Each child gets: 14\nLeft over: 2"
+        },
+        {
+          "stdin": "1\n1",
+          "expect": "Each child gets: 1\nLeft over: 0"
+        }
+      ]
+    },
+    {
+      "slug": "gcse-sequencing-p-s4",
+      "tier": 4,
+      "difficulty": 5,
+      "xp": 40,
+      "stretch": true,
+      "title": "🌟 Diagonal of a rectangle",
+      "brief": "The diagonal of a rectangle can be found using Pythagoras' theorem: diagonal = the square root of (width × width + height × height).\n\nInput the width, then the height (both may include decimals). Print `Diagonal: ` followed by the length of the diagonal, rounded to 2 decimal places.\n\nFor example, width `3` and height `4` prints `Diagonal: 5.0`.\n\nIn Python, a number to the power of `0.5` is its square root.",
+      "starter": "",
+      "hints": [
+        "Work out `width * width + height * height` first.",
+        "Then raise it to the power of 0.5: `(width * width + height * height) ** 0.5`, and round to 2 decimal places."
+      ],
+      "tests": [
+        {
+          "stdin": "3\n4",
+          "expect": "Diagonal: 5.0"
+        },
+        {
+          "stdin": "5\n12",
+          "expect": "Diagonal: 13.0"
+        },
+        {
+          "stdin": "1\n1",
+          "expect": "Diagonal: 1.41"
+        },
+        {
+          "stdin": "2.5\n6",
+          "expect": "Diagonal: 6.5"
+        },
+        {
+          "stdin": "10\n10",
+          "expect": "Diagonal: 14.14"
         }
       ]
     }

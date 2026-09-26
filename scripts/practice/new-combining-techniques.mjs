@@ -1,0 +1,73 @@
+// More practice for "Combining techniques": each task needs input + selection + iteration (+ lists/strings).
+export const tasks = [
+  {
+    key: "06", tier: 2, difficulty: 2, xp: 15, title: "Count the passes",
+    brief: "Input a whole number N (at least 1), then N test marks (whole numbers, one per line). A mark of 50 or more is a pass. Print `Passes: ` followed by how many of the marks were passes.\n\nFor example, `3` followed by `70`, `40`, `50` prints `Passes: 2`.",
+    hints: ["You need a loop to read the marks and a selection inside it to test each one.", "Keep a counter, `passes = 0`, and add 1 when `mark >= 50`."],
+    inputs: ["3\n70\n40\n50", "1\n49", "4\n100\n0\n50\n49", "2\n80\n90"],
+    solution: `n = int(input())\npasses = 0\nfor i in range(n):\n    mark = int(input())\n    if mark >= 50:\n        passes = passes + 1\nprint("Passes: " + str(passes))`,
+  },
+  {
+    key: "07", tier: 2, difficulty: 2, xp: 15, title: "Fizz and buzz",
+    brief: "Input a whole number N (at least 1). For every number from 1 to N, print a line:\n- `FizzBuzz` if the number is divisible by both 3 and 5\n- `Fizz` if it is divisible by 3 (but not 5)\n- `Buzz` if it is divisible by 5 (but not 3)\n- otherwise, the number itself\n\nFor example, `5` prints `1`, `2`, `Fizz`, `4`, `Buzz` on five lines.",
+    hints: ["Loop from 1 to N. Inside the loop, check the 'both' case FIRST, otherwise it would be caught by one of the others.", "A number is divisible by 3 when `i % 3 == 0`. Use `if` / `elif` / `elif` / `else`."],
+    inputs: ["5", "1", "15", "16", "3"],
+    solution: `n = int(input())\nfor i in range(1, n + 1):\n    if i % 3 == 0 and i % 5 == 0:\n        print("FizzBuzz")\n    elif i % 3 == 0:\n        print("Fizz")\n    elif i % 5 == 0:\n        print("Buzz")\n    else:\n        print(i)`,
+  },
+  {
+    key: "08", tier: 3, difficulty: 3, xp: 20, title: "Pass, merit or fail count",
+    brief: "Input a whole number N (at least 1), then N marks out of 100 (one per line). Each mark is a `Merit` if 70 or more, a `Pass` if 40 to 69, and a `Fail` if below 40.\n\nPrint three lines: `Merit: <count>`, `Pass: <count>` and `Fail: <count>`.",
+    hints: ["Use three separate counters, all starting at 0.", "Inside the loop use `if / elif / else` to decide which counter to add 1 to."],
+    inputs: ["3\n80\n50\n10", "1\n70", "5\n70\n69\n40\n39\n0", "4\n90\n95\n100\n99"],
+    solution: `n = int(input())\nmerit = 0\npass_count = 0\nfail = 0\nfor i in range(n):\n    mark = int(input())\n    if mark >= 70:\n        merit = merit + 1\n    elif mark >= 40:\n        pass_count = pass_count + 1\n    else:\n        fail = fail + 1\nprint("Merit: " + str(merit))\nprint("Pass: " + str(pass_count))\nprint("Fail: " + str(fail))`,
+  },
+  {
+    key: "09", tier: 3, difficulty: 3, xp: 20, title: "Stop on the word stop",
+    brief: "Input words, one per line, until the word `stop` is entered. The word `stop` itself is not counted. Print `Words: ` followed by how many words were entered before `stop`, and then `Longest: ` followed by the longest of those words (if two are tied, the first). If `stop` is the first word, print `Words: 0` and `Longest: none`.",
+    hints: ["You do not know how many words there will be, so use a `while` loop that reads a word each time round.", "Keep a counter and a variable for the longest word so far. Replace the longest only when the new word is strictly longer."],
+    inputs: ["cat\nelephant\ndog\nstop", "stop", "hi\nstop", "one\ntwo\nsix\nstop", "a\nbb\nccc\nstop"],
+    solution: `count = 0\nlongest = ""\nword = input()\nwhile word != "stop":\n    count = count + 1\n    if len(word) > len(longest):\n        longest = word\n    word = input()\nprint("Words: " + str(count))\nif count == 0:\n    print("Longest: none")\nelse:\n    print("Longest: " + longest)`,
+  },
+  {
+    key: "10", tier: 3, difficulty: 3, xp: 20, title: "Times table check",
+    brief: "Input a times table number from 1 to 12. Then input three answers, one per line: the answers a student gave to table × 1, table × 2 and table × 3, in that order.\n\nFor each answer print `Correct` if it is right or `Wrong` if it is not. Finish by printing `Score: ` followed by how many were correct, then `/3`.\n\nFor example, the table `5` with the answers `5`, `11` and `15` prints `Correct`, `Wrong`, `Correct` and `Score: 2/3`.",
+    hints: ["Read the table number first, then use a `for` loop with `i` from 1 to 3. The correct answer for question `i` is `table * i`.", "Compare each answer with `table * i`, print `Correct` or `Wrong`, and keep a score counter that goes up when it is correct."],
+    inputs: ["5\n5\n10\n15", "5\n5\n11\n15", "3\n0\n0\n0", "12\n12\n24\n35", "7\n7\n14\n21"],
+    solution: `table = int(input())\nscore = 0\nfor i in range(1, 4):\n    answer = int(input())\n    if answer == table * i:\n        print("Correct")\n        score = score + 1\n    else:\n        print("Wrong")\nprint("Score: " + str(score) + "/3")`,
+  },
+  {
+    key: "11", tier: 3, difficulty: 3, xp: 20, title: "Vowels and consonants",
+    brief: "Input a word in lower case (letters only). Print two lines: `Vowels: ` followed by how many of its letters are a, e, i, o or u, and `Consonants: ` followed by how many of its letters are not.\n\nFor example, `python` prints `Vowels: 1` and `Consonants: 5`.",
+    hints: ["Loop through the letters of the word. Each letter is either a vowel or a consonant.", "Two counters. `if letter in \"aeiou\":` add to the vowel counter, `else:` add to the consonant counter."],
+    inputs: ["python", "aeiou", "rhythm", "banana", "a"],
+    solution: `word = input()\nvowels = 0\nconsonants = 0\nfor letter in word:\n    if letter in "aeiou":\n        vowels = vowels + 1\n    else:\n        consonants = consonants + 1\nprint("Vowels: " + str(vowels))\nprint("Consonants: " + str(consonants))`,
+  },
+  {
+    key: "12", tier: 4, difficulty: 4, xp: 30, title: "Bank balance",
+    brief: "A bank account starts with a balance of £100. Input a whole number N (at least 1). Then input N transactions, one per line. Each is a whole number: a positive number is money paid in and a negative number is money taken out.\n\nA withdrawal is only allowed if it would not take the balance below £0. If it would, print `Refused` for it and leave the balance unchanged. Otherwise apply it. When all transactions are done, print `Balance: £` followed by the balance.\n\nFor example, `2` transactions of `-30` and `-90` prints `Refused` and then `Balance: £70`.",
+    hints: ["Start with `balance = 100` and loop through the transactions. Add each one to the balance, but check first.", "Work out `new_balance = balance + amount`. If `new_balance < 0`, print `Refused`; otherwise set `balance = new_balance`."],
+    inputs: ["2\n-30\n-90", "1\n50", "3\n-100\n10\n-10", "3\n-101\n-100\n5", "4\n20\n-50\n-80\n-70"],
+    solution: `n = int(input())\nbalance = 100\nfor i in range(n):\n    amount = int(input())\n    new_balance = balance + amount\n    if new_balance < 0:\n        print("Refused")\n    else:\n        balance = new_balance\nprint("Balance: £" + str(balance))`,
+  },
+  {
+    key: "13", tier: 4, difficulty: 4, xp: 30, title: "Positive, negative and zero",
+    brief: "Input whole numbers, one per line, until the number 999 is entered (the 999 is not counted). Print three lines: `Positive: <count>`, `Negative: <count>` and `Zero: <count>`, counting how many of the numbers were above 0, below 0, and equal to 0.",
+    hints: ["Use a `while` loop that keeps reading numbers until it gets 999. Use three counters.", "Read a number before the loop, then `while number != 999:` test it with `if / elif / else`, update a counter, and read the next number at the bottom of the loop."],
+    inputs: ["5\n-3\n0\n999", "999", "1\n2\n3\n999", "0\n0\n-1\n999", "-5\n5\n0\n7\n-7\n999"],
+    solution: `positive = 0\nnegative = 0\nzero = 0\nnumber = int(input())\nwhile number != 999:\n    if number > 0:\n        positive = positive + 1\n    elif number < 0:\n        negative = negative + 1\n    else:\n        zero = zero + 1\n    number = int(input())\nprint("Positive: " + str(positive))\nprint("Negative: " + str(negative))\nprint("Zero: " + str(zero))`,
+  },
+  {
+    key: "s1", tier: 4, difficulty: 5, xp: 40, stretch: true, title: "🌟 Guessing game",
+    brief: "The secret number is 42. Input guesses (whole numbers), one per line, until the guess is correct. For each wrong guess print `Too low` if it is below 42 or `Too high` if it is above 42. When the guess is correct print `Correct in <n> guesses`, where `<n>` is how many guesses were made in total. Always write the word `guesses` like this, even for 1.\n\nFor example, the guesses `10`, `50`, `42` print `Too low`, `Too high` and `Correct in 3 guesses`.",
+    hints: ["Use a `while` loop with a counter for the number of guesses. Read a guess, add 1 to the counter, then test it.", "Inside the loop: if the guess is 42, print the result. Otherwise use another `if` to choose between `Too low` and `Too high`. Stop the loop after a correct guess."],
+    inputs: ["42", "10\n50\n42", "1\n2\n3\n100\n42", "43\n41\n42", "0\n99\n42"],
+    solution: `guesses = 0\ncorrect = False\nwhile not correct:\n    guess = int(input())\n    guesses = guesses + 1\n    if guess == 42:\n        correct = True\n        print("Correct in " + str(guesses) + " guesses")\n    elif guess < 42:\n        print("Too low")\n    else:\n        print("Too high")`,
+  },
+  {
+    key: "s2", tier: 4, difficulty: 5, xp: 40, stretch: true, title: "🌟 Word statistics",
+    brief: "Input a whole number N (at least 1), then N words (one per line). Print three lines:\n- `Longest: ` followed by the longest word (if two are tied, the first)\n- `Shortest: ` followed by the shortest word (if two are tied, the first)\n- `Average length: ` followed by the mean length of the words, rounded to 1 decimal place\n\nFor example, `cat`, `elephant`, `dog` prints `Longest: elephant`, `Shortest: cat` and `Average length: 4.7`.",
+    hints: ["Read the words into a list first. Then you can go through it as many times as you need.", "Start with `longest = words[0]` and `shortest = words[0]`, then compare `len(word)` for every other word using `>` and `<`. For the mean, add up all the lengths and divide by N."],
+    inputs: ["3\ncat\nelephant\ndog", "1\nhello", "4\na\nbb\nccc\ndd", "3\nred\nblue\ngrey", "2\nabc\nxyz"],
+    solution: `n = int(input())\nwords = []\nfor i in range(n):\n    words.append(input())\nlongest = words[0]\nshortest = words[0]\ntotal = 0\nfor word in words:\n    if len(word) > len(longest):\n        longest = word\n    if len(word) < len(shortest):\n        shortest = word\n    total = total + len(word)\nprint("Longest: " + longest)\nprint("Shortest: " + shortest)\nprint("Average length: " + str(round(total / n, 1)))`,
+  },
+];
