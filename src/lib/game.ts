@@ -37,6 +37,11 @@ export const GCSE_TOPICS = [
     blurb: "Linear & binary search, bubble, insertion & merge sort",
   },
   {
+    key: "robust-programs",
+    label: "Robust programs",
+    blurb: "Validation, authentication, maintainability and testing",
+  },
+  {
     key: "databases",
     label: "Databases & SQL",
     blurb: "Relational databases, tables and SQL queries",

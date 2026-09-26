@@ -1,0 +1,1150 @@
+{
+  "track": "gcse",
+  "topic": "robust-programs",
+  "lessons": [
+    {
+      "slug": "gcse-robust-programs-1",
+      "title": "Defensive design and input validation",
+      "summary": "Expecting mistakes and misuse, and checking data before the program uses it.",
+      "notes": "A **robust** program keeps working sensibly even when a user does something unexpected. Users make typing mistakes, press the wrong key, or sometimes try to break the program on purpose.\n\n**Defensive design** means planning for this *before* it happens. The main ideas are:\n\n- **Anticipate misuse** – think about what a user could type in that you do not want, before you write the code.\n- **Validate input** – check the data is acceptable before the program uses it.\n- **Authenticate users** – check people are who they say they are (lesson 2).\n- **Make the program maintainable** (lesson 3) and **test it** (lessons 4 and 5).\n\n---\n\n**Input validation** checks that the data entered is *acceptable*. It cannot check that the data is *true*: someone could type 17 when their real age is 18, and 17 would still pass a check for \"0 to 120\". Common validation checks:\n\n| Check | What it tests | Example |\n| --- | --- | --- |\n| Presence check | Something was entered | The name is not empty |\n| Range check | A number is between two limits | Age is from 0 to 120 |\n| Length check | The number of characters | A password has at least 8 characters |\n| Type check | The data is the right type | A quantity is a whole number |\n| Format check | The data follows a pattern | An email address contains an @ |\n\nUseful Python for validation:\n\n- `len(text)` gives the number of characters in a string.\n- `text == \"\"` is True when nothing was typed.\n- `text.isdigit()` is True only if the text is not empty and every character is a digit 0-9. So `\"42\"` passes, but `\"4x\"`, `\"3.5\"`, `\"-5\"` and `\"\"` do not.\n\n---\n\nIf the input is not valid, the program should say what is wrong and **ask again**. A loop does this. The pattern is: read a value, then keep looping *while it is invalid*, reading again each time.",
+      "worked_example": "age = int(input())\nwhile age < 0 or age > 120:\n    print(\"Age must be from 0 to 120\")\n    age = int(input())\nprint(\"Age accepted:\", age)",
+      "worked_example_note": "The loop only runs while the age is invalid. Each time round, it complains and reads a new value. The first valid age ends the loop, so the final print always shows a valid age.",
+      "worked_example_demo_input": [
+        "150",
+        "-3",
+        "16"
+      ]
+    },
+    {
+      "slug": "gcse-robust-programs-2",
+      "title": "Authentication",
+      "summary": "Proving who you are, and limiting how many guesses someone gets.",
+      "notes": "**Authentication** means checking that a user really is who they claim to be. It protects private data and stops other people using someone else's account.\n\nCommon methods:\n\n| Method | How it works |\n| --- | --- |\n| Username and password | The user types secret details that only they should know |\n| PIN | A short secret number, often used on phones and cards |\n| Biometrics | Something about your body, such as a fingerprint or your face |\n| Two-factor authentication (2FA) | Two different kinds of proof, for example a password **and** a code sent to your phone |\n| Confirmation by email | A link or code is sent to the email address you gave, to prove it is yours |\n\nA good password is long, mixes letters, numbers and symbols, and is not easy to guess. Real systems never store passwords as plain text.\n\n---\n\n**Authentication in code.** The program compares what the user types with the stored value. In Python `==` is case-sensitive, so `\"Blue42\"` and `\"blue42\"` are different.\n\nTo stop someone guessing again and again, programs **limit the number of attempts**. A counter goes up after every wrong guess, and once it reaches the limit the account is locked.\n\nA loop that stops for *either* of two reasons needs a condition that can fail in two ways: keep asking `while attempts < 3 and not granted`.",
+      "worked_example": "password = \"Robust!23\"\nattempts = 0\ngranted = False\nwhile attempts < 3 and not granted:\n    guess = input()\n    attempts = attempts + 1\n    if guess == password:\n        granted = True\nif granted:\n    print(\"Access granted\")\nelse:\n    print(\"Locked out\")",
+      "worked_example_note": "The loop ends when the user gets it right (granted becomes True) or after 3 attempts. The final if checks which of the two reasons stopped it.",
+      "worked_example_demo_input": [
+        "hello",
+        "letmein",
+        "Robust!23"
+      ]
+    },
+    {
+      "slug": "gcse-robust-programs-3",
+      "title": "Maintainable programs",
+      "summary": "Writing code that is easy to understand and change later, using comments, good names, indentation and subprograms.",
+      "notes": "A **maintainable** program is one that can be understood and changed easily *later*. You might come back to your own program after months, or someone else might have to fix it or add a feature. Four habits make this much easier.\n\n**1. Comments.** A comment starts with `#`. Python ignores it when the program runs; it is there for people. Good comments explain **why** the code does something, not just what it does.\n\n**2. Meaningful names.** Choose names that say what the variable holds.\n\n```python\n# hard to follow\nx = float(input())\ny = x * 1.2\n\n# easy to follow\nprice = float(input())\nprice_with_vat = price * 1.2\n```\n\n**3. Indentation.** Code inside a selection (`if`) or a loop is indented so you can see at a glance where it starts and ends. Python *requires* this, but good layout also means sensible spacing and blank lines between sections.\n\n**4. Subprograms.** A **subprogram** (a function or procedure) is a named block of code you can reuse. Benefits:\n\n- write it once and use it many times, instead of copying code\n- change it in **one place** and every use is updated\n- test it on its own\n- the main program becomes shorter and easier to read\n\n---\n\nSubprograms are the big one for validation: a `is_valid_age(age)` function can be used everywhere an age is checked.",
+      "worked_example": "def is_valid_age(age):\n    # An age is valid if it is from 0 to 120\n    return age >= 0 and age <= 120\n\nage = int(input())\nif is_valid_age(age):\n    print(\"Age OK\")\nelse:\n    print(\"Age not OK\")",
+      "worked_example_note": "The rule for a valid age lives in one function with a clear name and a comment. If the rule ever changes, only that function needs editing.",
+      "worked_example_demo_input": [
+        "25"
+      ]
+    },
+    {
+      "slug": "gcse-robust-programs-4",
+      "title": "Testing and finding errors",
+      "summary": "Why we test, the two kinds of testing, and telling syntax errors from logic errors.",
+      "notes": "**Testing** is running a program to check that it works properly. Its purposes are to:\n\n- find errors (bugs) **before** the users do\n- check the program does what it was meant to do\n- check it copes with unexpected or wrong input (that it is *robust*)\n\n**Two types of testing**\n\n| Type | When | What |\n| --- | --- | --- |\n| Iterative testing | *During* development | Test each part as you write it, fix problems, then test again. Repeated many times |\n| Final (terminal) testing | *At the end* | Test the whole finished program against what it was supposed to do, before it is released |\n\n---\n\n**Two types of error**\n\n| Error | What it is | Example |\n| --- | --- | --- |\n| Syntax error | Breaks the rules of the language, so the program will not run at all | Missing colon after an `if`, a missing bracket, a misspelt keyword |\n| Logic error | The program runs, but gives the wrong result | Using `+` instead of `*`, `>` instead of `>=`, a loop that runs one time too few |\n\nA syntax error is easy to spot because Python tells you the line. A logic error is harder: nothing crashes, the answer is just wrong. You find it by testing with values where you *already know* the right answer, and by tracing the program step by step.\n\n(A third kind, a **runtime error**, is when the program crashes while running, for example dividing by zero or turning `\"abc\"` into a number.)",
+      "worked_example": "# This should print the average of two numbers\nfirst = int(input())\nsecond = int(input())\naverage = first + second / 2\nprint(average)",
+      "worked_example_note": "This runs with no error message, but 10 and 20 gives 20.0, not 15. That is a logic error: division happens before addition, so only second is halved. It needs brackets: (first + second) / 2.",
+      "worked_example_demo_input": [
+        "10",
+        "20"
+      ]
+    },
+    {
+      "slug": "gcse-robust-programs-5",
+      "title": "Choosing test data",
+      "summary": "Normal, boundary, invalid and erroneous test data, and checking results against what should happen.",
+      "notes": "To test properly you need to choose the right test data. Suppose a program should accept a whole number from **1 to 10**. There are four kinds of test data:\n\n| Type | What it is | Examples | Expected result |\n| --- | --- | --- | --- |\n| Normal | Ordinary data that should be accepted | 4, 7 | Accepted |\n| Boundary | Data on the very edge of what is allowed. Test the largest and smallest valid values, and also the values just beyond them | 1 and 10 (valid); 0 and 11 (just outside) | 1 and 10 accepted; 0 and 11 rejected |\n| Invalid | The correct type of data, but not allowed | 50, -3 | Rejected |\n| Erroneous | The wrong type of data altogether | \"ten\", \"4.5\", empty input | Rejected |\n\nDifferent books group these slightly differently, so in an exam follow the wording of the question.\n\n**Why boundary data matters.** Most mistakes happen at the edges. Writing `number > 1` instead of `number >= 1` still works for 4 and 7, and only tests at the boundary (1) will catch it.\n\n---\n\n**A test plan** lists each test, what you expect, and what actually happened. A test **passes** if the actual result matches the expected result, and **fails** if not.\n\n| Test | Input | Type | Expected result | Actual result | Pass? |\n| --- | --- | --- | --- | --- | --- |\n| 1 | 7 | Normal | Accepted | Accepted | Yes |\n| 2 | 10 | Boundary | Accepted | Accepted | Yes |\n| 3 | 11 | Boundary | Rejected | Accepted | **No** |",
+      "worked_example": "number = int(input())\nif number == 1 or number == 10:\n    print(\"Boundary\")\nelif number > 1 and number < 10:\n    print(\"Normal\")\nelse:\n    print(\"Invalid\")",
+      "worked_example_note": "For the range 1 to 10 this labels the two valid edge values as Boundary, the values between them as Normal, and anything else as Invalid.",
+      "worked_example_demo_input": [
+        "10"
+      ]
+    }
+  ],
+  "quiz": [
+    {
+      "lessonSlug": "gcse-robust-programs-1",
+      "question": "What is the purpose of input validation?",
+      "options": [
+        "To check that the data entered is acceptable before the program uses it",
+        "To prove that the data entered is true",
+        "To make the program run faster",
+        "To find syntax errors in the code"
+      ],
+      "answer": "To check that the data entered is acceptable before the program uses it",
+      "explanation": "Validation checks data is reasonable (in range, the right length or type, and so on). It cannot prove the data is actually true."
+    },
+    {
+      "lessonSlug": "gcse-robust-programs-1",
+      "question": "A program rejects any password that has fewer than 8 characters. Which validation check is this?",
+      "options": [
+        "Length check",
+        "Range check",
+        "Presence check",
+        "Type check"
+      ],
+      "answer": "Length check",
+      "explanation": "A length check tests the number of characters. A range check is for the size of a number."
+    },
+    {
+      "lessonSlug": "gcse-robust-programs-1",
+      "question": "A user types abc when the program asks for their age as a whole number. Which check would catch this?",
+      "options": [
+        "Type check",
+        "Presence check",
+        "Length check",
+        "Format check"
+      ],
+      "answer": "Type check",
+      "explanation": "abc is not a whole number, so a type check rejects it. A presence check would only notice if nothing was typed."
+    },
+    {
+      "lessonSlug": "gcse-robust-programs-1",
+      "question": "Why can validation not guarantee that data is correct?",
+      "options": [
+        "A value can be acceptable but still wrong, such as typing 17 instead of 18",
+        "Validation only works on text, not numbers",
+        "Validation is only done at the end of the program",
+        "Validation slows the program down too much"
+      ],
+      "answer": "A value can be acceptable but still wrong, such as typing 17 instead of 18",
+      "explanation": "Validation only checks the data is sensible. A wrong value that is still sensible passes."
+    },
+    {
+      "lessonSlug": "gcse-robust-programs-2",
+      "question": "What is authentication?",
+      "options": [
+        "Checking that a user is who they claim to be",
+        "Checking that a number is in range",
+        "Making a copy of a user's data",
+        "Testing a program before it is released"
+      ],
+      "answer": "Checking that a user is who they claim to be",
+      "explanation": "Authentication proves identity, for example with a password, a fingerprint or a code sent to a phone."
+    },
+    {
+      "lessonSlug": "gcse-robust-programs-2",
+      "question": "Why does a login system limit the number of password attempts?",
+      "options": [
+        "To stop someone guessing passwords over and over until they get in",
+        "To make the login page load faster",
+        "To make passwords shorter",
+        "To check that the password is long enough"
+      ],
+      "answer": "To stop someone guessing passwords over and over until they get in",
+      "explanation": "After a set number of wrong guesses the account is locked, so guessing is no longer practical."
+    },
+    {
+      "lessonSlug": "gcse-robust-programs-2",
+      "question": "Which of these is an example of two-factor authentication?",
+      "options": [
+        "Typing a password and then a code sent to your phone",
+        "Typing your password twice",
+        "Typing a username and an email address",
+        "Using a very long password"
+      ],
+      "answer": "Typing a password and then a code sent to your phone",
+      "explanation": "Two-factor means two different kinds of proof: something you know (the password) and something you have (your phone)."
+    },
+    {
+      "lessonSlug": "gcse-robust-programs-2",
+      "question": "Which of these is a biometric method of authentication?",
+      "options": [
+        "A fingerprint scan",
+        "A PIN",
+        "A password",
+        "A confirmation email"
+      ],
+      "answer": "A fingerprint scan",
+      "explanation": "Biometrics use a feature of the person's body, such as a fingerprint, face or eye."
+    },
+    {
+      "lessonSlug": "gcse-robust-programs-3",
+      "question": "What is the purpose of making a program maintainable?",
+      "options": [
+        "So it can be easily understood and changed later",
+        "So it runs faster",
+        "So it uses less memory",
+        "So it cannot be copied"
+      ],
+      "answer": "So it can be easily understood and changed later",
+      "explanation": "A maintainable program can be fixed or extended by the original programmer or by someone new."
+    },
+    {
+      "lessonSlug": "gcse-robust-programs-3",
+      "question": "Which is the best variable name for storing a person's height?",
+      "options": [
+        "height",
+        "h",
+        "x",
+        "thing1"
+      ],
+      "answer": "height",
+      "explanation": "A name should say what the variable holds. Single letters like h or x make the program hard to follow."
+    },
+    {
+      "lessonSlug": "gcse-robust-programs-3",
+      "question": "What does a comment do in a Python program?",
+      "options": [
+        "It explains the code to people reading it, and is ignored when the program runs",
+        "It stops the program if there is an error",
+        "It makes the code run faster",
+        "It stores a value for later"
+      ],
+      "answer": "It explains the code to people reading it, and is ignored when the program runs",
+      "explanation": "Comments start with # and have no effect on how the program runs."
+    },
+    {
+      "lessonSlug": "gcse-robust-programs-3",
+      "question": "How do subprograms make a program easier to maintain?",
+      "options": [
+        "The code is written once, reused, and can be changed in one place",
+        "They make the program run without needing an if statement",
+        "They stop syntax errors from happening",
+        "They remove the need for variables"
+      ],
+      "answer": "The code is written once, reused, and can be changed in one place",
+      "explanation": "Reusing one subprogram avoids copied code, so a change only has to be made once."
+    },
+    {
+      "lessonSlug": "gcse-robust-programs-4",
+      "question": "What is a syntax error?",
+      "options": [
+        "A mistake that breaks the rules of the language, so the program will not run",
+        "A program that runs but gives the wrong answer",
+        "A program that runs very slowly",
+        "A mistake in the test plan"
+      ],
+      "answer": "A mistake that breaks the rules of the language, so the program will not run",
+      "explanation": "For example a missing colon after an if. The program cannot start until it is fixed."
+    },
+    {
+      "lessonSlug": "gcse-robust-programs-4",
+      "question": "A program runs without crashing, but it works out the wrong total. What type of error is this?",
+      "options": [
+        "Logic error",
+        "Syntax error",
+        "Validation error",
+        "Authentication error"
+      ],
+      "answer": "Logic error",
+      "explanation": "The code is legal, so it runs, but the logic of the calculation is wrong."
+    },
+    {
+      "lessonSlug": "gcse-robust-programs-4",
+      "question": "A programmer tests each part of a program as it is written, then fixes problems and tests again. What is this called?",
+      "options": [
+        "Iterative testing",
+        "Final testing",
+        "Terminal testing",
+        "Boundary testing"
+      ],
+      "answer": "Iterative testing",
+      "explanation": "Iterative testing happens during development and is repeated. Final (terminal) testing is done at the end on the whole program."
+    },
+    {
+      "lessonSlug": "gcse-robust-programs-4",
+      "question": "Which of these is a purpose of testing?",
+      "options": [
+        "To find errors and check the program does what it should",
+        "To make the code shorter",
+        "To add comments to the code",
+        "To choose meaningful variable names"
+      ],
+      "answer": "To find errors and check the program does what it should",
+      "explanation": "Testing finds bugs before users do and checks the program meets its requirements."
+    },
+    {
+      "lessonSlug": "gcse-robust-programs-5",
+      "question": "A program should accept whole numbers from 1 to 10. Which of these is boundary test data?",
+      "options": [
+        "10",
+        "5",
+        "abc",
+        "50"
+      ],
+      "answer": "10",
+      "explanation": "10 is on the very edge of the allowed range. 1 is the other edge, and 0 and 11 are the values just outside it."
+    },
+    {
+      "lessonSlug": "gcse-robust-programs-5",
+      "question": "A program should accept an age as a whole number from 0 to 120. A user enters the word twenty. What type of test data is this?",
+      "options": [
+        "Erroneous",
+        "Normal",
+        "Boundary",
+        "Invalid"
+      ],
+      "answer": "Erroneous",
+      "explanation": "Erroneous data is the wrong type of data altogether. A number outside the range, such as 150, would be invalid."
+    },
+    {
+      "lessonSlug": "gcse-robust-programs-5",
+      "question": "A program should accept an age from 0 to 120. Which value is invalid test data (the right type but not allowed)?",
+      "options": [
+        "150",
+        "45",
+        "0",
+        "120"
+      ],
+      "answer": "150",
+      "explanation": "150 is a whole number, so it is the right type, but it is outside the allowed range."
+    },
+    {
+      "lessonSlug": "gcse-robust-programs-5",
+      "question": "Why is boundary data important when testing?",
+      "options": [
+        "Mistakes such as writing > instead of >= usually only show up at the edges of a range",
+        "Boundary data is the only data a program can accept",
+        "Boundary data makes the program run faster",
+        "It replaces the need for normal data"
+      ],
+      "answer": "Mistakes such as writing > instead of >= usually only show up at the edges of a range",
+      "explanation": "A value in the middle of the range passes either way, so only tests at the edges expose that kind of bug."
+    }
+  ],
+  "tasks": [
+    {
+      "slug": "gcse-robust-programs-t1-01",
+      "lesson": 1,
+      "tier": 1,
+      "difficulty": 1,
+      "xp": 10,
+      "title": "Presence check",
+      "brief": "Input a name.\n\nPrint `Name entered` if something was typed. Print `Nothing entered` if the name is empty.",
+      "starter": "",
+      "hints": [
+        "An empty string is written as two quote marks with nothing between them: \"\". You can compare the input to it with ==.",
+        "Use if name == \"\": for the empty case, and else: for everything else."
+      ],
+      "tests": [
+        {
+          "stdin": "Sam",
+          "expect": "Name entered"
+        },
+        {
+          "stdin": "",
+          "expect": "Nothing entered"
+        },
+        {
+          "stdin": "Priya Shah",
+          "expect": "Name entered"
+        }
+      ]
+    },
+    {
+      "slug": "gcse-robust-programs-t1-02",
+      "lesson": 1,
+      "tier": 1,
+      "difficulty": 2,
+      "xp": 15,
+      "title": "Range check on a mark",
+      "brief": "Input a whole number, which is a test mark.\n\nPrint `Valid` if the mark is from 0 to 100. Both 0 and 100 count as valid.\n\nOtherwise print `Invalid`.",
+      "starter": "",
+      "hints": [
+        "You need two conditions to both be true: the mark is at least 0 AND the mark is at most 100. Join them with and.",
+        "Use >= and <= so that 0 and 100 themselves are included."
+      ],
+      "tests": [
+        {
+          "stdin": "50",
+          "expect": "Valid"
+        },
+        {
+          "stdin": "0",
+          "expect": "Valid"
+        },
+        {
+          "stdin": "100",
+          "expect": "Valid"
+        },
+        {
+          "stdin": "101",
+          "expect": "Invalid"
+        },
+        {
+          "stdin": "-1",
+          "expect": "Invalid"
+        }
+      ]
+    },
+    {
+      "slug": "gcse-robust-programs-t1-03",
+      "lesson": 1,
+      "tier": 2,
+      "difficulty": 2,
+      "xp": 15,
+      "title": "Length check on a password",
+      "brief": "A website says a password must have at least 8 characters.\n\nInput a password. Print `Long enough` if it has 8 or more characters. Otherwise print `Too short`.",
+      "starter": "",
+      "hints": [
+        "len(text) gives the number of characters in text.",
+        "Compare len(password) with 8. Exactly 8 characters is allowed, so think about whether you need > or >=."
+      ],
+      "tests": [
+        {
+          "stdin": "abcdefgh",
+          "expect": "Long enough"
+        },
+        {
+          "stdin": "abc",
+          "expect": "Too short"
+        },
+        {
+          "stdin": "abcdefg",
+          "expect": "Too short"
+        },
+        {
+          "stdin": "correcthorsebattery",
+          "expect": "Long enough"
+        }
+      ]
+    },
+    {
+      "slug": "gcse-robust-programs-t1-04",
+      "lesson": 1,
+      "tier": 2,
+      "difficulty": 2,
+      "xp": 15,
+      "title": "Type check: is it a whole number?",
+      "brief": "Input some text (do not convert it to a number).\n\nPrint `Whole number` if the text is made up only of the digits 0 to 9. Otherwise print `Not a whole number`.\n\nEmpty text is not a whole number.",
+      "starter": "",
+      "hints": [
+        "Strings have a method called isdigit() that does exactly this check. For example \"42\".isdigit() is True.",
+        "Write if text.isdigit(): and print the matching message. Do not use int() on the text."
+      ],
+      "tests": [
+        {
+          "stdin": "42",
+          "expect": "Whole number"
+        },
+        {
+          "stdin": "4x2",
+          "expect": "Not a whole number"
+        },
+        {
+          "stdin": "",
+          "expect": "Not a whole number"
+        },
+        {
+          "stdin": "3.5",
+          "expect": "Not a whole number"
+        },
+        {
+          "stdin": "-7",
+          "expect": "Not a whole number"
+        }
+      ]
+    },
+    {
+      "slug": "gcse-robust-programs-t1-05",
+      "lesson": 1,
+      "tier": 3,
+      "difficulty": 3,
+      "xp": 25,
+      "title": "Ask again until it is valid",
+      "brief": "A board game is played by 2 to 6 players. The program asks how many are playing.\n\nRead whole numbers, one per line. Each time the number is not from 2 to 6, print `Invalid, try again` and read another number.\n\nAs soon as a valid number is entered, print `Players: ` followed by the number (for example `Players: 4`) and stop.",
+      "starter": "",
+      "hints": [
+        "Read the first number before the loop. Then use while the number is invalid: print the message and read another number.",
+        "The loop condition is that the number is below 2 or above 6. After the loop, the number must be valid, so print it."
+      ],
+      "tests": [
+        {
+          "stdin": "4",
+          "expect": "Players: 4"
+        },
+        {
+          "stdin": "9\n1\n3",
+          "expect": "Invalid, try again\nInvalid, try again\nPlayers: 3"
+        },
+        {
+          "stdin": "2",
+          "expect": "Players: 2"
+        },
+        {
+          "stdin": "7\n6",
+          "expect": "Invalid, try again\nPlayers: 6"
+        }
+      ]
+    },
+    {
+      "slug": "gcse-robust-programs-t1-stretch",
+      "lesson": 1,
+      "tier": 4,
+      "difficulty": 5,
+      "xp": 40,
+      "stretch": true,
+      "title": "Order quantity checker",
+      "brief": "A shop lets customers order between 1 and 10 of an item. The quantity is typed as text, so the program must check two things.\n\nRead entries one per line. For each entry that is not valid:\n- print `Not a whole number` if it contains anything other than the digits 0 to 9 (or is empty)\n- print `Out of range` if it is made of digits but is not from 1 to 10\n\nThen read the next entry. As soon as an entry is valid, print `Quantity: ` followed by the number and stop.\n\nFor example, the entries abc, 0, 25, 3 print:\n```\nNot a whole number\nOut of range\nOut of range\nQuantity: 3\n```",
+      "starter": "",
+      "hints": [
+        "Check the type first. If the text is not all digits, you cannot safely convert it with int(). Only once it passes isdigit() should you convert it and check the range.",
+        "Use a loop that ends when an entry is valid. Inside it, use if / elif to choose between the two messages, then read the next entry."
+      ],
+      "tests": [
+        {
+          "stdin": "abc\n0\n25\n3",
+          "expect": "Not a whole number\nOut of range\nOut of range\nQuantity: 3"
+        },
+        {
+          "stdin": "5",
+          "expect": "Quantity: 5"
+        },
+        {
+          "stdin": "-2\n10",
+          "expect": "Not a whole number\nQuantity: 10"
+        },
+        {
+          "stdin": "\n7",
+          "expect": "Not a whole number\nQuantity: 7"
+        }
+      ]
+    },
+    {
+      "slug": "gcse-robust-programs-t2-01",
+      "lesson": 2,
+      "tier": 1,
+      "difficulty": 1,
+      "xp": 10,
+      "title": "Check the password",
+      "brief": "The stored password is `python123`.\n\nInput a password. Print `Access granted` if it is exactly the same as the stored password. Otherwise print `Access denied`.",
+      "starter": "",
+      "hints": [
+        "Compare what was typed with the stored password using ==.",
+        "Upper and lower case letters count as different, so Python123 does not match python123. == already behaves like this."
+      ],
+      "tests": [
+        {
+          "stdin": "python123",
+          "expect": "Access granted"
+        },
+        {
+          "stdin": "Python123",
+          "expect": "Access denied"
+        },
+        {
+          "stdin": "",
+          "expect": "Access denied"
+        }
+      ]
+    },
+    {
+      "slug": "gcse-robust-programs-t2-02",
+      "lesson": 2,
+      "tier": 1,
+      "difficulty": 2,
+      "xp": 15,
+      "title": "Username and password",
+      "brief": "The correct username is `admin` and the correct password is `Sup3rSecret`.\n\nRead a username, then a password, one per line.\n\nPrint `Welcome` only if BOTH are correct. Otherwise print `Login failed`.\n\nPrint the same `Login failed` message whichever part is wrong. That way a hacker cannot tell whether they guessed the username correctly.",
+      "starter": "",
+      "hints": [
+        "You need one if with two conditions joined by and: the username matches AND the password matches.",
+        "Only two messages are possible, Welcome or Login failed, so a single if / else is enough."
+      ],
+      "tests": [
+        {
+          "stdin": "admin\nSup3rSecret",
+          "expect": "Welcome"
+        },
+        {
+          "stdin": "admin\nwrong",
+          "expect": "Login failed"
+        },
+        {
+          "stdin": "root\nSup3rSecret",
+          "expect": "Login failed"
+        },
+        {
+          "stdin": "root\nwrong",
+          "expect": "Login failed"
+        }
+      ]
+    },
+    {
+      "slug": "gcse-robust-programs-t2-03",
+      "lesson": 2,
+      "tier": 2,
+      "difficulty": 3,
+      "xp": 25,
+      "title": "Three attempts",
+      "brief": "A login screen gives the user at most 3 attempts to type the correct password, which is `blue42`.\n\nRead guesses, one per line. If a guess is correct, print `Access granted` and stop. If the user has used 3 wrong guesses, print `Locked out` and stop.\n\nOnly one of the two messages is ever printed. A correct guess on the 4th line does not count, because the account is already locked.",
+      "starter": "",
+      "hints": [
+        "Use a counter that starts at 0 and goes up by 1 after every guess. The loop should keep going while the counter is below 3 and access has not been granted.",
+        "Use a variable such as granted = False, and set it to True when the guess is correct. After the loop, use it to decide which message to print."
+      ],
+      "tests": [
+        {
+          "stdin": "blue42",
+          "expect": "Access granted"
+        },
+        {
+          "stdin": "x\nblue42",
+          "expect": "Access granted"
+        },
+        {
+          "stdin": "a\nb\nblue42",
+          "expect": "Access granted"
+        },
+        {
+          "stdin": "a\nb\nc",
+          "expect": "Locked out"
+        },
+        {
+          "stdin": "a\nb\nc\nblue42",
+          "expect": "Locked out"
+        }
+      ]
+    },
+    {
+      "slug": "gcse-robust-programs-t2-04",
+      "lesson": 2,
+      "tier": 3,
+      "difficulty": 3,
+      "xp": 25,
+      "title": "Attempts left",
+      "brief": "A login screen tells the user how many attempts they have left. The correct password is `blue42` and the user gets 3 attempts.\n\nRead guesses, one per line.\n- If a guess is correct, print `Access granted` and stop.\n- If a guess is wrong, print `Wrong. Attempts left: ` followed by how many attempts remain.\n- After the third wrong guess, print `Locked out` and stop.\n\nFor example, three wrong guesses print:\n```\nWrong. Attempts left: 2\nWrong. Attempts left: 1\nWrong. Attempts left: 0\nLocked out\n```",
+      "starter": "",
+      "hints": [
+        "Keep a variable for the attempts left, starting at 3. Take 1 off it after each wrong guess, then print it.",
+        "After the loop finishes, only print Locked out if the user never got it right."
+      ],
+      "tests": [
+        {
+          "stdin": "a\nblue42",
+          "expect": "Wrong. Attempts left: 2\nAccess granted"
+        },
+        {
+          "stdin": "a\nb\nc",
+          "expect": "Wrong. Attempts left: 2\nWrong. Attempts left: 1\nWrong. Attempts left: 0\nLocked out"
+        },
+        {
+          "stdin": "blue42",
+          "expect": "Access granted"
+        },
+        {
+          "stdin": "a\nb\nblue42",
+          "expect": "Wrong. Attempts left: 2\nWrong. Attempts left: 1\nAccess granted"
+        }
+      ]
+    },
+    {
+      "slug": "gcse-robust-programs-t2-stretch",
+      "lesson": 2,
+      "tier": 4,
+      "difficulty": 5,
+      "xp": 40,
+      "stretch": true,
+      "title": "Choose a new password",
+      "brief": "A website checks a new password using these rules, in this order:\n1. It must have at least 8 characters, otherwise print `Too short`\n2. It must not be exactly `password`, otherwise print `Too obvious`\n3. It must contain at least one digit (0-9), otherwise print `Needs a digit`\n4. The user types it a second time to confirm. If the two do not match, print `Passwords do not match`\n\nRead the new password, then the confirmation, one per line. Print only the FIRST rule that fails. If every rule passes, print `Password set`.",
+      "starter": "",
+      "hints": [
+        "Use if / elif / elif / elif / else so that only the first failing rule prints anything.",
+        "To check for a digit, you can loop over the characters and use isdigit() on each one, keeping a variable that becomes True when you find one."
+      ],
+      "tests": [
+        {
+          "stdin": "abc1\nabc1",
+          "expect": "Too short"
+        },
+        {
+          "stdin": "password\npassword",
+          "expect": "Too obvious"
+        },
+        {
+          "stdin": "longpassword\nlongpassword",
+          "expect": "Needs a digit"
+        },
+        {
+          "stdin": "longpass1\nlongpass2",
+          "expect": "Passwords do not match"
+        },
+        {
+          "stdin": "longpass1\nlongpass1",
+          "expect": "Password set"
+        }
+      ]
+    },
+    {
+      "slug": "gcse-robust-programs-t3-01",
+      "lesson": 3,
+      "tier": 1,
+      "difficulty": 2,
+      "xp": 15,
+      "title": "Write a validation function",
+      "brief": "Write a function called `is_valid_mark` that has one parameter, `mark`. It should return True if the mark is from 0 to 100 (including 0 and 100), and False otherwise.\n\nThen write the main program. Input a whole number, use your function to check it, and print `Valid` or `Invalid`.",
+      "starter": "def is_valid_mark(mark):\n    # write your code here\n\n\n",
+      "hints": [
+        "Inside the function, use return with a condition that checks both limits, joined with and.",
+        "In the main program: read the number, then if is_valid_mark(number): print Valid, else print Invalid."
+      ],
+      "tests": [
+        {
+          "stdin": "50",
+          "expect": "Valid"
+        },
+        {
+          "stdin": "0",
+          "expect": "Valid"
+        },
+        {
+          "stdin": "101",
+          "expect": "Invalid"
+        },
+        {
+          "stdin": "-5",
+          "expect": "Invalid"
+        },
+        {
+          "stdin": "100",
+          "expect": "Valid"
+        }
+      ]
+    },
+    {
+      "slug": "gcse-robust-programs-t3-02",
+      "lesson": 3,
+      "tier": 2,
+      "difficulty": 3,
+      "xp": 25,
+      "title": "Reuse the same check",
+      "brief": "A teacher enters three test marks, one per line. A mark is valid if it is from 0 to 100.\n\nWrite a function `is_valid_mark(mark)` that returns True or False, and call it once for each of the three marks (do not copy the check three times).\n\nIf all three marks are valid, print `All valid`. Otherwise print how many were invalid, for example `2 invalid`.",
+      "starter": "",
+      "hints": [
+        "Write the function first. Then read the three marks and call the function for each one, adding 1 to a counter each time it returns False.",
+        "After checking all three, if the counter is 0 print All valid, otherwise print the counter followed by the word invalid."
+      ],
+      "tests": [
+        {
+          "stdin": "50\n60\n70",
+          "expect": "All valid"
+        },
+        {
+          "stdin": "50\n101\n-1",
+          "expect": "2 invalid"
+        },
+        {
+          "stdin": "101\n60\n70",
+          "expect": "1 invalid"
+        },
+        {
+          "stdin": "-1\n200\n300",
+          "expect": "3 invalid"
+        }
+      ]
+    },
+    {
+      "slug": "gcse-robust-programs-t3-03",
+      "lesson": 3,
+      "tier": 3,
+      "difficulty": 3,
+      "xp": 25,
+      "title": "Change it in one place",
+      "brief": "A shop adds 20% VAT to prices. Write a function `add_vat(price)` that returns the price multiplied by 1.2.\n\nThe program reads three prices, one per line (they may have decimals). For each price, in the order entered, print the price including VAT, rounded to 2 decimal places, on its own line.\n\nFor example, a price of 10 prints `12.00`.\n\nBecause the VAT rule lives in one function, if VAT changed you would only need to edit one line.",
+      "starter": "",
+      "hints": [
+        "Write the function first, with return price * 1.2. Then use a loop that runs 3 times, reading a price with float(input()) and printing the result of add_vat.",
+        "To show exactly 2 decimal places, use an f-string: print(f\"{value:.2f}\")."
+      ],
+      "tests": [
+        {
+          "stdin": "10\n20\n50",
+          "expect": "12.00\n24.00\n60.00"
+        },
+        {
+          "stdin": "5\n7.5\n100",
+          "expect": "6.00\n9.00\n120.00"
+        },
+        {
+          "stdin": "0\n1\n2.5",
+          "expect": "0.00\n1.20\n3.00"
+        }
+      ]
+    },
+    {
+      "slug": "gcse-robust-programs-t3-stretch",
+      "lesson": 3,
+      "tier": 4,
+      "difficulty": 5,
+      "xp": 40,
+      "stretch": true,
+      "title": "Shape calculator with subprograms",
+      "brief": "Write a program made of two subprograms and a short main program.\n\nRead a command, then a width, then a height, one per line (the width and height are whole numbers).\n- If the command is `area`, print width multiplied by height.\n- If the command is `perimeter`, print 2 multiplied by (width + height).\n- Otherwise print `Unknown command`.\n\nWrite a function `area(width, height)` and a function `perimeter(width, height)`, each returning its answer. The main program should only read the input, call the correct function and print the result.",
+      "starter": "",
+      "hints": [
+        "Define both functions at the top of the program, each with return. The main program comes after them.",
+        "In the main program, use if / elif / else on the command. Call the function inside the print, for example print(area(width, height))."
+      ],
+      "tests": [
+        {
+          "stdin": "area\n3\n4",
+          "expect": "12"
+        },
+        {
+          "stdin": "perimeter\n3\n4",
+          "expect": "14"
+        },
+        {
+          "stdin": "volume\n3\n4",
+          "expect": "Unknown command"
+        },
+        {
+          "stdin": "area\n10\n10",
+          "expect": "100"
+        }
+      ]
+    },
+    {
+      "slug": "gcse-robust-programs-t4-01",
+      "lesson": 4,
+      "tier": 1,
+      "difficulty": 2,
+      "xp": 15,
+      "title": "Fix the syntax error",
+      "brief": "This program should print `Big` if the number entered is greater than 10, and `Small` otherwise.\n\nIt will not run because of a syntax error. Find the mistake and fix it.",
+      "starter": "number = int(input())\nif number > 10\n    print(\"Big\")\nelse:\n    print(\"Small\")\n",
+      "hints": [
+        "Python's error message shows the line number. Look carefully at the end of the line it points to, or the one just before it.",
+        "An if line must end with a colon, just like the else line does."
+      ],
+      "tests": [
+        {
+          "stdin": "11",
+          "expect": "Big"
+        },
+        {
+          "stdin": "10",
+          "expect": "Small"
+        },
+        {
+          "stdin": "3",
+          "expect": "Small"
+        }
+      ]
+    },
+    {
+      "slug": "gcse-robust-programs-t4-02",
+      "lesson": 4,
+      "tier": 2,
+      "difficulty": 2,
+      "xp": 15,
+      "title": "Fix the logic error: the average",
+      "brief": "This program should print the average (mean) of two whole numbers. For example, 10 and 20 should print `15.0`.\n\nIt runs without any error message, but the answer is wrong. Find the logic error and fix it.",
+      "starter": "first = int(input())\nsecond = int(input())\naverage = first + second / 2\nprint(average)\n",
+      "hints": [
+        "Try the program with 10 and 20 and work out by hand what it calculates. Which part gets divided by 2?",
+        "Python does division before addition. You need brackets so the two numbers are added first."
+      ],
+      "tests": [
+        {
+          "stdin": "10\n20",
+          "expect": "15.0"
+        },
+        {
+          "stdin": "4\n6",
+          "expect": "5.0"
+        },
+        {
+          "stdin": "3\n4",
+          "expect": "3.5"
+        }
+      ]
+    },
+    {
+      "slug": "gcse-robust-programs-t4-03",
+      "lesson": 4,
+      "tier": 3,
+      "difficulty": 3,
+      "xp": 25,
+      "title": "Fix the logic error: one short",
+      "brief": "This program should read a whole number and print the total of all the whole numbers from 1 up to and including that number. For example, 4 should print `10` (1 + 2 + 3 + 4).\n\nIt runs, but the total is always too small. Find the logic error and fix it.",
+      "starter": "count = int(input())\ntotal = 0\nfor number in range(1, count):\n    total = total + number\nprint(total)\n",
+      "hints": [
+        "Test it with 1. The correct answer is 1, but what does the program print? What numbers does the loop actually go through?",
+        "range(1, count) stops one number before count. Change the second value so that count is included."
+      ],
+      "tests": [
+        {
+          "stdin": "4",
+          "expect": "10"
+        },
+        {
+          "stdin": "1",
+          "expect": "1"
+        },
+        {
+          "stdin": "10",
+          "expect": "55"
+        }
+      ]
+    },
+    {
+      "slug": "gcse-robust-programs-t4-04",
+      "lesson": 4,
+      "tier": 3,
+      "difficulty": 3,
+      "xp": 25,
+      "title": "Fix the logic error: voting age",
+      "brief": "A person can vote if they are 18 or over. This program should print `Can vote` or `Cannot vote`.\n\nA tester says it gives the right answer for most ages but is wrong for one particular age. Find the logic error and fix it.",
+      "starter": "age = int(input())\nif age > 18:\n    print(\"Can vote\")\nelse:\n    print(\"Cannot vote\")\n",
+      "hints": [
+        "Think about which age the program treats wrongly. Try 17, 30, and then 18 itself.",
+        "\"18 or over\" includes 18. Look at the comparison operator: > leaves 18 out."
+      ],
+      "tests": [
+        {
+          "stdin": "18",
+          "expect": "Can vote"
+        },
+        {
+          "stdin": "17",
+          "expect": "Cannot vote"
+        },
+        {
+          "stdin": "30",
+          "expect": "Can vote"
+        },
+        {
+          "stdin": "0",
+          "expect": "Cannot vote"
+        }
+      ]
+    },
+    {
+      "slug": "gcse-robust-programs-t4-stretch",
+      "lesson": 4,
+      "tier": 4,
+      "difficulty": 5,
+      "xp": 40,
+      "stretch": true,
+      "title": "Two errors in one program",
+      "brief": "This program should read three whole numbers, one per line, and print the largest of them.\n\nIt contains TWO mistakes: one syntax error and one logic error. Fix both. Fix the syntax error first so the program runs, then test it to find the logic error.",
+      "starter": "a = int(input())\nb = int(input())\nc = int(input())\nlargest = a\nif b > largest\n    largest = b\nif c < largest:\n    largest = c\nprint(largest)\n",
+      "hints": [
+        "Find the syntax error first: one of the if lines is missing something at the end. Once the program runs, try inputs where the largest number is in different positions.",
+        "The last if is meant to update largest when c is bigger. Check whether the comparison points the right way."
+      ],
+      "tests": [
+        {
+          "stdin": "1\n5\n3",
+          "expect": "5"
+        },
+        {
+          "stdin": "9\n2\n4",
+          "expect": "9"
+        },
+        {
+          "stdin": "2\n3\n8",
+          "expect": "8"
+        },
+        {
+          "stdin": "7\n7\n7",
+          "expect": "7"
+        }
+      ]
+    },
+    {
+      "slug": "gcse-robust-programs-t5-01",
+      "lesson": 5,
+      "tier": 1,
+      "difficulty": 2,
+      "xp": 15,
+      "title": "Normal, boundary or invalid?",
+      "brief": "A program accepts whole numbers from 1 to 10.\n\nInput a whole number and print what kind of test data it is:\n- `Boundary` if it is 1 or 10 (the edges of the allowed range)\n- `Normal` if it is from 2 to 9\n- `Invalid` for any other number",
+      "starter": "",
+      "hints": [
+        "Check the two edge values first, using or: number == 1 or number == 10.",
+        "Then use elif for the middle values (greater than 1 and less than 10). Everything else falls into else."
+      ],
+      "tests": [
+        {
+          "stdin": "5",
+          "expect": "Normal"
+        },
+        {
+          "stdin": "1",
+          "expect": "Boundary"
+        },
+        {
+          "stdin": "10",
+          "expect": "Boundary"
+        },
+        {
+          "stdin": "2",
+          "expect": "Normal"
+        },
+        {
+          "stdin": "9",
+          "expect": "Normal"
+        },
+        {
+          "stdin": "0",
+          "expect": "Invalid"
+        },
+        {
+          "stdin": "11",
+          "expect": "Invalid"
+        },
+        {
+          "stdin": "50",
+          "expect": "Invalid"
+        }
+      ]
+    },
+    {
+      "slug": "gcse-robust-programs-t5-02",
+      "lesson": 5,
+      "tier": 2,
+      "difficulty": 3,
+      "xp": 25,
+      "title": "Include erroneous data",
+      "brief": "A program accepts whole numbers from 1 to 100. The entry is typed as text.\n\nInput the text (do not convert it straight away) and print what kind of test data it is:\n- `Erroneous` if it is not made up only of digits (or is empty), because it is the wrong type of data\n- otherwise convert it to a number, then print `Boundary` if it is 1 or 100, `Normal` if it is from 2 to 99, or `Invalid` for any other number",
+      "starter": "",
+      "hints": [
+        "Test the type first with isdigit(). Only convert with int() once you know the text is all digits.",
+        "After the type check, the number rules are the same as before: edges are Boundary, the middle is Normal, everything else is Invalid."
+      ],
+      "tests": [
+        {
+          "stdin": "50",
+          "expect": "Normal"
+        },
+        {
+          "stdin": "1",
+          "expect": "Boundary"
+        },
+        {
+          "stdin": "100",
+          "expect": "Boundary"
+        },
+        {
+          "stdin": "0",
+          "expect": "Invalid"
+        },
+        {
+          "stdin": "101",
+          "expect": "Invalid"
+        },
+        {
+          "stdin": "abc",
+          "expect": "Erroneous"
+        },
+        {
+          "stdin": "",
+          "expect": "Erroneous"
+        },
+        {
+          "stdin": "7.5",
+          "expect": "Erroneous"
+        }
+      ]
+    },
+    {
+      "slug": "gcse-robust-programs-t5-03",
+      "lesson": 5,
+      "tier": 3,
+      "difficulty": 3,
+      "xp": 25,
+      "title": "Boundary values for a range",
+      "brief": "A tester wants boundary test data for a rule that accepts whole numbers from a lowest value to a highest value.\n\nRead the lowest allowed number, then the highest allowed number, one per line. Print four numbers, each on its own line, in this order:\n1. the number just below the lowest\n2. the lowest allowed number\n3. the highest allowed number\n4. the number just above the highest\n\nFor example, a range of 13 to 19 prints:\n```\n12\n13\n19\n20\n```",
+      "starter": "",
+      "hints": [
+        "Convert both inputs to whole numbers. The number just below the lowest is the lowest minus 1.",
+        "Use four print statements, one for each of the four values."
+      ],
+      "tests": [
+        {
+          "stdin": "13\n19",
+          "expect": "12\n13\n19\n20"
+        },
+        {
+          "stdin": "1\n10",
+          "expect": "0\n1\n10\n11"
+        },
+        {
+          "stdin": "0\n120",
+          "expect": "-1\n0\n120\n121"
+        }
+      ]
+    },
+    {
+      "slug": "gcse-robust-programs-t5-04",
+      "lesson": 5,
+      "tier": 3,
+      "difficulty": 3,
+      "xp": 25,
+      "title": "Mark a test: pass or fail?",
+      "brief": "A program should accept ages from 18 to 65 (including 18 and 65) and reject all others. A tester ran it with some ages and wrote down what the program did.\n\nRead an age, then the result the program gave, which is either `Accepted` or `Rejected`, one per line.\n\nPrint `Pass` if the program did the right thing for that age, or `Fail` if it did not.\n\nFor example, age 17 with the result Accepted prints `Fail`, because 17 should have been rejected.",
+      "starter": "",
+      "hints": [
+        "First work out what SHOULD happen: an age from 18 to 65 should be Accepted, anything else should be Rejected. Store that in a variable.",
+        "Then compare it with the result the tester recorded. If they match, print Pass. If not, print Fail."
+      ],
+      "tests": [
+        {
+          "stdin": "18\nAccepted",
+          "expect": "Pass"
+        },
+        {
+          "stdin": "17\nAccepted",
+          "expect": "Fail"
+        },
+        {
+          "stdin": "65\nAccepted",
+          "expect": "Pass"
+        },
+        {
+          "stdin": "66\nRejected",
+          "expect": "Pass"
+        },
+        {
+          "stdin": "30\nRejected",
+          "expect": "Fail"
+        },
+        {
+          "stdin": "66\nAccepted",
+          "expect": "Fail"
+        }
+      ]
+    },
+    {
+      "slug": "gcse-robust-programs-t5-stretch",
+      "lesson": 5,
+      "tier": 4,
+      "difficulty": 5,
+      "xp": 40,
+      "stretch": true,
+      "title": "Test report summary",
+      "brief": "A program should accept ages from 18 to 65 (including 18 and 65) and reject all others. A tester recorded several tests.\n\nRead the number of tests. Then, for each test, read the age and then the result the program gave (`Accepted` or `Rejected`), one per line.\n\nA test passes if the program did the right thing for that age. At the end print how many tests passed and how many failed, in exactly this form:\n```\nPassed: 2\nFailed: 1\n```",
+      "starter": "",
+      "hints": [
+        "Use a loop that runs once for each test. Inside it, read the age and the recorded result, work out what should have happened, and compare.",
+        "Keep two counters that start at 0, one for passed and one for failed, and add 1 to the right one each time round the loop. Print both at the end, after the loop."
+      ],
+      "tests": [
+        {
+          "stdin": "3\n18\nAccepted\n17\nAccepted\n30\nAccepted",
+          "expect": "Passed: 2\nFailed: 1"
+        },
+        {
+          "stdin": "2\n66\nRejected\n40\nRejected",
+          "expect": "Passed: 1\nFailed: 1"
+        },
+        {
+          "stdin": "1\n18\nRejected",
+          "expect": "Passed: 0\nFailed: 1"
+        },
+        {
+          "stdin": "2\n17\nRejected\n65\nAccepted",
+          "expect": "Passed: 2\nFailed: 0"
+        }
+      ]
+    }
+  ],
+  "homeworkTasks": [],
+  "projectTasks": [],
+  "practiceTasks": []
+}
