@@ -1146,5 +1146,1314 @@
   ],
   "homeworkTasks": [],
   "projectTasks": [],
-  "practiceTasks": []
+  "practiceTasks": [
+    {
+      "slug": "gcse-robust-programs-p-01",
+      "tier": 1,
+      "difficulty": 1,
+      "xp": 10,
+      "title": "Is anything there?",
+      "brief": "A form must not be left blank. A name that is only spaces counts as blank too.\n\nInput some text. Print `Valid` if it contains at least one character that is not a space. Otherwise print `Invalid`.",
+      "starter": "",
+      "hints": [
+        "Text made only of spaces is the same as empty text once the spaces are taken off.",
+        "`text.strip()` removes spaces from both ends. Check whether what is left is empty."
+      ],
+      "tests": [
+        {
+          "stdin": "Sam",
+          "expect": "Valid"
+        },
+        {
+          "stdin": "",
+          "expect": "Invalid"
+        },
+        {
+          "stdin": "   ",
+          "expect": "Invalid"
+        },
+        {
+          "stdin": " a ",
+          "expect": "Valid"
+        },
+        {
+          "stdin": "0",
+          "expect": "Valid"
+        }
+      ]
+    },
+    {
+      "slug": "gcse-robust-programs-p-02",
+      "tier": 1,
+      "difficulty": 1,
+      "xp": 10,
+      "title": "Rating from 1 to 5",
+      "brief": "A survey asks for a rating from 1 to 5. Both 1 and 5 are allowed.\n\nInput a whole number. Print `Valid` if it is from 1 to 5, otherwise print `Invalid`.",
+      "starter": "",
+      "hints": [
+        "You need two things to be true at once: at least 1 AND at most 5.",
+        "`if rating >= 1 and rating <= 5:`"
+      ],
+      "tests": [
+        {
+          "stdin": "3",
+          "expect": "Valid"
+        },
+        {
+          "stdin": "1",
+          "expect": "Valid"
+        },
+        {
+          "stdin": "5",
+          "expect": "Valid"
+        },
+        {
+          "stdin": "0",
+          "expect": "Invalid"
+        },
+        {
+          "stdin": "6",
+          "expect": "Invalid"
+        },
+        {
+          "stdin": "-2",
+          "expect": "Invalid"
+        }
+      ]
+    },
+    {
+      "slug": "gcse-robust-programs-p-03",
+      "tier": 2,
+      "difficulty": 2,
+      "xp": 15,
+      "title": "Username length",
+      "brief": "A username must be from 4 to 12 characters long. Both 4 and 12 are allowed.\n\nInput a username. Print `Valid` if its length is allowed, otherwise print `Invalid`.",
+      "starter": "",
+      "hints": [
+        "`len(name)` gives the number of characters.",
+        "Check the length against both limits: `len(name) >= 4 and len(name) <= 12`."
+      ],
+      "tests": [
+        {
+          "stdin": "abc",
+          "expect": "Invalid"
+        },
+        {
+          "stdin": "abcd",
+          "expect": "Valid"
+        },
+        {
+          "stdin": "abcdefghijkl",
+          "expect": "Valid"
+        },
+        {
+          "stdin": "abcdefghijklm",
+          "expect": "Invalid"
+        },
+        {
+          "stdin": "sam_99",
+          "expect": "Valid"
+        },
+        {
+          "stdin": "",
+          "expect": "Invalid"
+        }
+      ]
+    },
+    {
+      "slug": "gcse-robust-programs-p-04",
+      "tier": 2,
+      "difficulty": 2,
+      "xp": 15,
+      "title": "A four-digit PIN",
+      "brief": "A PIN must be exactly 4 digits (0 to 9) and nothing else.\n\nInput some text. Print `Valid` if it is exactly 4 digits, otherwise print `Invalid`.\n\nFor example, `0472` is valid but `472` and `47a2` are not.",
+      "starter": "",
+      "hints": [
+        "There are two checks: the length must be 4, and every character must be a digit.",
+        "`text.isdigit()` is True when every character is a digit. Keep the PIN as text so the leading 0 is not lost."
+      ],
+      "tests": [
+        {
+          "stdin": "0472",
+          "expect": "Valid"
+        },
+        {
+          "stdin": "4821",
+          "expect": "Valid"
+        },
+        {
+          "stdin": "472",
+          "expect": "Invalid"
+        },
+        {
+          "stdin": "47a2",
+          "expect": "Invalid"
+        },
+        {
+          "stdin": "48211",
+          "expect": "Invalid"
+        },
+        {
+          "stdin": "",
+          "expect": "Invalid"
+        },
+        {
+          "stdin": "12 4",
+          "expect": "Invalid"
+        }
+      ]
+    },
+    {
+      "slug": "gcse-robust-programs-p-05",
+      "tier": 3,
+      "difficulty": 3,
+      "xp": 25,
+      "title": "Product code format",
+      "brief": "A product code must be in this format: two capital letters, then three digits. For example `AB123`.\n\nInput a code. Print `Valid` if it matches the format exactly, otherwise print `Invalid`.\n\nLower case letters are not allowed, so `ab123` is invalid.",
+      "starter": "",
+      "hints": [
+        "Check the length is 5 first. Then check the first two characters and the last three separately.",
+        "For the letters use `code[:2].isalpha()` and `code[:2].isupper()`. For the digits use `code[2:].isdigit()`."
+      ],
+      "tests": [
+        {
+          "stdin": "AB123",
+          "expect": "Valid"
+        },
+        {
+          "stdin": "ab123",
+          "expect": "Invalid"
+        },
+        {
+          "stdin": "Ab123",
+          "expect": "Invalid"
+        },
+        {
+          "stdin": "A1234",
+          "expect": "Invalid"
+        },
+        {
+          "stdin": "ABC12",
+          "expect": "Invalid"
+        },
+        {
+          "stdin": "AB12",
+          "expect": "Invalid"
+        },
+        {
+          "stdin": "AB1234",
+          "expect": "Invalid"
+        },
+        {
+          "stdin": "AB12x",
+          "expect": "Invalid"
+        },
+        {
+          "stdin": "ZZ000",
+          "expect": "Valid"
+        }
+      ]
+    },
+    {
+      "slug": "gcse-robust-programs-p-06",
+      "tier": 4,
+      "difficulty": 4,
+      "xp": 30,
+      "title": "Email format check",
+      "brief": "A simple email check says an address is valid when **all** of these are true:\n- it has exactly one `@`\n- it has no spaces\n- there is at least one character before the `@`\n- after the `@` there is a `.` with at least one character before it and at least one character after it\n\nInput an address. Print `Valid` or `Invalid`.\n\nFor example, `sam@mail.com` is valid. `sam@mail` and `@mail.com` and `sam@.com` are not.",
+      "starter": "",
+      "hints": [
+        "Count the `@` characters first with `text.count(\"@\")`. If it is not exactly 1 (or there is a space) it is invalid.",
+        "Split into two parts with `name, domain = text.split(\"@\")`. Use `domain.find(\".\")` to find the first dot: it must not be at position 0 and must not be the last character."
+      ],
+      "tests": [
+        {
+          "stdin": "sam@mail.com",
+          "expect": "Valid"
+        },
+        {
+          "stdin": "sam@mail",
+          "expect": "Invalid"
+        },
+        {
+          "stdin": "@mail.com",
+          "expect": "Invalid"
+        },
+        {
+          "stdin": "sam@.com",
+          "expect": "Invalid"
+        },
+        {
+          "stdin": "sam@mail.",
+          "expect": "Invalid"
+        },
+        {
+          "stdin": "sa m@mail.com",
+          "expect": "Invalid"
+        },
+        {
+          "stdin": "sam@@mail.com",
+          "expect": "Invalid"
+        },
+        {
+          "stdin": "a@b.c",
+          "expect": "Valid"
+        },
+        {
+          "stdin": "sam@mail.co.uk",
+          "expect": "Valid"
+        },
+        {
+          "stdin": "sam.mail.com",
+          "expect": "Invalid"
+        }
+      ]
+    },
+    {
+      "slug": "gcse-robust-programs-p-07",
+      "tier": 3,
+      "difficulty": 3,
+      "xp": 25,
+      "title": "Menu choice, ask again",
+      "brief": "A menu has three options: 1, 2 and 3. The user types their choice as text.\n\nRead choices, one per line. Each time the choice is not exactly `1`, `2` or `3`, print `Please choose 1, 2 or 3` and read another choice. When the choice is valid, print `You chose ` followed by the choice, and stop.\n\nFor example, the choices `x`, `7`, `2` print:\n```\nPlease choose 1, 2 or 3\nPlease choose 1, 2 or 3\nYou chose 2\n```",
+      "starter": "",
+      "hints": [
+        "Read the first choice before the loop, then loop `while` the choice is not valid, reading again each time.",
+        "Keep it as text. A choice is valid when `choice == \"1\" or choice == \"2\" or choice == \"3\"` (or `choice in [\"1\", \"2\", \"3\"]`)."
+      ],
+      "tests": [
+        {
+          "stdin": "2",
+          "expect": "You chose 2"
+        },
+        {
+          "stdin": "x\n7\n2",
+          "expect": "Please choose 1, 2 or 3\nPlease choose 1, 2 or 3\nYou chose 2"
+        },
+        {
+          "stdin": "\n12\n3",
+          "expect": "Please choose 1, 2 or 3\nPlease choose 1, 2 or 3\nYou chose 3"
+        },
+        {
+          "stdin": "0\n1",
+          "expect": "Please choose 1, 2 or 3\nYou chose 1"
+        },
+        {
+          "stdin": "a\nb\nc\n3",
+          "expect": "Please choose 1, 2 or 3\nPlease choose 1, 2 or 3\nPlease choose 1, 2 or 3\nYou chose 3"
+        }
+      ]
+    },
+    {
+      "slug": "gcse-robust-programs-p-08",
+      "tier": 3,
+      "difficulty": 3,
+      "xp": 25,
+      "title": "A whole number above zero",
+      "brief": "A program needs a whole number that is 1 or more. The user types their entry as text.\n\nRead entries, one per line. An entry is valid only if it is made up of digits and its value is more than 0. Each time an entry is not valid, print `Try again` and read another. When it is valid, print `Accepted: ` followed by the number, and stop.\n\nFor example, `abc`, `0`, `12` prints:\n```\nTry again\nTry again\nAccepted: 12\n```",
+      "starter": "",
+      "hints": [
+        "Check that the entry is all digits BEFORE you convert it with `int()`, otherwise the program crashes on `abc`.",
+        "One way: keep a variable `valid = False`. Inside the loop, set it to True only if `entry.isdigit()` and `int(entry) > 0`."
+      ],
+      "tests": [
+        {
+          "stdin": "5",
+          "expect": "Accepted: 5"
+        },
+        {
+          "stdin": "abc\n0\n12",
+          "expect": "Try again\nTry again\nAccepted: 12"
+        },
+        {
+          "stdin": "-4\n3.5\n007",
+          "expect": "Try again\nTry again\nAccepted: 7"
+        },
+        {
+          "stdin": "\n0\n0\n1",
+          "expect": "Try again\nTry again\nTry again\nAccepted: 1"
+        },
+        {
+          "stdin": "10a\n10",
+          "expect": "Try again\nAccepted: 10"
+        }
+      ]
+    },
+    {
+      "slug": "gcse-robust-programs-p-09",
+      "tier": 3,
+      "difficulty": 3,
+      "xp": 25,
+      "title": "Which password check failed?",
+      "brief": "A password is checked in this order. The first check that fails decides the message:\n1. If nothing was entered, print `Empty`\n2. If it is shorter than 8 characters, print `Too short`\n3. If it has no digit (0 to 9), print `No digit`\n\nIf all the checks pass, print `OK`.\n\nInput a password and print the message.",
+      "starter": "",
+      "hints": [
+        "Use `if` / `elif` / `elif` / `else` so only the first failing check prints anything.",
+        "To find out whether there is a digit, loop through the characters and use `character.isdigit()`, keeping a variable that becomes True if you find one."
+      ],
+      "tests": [
+        {
+          "stdin": "",
+          "expect": "Empty"
+        },
+        {
+          "stdin": "abc1",
+          "expect": "Too short"
+        },
+        {
+          "stdin": "abcdefgh",
+          "expect": "No digit"
+        },
+        {
+          "stdin": "abcdefg1",
+          "expect": "OK"
+        },
+        {
+          "stdin": "12345678",
+          "expect": "OK"
+        },
+        {
+          "stdin": "passw0rd!",
+          "expect": "OK"
+        },
+        {
+          "stdin": "1",
+          "expect": "Too short"
+        }
+      ]
+    },
+    {
+      "slug": "gcse-robust-programs-p-10",
+      "tier": 4,
+      "difficulty": 4,
+      "xp": 30,
+      "title": "Is it a real date?",
+      "brief": "Input a day, then a month, then a year, as whole numbers (one per line). Print `Valid` if it is a real date, otherwise print `Invalid`.\n\nUse these rules:\n- the year must be from 1900 to 2100\n- the month must be from 1 to 12\n- the day must be at least 1 and no more than the number of days in that month\n\nThe months with 30 days are April (4), June (6), September (9) and November (11). February (2) has 28 days (ignore leap years). All the other months have 31 days.",
+      "starter": "",
+      "hints": [
+        "Check the year and the month first. If either is wrong the date is invalid, whatever the day is.",
+        "Work out how many days the month has (28, 30 or 31) and store it in a variable, then check `day >= 1 and day <= days`."
+      ],
+      "tests": [
+        {
+          "stdin": "15\n6\n2024",
+          "expect": "Valid"
+        },
+        {
+          "stdin": "31\n4\n2024",
+          "expect": "Invalid"
+        },
+        {
+          "stdin": "30\n4\n2024",
+          "expect": "Valid"
+        },
+        {
+          "stdin": "29\n2\n2023",
+          "expect": "Invalid"
+        },
+        {
+          "stdin": "28\n2\n2023",
+          "expect": "Valid"
+        },
+        {
+          "stdin": "0\n5\n2000",
+          "expect": "Invalid"
+        },
+        {
+          "stdin": "31\n12\n2100",
+          "expect": "Valid"
+        },
+        {
+          "stdin": "1\n13\n2000",
+          "expect": "Invalid"
+        },
+        {
+          "stdin": "1\n1\n1899",
+          "expect": "Invalid"
+        },
+        {
+          "stdin": "31\n1\n2101",
+          "expect": "Invalid"
+        }
+      ]
+    },
+    {
+      "slug": "gcse-robust-programs-p-11",
+      "tier": 3,
+      "difficulty": 3,
+      "xp": 25,
+      "title": "Age entry: type, then range",
+      "brief": "A club accepts members aged 13 to 19 (both included). The age is typed as text.\n\nInput the age and check it in this order:\n1. If it is not made up only of digits, print `Not a number`\n2. Otherwise, if it is less than 13 or more than 19, print `Out of range`\n3. Otherwise print `Accepted`",
+      "starter": "",
+      "hints": [
+        "Do the type check first. You cannot safely use `int()` on text that is not a number.",
+        "If `age.isdigit()` is False you are done. If it is True, you can convert it and compare."
+      ],
+      "tests": [
+        {
+          "stdin": "15",
+          "expect": "Accepted"
+        },
+        {
+          "stdin": "13",
+          "expect": "Accepted"
+        },
+        {
+          "stdin": "19",
+          "expect": "Accepted"
+        },
+        {
+          "stdin": "12",
+          "expect": "Out of range"
+        },
+        {
+          "stdin": "20",
+          "expect": "Out of range"
+        },
+        {
+          "stdin": "abc",
+          "expect": "Not a number"
+        },
+        {
+          "stdin": "",
+          "expect": "Not a number"
+        },
+        {
+          "stdin": "1.5",
+          "expect": "Not a number"
+        },
+        {
+          "stdin": "-3",
+          "expect": "Not a number"
+        }
+      ]
+    },
+    {
+      "slug": "gcse-robust-programs-p-12",
+      "tier": 4,
+      "difficulty": 4,
+      "xp": 30,
+      "title": "Card number check",
+      "brief": "A card number is checked in this order:\n1. If it contains anything that is not a digit, print `Not digits`\n2. If it is not exactly 16 characters long, print `Wrong length`\n3. If the sum of its digits is not a multiple of 10, print `Failed check`\n\nIf all three checks pass, print `Valid`.\n\nInput a card number and print the result.",
+      "starter": "",
+      "hints": [
+        "Do the checks in the order given and stop at the first one that fails.",
+        "For the sum: `total = 0`, then for each character add `int(character)`. A multiple of 10 has `total % 10 == 0`."
+      ],
+      "tests": [
+        {
+          "stdin": "1234567890123456",
+          "expect": "Failed check"
+        },
+        {
+          "stdin": "0000000000000000",
+          "expect": "Valid"
+        },
+        {
+          "stdin": "1111111111111119",
+          "expect": "Failed check"
+        },
+        {
+          "stdin": "12345",
+          "expect": "Wrong length"
+        },
+        {
+          "stdin": "1234 5678 9012 3456",
+          "expect": "Not digits"
+        },
+        {
+          "stdin": "abcdefghijklmnop",
+          "expect": "Not digits"
+        },
+        {
+          "stdin": "5555555555555550",
+          "expect": "Failed check"
+        },
+        {
+          "stdin": "55555555555555555",
+          "expect": "Wrong length"
+        }
+      ]
+    },
+    {
+      "slug": "gcse-robust-programs-p-13",
+      "tier": 1,
+      "difficulty": 1,
+      "xp": 10,
+      "title": "Do the passwords match?",
+      "brief": "When someone creates an account they type their new password twice, to catch typing mistakes.\n\nInput the password, then input it again. Print `Match` if the two are exactly the same, otherwise print `Do not match`. Capital letters matter.",
+      "starter": "",
+      "hints": [
+        "Read both lines into two variables.",
+        "Compare them with `==`. It already treats `Cat` and `cat` as different."
+      ],
+      "tests": [
+        {
+          "stdin": "river42\nriver42",
+          "expect": "Match"
+        },
+        {
+          "stdin": "river42\nRiver42",
+          "expect": "Do not match"
+        },
+        {
+          "stdin": "a\nb",
+          "expect": "Do not match"
+        },
+        {
+          "stdin": "\n",
+          "expect": "Match"
+        },
+        {
+          "stdin": "pass word\npass word",
+          "expect": "Match"
+        },
+        {
+          "stdin": "abc\nabcd",
+          "expect": "Do not match"
+        }
+      ]
+    },
+    {
+      "slug": "gcse-robust-programs-p-14",
+      "tier": 2,
+      "difficulty": 2,
+      "xp": 15,
+      "title": "PIN with a leading zero",
+      "brief": "The stored PIN is `0472`. Input a PIN. Print `Access granted` if it is exactly the same as the stored PIN, otherwise print `Access denied`.\n\nCareful: `472` is **not** the same as `0472`.",
+      "starter": "",
+      "hints": [
+        "If you turn the PIN into a number with `int()`, the leading 0 disappears and the check goes wrong.",
+        "Keep the PIN as text and compare it with the string `\"0472\"`."
+      ],
+      "tests": [
+        {
+          "stdin": "0472",
+          "expect": "Access granted"
+        },
+        {
+          "stdin": "472",
+          "expect": "Access denied"
+        },
+        {
+          "stdin": "0473",
+          "expect": "Access denied"
+        },
+        {
+          "stdin": "",
+          "expect": "Access denied"
+        },
+        {
+          "stdin": "04720",
+          "expect": "Access denied"
+        },
+        {
+          "stdin": "0472 ",
+          "expect": "Access denied"
+        }
+      ]
+    },
+    {
+      "slug": "gcse-robust-programs-p-15",
+      "tier": 3,
+      "difficulty": 3,
+      "xp": 25,
+      "title": "Two accounts",
+      "brief": "A system has two accounts:\n- username `ana`, password `blue7`\n- username `raj`, password `Green!9`\n\nInput a username, then a password. If they match one of the accounts, print `Welcome, ` followed by the username. Otherwise print `Login failed`.\n\nThe password must belong to the same account as the username: `ana` with `Green!9` fails.",
+      "starter": "",
+      "hints": [
+        "Check each account separately: the username matches AND the password matches.",
+        "Use `if username == \"ana\" and password == \"blue7\":` then `elif` for the second account."
+      ],
+      "tests": [
+        {
+          "stdin": "ana\nblue7",
+          "expect": "Welcome, ana"
+        },
+        {
+          "stdin": "raj\nGreen!9",
+          "expect": "Welcome, raj"
+        },
+        {
+          "stdin": "ana\nGreen!9",
+          "expect": "Login failed"
+        },
+        {
+          "stdin": "raj\nblue7",
+          "expect": "Login failed"
+        },
+        {
+          "stdin": "Ana\nblue7",
+          "expect": "Login failed"
+        },
+        {
+          "stdin": "zed\nx",
+          "expect": "Login failed"
+        },
+        {
+          "stdin": "ana\nBlue7",
+          "expect": "Login failed"
+        }
+      ]
+    },
+    {
+      "slug": "gcse-robust-programs-p-16",
+      "tier": 4,
+      "difficulty": 4,
+      "xp": 30,
+      "title": "Password strength score",
+      "brief": "A password gets 1 point for each of these it meets:\n- at least 8 characters long\n- has a capital letter\n- has a lower case letter\n- has a digit (0 to 9)\n- has a symbol (anything that is not a letter or a digit)\n\nInput a password. Print `Score: ` followed by the points out of 5 (for example `Score: 3/5`), then on the next line print `Weak` for 0 to 2 points, `OK` for 3 or 4 points, or `Strong` for 5 points.",
+      "starter": "",
+      "hints": [
+        "Work out each of the five checks separately and add 1 to a `score` variable for each one that is met.",
+        "Useful string methods: `isupper()`, `islower()`, `isdigit()` and `isalnum()` (a symbol is a character where `isalnum()` is False)."
+      ],
+      "tests": [
+        {
+          "stdin": "abc",
+          "expect": "Score: 1/5\nWeak"
+        },
+        {
+          "stdin": "abcdefgh",
+          "expect": "Score: 2/5\nWeak"
+        },
+        {
+          "stdin": "Abcdefg1",
+          "expect": "Score: 4/5\nOK"
+        },
+        {
+          "stdin": "Passw0rd!",
+          "expect": "Score: 5/5\nStrong"
+        },
+        {
+          "stdin": "PASSWORD",
+          "expect": "Score: 2/5\nWeak"
+        },
+        {
+          "stdin": "12345678",
+          "expect": "Score: 2/5\nWeak"
+        },
+        {
+          "stdin": "a1!",
+          "expect": "Score: 3/5\nOK"
+        },
+        {
+          "stdin": "Ab1!",
+          "expect": "Score: 4/5\nOK"
+        }
+      ]
+    },
+    {
+      "slug": "gcse-robust-programs-p-17",
+      "tier": 3,
+      "difficulty": 3,
+      "xp": 25,
+      "title": "Strong or weak?",
+      "brief": "A password is **strong** if it is at least 8 characters long AND has at least one capital letter AND at least one lower case letter AND at least one digit.\n\nInput a password. Print `Strong` or `Weak`.",
+      "starter": "",
+      "hints": [
+        "Loop through the characters and use three True/False variables: one for capitals, one for lower case, one for digits.",
+        "At the end, the password is strong only if the length is enough and all three variables are True."
+      ],
+      "tests": [
+        {
+          "stdin": "Passw0rd",
+          "expect": "Strong"
+        },
+        {
+          "stdin": "password1",
+          "expect": "Weak"
+        },
+        {
+          "stdin": "PASSWORD1",
+          "expect": "Weak"
+        },
+        {
+          "stdin": "Pass1",
+          "expect": "Weak"
+        },
+        {
+          "stdin": "Abcdefg1",
+          "expect": "Strong"
+        },
+        {
+          "stdin": "abcdefgH",
+          "expect": "Weak"
+        },
+        {
+          "stdin": "12345678",
+          "expect": "Weak"
+        },
+        {
+          "stdin": "P4ssword!",
+          "expect": "Strong"
+        }
+      ]
+    },
+    {
+      "slug": "gcse-robust-programs-p-18",
+      "tier": 3,
+      "difficulty": 3,
+      "xp": 25,
+      "title": "Is the username taken?",
+      "brief": "Input a whole number N. Then input N usernames that already exist, one per line. Finally input a new username that someone wants.\n\nPrint `Taken` if the new username is already in the list, otherwise print `Available`. Capital letters do not matter, so `Sam` and `sam` count as the same username.",
+      "starter": "",
+      "hints": [
+        "To ignore capital letters, change both the new name and each stored name to lower case with `.lower()` before comparing.",
+        "Loop through the stored names. If any of them matches, it is taken."
+      ],
+      "tests": [
+        {
+          "stdin": "2\nsam\nana\nana",
+          "expect": "Taken"
+        },
+        {
+          "stdin": "2\nsam\nana\nANA",
+          "expect": "Taken"
+        },
+        {
+          "stdin": "2\nsam\nana\nben",
+          "expect": "Available"
+        },
+        {
+          "stdin": "1\nSam\nsam",
+          "expect": "Taken"
+        },
+        {
+          "stdin": "3\nsam\nana\nraj\nra",
+          "expect": "Available"
+        },
+        {
+          "stdin": "1\nx\nx",
+          "expect": "Taken"
+        }
+      ]
+    },
+    {
+      "slug": "gcse-robust-programs-p-19",
+      "tier": 4,
+      "difficulty": 4,
+      "xp": 30,
+      "title": "Two-factor login",
+      "brief": "A login needs two things: the password `river42` and the code `4821` that was sent to the user's phone.\n\nInput the password, then input the code. Print:\n- `Logged in` if both are correct\n- `Wrong password` if the password is wrong (whatever the code is)\n- `Wrong code` if the password is right but the code is wrong",
+      "starter": "",
+      "hints": [
+        "Read both lines first. Then check the password before you check the code.",
+        "Use `if password != \"river42\":` first, then `elif code != \"4821\":`, then `else:`."
+      ],
+      "tests": [
+        {
+          "stdin": "river42\n4821",
+          "expect": "Logged in"
+        },
+        {
+          "stdin": "river42\n1234",
+          "expect": "Wrong code"
+        },
+        {
+          "stdin": "River42\n4821",
+          "expect": "Wrong password"
+        },
+        {
+          "stdin": "wrong\nwrong",
+          "expect": "Wrong password"
+        },
+        {
+          "stdin": "river42\n",
+          "expect": "Wrong code"
+        },
+        {
+          "stdin": "\n4821",
+          "expect": "Wrong password"
+        }
+      ]
+    },
+    {
+      "slug": "gcse-robust-programs-p-20",
+      "tier": 2,
+      "difficulty": 2,
+      "xp": 15,
+      "title": "Fix the syntax error: greeting",
+      "brief": "This program should input a name and print `Hello, ` followed by the name. For example, the name `Sam` prints `Hello, Sam`.\n\nIt will not run because of a syntax error. Find it and fix it.",
+      "starter": "name = input()\nprint(\"Hello, \" + name\n",
+      "hints": [
+        "Python's error message points to the line. Look at how that line ends.",
+        "Every opening bracket needs a closing bracket."
+      ],
+      "tests": [
+        {
+          "stdin": "Sam",
+          "expect": "Hello, Sam"
+        },
+        {
+          "stdin": "Priya",
+          "expect": "Hello, Priya"
+        },
+        {
+          "stdin": "A",
+          "expect": "Hello, A"
+        }
+      ]
+    },
+    {
+      "slug": "gcse-robust-programs-p-21",
+      "tier": 2,
+      "difficulty": 2,
+      "xp": 15,
+      "title": "Fix the syntax error: countdown",
+      "brief": "This program should input a whole number and count down from it to 1, printing each number on its own line. For example, `3` prints `3`, `2`, `1`.\n\nIt will not run because of a syntax error. Find it and fix it.",
+      "starter": "count = int(input())\nwhile count > 0\n    print(count)\n    count = count - 1\n",
+      "hints": [
+        "Look at the end of the line that starts with `while`.",
+        "Lines that start `if`, `while`, `for` and `else` must end with a colon."
+      ],
+      "tests": [
+        {
+          "stdin": "3",
+          "expect": "3\n2\n1"
+        },
+        {
+          "stdin": "1",
+          "expect": "1"
+        },
+        {
+          "stdin": "5",
+          "expect": "5\n4\n3\n2\n1"
+        }
+      ]
+    },
+    {
+      "slug": "gcse-robust-programs-p-22",
+      "tier": 3,
+      "difficulty": 3,
+      "xp": 25,
+      "title": "Fix the logic error: the total",
+      "brief": "This program should input a whole number N, then N whole numbers (one per line), and print their total. For example, `3` then `4`, `5`, `6` prints `15`.\n\nIt runs, but the total is wrong. Find the logic error and fix it.",
+      "starter": "n = int(input())\ntotal = 0\nfor i in range(n):\n    number = int(input())\ntotal = total + number\nprint(total)\n",
+      "hints": [
+        "Run it with 3 numbers and work out by hand which numbers actually get added to the total.",
+        "The line that adds to the total is not inside the loop, so it only runs once. Indent it."
+      ],
+      "tests": [
+        {
+          "stdin": "3\n4\n5\n6",
+          "expect": "15"
+        },
+        {
+          "stdin": "1\n10",
+          "expect": "10"
+        },
+        {
+          "stdin": "2\n1\n2",
+          "expect": "3"
+        },
+        {
+          "stdin": "4\n7\n7\n7\n7",
+          "expect": "28"
+        }
+      ]
+    },
+    {
+      "slug": "gcse-robust-programs-p-23",
+      "tier": 3,
+      "difficulty": 3,
+      "xp": 25,
+      "title": "Fix the logic error: age check",
+      "brief": "An age is valid if it is from 1 to 120 (both included). This program should print `Valid` or `Invalid`.\n\nA tester says it prints `Valid` for ages that are far too big. Find the logic error and fix it.",
+      "starter": "age = int(input())\nif age >= 1 or age <= 120:\n    print(\"Valid\")\nelse:\n    print(\"Invalid\")\n",
+      "hints": [
+        "Try the ages 0 and 200 in your head. Which part of the condition is true for 200?",
+        "Both limits must be respected at the same time, so `or` is the wrong word."
+      ],
+      "tests": [
+        {
+          "stdin": "45",
+          "expect": "Valid"
+        },
+        {
+          "stdin": "1",
+          "expect": "Valid"
+        },
+        {
+          "stdin": "120",
+          "expect": "Valid"
+        },
+        {
+          "stdin": "0",
+          "expect": "Invalid"
+        },
+        {
+          "stdin": "121",
+          "expect": "Invalid"
+        },
+        {
+          "stdin": "200",
+          "expect": "Invalid"
+        },
+        {
+          "stdin": "-5",
+          "expect": "Invalid"
+        }
+      ]
+    },
+    {
+      "slug": "gcse-robust-programs-p-24",
+      "tier": 3,
+      "difficulty": 3,
+      "xp": 25,
+      "title": "Fix the logic error: three attempts",
+      "brief": "A user gets **3** attempts to enter the password `sun`. Read guesses, one per line. If a guess is right, print `Access granted` and stop. If the user has used 3 wrong guesses, print `Locked out`.\n\nThis program lets the user have more than 3 attempts. Find the logic error and fix it.",
+      "starter": "attempts = 0\ngranted = False\nwhile attempts <= 3 and not granted:\n    guess = input()\n    attempts = attempts + 1\n    if guess == \"sun\":\n        granted = True\nif granted:\n    print(\"Access granted\")\nelse:\n    print(\"Locked out\")\n",
+      "hints": [
+        "Count how many guesses the loop allows. The loop runs while `attempts <= 3` - how many values of `attempts` is that?",
+        "Starting from 0, the loop should run for the values 0, 1 and 2 only, so the condition should be `attempts < 3`."
+      ],
+      "tests": [
+        {
+          "stdin": "sun",
+          "expect": "Access granted"
+        },
+        {
+          "stdin": "a\nsun",
+          "expect": "Access granted"
+        },
+        {
+          "stdin": "a\nb\nsun",
+          "expect": "Access granted"
+        },
+        {
+          "stdin": "a\nb\nc",
+          "expect": "Locked out"
+        },
+        {
+          "stdin": "a\nb\nc\nsun",
+          "expect": "Locked out"
+        },
+        {
+          "stdin": "a\nb\nc\nd\nsun",
+          "expect": "Locked out"
+        }
+      ]
+    },
+    {
+      "slug": "gcse-robust-programs-p-25",
+      "tier": 3,
+      "difficulty": 3,
+      "xp": 25,
+      "title": "Fix the logic error: at least 8",
+      "brief": "A password must have **at least** 8 characters. This program should print `Long enough` or `Too short`.\n\nA tester says it gives the wrong answer for one particular length. Find the logic error and fix it.",
+      "starter": "password = input()\nif len(password) > 8:\n    print(\"Long enough\")\nelse:\n    print(\"Too short\")\n",
+      "hints": [
+        "Try passwords with 7, 8 and 9 characters. Which one is treated wrongly?",
+        "\"At least 8\" includes 8 itself. Look at the comparison operator: `>` leaves 8 out."
+      ],
+      "tests": [
+        {
+          "stdin": "abcdefg",
+          "expect": "Too short"
+        },
+        {
+          "stdin": "abcdefgh",
+          "expect": "Long enough"
+        },
+        {
+          "stdin": "abcdefghi",
+          "expect": "Long enough"
+        },
+        {
+          "stdin": "",
+          "expect": "Too short"
+        },
+        {
+          "stdin": "12345678",
+          "expect": "Long enough"
+        },
+        {
+          "stdin": "a",
+          "expect": "Too short"
+        }
+      ]
+    },
+    {
+      "slug": "gcse-robust-programs-p-26",
+      "tier": 2,
+      "difficulty": 2,
+      "xp": 15,
+      "title": "Classify the test data",
+      "brief": "A program should accept whole numbers from 13 to 19. Each entry is typed as text.\n\nInput an entry and print what kind of test data it is:\n- `Erroneous` if it contains anything that is not a digit (so `abc`, `4.5` and `-3` are erroneous)\n- `Boundary` if it is 13 or 19\n- `Normal` if it is from 14 to 18\n- `Invalid` for any other whole number",
+      "starter": "",
+      "hints": [
+        "Check for erroneous data first, with `isdigit()`. Only then convert with `int()`.",
+        "After that: boundary values first, then the normal range, and everything left over is invalid."
+      ],
+      "tests": [
+        {
+          "stdin": "15",
+          "expect": "Normal"
+        },
+        {
+          "stdin": "13",
+          "expect": "Boundary"
+        },
+        {
+          "stdin": "19",
+          "expect": "Boundary"
+        },
+        {
+          "stdin": "14",
+          "expect": "Normal"
+        },
+        {
+          "stdin": "18",
+          "expect": "Normal"
+        },
+        {
+          "stdin": "12",
+          "expect": "Invalid"
+        },
+        {
+          "stdin": "20",
+          "expect": "Invalid"
+        },
+        {
+          "stdin": "0",
+          "expect": "Invalid"
+        },
+        {
+          "stdin": "abc",
+          "expect": "Erroneous"
+        },
+        {
+          "stdin": "4.5",
+          "expect": "Erroneous"
+        },
+        {
+          "stdin": "-3",
+          "expect": "Erroneous"
+        },
+        {
+          "stdin": "",
+          "expect": "Erroneous"
+        }
+      ]
+    },
+    {
+      "slug": "gcse-robust-programs-p-27",
+      "tier": 2,
+      "difficulty": 2,
+      "xp": 15,
+      "title": "Choose test data for a range",
+      "brief": "A tester wants a set of test values for a rule that accepts whole numbers from a lowest value to a highest value.\n\nInput the lowest allowed number, then the highest allowed number. Print four lines:\n```\nNormal: <the middle value>\nBoundary: <the lowest number>\nBoundary: <the highest number>\nInvalid: <the highest number plus 1>\n```\nThe middle value is `(lowest + highest) DIV 2` (whole-number division).\n\nFor example, the range 1 to 10 prints `Normal: 5`, `Boundary: 1`, `Boundary: 10` and `Invalid: 11`.",
+      "starter": "",
+      "hints": [
+        "Convert both inputs to whole numbers first, then work out the middle value with `//`.",
+        "Use one `print` for each of the four lines, joining the label and the number with `str()`."
+      ],
+      "tests": [
+        {
+          "stdin": "1\n10",
+          "expect": "Normal: 5\nBoundary: 1\nBoundary: 10\nInvalid: 11"
+        },
+        {
+          "stdin": "13\n19",
+          "expect": "Normal: 16\nBoundary: 13\nBoundary: 19\nInvalid: 20"
+        },
+        {
+          "stdin": "0\n100",
+          "expect": "Normal: 50\nBoundary: 0\nBoundary: 100\nInvalid: 101"
+        },
+        {
+          "stdin": "5\n5",
+          "expect": "Normal: 5\nBoundary: 5\nBoundary: 5\nInvalid: 6"
+        },
+        {
+          "stdin": "-4\n4",
+          "expect": "Normal: 0\nBoundary: -4\nBoundary: 4\nInvalid: 5"
+        }
+      ]
+    },
+    {
+      "slug": "gcse-robust-programs-p-28",
+      "tier": 3,
+      "difficulty": 3,
+      "xp": 25,
+      "title": "A username-checking function",
+      "brief": "A username is valid if it is from 4 to 12 characters long AND made up only of letters and digits (no spaces or symbols).\n\nWrite a function called `is_valid_username(name)` that returns `True` if the username is valid and `False` if it is not.\n\nThen write a main program. Input a whole number N, then N usernames (one per line). For each one, in order, use your function and print `Valid` or `Invalid` on its own line.",
+      "starter": "def is_valid_username(name):\n    # write your code here\n\n\n",
+      "hints": [
+        "Inside the function, `return` a condition that checks the length and `name.isalnum()` together.",
+        "In the main program, use a loop that runs N times. Call the function inside an `if`."
+      ],
+      "tests": [
+        {
+          "stdin": "4\nsam99\nab\nhas space\nabcdefghijklm",
+          "expect": "Valid\nInvalid\nInvalid\nInvalid"
+        },
+        {
+          "stdin": "1\nAna2",
+          "expect": "Valid"
+        },
+        {
+          "stdin": "3\na_b_c_d\nabcd\nabcdefghijkl",
+          "expect": "Invalid\nValid\nValid"
+        }
+      ]
+    },
+    {
+      "slug": "gcse-robust-programs-p-s1",
+      "tier": 4,
+      "difficulty": 5,
+      "xp": 40,
+      "stretch": true,
+      "title": "🌟 Registration checker",
+      "brief": "A website checks a new account. Input a username, then a password, then an age (all typed as text, one per line).\n\nCheck them in this order and print one line for **each** rule that is broken:\n1. The username must be 4 to 12 characters and made up only of letters and digits. Otherwise print `Bad username`\n2. The password must be at least 8 characters long and contain at least one digit. Otherwise print `Bad password`\n3. The age must be made up only of digits and be from 13 to 19. Otherwise print `Bad age`\n\nIf nothing is broken, print `Registered`.\n\nFor example, `sam99`, `abc`, `20` prints `Bad password` and `Bad age`.",
+      "starter": "",
+      "hints": [
+        "Do the three checks one after the other, each with its own `if`, so that more than one message can be printed.",
+        "Keep a variable that counts the problems. At the end, if it is still 0, print `Registered`. Do the age type check before you use `int()`."
+      ],
+      "tests": [
+        {
+          "stdin": "sam99\nabcdefg1\n15",
+          "expect": "Registered"
+        },
+        {
+          "stdin": "sam99\nabc\n20",
+          "expect": "Bad password\nBad age"
+        },
+        {
+          "stdin": "ab\nabcdefgh\nx",
+          "expect": "Bad username\nBad password\nBad age"
+        },
+        {
+          "stdin": "sam 99\n12345678\n13",
+          "expect": "Bad username"
+        },
+        {
+          "stdin": "Bo_b\npassword\n19",
+          "expect": "Bad username\nBad password"
+        },
+        {
+          "stdin": "abcd\nabcdefg9\n12",
+          "expect": "Bad age"
+        }
+      ]
+    },
+    {
+      "slug": "gcse-robust-programs-p-s2",
+      "tier": 4,
+      "difficulty": 5,
+      "xp": 40,
+      "stretch": true,
+      "title": "🌟 Tidy up a name",
+      "brief": "Users often type their name with extra spaces or in the wrong case. Input a name and clean it up:\n- remove any spaces at the start and end\n- replace each run of spaces between words with a single space\n- make the first letter of each word a capital and the rest lower case\n\nPrint the cleaned name. If nothing is left after cleaning (the entry was empty or only spaces), print `Invalid` instead.\n\nFor example, `  aNA   maRIA  ` prints `Ana Maria`.",
+      "starter": "",
+      "hints": [
+        "`text.split()` with nothing in the brackets splits on any amount of spaces and throws away the empty pieces.",
+        "For each word use `word.capitalize()`, then join the words back together with `\" \".join(...)`. Check for an empty result before printing."
+      ],
+      "tests": [
+        {
+          "stdin": "  aNA   maRIA  ",
+          "expect": "Ana Maria"
+        },
+        {
+          "stdin": "sam",
+          "expect": "Sam"
+        },
+        {
+          "stdin": "SAM SMITH",
+          "expect": "Sam Smith"
+        },
+        {
+          "stdin": "   ",
+          "expect": "Invalid"
+        },
+        {
+          "stdin": "",
+          "expect": "Invalid"
+        },
+        {
+          "stdin": "o'neil  jones",
+          "expect": "O'neil Jones"
+        },
+        {
+          "stdin": "mary  ann  lee",
+          "expect": "Mary Ann Lee"
+        }
+      ]
+    },
+    {
+      "slug": "gcse-robust-programs-p-s3",
+      "tier": 4,
+      "difficulty": 5,
+      "xp": 40,
+      "stretch": true,
+      "title": "🌟 Find the failing test",
+      "brief": "A program should accept whole numbers from 1 to 100 and reject all others. A tester ran it with some values and wrote down what the program did.\n\nInput a whole number N. Then, for each of N tests, input the value that was tested, then input the result the program gave (`Accepted` or `Rejected`).\n\nPrint `All tests passed` if the program did the right thing every time. Otherwise print `First failure: ` followed by the value of the **first** test where the program did the wrong thing.\n\nFor example, the test value `100` with the result `Rejected` is a failure, because 100 should have been accepted.",
+      "starter": "",
+      "hints": [
+        "For each test work out what SHOULD have happened (`Accepted` if the value is from 1 to 100, otherwise `Rejected`) and compare it with the result you were given.",
+        "You still need to read every line of input, but only remember the first failing value. A variable that starts as `None` is a good way to do this."
+      ],
+      "tests": [
+        {
+          "stdin": "3\n50\nAccepted\n0\nAccepted\n101\nRejected",
+          "expect": "First failure: 0"
+        },
+        {
+          "stdin": "4\n1\nAccepted\n100\nAccepted\n0\nRejected\n101\nRejected",
+          "expect": "All tests passed"
+        },
+        {
+          "stdin": "2\n100\nRejected\n0\nAccepted",
+          "expect": "First failure: 100"
+        },
+        {
+          "stdin": "1\n5\nRejected",
+          "expect": "First failure: 5"
+        },
+        {
+          "stdin": "1\n7\nAccepted",
+          "expect": "All tests passed"
+        }
+      ]
+    },
+    {
+      "slug": "gcse-robust-programs-p-s4",
+      "tier": 4,
+      "difficulty": 5,
+      "xp": 40,
+      "stretch": true,
+      "title": "🌟 Count the entries",
+      "brief": "A survey asks for a whole number from 1 to 50. Input a whole number N, then N entries (one per line, typed as text).\n\nSort the entries into three groups and print the size of each group on its own line:\n```\nValid: <how many are digits AND from 1 to 50>\nNot numbers: <how many contain anything that is not a digit>\nOut of range: <how many are digits but not from 1 to 50>\n```\nFor example, the entries `7`, `abc`, `0`, `50`, `51` print `Valid: 2`, `Not numbers: 1` and `Out of range: 2`.",
+      "starter": "",
+      "hints": [
+        "Use three counters that all start at 0. For each entry decide which one to add to: check for digits first, then the range.",
+        "An entry that is not all digits must be counted as `Not numbers`, and you must not call `int()` on it."
+      ],
+      "tests": [
+        {
+          "stdin": "5\n7\nabc\n0\n50\n51",
+          "expect": "Valid: 2\nNot numbers: 1\nOut of range: 2"
+        },
+        {
+          "stdin": "3\n1\n2\n3",
+          "expect": "Valid: 3\nNot numbers: 0\nOut of range: 0"
+        },
+        {
+          "stdin": "2\nx\ny",
+          "expect": "Valid: 0\nNot numbers: 2\nOut of range: 0"
+        },
+        {
+          "stdin": "5\n\n00\n-1\n49\n1.5",
+          "expect": "Valid: 1\nNot numbers: 3\nOut of range: 1"
+        },
+        {
+          "stdin": "1\n50",
+          "expect": "Valid: 1\nNot numbers: 0\nOut of range: 0"
+        }
+      ]
+    }
+  ]
 }
