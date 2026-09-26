@@ -19,6 +19,7 @@ import { getSqlJs, runSqlOnce, runSqlTests, type SqlRunOutcome } from "@/lib/sql
 import { highlightErrorLine, pythonEditorExtensions } from "@/lib/python-lint";
 import { sqlEditorExtensions } from "@/lib/sql-lang";
 import { pickChallenge, recordAttempt, type Challenge } from "@/lib/progress";
+import { shouldRestoreSolution } from "@/lib/saved-solution";
 import {
   completedTaskSlugs,
   projectsForTopic,
@@ -102,6 +103,7 @@ function Play() {
   const [pendingAnswer, setPendingAnswer] = useState("");
   const [consoleRunning, setConsoleRunning] = useState(false);
   const startedAt = useRef(Date.now());
+  const restoredFor = useRef<string | null>(null);
   const editorViewRef = useRef<EditorView | null>(null);
   const inputFieldRef = useRef<HTMLInputElement | null>(null);
 
@@ -181,6 +183,7 @@ function Play() {
   useEffect(() => {
     if (challenge) {
       setCode(priorAttempt?.code ?? challenge.starter_code ?? "");
+      restoredFor.current = null;
       setOutcome(null);
       setSolved(false);
       setTries(0);
@@ -194,6 +197,50 @@ function Play() {
       startedAt.current = Date.now();
     }
   }, [challenge, priorAttempt]);
+
+  // A lesson task the student has already passed reopens with the code they
+  // passed with, not the starter code, so they can look back at (or build on)
+  // their own solution. Every attempt's code is stored, so this just reads the
+  // latest passing one. Lesson tasks only - Practice, homework and the like
+  // are meant to be tackled fresh. staleTime/gcTime 0 so a task passed a
+  // minute ago shows its new solution rather than a cached "no solution yet".
+  const isLessonTask = !!search.lesson;
+  const { data: savedSolution } = useQuery({
+    queryKey: ["saved-solution", user?.id, challenge?.slug],
+    enabled: !!user && !!challenge && isLessonTask,
+    staleTime: 0,
+    gcTime: 0,
+    refetchOnWindowFocus: false,
+    retry: false,
+    queryFn: async () => {
+      const { data } = await supabase
+        .from("attempts")
+        .select("code, challenges!inner(slug)")
+        .eq("user_id", user!.id)
+        .eq("passed", true)
+        .eq("challenges.slug", challenge!.slug)
+        .order("created_at", { ascending: false })
+        .limit(1)
+        .maybeSingle();
+      return data;
+    },
+  });
+
+  // Once per visit to a challenge, and only into an untouched editor, so
+  // typing that started before the saved code arrived is never overwritten.
+  // The reset effect above clears restoredFor, so if it resets the editor
+  // (the challenge object changing) the solution is put back.
+  useEffect(() => {
+    if (!challenge || !savedSolution?.code) return;
+    if (restoredFor.current === challenge.slug) return;
+    restoredFor.current = challenge.slug;
+    const saved = savedSolution.code;
+    setCode((current) =>
+      shouldRestoreSolution({ current, starter: challenge.starter_code ?? "", saved })
+        ? saved
+        : current,
+    );
+  }, [challenge, savedSolution]);
 
   useEffect(() => {
     if (!challenge) return;
@@ -742,6 +789,12 @@ function Play() {
             <div className="rounded-lg border border-destructive/40 bg-destructive/10 px-4 py-3 font-mono text-sm text-destructive">
               Line {syntaxError.line}: {syntaxError.message}
             </div>
+          ) : null}
+          {isLessonTask && savedSolution?.code && code === savedSolution.code ? (
+            <p className="rounded-md border border-success/30 bg-success/5 px-3 py-2 text-sm text-success">
+              ✓ You've completed this task - this is the code you passed with. Press Reset to start
+              it again from scratch.
+            </p>
           ) : null}
           <div className="flex flex-wrap gap-2">
             <Button
