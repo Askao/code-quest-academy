@@ -74,20 +74,51 @@ function ErrorComponent({ error, reset }: { error: Error; reset: () => void }) {
   );
 }
 
+// What search engines are told about the site itself. The name is "H-Code
+// Academy" - the same as the web address (hcodeacademy.co.uk) - and the one-word
+// form people type into a search box is listed as an alternate name, so a search
+// for "hcodeacademy" is recognised as this site.
+const SITE_URL = "https://www.hcodeacademy.co.uk";
+const SITE_JSON_LD = JSON.stringify({
+  "@context": "https://schema.org",
+  "@graph": [
+    {
+      "@type": "WebSite",
+      "@id": `${SITE_URL}/#website`,
+      url: `${SITE_URL}/`,
+      name: "H-Code Academy",
+      alternateName: ["hcodeacademy", "HCode Academy", "H-Code"],
+      description:
+        "Free Python practice, lessons and revision for GCSE (OCR and AQA) and A level computer science, with teacher classes, homework and assessments.",
+      inLanguage: "en-GB",
+    },
+    {
+      "@type": "Organization",
+      "@id": `${SITE_URL}/#organization`,
+      name: "H-Code Academy",
+      alternateName: "hcodeacademy",
+      url: `${SITE_URL}/`,
+      logo: `${SITE_URL}/favicon.svg`,
+    },
+  ],
+});
+
 export const Route = createRootRouteWithContext<{ queryClient: QueryClient }>()({
   head: () => ({
     meta: [
       { charSet: "utf-8" },
       { name: "viewport", content: "width=device-width, initial-scale=1" },
-      { title: "H-Code — Python practice for GCSE & A level" },
+      { title: "H-Code Academy — Python practice for GCSE & A level" },
       {
         name: "description",
         content:
           "Free adaptive Python practice for GCSE (OCR and AQA) and A level computer science, with teacher classes, homework and leaderboards.",
       },
       { property: "og:type", content: "website" },
+      { property: "og:site_name", content: "H-Code Academy" },
       { name: "twitter:card", content: "summary_large_image" },
     ],
+    scripts: [{ type: "application/ld+json", children: SITE_JSON_LD }],
     links: [
       { rel: "stylesheet", href: appCss },
       { rel: "preconnect", href: "https://fonts.googleapis.com" },

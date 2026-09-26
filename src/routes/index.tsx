@@ -28,19 +28,20 @@ import { GCSE_TOPICS, ALEVEL_TOPICS } from "@/lib/game";
 export const Route = createFileRoute("/")({
   head: () => ({
     meta: [
-      { title: "H-Code — free Python practice for GCSE & A level" },
+      { title: "H-Code Academy — free Python practice for GCSE & A level" },
       {
         name: "description",
         content:
           "Structured Python lesson paths, per-topic adaptive skill tracking, longer assessment projects and a free in-browser IDE for GCSE (OCR and AQA) and A level — with teacher-paced classes, personalised homework and class-wide analytics.",
       },
-      { property: "og:title", content: "H-Code — free Python practice for GCSE & A level" },
+      { property: "og:title", content: "H-Code Academy — free Python practice for GCSE & A level" },
       {
         property: "og:description",
         content:
           "Lesson paths, a real adaptive engine, projects, teacher classes and a free browser IDE for computer science students.",
       },
     ],
+    links: [{ rel: "canonical", href: "https://www.hcodeacademy.co.uk/" }],
   }),
   component: Landing,
 });
@@ -408,7 +409,7 @@ function Landing() {
             <span className="flex h-7 w-7 items-center justify-center rounded-lg bg-primary/15">
               &gt;_
             </span>
-            H-Code
+            H-Code Academy
           </span>
           <div className="flex items-center gap-2">
             <ThemeToggle />
@@ -902,7 +903,7 @@ function Landing() {
       </section>
 
       <footer className="border-t border-border py-8 text-center text-sm text-muted-foreground">
-        H-Code — self-hostable Python practice for computer science departments.
+        H-Code Academy (hcodeacademy.co.uk) — Python practice for computer science students and their teachers.
       </footer>
     </div>
   );
