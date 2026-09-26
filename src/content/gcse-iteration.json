@@ -9,7 +9,9 @@
       "notes": "A **count-controlled** loop repeats a known number of times.\n\n```python\nfor i in range(5):        # 0,1,2,3,4\nfor i in range(1, 6):     # 1,2,3,4,5\nfor i in range(10, 0, -1) # counts down\n```\n\n`range(a, b)` stops **before** `b` — that off-by-one is the most common exam error.\n\n---\n\nA running total is set up before the loop and updated inside it:\n\n```python\ntotal = 0\nfor i in range(1, 6):\n    total = total + i\n```",
       "worked_example": "n = int(input())\ntotal = 0\nfor i in range(1, n + 1):\n    total = total + i\nprint(total)",
       "worked_example_note": "`n + 1` makes the loop include `n` itself. `total` must exist before the loop starts.",
-      "worked_example_demo_input": ["5"]
+      "worked_example_demo_input": [
+        "5"
+      ]
     },
     {
       "slug": "gcse-iteration-4",
@@ -18,7 +20,9 @@
       "notes": "A quick recap: `range(a, b)` counts from `a` up to, but **not including**, `b`. `range(a, b, step)` adds a step size, which can be negative to count down.\n\nA loop can do more than just print — it can build up a running total, or count how many values meet some condition, using a variable set up before the loop and updated inside it.",
       "worked_example": "n = int(input())\ncount = 0\nfor i in range(1, n + 1):\n    if i % 5 == 0:\n        count = count + 1\nprint(count)",
       "worked_example_note": "count only increases when the if condition inside the loop is true — the loop still runs every time, but the counter doesn't.",
-      "worked_example_demo_input": ["12"]
+      "worked_example_demo_input": [
+        "12"
+      ]
     },
     {
       "slug": "gcse-iteration-2",
@@ -27,7 +31,11 @@
       "notes": "A **condition-controlled** loop repeats until something becomes false.\n\n```python\nvalue = int(input())\nwhile value != 0:\n    print(value)\n    value = int(input())\n```\n\nThat pattern — read, loop, read again at the bottom — is how OCR expects a **sentinel value** (a special value such as 0 or `stop` that ends the input) to be handled.\n\n---\n\nInput validation uses the same shape:\n\n```python\nage = int(input())\nwhile age < 0:\n    age = int(input())\n```\n\nIf you forget to read a new value inside the loop, it never ends.\n\n---\n\nOCR's exam pseudocode also has a **post-condition** loop, `do...until`:\n\n```text\ndo\n    answer = input(\"What is the password?\")\nuntil answer == \"computer\"\n```\n\nThe key difference from `while`: a `do...until` loop checks its condition at the **end** of each pass, so it always runs at least once — a `while` loop checks first, so it might not run at all. Python has no `do...until` keyword, but a loop that starts `True` and `break`s when the real condition is met behaves the same way:\n\n```python\nwhile True:\n    answer = input(\"What is the password?\")\n    if answer == \"computer\":\n        break\n```",
       "worked_example": "count = 0\nword = input()\nwhile word != \"stop\":\n    count = count + 1\n    word = input()\nprint(count)",
       "worked_example_note": "The sentinel `stop` is not counted, because the loop checks the value before doing anything with it.",
-      "worked_example_demo_input": ["cat", "dog", "stop"]
+      "worked_example_demo_input": [
+        "cat",
+        "dog",
+        "stop"
+      ]
     },
     {
       "slug": "gcse-iteration-5",
@@ -36,7 +44,10 @@
       "notes": "Recap the shape: **read, loop, read again inside it**. That's true whether you're using a sentinel value to end input, or validating that a value is in range.\n\n```python\ntotal = 0\nvalue = int(input())\nwhile value != 0:\n    total = total + value\n    value = int(input())\nprint(total)\n```\n\nThe sentinel itself (0 here) is never added to the total — the loop's condition is checked *before* anything inside it runs.",
       "worked_example": "attempts = 0\nguess = int(input())\nattempts = attempts + 1\nwhile guess != 7:\n    guess = int(input())\n    attempts = attempts + 1\nprint(attempts)",
       "worked_example_note": "The first guess is read and counted before the loop even starts, since the loop's condition needs a value to check.",
-      "worked_example_demo_input": ["3", "7"]
+      "worked_example_demo_input": [
+        "3",
+        "7"
+      ]
     },
     {
       "slug": "gcse-iteration-3",
@@ -45,407 +56,1930 @@
       "notes": "Ask one question to choose your loop: **do I know how many times?**\n\n- Yes → `for`\n- No, it depends on the data → `while`\n\n---\n\nLonger questions often need more than one variable tracked through the loop — for example a total *and* a count *and* the largest so far. Set them all up before the loop starts, and update each one inside it.\n\nWhen the question says *keep asking until*, that is a `while` with a sentinel. When it says *for each of the 10 readings*, that is a `for`.",
       "worked_example": "# Read 5 numbers and report the largest\nlargest = int(input())\nfor i in range(4):\n    value = int(input())\n    if value > largest:\n        largest = value\nprint(largest)",
       "worked_example_note": "Starting `largest` at the first real value avoids guessing a starting number that might be too big.",
-      "worked_example_demo_input": ["10", "25", "7", "30", "18"]
+      "worked_example_demo_input": [
+        "10",
+        "25",
+        "7",
+        "30",
+        "18"
+      ]
     }
   ],
   "quiz": [
-    { "lessonSlug": "gcse-iteration-1", "question": "What does range(1, 6) produce?", "options": ["1, 2, 3, 4, 5", "1, 2, 3, 4, 5, 6", "0, 1, 2, 3, 4, 5", "2, 3, 4, 5, 6"], "answer": "1, 2, 3, 4, 5", "explanation": "range(a, b) counts from a up to, but not including, b." },
-    { "lessonSlug": "gcse-iteration-1", "question": "Where must a running total variable be set up?", "options": ["Before the loop starts", "Inside the loop, on every pass", "After the loop finishes", "It doesn't matter"], "answer": "Before the loop starts", "explanation": "If total = 0 were inside the loop, it would reset back to 0 every single pass instead of accumulating." },
-    { "lessonSlug": "gcse-iteration-1", "question": "What is the most common exam mistake with range()?", "options": ["Getting the off-by-one boundary wrong — forgetting range() stops before its second value", "Forgetting to indent", "Using a while loop instead", "Using too many variables"], "answer": "Getting the off-by-one boundary wrong — forgetting range() stops before its second value" },
-    { "lessonSlug": "gcse-iteration-4", "question": "What does range(2, 10, 2) produce?", "options": ["2, 4, 6, 8", "2, 4, 6, 8, 10", "0, 2, 4, 6, 8", "2, 3, 4, ..., 9"], "answer": "2, 4, 6, 8", "explanation": "The third argument is the step size, and range still stops before its second value." },
-    { "lessonSlug": "gcse-iteration-4", "question": "A loop counts how many values meet a condition. Where should the counter start?", "options": ["Set to 0 before the loop, then increased inside it when the condition is met", "Set to 0 inside the loop, every pass", "It doesn't need starting anywhere", "Set to 1 before the loop"], "answer": "Set to 0 before the loop, then increased inside it when the condition is met" },
-    { "lessonSlug": "gcse-iteration-2", "question": "What is a sentinel value?", "options": ["A special value (like 0 or \"stop\") that signals the end of input, and isn't itself real data", "The first value a loop reads", "A value that causes an error", "The total of all values read"], "answer": "A special value (like 0 or \"stop\") that signals the end of input, and isn't itself real data" },
-    { "lessonSlug": "gcse-iteration-2", "question": "What happens if you forget to read a new value inside a while loop's body?", "options": ["The loop never ends (infinite loop)", "The program crashes immediately", "The loop runs exactly once", "Python fixes it automatically"], "answer": "The loop never ends (infinite loop)", "explanation": "If the condition variable never changes inside the loop, the while condition stays true forever." },
-    { "lessonSlug": "gcse-iteration-2", "question": "In the pattern \"read, loop, read again at the bottom\", why is there a second read inside the loop?", "options": ["So the condition has a new value to check on the next pass", "To print the value twice", "It's not needed, just for style", "To validate the input"], "answer": "So the condition has a new value to check on the next pass" },
-    { "lessonSlug": "gcse-iteration-2", "question": "What's the key difference between a while loop and OCR's do...until loop?", "options": ["do...until always runs its body at least once, since the condition is checked at the end", "do...until never runs its body", "They are exactly identical", "while can only count up, do...until can only count down"], "answer": "do...until always runs its body at least once, since the condition is checked at the end", "explanation": "while checks its condition before running the body, so it might not run at all - do...until checks after, so the body always runs once first." },
-    { "lessonSlug": "gcse-iteration-5", "question": "In a sentinel-value loop, is the sentinel itself included in a running total?", "options": ["No — the loop checks the value before using it", "Yes, it's added like any other value", "Only if it's negative", "It depends on the loop"], "answer": "No — the loop checks the value before using it", "explanation": "The while condition is checked first, so once the sentinel is read the loop body never runs again for it." },
-    { "lessonSlug": "gcse-iteration-5", "question": "What must happen inside a while loop's body for a validation loop to eventually stop?", "options": ["A new value must be read, so the condition has something different to check", "Nothing, it stops automatically", "The loop must count to 10", "The variable must be reset to 0"], "answer": "A new value must be read, so the condition has something different to check" },
-    { "lessonSlug": "gcse-iteration-3", "question": "How do you decide between a for loop and a while loop?", "options": ["If you know exactly how many times to repeat, use for; otherwise use while", "for is always better", "while is always better", "It depends on how many variables you have"], "answer": "If you know exactly how many times to repeat, use for; otherwise use while" },
-    { "lessonSlug": "gcse-iteration-3", "question": "A question says \"keep asking until the user types stop\". Which loop type does this describe?", "options": ["A while loop with a sentinel", "A for loop with range()", "Neither — this needs no loop", "A for loop counting to 10"], "answer": "A while loop with a sentinel" },
-    { "lessonSlug": "gcse-iteration-3", "question": "A question tracks a total, a count, AND the largest value seen through a loop. Where should these variables be created?", "options": ["All set up before the loop starts, then updated inside it", "All created inside the loop on every pass", "Only the total needs setting up first", "It doesn't matter where"], "answer": "All set up before the loop starts, then updated inside it" }
+    {
+      "lessonSlug": "gcse-iteration-1",
+      "question": "What does range(1, 6) produce?",
+      "options": [
+        "1, 2, 3, 4, 5",
+        "1, 2, 3, 4, 5, 6",
+        "0, 1, 2, 3, 4, 5",
+        "2, 3, 4, 5, 6"
+      ],
+      "answer": "1, 2, 3, 4, 5",
+      "explanation": "range(a, b) counts from a up to, but not including, b."
+    },
+    {
+      "lessonSlug": "gcse-iteration-1",
+      "question": "Where must a running total variable be set up?",
+      "options": [
+        "Before the loop starts",
+        "Inside the loop, on every pass",
+        "After the loop finishes",
+        "It doesn't matter"
+      ],
+      "answer": "Before the loop starts",
+      "explanation": "If total = 0 were inside the loop, it would reset back to 0 every single pass instead of accumulating."
+    },
+    {
+      "lessonSlug": "gcse-iteration-1",
+      "question": "What is the most common exam mistake with range()?",
+      "options": [
+        "Getting the off-by-one boundary wrong — forgetting range() stops before its second value",
+        "Forgetting to indent",
+        "Using a while loop instead",
+        "Using too many variables"
+      ],
+      "answer": "Getting the off-by-one boundary wrong — forgetting range() stops before its second value"
+    },
+    {
+      "lessonSlug": "gcse-iteration-4",
+      "question": "What does range(2, 10, 2) produce?",
+      "options": [
+        "2, 4, 6, 8",
+        "2, 4, 6, 8, 10",
+        "0, 2, 4, 6, 8",
+        "2, 3, 4, ..., 9"
+      ],
+      "answer": "2, 4, 6, 8",
+      "explanation": "The third argument is the step size, and range still stops before its second value."
+    },
+    {
+      "lessonSlug": "gcse-iteration-4",
+      "question": "A loop counts how many values meet a condition. Where should the counter start?",
+      "options": [
+        "Set to 0 before the loop, then increased inside it when the condition is met",
+        "Set to 0 inside the loop, every pass",
+        "It doesn't need starting anywhere",
+        "Set to 1 before the loop"
+      ],
+      "answer": "Set to 0 before the loop, then increased inside it when the condition is met"
+    },
+    {
+      "lessonSlug": "gcse-iteration-2",
+      "question": "What is a sentinel value?",
+      "options": [
+        "A special value (like 0 or \"stop\") that signals the end of input, and isn't itself real data",
+        "The first value a loop reads",
+        "A value that causes an error",
+        "The total of all values read"
+      ],
+      "answer": "A special value (like 0 or \"stop\") that signals the end of input, and isn't itself real data"
+    },
+    {
+      "lessonSlug": "gcse-iteration-2",
+      "question": "What happens if you forget to read a new value inside a while loop's body?",
+      "options": [
+        "The loop never ends (infinite loop)",
+        "The program crashes immediately",
+        "The loop runs exactly once",
+        "Python fixes it automatically"
+      ],
+      "answer": "The loop never ends (infinite loop)",
+      "explanation": "If the condition variable never changes inside the loop, the while condition stays true forever."
+    },
+    {
+      "lessonSlug": "gcse-iteration-2",
+      "question": "In the pattern \"read, loop, read again at the bottom\", why is there a second read inside the loop?",
+      "options": [
+        "So the condition has a new value to check on the next pass",
+        "To print the value twice",
+        "It's not needed, just for style",
+        "To validate the input"
+      ],
+      "answer": "So the condition has a new value to check on the next pass"
+    },
+    {
+      "lessonSlug": "gcse-iteration-2",
+      "question": "What's the key difference between a while loop and OCR's do...until loop?",
+      "options": [
+        "do...until always runs its body at least once, since the condition is checked at the end",
+        "do...until never runs its body",
+        "They are exactly identical",
+        "while can only count up, do...until can only count down"
+      ],
+      "answer": "do...until always runs its body at least once, since the condition is checked at the end",
+      "explanation": "while checks its condition before running the body, so it might not run at all - do...until checks after, so the body always runs once first."
+    },
+    {
+      "lessonSlug": "gcse-iteration-5",
+      "question": "In a sentinel-value loop, is the sentinel itself included in a running total?",
+      "options": [
+        "No — the loop checks the value before using it",
+        "Yes, it's added like any other value",
+        "Only if it's negative",
+        "It depends on the loop"
+      ],
+      "answer": "No — the loop checks the value before using it",
+      "explanation": "The while condition is checked first, so once the sentinel is read the loop body never runs again for it."
+    },
+    {
+      "lessonSlug": "gcse-iteration-5",
+      "question": "What must happen inside a while loop's body for a validation loop to eventually stop?",
+      "options": [
+        "A new value must be read, so the condition has something different to check",
+        "Nothing, it stops automatically",
+        "The loop must count to 10",
+        "The variable must be reset to 0"
+      ],
+      "answer": "A new value must be read, so the condition has something different to check"
+    },
+    {
+      "lessonSlug": "gcse-iteration-3",
+      "question": "How do you decide between a for loop and a while loop?",
+      "options": [
+        "If you know exactly how many times to repeat, use for; otherwise use while",
+        "for is always better",
+        "while is always better",
+        "It depends on how many variables you have"
+      ],
+      "answer": "If you know exactly how many times to repeat, use for; otherwise use while"
+    },
+    {
+      "lessonSlug": "gcse-iteration-3",
+      "question": "A question says \"keep asking until the user types stop\". Which loop type does this describe?",
+      "options": [
+        "A while loop with a sentinel",
+        "A for loop with range()",
+        "Neither — this needs no loop",
+        "A for loop counting to 10"
+      ],
+      "answer": "A while loop with a sentinel"
+    },
+    {
+      "lessonSlug": "gcse-iteration-3",
+      "question": "A question tracks a total, a count, AND the largest value seen through a loop. Where should these variables be created?",
+      "options": [
+        "All set up before the loop starts, then updated inside it",
+        "All created inside the loop on every pass",
+        "Only the total needs setting up first",
+        "It doesn't matter where"
+      ],
+      "answer": "All set up before the loop starts, then updated inside it"
+    }
   ],
   "tasks": [
     {
-      "slug": "gcse-iteration-t1-01", "lesson": 1, "tier": 1, "difficulty": 1, "xp": 10,
+      "slug": "gcse-iteration-t1-01",
+      "lesson": 1,
+      "tier": 1,
+      "difficulty": 1,
+      "xp": 10,
       "title": "Repeat a word",
       "brief": "Input a word. Print it 3 times, one per line.",
       "starter": "",
-      "hints": ["for i in range(3): repeats the line inside it 3 times.", "A for loop repeating `range(n)` times can print the same stored value each time round."],
-      "tests": [{ "stdin": "hi", "expect": "hi\nhi\nhi" }, { "stdin": "loop", "expect": "loop\nloop\nloop" }]
+      "hints": [
+        "for i in range(3): repeats the line inside it 3 times.",
+        "A for loop repeating `range(n)` times can print the same stored value each time round."
+      ],
+      "tests": [
+        {
+          "stdin": "hi",
+          "expect": "hi\nhi\nhi"
+        },
+        {
+          "stdin": "loop",
+          "expect": "loop\nloop\nloop"
+        }
+      ]
     },
     {
-      "slug": "gcse-iteration-t1-02", "lesson": 1, "tier": 1, "difficulty": 1, "xp": 10,
+      "slug": "gcse-iteration-t1-02",
+      "lesson": 1,
+      "tier": 1,
+      "difficulty": 1,
+      "xp": 10,
       "title": "Count down",
       "brief": "Input a whole number N. Print every number from N down to 1, one per line.",
       "starter": "",
-      "hints": ["Counting backwards needs a third argument in range() to step by -1 instead of the default +1.", "range() can count down as well as up when given a negative step as its third argument."],
-      "tests": [{ "stdin": "3", "expect": "3\n2\n1" }, { "stdin": "1", "expect": "1" }]
+      "hints": [
+        "Counting backwards needs a third argument in range() to step by -1 instead of the default +1.",
+        "range() can count down as well as up when given a negative step as its third argument."
+      ],
+      "tests": [
+        {
+          "stdin": "3",
+          "expect": "3\n2\n1"
+        },
+        {
+          "stdin": "1",
+          "expect": "1"
+        }
+      ]
     },
     {
-      "slug": "gcse-iteration-t1-03", "lesson": 1, "tier": 1, "difficulty": 2, "xp": 15,
+      "slug": "gcse-iteration-t1-03",
+      "lesson": 1,
+      "tier": 1,
+      "difficulty": 2,
+      "xp": 15,
       "title": "Even numbers",
       "brief": "Input a whole number N. Print every even number from 2 up to and including N, one per line. If there are none (N is less than 2), print nothing.",
       "starter": "",
-      "hints": ["Stepping by more than 1 each time needs a third argument in range() — a start, a stop, and a step size.", "range() takes a start, a stop, and a step size as three arguments, in that order."],
-      "tests": [{ "stdin": "6", "expect": "2\n4\n6" }, { "stdin": "1", "expect": "" }]
+      "hints": [
+        "Stepping by more than 1 each time needs a third argument in range() — a start, a stop, and a step size.",
+        "range() takes a start, a stop, and a step size as three arguments, in that order."
+      ],
+      "tests": [
+        {
+          "stdin": "6",
+          "expect": "2\n4\n6"
+        },
+        {
+          "stdin": "1",
+          "expect": ""
+        }
+      ]
     },
     {
-      "slug": "gcse-iteration-t1-stretch", "lesson": 1, "tier": 4, "difficulty": 5, "xp": 40, "stretch": true,
+      "slug": "gcse-iteration-t1-stretch",
+      "lesson": 1,
+      "tier": 4,
+      "difficulty": 5,
+      "xp": 40,
+      "stretch": true,
       "title": "Star triangle",
       "brief": "Read a whole number N. Print a triangle of asterisks (*): on row 1 print one asterisk, on row 2 print two, and so on up to row N, which has N asterisks. Each row is on its own line, with no spaces.\n\nFor example, if N is 4, print:\n```\n*\n**\n***\n****\n```",
       "starter": "",
-      "hints": ["Python can repeat a string with *: \"*\" * 3 gives \"***\". Loop a row number from 1 to N and print that many asterisks each time.", "Loop a row number upward, printing that many repeated characters each time round."],
-      "tests": [{ "stdin": "4", "expect": "*\n**\n***\n****" }, { "stdin": "1", "expect": "*" }]
+      "hints": [
+        "Python can repeat a string with *: \"*\" * 3 gives \"***\". Loop a row number from 1 to N and print that many asterisks each time.",
+        "Loop a row number upward, printing that many repeated characters each time round."
+      ],
+      "tests": [
+        {
+          "stdin": "4",
+          "expect": "*\n**\n***\n****"
+        },
+        {
+          "stdin": "1",
+          "expect": "*"
+        }
+      ]
     },
     {
-      "slug": "gcse-iteration-r1-01", "lesson": 4, "tier": 1, "difficulty": 1, "xp": 10,
+      "slug": "gcse-iteration-r1-01",
+      "lesson": 4,
+      "tier": 1,
+      "difficulty": 1,
+      "xp": 10,
       "title": "Numbers 1 to N",
       "brief": "Input a whole number N. Print every whole number from 1 to N, one per line.",
       "starter": "",
-      "hints": ["range(1, n + 1) counts from 1 up to and including n.", "The pattern is `for i in range(1, n + 1): print(i)`."],
-      "tests": [{ "stdin": "4", "expect": "1\n2\n3\n4" }, { "stdin": "1", "expect": "1" }]
+      "hints": [
+        "range(1, n + 1) counts from 1 up to and including n.",
+        "The pattern is `for i in range(1, n + 1): print(i)`."
+      ],
+      "tests": [
+        {
+          "stdin": "4",
+          "expect": "1\n2\n3\n4"
+        },
+        {
+          "stdin": "1",
+          "expect": "1"
+        }
+      ]
     },
     {
-      "slug": "gcse-iteration-r1-02", "lesson": 4, "tier": 1, "difficulty": 2, "xp": 15,
+      "slug": "gcse-iteration-r1-02",
+      "lesson": 4,
+      "tier": 1,
+      "difficulty": 2,
+      "xp": 15,
       "title": "Sum of multiples of 3",
       "brief": "Input a whole number N. Print the sum of every multiple of 3 from 1 to N.",
       "starter": "",
-      "hints": ["Check each number with % 3 inside the loop before adding it to the total.", "Loop from 1 to n, adding a value to the total only if it's a multiple of 3."],
-      "tests": [{ "stdin": "10", "expect": "18" }, { "stdin": "15", "expect": "45" }]
+      "hints": [
+        "Check each number with % 3 inside the loop before adding it to the total.",
+        "Loop from 1 to n, adding a value to the total only if it's a multiple of 3."
+      ],
+      "tests": [
+        {
+          "stdin": "10",
+          "expect": "18"
+        },
+        {
+          "stdin": "15",
+          "expect": "45"
+        }
+      ]
     },
     {
-      "slug": "gcse-iteration-r1-03", "lesson": 4, "tier": 2, "difficulty": 2, "xp": 15,
+      "slug": "gcse-iteration-r1-03",
+      "lesson": 4,
+      "tier": 2,
+      "difficulty": 2,
+      "xp": 15,
       "title": "Times table, four rows",
       "brief": "Input a whole number. Print its times table from 1 to 4, one line per row, in the format `<number> x <i> = <result>`.",
       "starter": "",
-      "hints": ["Loop i from 1 to 4, printing the number multiplied by i each time.", "Build each line with an f-string inside the loop."],
-      "tests": [{ "stdin": "3", "expect": "3 x 1 = 3\n3 x 2 = 6\n3 x 3 = 9\n3 x 4 = 12" }, { "stdin": "6", "expect": "6 x 1 = 6\n6 x 2 = 12\n6 x 3 = 18\n6 x 4 = 24" }]
+      "hints": [
+        "Loop i from 1 to 4, printing the number multiplied by i each time.",
+        "Build each line with an f-string inside the loop."
+      ],
+      "tests": [
+        {
+          "stdin": "3",
+          "expect": "3 x 1 = 3\n3 x 2 = 6\n3 x 3 = 9\n3 x 4 = 12"
+        },
+        {
+          "stdin": "6",
+          "expect": "6 x 1 = 6\n6 x 2 = 12\n6 x 3 = 18\n6 x 4 = 24"
+        }
+      ]
     },
     {
-      "slug": "gcse-iteration-r1-04", "lesson": 4, "tier": 2, "difficulty": 2, "xp": 20,
+      "slug": "gcse-iteration-r1-04",
+      "lesson": 4,
+      "tier": 2,
+      "difficulty": 2,
+      "xp": 20,
       "title": "Count values above a limit",
       "brief": "Input a whole number N. Input a limit. Input N whole numbers, one at a time. Print how many of them are greater than the limit.",
       "starter": "",
-      "hints": ["Set a counter to 0 before the loop, then increase it whenever a value beats the limit.", "Loop N times, comparing each value against the limit with an if statement."],
-      "tests": [{ "stdin": "4\n5\n2\n8\n4\n9", "expect": "2" }, { "stdin": "3\n5\n1\n2\n3", "expect": "0" }]
+      "hints": [
+        "Set a counter to 0 before the loop, then increase it whenever a value beats the limit.",
+        "Loop N times, comparing each value against the limit with an if statement."
+      ],
+      "tests": [
+        {
+          "stdin": "4\n5\n2\n8\n4\n9",
+          "expect": "2"
+        },
+        {
+          "stdin": "3\n5\n1\n2\n3",
+          "expect": "0"
+        }
+      ]
     },
     {
-      "slug": "gcse-iteration-r1-stretch", "lesson": 4, "tier": 4, "difficulty": 5, "xp": 40, "stretch": true,
+      "slug": "gcse-iteration-r1-stretch",
+      "lesson": 4,
+      "tier": 4,
+      "difficulty": 5,
+      "xp": 40,
+      "stretch": true,
       "title": "Sum of squares",
       "brief": "Input a whole number N. Print the sum of the squares of every whole number from 1 to N.\n\nFor example, if N is 3, print 1*1 + 2*2 + 3*3 = 14.",
       "starter": "",
-      "hints": ["Square a number by multiplying it by itself, adding each result to a running total inside the loop.", "The pattern is the same running-total shape as the lesson's worked example, but adding i*i instead of i."],
-      "tests": [{ "stdin": "3", "expect": "14" }, { "stdin": "4", "expect": "30" }]
+      "hints": [
+        "Square a number by multiplying it by itself, adding each result to a running total inside the loop.",
+        "The pattern is the same running-total shape as the lesson's worked example, but adding i*i instead of i."
+      ],
+      "tests": [
+        {
+          "stdin": "3",
+          "expect": "14"
+        },
+        {
+          "stdin": "4",
+          "expect": "30"
+        }
+      ]
     },
     {
-      "slug": "gcse-iteration-t2-01", "lesson": 2, "tier": 2, "difficulty": 2, "xp": 15,
+      "slug": "gcse-iteration-t2-01",
+      "lesson": 2,
+      "tier": 2,
+      "difficulty": 2,
+      "xp": 15,
       "title": "Five scores",
       "brief": "A teacher wants to total up 5 test scores. Input the 5 scores, one per line. Display the total.",
       "starter": "",
-      "hints": ["Set the total to 0 before the loop starts, then add each score to it inside the loop.", "Start a running total at 0 before the loop, then add each new cast value to it inside the loop."],
-      "tests": [{ "stdin": "1\n2\n3\n4\n5", "expect": "15" }, { "stdin": "10\n10\n10\n10\n10", "expect": "50" }]
+      "hints": [
+        "Set the total to 0 before the loop starts, then add each score to it inside the loop.",
+        "Start a running total at 0 before the loop, then add each new cast value to it inside the loop."
+      ],
+      "tests": [
+        {
+          "stdin": "1\n2\n3\n4\n5",
+          "expect": "15"
+        },
+        {
+          "stdin": "10\n10\n10\n10\n10",
+          "expect": "50"
+        }
+      ]
     },
     {
-      "slug": "gcse-iteration-t2-02", "lesson": 3, "tier": 2, "difficulty": 3, "xp": 20,
+      "slug": "gcse-iteration-t2-02",
+      "lesson": 3,
+      "tier": 2,
+      "difficulty": 3,
+      "xp": 20,
       "title": "Password retry",
       "brief": "A system keeps asking for a password until the user types `open`. Once they do, display how many attempts were needed in total (including the successful one), in the format `<count> attempts`.\n\nAlways write \"attempts\" even for 1 (don't worry about \"attempt\" vs \"attempts\" grammar).\n\nFor example, if the correct password is entered on the third try, print `3 attempts`.",
       "starter": "",
-      "hints": ["Count every attempt, including the correct one that ends the loop. Read the next attempt at the bottom of the loop, same shape as the lesson's sentinel example.", "Increment the counter both inside the loop and once more for the final successful attempt that ends it."],
-      "tests": [{ "stdin": "open", "expect": "1 attempts" }, { "stdin": "no\nnope\nopen", "expect": "3 attempts" }]
+      "hints": [
+        "Count every attempt, including the correct one that ends the loop. Read the next attempt at the bottom of the loop, same shape as the lesson's sentinel example.",
+        "Increment the counter both inside the loop and once more for the final successful attempt that ends it."
+      ],
+      "tests": [
+        {
+          "stdin": "open",
+          "expect": "1 attempts"
+        },
+        {
+          "stdin": "no\nnope\nopen",
+          "expect": "3 attempts"
+        }
+      ]
     },
     {
-      "slug": "gcse-iteration-t2-03", "lesson": 3, "tier": 2, "difficulty": 3, "xp": 20,
+      "slug": "gcse-iteration-t2-03",
+      "lesson": 3,
+      "tier": 2,
+      "difficulty": 3,
+      "xp": 20,
       "title": "Validate a mark",
       "brief": "A mark must be between 0 and 100 inclusive. Keep asking the user for a whole number until they enter a valid mark. Display the valid mark in the format `Accepted: <mark>`.\n\nFor example, if 55 is the first (valid) number entered, print `Accepted: 55`.",
       "starter": "",
-      "hints": ["Read one value first, then loop while it's out of range, reading a replacement each time — same shape as the lesson's validation example.", "A while loop can keep re-reading a value for as long as it falls outside the accepted range."],
-      "tests": [{ "stdin": "55", "expect": "Accepted: 55" }, { "stdin": "120\n-4\n0", "expect": "Accepted: 0" }]
+      "hints": [
+        "Read one value first, then loop while it's out of range, reading a replacement each time — same shape as the lesson's validation example.",
+        "A while loop can keep re-reading a value for as long as it falls outside the accepted range."
+      ],
+      "tests": [
+        {
+          "stdin": "55",
+          "expect": "Accepted: 55"
+        },
+        {
+          "stdin": "120\n-4\n0",
+          "expect": "Accepted: 0"
+        }
+      ]
     },
     {
-      "slug": "gcse-iteration-t2-stretch", "lesson": 3, "tier": 4, "difficulty": 5, "xp": 40, "stretch": true,
+      "slug": "gcse-iteration-t2-stretch",
+      "lesson": 3,
+      "tier": 4,
+      "difficulty": 5,
+      "xp": 40,
+      "stretch": true,
       "title": "Count the even numbers",
       "brief": "Read whole numbers, one per line, until the sentinel value 0 is entered. The 0 itself is not counted.\n\nCount how many of the numbers read before the 0 are even. Print the count.\n\nFor example, 3, 4, 6, 7, 0 has two even numbers before the sentinel (4 and 6), so print 2.",
       "starter": "",
-      "hints": ["Use the same read-loop-read-again pattern as the lesson's sentinel example, but add a check inside the loop for whether the current value is even (divisible by 2 with no remainder) before reading the next one.", "An if statement inside the loop can check a property of the current value before you move on to reading the next one."],
-      "tests": [{ "stdin": "3\n4\n6\n7\n0", "expect": "2" }, { "stdin": "0", "expect": "0" }, { "stdin": "2\n0", "expect": "1" }]
+      "hints": [
+        "Use the same read-loop-read-again pattern as the lesson's sentinel example, but add a check inside the loop for whether the current value is even (divisible by 2 with no remainder) before reading the next one.",
+        "An if statement inside the loop can check a property of the current value before you move on to reading the next one."
+      ],
+      "tests": [
+        {
+          "stdin": "3\n4\n6\n7\n0",
+          "expect": "2"
+        },
+        {
+          "stdin": "0",
+          "expect": "0"
+        },
+        {
+          "stdin": "2\n0",
+          "expect": "1"
+        }
+      ]
     },
     {
-      "slug": "gcse-iteration-r2-01", "lesson": 5, "tier": 1, "difficulty": 1, "xp": 10,
+      "slug": "gcse-iteration-r2-01",
+      "lesson": 5,
+      "tier": 1,
+      "difficulty": 1,
+      "xp": 10,
       "title": "Total until -1",
       "brief": "Keep reading whole numbers and adding them to a running total, stopping as soon as -1 is entered. Print the final total (not including the -1).",
       "starter": "",
-      "hints": ["Read one value first, then loop while it isn't -1, reading the next value at the bottom of the loop.", "Same shape as the lesson's worked example, but adding instead of counting."],
-      "tests": [{ "stdin": "5\n3\n2\n-1", "expect": "10" }, { "stdin": "10\n-1", "expect": "10" }]
+      "hints": [
+        "Read one value first, then loop while it isn't -1, reading the next value at the bottom of the loop.",
+        "Same shape as the lesson's worked example, but adding instead of counting."
+      ],
+      "tests": [
+        {
+          "stdin": "5\n3\n2\n-1",
+          "expect": "10"
+        },
+        {
+          "stdin": "10\n-1",
+          "expect": "10"
+        }
+      ]
     },
     {
-      "slug": "gcse-iteration-r2-02", "lesson": 5, "tier": 1, "difficulty": 2, "xp": 15,
+      "slug": "gcse-iteration-r2-02",
+      "lesson": 5,
+      "tier": 1,
+      "difficulty": 2,
+      "xp": 15,
       "title": "Validated age",
       "brief": "Keep asking for a whole number age until one between 0 and 120 inclusive is entered. Print `Accepted: <value>`.",
       "starter": "",
-      "hints": ["Read one value first, then loop while it's out of range, reading a replacement each time.", "Same shape as the lesson's validation example."],
-      "tests": [{ "stdin": "200\n-5\n45", "expect": "Accepted: 45" }, { "stdin": "30", "expect": "Accepted: 30" }]
+      "hints": [
+        "Read one value first, then loop while it's out of range, reading a replacement each time.",
+        "Same shape as the lesson's validation example."
+      ],
+      "tests": [
+        {
+          "stdin": "200\n-5\n45",
+          "expect": "Accepted: 45"
+        },
+        {
+          "stdin": "30",
+          "expect": "Accepted: 30"
+        }
+      ]
     },
     {
-      "slug": "gcse-iteration-r2-03", "lesson": 5, "tier": 2, "difficulty": 2, "xp": 20,
+      "slug": "gcse-iteration-r2-03",
+      "lesson": 5,
+      "tier": 2,
+      "difficulty": 2,
+      "xp": 20,
       "title": "Guessing game",
       "brief": "The secret number is 4. Keep reading whole number guesses until the correct one is entered. Print `Guessed in <count> attempt(s)`, where `<count>` is how many guesses it took, including the correct one.",
       "starter": "",
-      "hints": ["Count every attempt, including the correct one that ends the loop.", "Same read-loop-read-again shape as the worked example, counting each attempt."],
-      "tests": [{ "stdin": "3\n9\n4", "expect": "Guessed in 3 attempt(s)" }, { "stdin": "4", "expect": "Guessed in 1 attempt(s)" }]
+      "hints": [
+        "Count every attempt, including the correct one that ends the loop.",
+        "Same read-loop-read-again shape as the worked example, counting each attempt."
+      ],
+      "tests": [
+        {
+          "stdin": "3\n9\n4",
+          "expect": "Guessed in 3 attempt(s)"
+        },
+        {
+          "stdin": "4",
+          "expect": "Guessed in 1 attempt(s)"
+        }
+      ]
     },
     {
-      "slug": "gcse-iteration-r2-04", "lesson": 5, "tier": 2, "difficulty": 3, "xp": 20,
+      "slug": "gcse-iteration-r2-04",
+      "lesson": 5,
+      "tier": 2,
+      "difficulty": 3,
+      "xp": 20,
       "title": "Keep asking for a positive number",
       "brief": "Keep reading whole numbers until one that is greater than 0 is entered. Print that number.",
       "starter": "",
-      "hints": ["Read one value first, then loop while it isn't greater than 0, reading a replacement each time.", "The pattern is `while n <= 0: n = int(input())`."],
-      "tests": [{ "stdin": "-3\n0\n5", "expect": "5" }, { "stdin": "8", "expect": "8" }]
+      "hints": [
+        "Read one value first, then loop while it isn't greater than 0, reading a replacement each time.",
+        "The pattern is `while n <= 0: n = int(input())`."
+      ],
+      "tests": [
+        {
+          "stdin": "-3\n0\n5",
+          "expect": "5"
+        },
+        {
+          "stdin": "8",
+          "expect": "8"
+        }
+      ]
     },
     {
-      "slug": "gcse-iteration-r2-stretch", "lesson": 5, "tier": 4, "difficulty": 5, "xp": 40, "stretch": true,
+      "slug": "gcse-iteration-r2-stretch",
+      "lesson": 5,
+      "tier": 4,
+      "difficulty": 5,
+      "xp": 40,
+      "stretch": true,
       "title": "Total until negative",
       "brief": "Keep reading whole numbers and adding them to a running total, stopping as soon as a negative number is entered. Print the final total (not including the negative number that stopped it).",
       "starter": "",
-      "hints": ["The sentinel here isn't one fixed value — it's any number below zero, so the loop condition needs a comparison rather than checking for one exact value.", "The pattern is `while n >= 0: total += n, n = int(input())`, reading the first value before the loop starts."],
-      "tests": [{ "stdin": "7\n2\n6\n-3", "expect": "15" }, { "stdin": "9\n-2", "expect": "9" }]
+      "hints": [
+        "The sentinel here isn't one fixed value — it's any number below zero, so the loop condition needs a comparison rather than checking for one exact value.",
+        "The pattern is `while n >= 0: total += n, n = int(input())`, reading the first value before the loop starts."
+      ],
+      "tests": [
+        {
+          "stdin": "7\n2\n6\n-3",
+          "expect": "15"
+        },
+        {
+          "stdin": "9\n-2",
+          "expect": "9"
+        }
+      ]
     },
     {
-      "slug": "gcse-iteration-t3-01", "lesson": 3, "tier": 3, "difficulty": 3, "xp": 25,
+      "slug": "gcse-iteration-t3-01",
+      "lesson": 3,
+      "tier": 3,
+      "difficulty": 3,
+      "xp": 25,
       "title": "Rainfall readings",
       "brief": "A weather station takes 7 daily rainfall readings in millimetres, entered one per line as whole numbers. Report the total rainfall for the week on the first line. Report the highest single reading on the second line.",
       "starter": "",
-      "hints": ["Track a total and a highest-so-far in the same loop, updating both each time a reading is read.", "Start the highest at 0, since rainfall readings can't be negative"],
-      "tests": [{ "stdin": "1\n2\n3\n4\n5\n6\n7", "expect": "28\n7" }, { "stdin": "0\n0\n12\n0\n3\n0\n0", "expect": "15\n12" }]
+      "hints": [
+        "Track a total and a highest-so-far in the same loop, updating both each time a reading is read.",
+        "Start the highest at 0, since rainfall readings can't be negative"
+      ],
+      "tests": [
+        {
+          "stdin": "1\n2\n3\n4\n5\n6\n7",
+          "expect": "28\n7"
+        },
+        {
+          "stdin": "0\n0\n12\n0\n3\n0\n0",
+          "expect": "15\n12"
+        }
+      ]
     },
     {
-      "slug": "gcse-iteration-t3-02", "lesson": 3, "tier": 3, "difficulty": 4, "xp": 30,
+      "slug": "gcse-iteration-t3-02",
+      "lesson": 3,
+      "tier": 3,
+      "difficulty": 4,
+      "xp": 30,
       "title": "Class average until done",
       "brief": "A teacher enters marks one at a time and types `-1` when there are no more marks to enter — this sentinel is not itself a mark.\n\nDisplay how many marks were entered, then the average of those marks rounded to 1 decimal place, each on its own line. If no marks were entered at all (the very first input is `-1`), display `No marks` instead and nothing else.",
       "starter": "",
-      "hints": ["Guard against dividing by zero: if the count ends up as 0, skip the average and print No marks instead.", "The sentinel -1 must not be counted towards the total or the count"],
-      "tests": [{ "stdin": "-1", "expect": "No marks" }, { "stdin": "10\n20\n-1", "expect": "2\n15.0" }, { "stdin": "7\n8\n10\n-1", "expect": "3\n8.3" }]
+      "hints": [
+        "Guard against dividing by zero: if the count ends up as 0, skip the average and print No marks instead.",
+        "The sentinel -1 must not be counted towards the total or the count"
+      ],
+      "tests": [
+        {
+          "stdin": "-1",
+          "expect": "No marks"
+        },
+        {
+          "stdin": "10\n20\n-1",
+          "expect": "2\n15.0"
+        },
+        {
+          "stdin": "7\n8\n10\n-1",
+          "expect": "3\n8.3"
+        }
+      ]
     },
     {
-      "slug": "gcse-iteration-t3-03", "lesson": 3, "tier": 3, "difficulty": 4, "xp": 30,
+      "slug": "gcse-iteration-t3-03",
+      "lesson": 3,
+      "tier": 3,
+      "difficulty": 4,
+      "xp": 30,
       "title": "Savings target",
       "brief": "A saver puts a fixed amount into an account every month. Read the monthly amount (a whole number of pounds), then a savings target (a whole number of pounds). Report how many whole months it takes for the balance to reach or pass the target, in the format `<months> months`.",
       "starter": "",
-      "hints": ["You don't know in advance how many months this will take, so use a while loop that keeps adding the monthly amount until the balance reaches the target.", "Count the months as you go, in the same loop that adds the balance"],
-      "tests": [{ "stdin": "50\n300", "expect": "6 months" }, { "stdin": "40\n100", "expect": "3 months" }]
+      "hints": [
+        "You don't know in advance how many months this will take, so use a while loop that keeps adding the monthly amount until the balance reaches the target.",
+        "Count the months as you go, in the same loop that adds the balance"
+      ],
+      "tests": [
+        {
+          "stdin": "50\n300",
+          "expect": "6 months"
+        },
+        {
+          "stdin": "40\n100",
+          "expect": "3 months"
+        }
+      ]
     },
     {
-      "slug": "gcse-iteration-t4-01", "lesson": 3, "tier": 4, "difficulty": 4, "xp": 35,
+      "slug": "gcse-iteration-t4-01",
+      "lesson": 3,
+      "tier": 4,
+      "difficulty": 4,
+      "xp": 35,
       "title": "Turnstile counter",
       "brief": "A stadium turnstile logs each person as they pass through.\n\n- for every person, the operator types `in` or `out`\n- when the shift ends, the operator types `end`\n- the count starts at 0 and can never go below 0 — if `out` is logged while the count is already 0, ignore it\n\nProcess the log and output the number of people still inside at the end of the shift, in the format `Inside: <count>`.\n\nFor example, `in`, `in`, `out`, `in`, `end` leaves 2 people inside, so print `Inside: 2`.",
       "starter": "",
-      "hints": ["This is a while loop with the sentinel end, reading one log entry at a time.", "Only subtract on out when the count is currently above 0 — check that before subtracting"],
-      "tests": [{ "stdin": "in\nin\nout\nin\nend", "expect": "Inside: 2" }, { "stdin": "out\nout\nin\nend", "expect": "Inside: 1" }, { "stdin": "end", "expect": "Inside: 0" }]
+      "hints": [
+        "This is a while loop with the sentinel end, reading one log entry at a time.",
+        "Only subtract on out when the count is currently above 0 — check that before subtracting"
+      ],
+      "tests": [
+        {
+          "stdin": "in\nin\nout\nin\nend",
+          "expect": "Inside: 2"
+        },
+        {
+          "stdin": "out\nout\nin\nend",
+          "expect": "Inside: 1"
+        },
+        {
+          "stdin": "end",
+          "expect": "Inside: 0"
+        }
+      ]
     },
     {
-      "slug": "gcse-iteration-t4-02", "lesson": 3, "tier": 4, "difficulty": 5, "xp": 40,
+      "slug": "gcse-iteration-t4-02",
+      "lesson": 3,
+      "tier": 4,
+      "difficulty": 5,
+      "xp": 40,
       "title": "Times table tester",
       "brief": "A primary school wants a program that tests a pupil on the 5 times table.\n\nThe program asks 5 questions. For question number n, the correct answer is n × 5 — so the first correct answer is 5, the second is 10, and so on.\n\nRead the pupil's answer to each question as a whole number. After all 5 questions:\n- print one line per question, in the format `Q<n> correct` or `Q<n> wrong`\n- then print a final line, in the format `Score: <correct>/5`\n\nFor example, if all 5 answers are correct, the final line is `Score: 5/5`.",
       "starter": "",
-      "hints": ["A for loop over the question numbers can compare the user's answer against each question's own expected result.", "Print the feedback for each question inside the loop, and keep a running count of how many were correct so you can print the score after the loop ends."],
-      "tests": [{ "stdin": "5\n10\n15\n20\n25", "expect": "Q1 correct\nQ2 correct\nQ3 correct\nQ4 correct\nQ5 correct\nScore: 5/5" }, { "stdin": "5\n11\n15\n0\n25", "expect": "Q1 correct\nQ2 wrong\nQ3 correct\nQ4 wrong\nQ5 correct\nScore: 3/5" }]
+      "hints": [
+        "A for loop over the question numbers can compare the user's answer against each question's own expected result.",
+        "Print the feedback for each question inside the loop, and keep a running count of how many were correct so you can print the score after the loop ends."
+      ],
+      "tests": [
+        {
+          "stdin": "5\n10\n15\n20\n25",
+          "expect": "Q1 correct\nQ2 correct\nQ3 correct\nQ4 correct\nQ5 correct\nScore: 5/5"
+        },
+        {
+          "stdin": "5\n11\n15\n0\n25",
+          "expect": "Q1 correct\nQ2 wrong\nQ3 correct\nQ4 wrong\nQ5 correct\nScore: 3/5"
+        }
+      ]
     },
     {
-      "slug": "gcse-iteration-t4-03", "lesson": 3, "tier": 4, "difficulty": 5, "xp": 40,
+      "slug": "gcse-iteration-t4-03",
+      "lesson": 3,
+      "tier": 4,
+      "difficulty": 5,
+      "xp": 40,
       "title": "Energy meter report",
       "brief": "A smart meter records the electricity used each day of a month.\n\nRead readings in kilowatt hours (whole numbers), one per line, until the value -1 is entered to show there are no more readings. If no readings are entered at all (the first value is -1), output `No readings` and nothing else.\n\nOtherwise, produce a report of exactly three lines, in the format:\n```\nDays: 3\nTotal: 24\nHighest day: 12\n```",
       "starter": "",
-      "hints": ["Track a count, a total and a highest-so-far together, all updated inside the same loop.", "Check for the empty case (first value is -1) before trying to print any report lines"],
-      "tests": [{ "stdin": "-1", "expect": "No readings" }, { "stdin": "5\n12\n7\n-1", "expect": "Days: 3\nTotal: 24\nHighest day: 12" }, { "stdin": "9\n-1", "expect": "Days: 1\nTotal: 9\nHighest day: 9" }]
+      "hints": [
+        "Track a count, a total and a highest-so-far together, all updated inside the same loop.",
+        "Check for the empty case (first value is -1) before trying to print any report lines"
+      ],
+      "tests": [
+        {
+          "stdin": "-1",
+          "expect": "No readings"
+        },
+        {
+          "stdin": "5\n12\n7\n-1",
+          "expect": "Days: 3\nTotal: 24\nHighest day: 12"
+        },
+        {
+          "stdin": "9\n-1",
+          "expect": "Days: 1\nTotal: 9\nHighest day: 9"
+        }
+      ]
     },
     {
-      "slug": "gcse-iteration-t3-stretch", "lesson": 3, "tier": 4, "difficulty": 5, "xp": 40, "stretch": true,
+      "slug": "gcse-iteration-t3-stretch",
+      "lesson": 3,
+      "tier": 4,
+      "difficulty": 5,
+      "xp": 40,
+      "stretch": true,
       "title": "Temperature range",
       "brief": "A weather station takes 6 temperature readings in one day, entered one per line as whole numbers (which may be negative).\n\nReport the highest reading, the lowest reading, and the range (highest minus lowest), each on its own line, in the format:\n```\nHighest: 8\nLowest: -3\nRange: 11\n```",
       "starter": "",
-      "hints": ["Track a highest-so-far and a lowest-so-far at the same time, both starting at the first reading — the same idea as tracking one running value, just doubled.", "Set both running values from the first reading before the loop starts, then update whichever one changes as each new reading comes in."],
-      "tests": [{ "stdin": "2\n8\n-3\n0\n5\n1", "expect": "Highest: 8\nLowest: -3\nRange: 11" }, { "stdin": "5\n5\n5\n5\n5\n5", "expect": "Highest: 5\nLowest: 5\nRange: 0" }]
+      "hints": [
+        "Track a highest-so-far and a lowest-so-far at the same time, both starting at the first reading — the same idea as tracking one running value, just doubled.",
+        "Set both running values from the first reading before the loop starts, then update whichever one changes as each new reading comes in."
+      ],
+      "tests": [
+        {
+          "stdin": "2\n8\n-3\n0\n5\n1",
+          "expect": "Highest: 8\nLowest: -3\nRange: 11"
+        },
+        {
+          "stdin": "5\n5\n5\n5\n5\n5",
+          "expect": "Highest: 5\nLowest: 5\nRange: 0"
+        }
+      ]
     }
   ],
   "homeworkTasks": [
-    { "slug": "gcse-iteration-hw-01", "lesson": 1, "tier": 1, "difficulty": 1, "xp": 10, "title": "Count up to N",
+    {
+      "slug": "gcse-iteration-hw-01",
+      "lesson": 1,
+      "tier": 1,
+      "difficulty": 1,
+      "xp": 10,
+      "title": "Count up to N",
       "brief": "Input a whole number N. Print every whole number from 1 to N, each on its own line.",
-      "starter": "", "hints": ["range(1, n + 1) counts from 1 up to and including n.", "Cast the input, then loop with range(1, n + 1), printing each value."],
-      "tests": [{ "stdin": "5", "expect": "1\n2\n3\n4\n5" }, { "stdin": "3", "expect": "1\n2\n3" }] },
-    { "slug": "gcse-iteration-hw-02", "lesson": 1, "tier": 1, "difficulty": 1, "xp": 10, "title": "Sum from 1 to N",
+      "starter": "",
+      "hints": [
+        "range(1, n + 1) counts from 1 up to and including n.",
+        "Cast the input, then loop with range(1, n + 1), printing each value."
+      ],
+      "tests": [
+        {
+          "stdin": "5",
+          "expect": "1\n2\n3\n4\n5"
+        },
+        {
+          "stdin": "3",
+          "expect": "1\n2\n3"
+        }
+      ]
+    },
+    {
+      "slug": "gcse-iteration-hw-02",
+      "lesson": 1,
+      "tier": 1,
+      "difficulty": 1,
+      "xp": 10,
+      "title": "Sum from 1 to N",
       "brief": "Input a whole number N. Print the sum of every whole number from 1 to N.",
-      "starter": "", "hints": ["Set a running total to 0 before the loop, then add each number to it.", "Loop from 1 to n, adding each value to a running total, then print the total."],
-      "tests": [{ "stdin": "5", "expect": "15" }, { "stdin": "10", "expect": "55" }] },
-    { "slug": "gcse-iteration-hw-03", "lesson": 1, "tier": 2, "difficulty": 2, "xp": 20, "title": "Times table",
+      "starter": "",
+      "hints": [
+        "Set a running total to 0 before the loop, then add each number to it.",
+        "Loop from 1 to n, adding each value to a running total, then print the total."
+      ],
+      "tests": [
+        {
+          "stdin": "5",
+          "expect": "15"
+        },
+        {
+          "stdin": "10",
+          "expect": "55"
+        }
+      ]
+    },
+    {
+      "slug": "gcse-iteration-hw-03",
+      "lesson": 1,
+      "tier": 2,
+      "difficulty": 2,
+      "xp": 20,
+      "title": "Times table",
       "brief": "Input a whole number. Print its times table from 1 to 5, one line per row, in the format `<number> x <i> = <result>`.",
-      "starter": "", "hints": ["Loop i from 1 to 5, printing the number multiplied by i each time.", "Build each line with an f-string inside the loop."],
-      "tests": [{ "stdin": "3", "expect": "3 x 1 = 3\n3 x 2 = 6\n3 x 3 = 9\n3 x 4 = 12\n3 x 5 = 15" }, { "stdin": "4", "expect": "4 x 1 = 4\n4 x 2 = 8\n4 x 3 = 12\n4 x 4 = 16\n4 x 5 = 20" }] },
-    { "slug": "gcse-iteration-hw-04", "lesson": 2, "tier": 1, "difficulty": 1, "xp": 10, "title": "Countdown to liftoff",
+      "starter": "",
+      "hints": [
+        "Loop i from 1 to 5, printing the number multiplied by i each time.",
+        "Build each line with an f-string inside the loop."
+      ],
+      "tests": [
+        {
+          "stdin": "3",
+          "expect": "3 x 1 = 3\n3 x 2 = 6\n3 x 3 = 9\n3 x 4 = 12\n3 x 5 = 15"
+        },
+        {
+          "stdin": "4",
+          "expect": "4 x 1 = 4\n4 x 2 = 8\n4 x 3 = 12\n4 x 4 = 16\n4 x 5 = 20"
+        }
+      ]
+    },
+    {
+      "slug": "gcse-iteration-hw-04",
+      "lesson": 2,
+      "tier": 1,
+      "difficulty": 1,
+      "xp": 10,
+      "title": "Countdown to liftoff",
       "brief": "Input a whole number N. Print every whole number from N down to 1, each on its own line, then print `Liftoff!` on the final line.",
-      "starter": "", "hints": ["range(n, 0, -1) counts backwards from n down to (but not including) 0.", "Loop with range(n, 0, -1) printing each value, then print Liftoff! once the loop ends."],
-      "tests": [{ "stdin": "3", "expect": "3\n2\n1\nLiftoff!" }, { "stdin": "5", "expect": "5\n4\n3\n2\n1\nLiftoff!" }] },
-    { "slug": "gcse-iteration-hw-05", "lesson": 1, "tier": 2, "difficulty": 2, "xp": 20, "title": "Total of N purchases",
+      "starter": "",
+      "hints": [
+        "range(n, 0, -1) counts backwards from n down to (but not including) 0.",
+        "Loop with range(n, 0, -1) printing each value, then print Liftoff! once the loop ends."
+      ],
+      "tests": [
+        {
+          "stdin": "3",
+          "expect": "3\n2\n1\nLiftoff!"
+        },
+        {
+          "stdin": "5",
+          "expect": "5\n4\n3\n2\n1\nLiftoff!"
+        }
+      ]
+    },
+    {
+      "slug": "gcse-iteration-hw-05",
+      "lesson": 1,
+      "tier": 2,
+      "difficulty": 2,
+      "xp": 20,
+      "title": "Total of N purchases",
       "brief": "Input a whole number N. Input N prices, which may include pence, one at a time. Print the total, rounded to 2 decimal places.",
-      "starter": "", "hints": ["Set a running total to 0 before the loop, then add each price to it.", "Loop N times, casting and adding each price, then round(total, 2) before printing."],
-      "tests": [{ "stdin": "3\n2.50\n1.00\n3.25", "expect": "6.75" }, { "stdin": "2\n10.00\n5.00", "expect": "15.0" }] },
-    { "slug": "gcse-iteration-hw-06", "lesson": 1, "tier": 2, "difficulty": 2, "xp": 20, "title": "Count negative numbers",
+      "starter": "",
+      "hints": [
+        "Set a running total to 0 before the loop, then add each price to it.",
+        "Loop N times, casting and adding each price, then round(total, 2) before printing."
+      ],
+      "tests": [
+        {
+          "stdin": "3\n2.50\n1.00\n3.25",
+          "expect": "6.75"
+        },
+        {
+          "stdin": "2\n10.00\n5.00",
+          "expect": "15.0"
+        }
+      ]
+    },
+    {
+      "slug": "gcse-iteration-hw-06",
+      "lesson": 1,
+      "tier": 2,
+      "difficulty": 2,
+      "xp": 20,
+      "title": "Count negative numbers",
       "brief": "Input a whole number N. Input N whole numbers, one at a time. Print how many of them are negative.",
-      "starter": "", "hints": ["Set a counter to 0 before the loop, then increase it whenever a value is negative.", "Loop N times, checking each value with an if statement inside the loop."],
-      "tests": [{ "stdin": "4\n-2\n5\n-8\n3", "expect": "2" }, { "stdin": "3\n1\n2\n3", "expect": "0" }] },
-    { "slug": "gcse-iteration-hw-07", "lesson": 3, "tier": 3, "difficulty": 3, "xp": 25, "title": "Doubling past 100",
+      "starter": "",
+      "hints": [
+        "Set a counter to 0 before the loop, then increase it whenever a value is negative.",
+        "Loop N times, checking each value with an if statement inside the loop."
+      ],
+      "tests": [
+        {
+          "stdin": "4\n-2\n5\n-8\n3",
+          "expect": "2"
+        },
+        {
+          "stdin": "3\n1\n2\n3",
+          "expect": "0"
+        }
+      ]
+    },
+    {
+      "slug": "gcse-iteration-hw-07",
+      "lesson": 3,
+      "tier": 3,
+      "difficulty": 3,
+      "xp": 25,
+      "title": "Doubling past 100",
       "brief": "Input a whole number starting value. Keep doubling it until it exceeds 100. Print how many times it was doubled.",
-      "starter": "", "hints": ["A while loop can keep doubling for as long as the value is 100 or under.", "Count each doubling inside a while loop, stopping once the value exceeds 100."],
-      "tests": [{ "stdin": "1", "expect": "7" }, { "stdin": "10", "expect": "4" }] },
-    { "slug": "gcse-iteration-hw-08", "lesson": 3, "tier": 2, "difficulty": 2, "xp": 20, "title": "Sum until zero",
+      "starter": "",
+      "hints": [
+        "A while loop can keep doubling for as long as the value is 100 or under.",
+        "Count each doubling inside a while loop, stopping once the value exceeds 100."
+      ],
+      "tests": [
+        {
+          "stdin": "1",
+          "expect": "7"
+        },
+        {
+          "stdin": "10",
+          "expect": "4"
+        }
+      ]
+    },
+    {
+      "slug": "gcse-iteration-hw-08",
+      "lesson": 3,
+      "tier": 2,
+      "difficulty": 2,
+      "xp": 20,
+      "title": "Sum until zero",
       "brief": "Keep reading whole numbers and adding them to a running total, stopping as soon as 0 is entered. Print the final total (not including the 0).",
-      "starter": "", "hints": ["Read one value first, then loop while it isn't 0, reading the next value at the bottom of the loop.", "Same shape as the lesson's sentinel example, but adding instead of counting."],
-      "tests": [{ "stdin": "5\n3\n2\n0", "expect": "10" }, { "stdin": "10\n0", "expect": "10" }] },
-    { "slug": "gcse-iteration-hw-09", "lesson": 3, "tier": 2, "difficulty": 2, "xp": 20, "title": "Validated percentage",
+      "starter": "",
+      "hints": [
+        "Read one value first, then loop while it isn't 0, reading the next value at the bottom of the loop.",
+        "Same shape as the lesson's sentinel example, but adding instead of counting."
+      ],
+      "tests": [
+        {
+          "stdin": "5\n3\n2\n0",
+          "expect": "10"
+        },
+        {
+          "stdin": "10\n0",
+          "expect": "10"
+        }
+      ]
+    },
+    {
+      "slug": "gcse-iteration-hw-09",
+      "lesson": 3,
+      "tier": 2,
+      "difficulty": 2,
+      "xp": 20,
+      "title": "Validated percentage",
       "brief": "Keep asking for a whole number percentage until one between 0 and 100 inclusive is entered. Print Accepted: <value>.",
-      "starter": "", "hints": ["Read one value first, then loop while it's out of range, reading a replacement each time.", "Same shape as the lesson's validation example."],
-      "tests": [{ "stdin": "150\n-5\n80", "expect": "Accepted: 80" }, { "stdin": "50", "expect": "Accepted: 50" }] },
-    { "slug": "gcse-iteration-hw-10", "lesson": 3, "tier": 2, "difficulty": 2, "xp": 20, "title": "Guess the number",
+      "starter": "",
+      "hints": [
+        "Read one value first, then loop while it's out of range, reading a replacement each time.",
+        "Same shape as the lesson's validation example."
+      ],
+      "tests": [
+        {
+          "stdin": "150\n-5\n80",
+          "expect": "Accepted: 80"
+        },
+        {
+          "stdin": "50",
+          "expect": "Accepted: 50"
+        }
+      ]
+    },
+    {
+      "slug": "gcse-iteration-hw-10",
+      "lesson": 3,
+      "tier": 2,
+      "difficulty": 2,
+      "xp": 20,
+      "title": "Guess the number",
       "brief": "The secret number is 7. Keep reading whole number guesses until the correct one is entered. Print Guessed in <count> attempt(s), where <count> is how many guesses it took, including the correct one.",
-      "starter": "", "hints": ["Count every attempt, including the correct one that ends the loop.", "Same read-loop-read-again shape as the lesson's sentinel example, counting each attempt."],
-      "tests": [{ "stdin": "3\n9\n7", "expect": "Guessed in 3 attempt(s)" }, { "stdin": "7", "expect": "Guessed in 1 attempt(s)" }] },
-    { "slug": "gcse-iteration-hw-11", "lesson": 1, "tier": 2, "difficulty": 2, "xp": 20, "title": "Average of N scores",
+      "starter": "",
+      "hints": [
+        "Count every attempt, including the correct one that ends the loop.",
+        "Same read-loop-read-again shape as the lesson's sentinel example, counting each attempt."
+      ],
+      "tests": [
+        {
+          "stdin": "3\n9\n7",
+          "expect": "Guessed in 3 attempt(s)"
+        },
+        {
+          "stdin": "7",
+          "expect": "Guessed in 1 attempt(s)"
+        }
+      ]
+    },
+    {
+      "slug": "gcse-iteration-hw-11",
+      "lesson": 1,
+      "tier": 2,
+      "difficulty": 2,
+      "xp": 20,
+      "title": "Average of N scores",
       "brief": "Input a whole number N. Input N whole number test scores, one at a time. Print their average, rounded to 1 decimal place.",
-      "starter": "", "hints": ["Set a running total to 0 before the loop, then divide by N once it finishes.", "Loop N times adding each score, then round(total / n, 1) before printing."],
-      "tests": [{ "stdin": "3\n60\n70\n80", "expect": "70.0" }, { "stdin": "2\n50\n51", "expect": "50.5" }] },
-    { "slug": "gcse-iteration-hw-12", "lesson": 2, "tier": 2, "difficulty": 2, "xp": 20, "title": "Largest of N",
+      "starter": "",
+      "hints": [
+        "Set a running total to 0 before the loop, then divide by N once it finishes.",
+        "Loop N times adding each score, then round(total / n, 1) before printing."
+      ],
+      "tests": [
+        {
+          "stdin": "3\n60\n70\n80",
+          "expect": "70.0"
+        },
+        {
+          "stdin": "2\n50\n51",
+          "expect": "50.5"
+        }
+      ]
+    },
+    {
+      "slug": "gcse-iteration-hw-12",
+      "lesson": 2,
+      "tier": 2,
+      "difficulty": 2,
+      "xp": 20,
+      "title": "Largest of N",
       "brief": "Input a whole number N. Input N whole numbers, one at a time. Print the largest one.",
-      "starter": "", "hints": ["Track a highest-so-far, starting from the first value read.", "Compare each new value against the running highest, updating it when a bigger one turns up."],
-      "tests": [{ "stdin": "4\n3\n9\n2\n7", "expect": "9" }, { "stdin": "3\n1\n1\n1", "expect": "1" }] },
-    { "slug": "gcse-iteration-hw-13", "lesson": 2, "tier": 2, "difficulty": 2, "xp": 20, "title": "Smallest of N",
+      "starter": "",
+      "hints": [
+        "Track a highest-so-far, starting from the first value read.",
+        "Compare each new value against the running highest, updating it when a bigger one turns up."
+      ],
+      "tests": [
+        {
+          "stdin": "4\n3\n9\n2\n7",
+          "expect": "9"
+        },
+        {
+          "stdin": "3\n1\n1\n1",
+          "expect": "1"
+        }
+      ]
+    },
+    {
+      "slug": "gcse-iteration-hw-13",
+      "lesson": 2,
+      "tier": 2,
+      "difficulty": 2,
+      "xp": 20,
+      "title": "Smallest of N",
       "brief": "Input a whole number N. Input N whole numbers, one at a time. Print the smallest one.",
-      "starter": "", "hints": ["Track a lowest-so-far, starting from the first value read.", "Compare each new value against the running lowest, updating it when a smaller one turns up."],
-      "tests": [{ "stdin": "4\n3\n9\n2\n7", "expect": "2" }, { "stdin": "3\n5\n5\n5", "expect": "5" }] },
-    { "slug": "gcse-iteration-hw-14", "lesson": 2, "tier": 3, "difficulty": 3, "xp": 25, "title": "Count above a threshold",
+      "starter": "",
+      "hints": [
+        "Track a lowest-so-far, starting from the first value read.",
+        "Compare each new value against the running lowest, updating it when a smaller one turns up."
+      ],
+      "tests": [
+        {
+          "stdin": "4\n3\n9\n2\n7",
+          "expect": "2"
+        },
+        {
+          "stdin": "3\n5\n5\n5",
+          "expect": "5"
+        }
+      ]
+    },
+    {
+      "slug": "gcse-iteration-hw-14",
+      "lesson": 2,
+      "tier": 3,
+      "difficulty": 3,
+      "xp": 25,
+      "title": "Count above a threshold",
       "brief": "Input a whole number threshold. Input a whole number N. Input N whole numbers, one at a time. Print how many of them are greater than the threshold.",
-      "starter": "", "hints": ["Set a counter to 0 before the loop, then increase it whenever a value beats the threshold.", "Loop N times, comparing each value against the threshold with an if statement."],
-      "tests": [{ "stdin": "5\n4\n10\n3\n8\n2", "expect": "2" }, { "stdin": "0\n3\n-1\n5\n2", "expect": "2" }] },
-    { "slug": "gcse-iteration-hw-15", "lesson": 1, "tier": 2, "difficulty": 2, "xp": 20, "title": "Total distance over N days",
+      "starter": "",
+      "hints": [
+        "Set a counter to 0 before the loop, then increase it whenever a value beats the threshold.",
+        "Loop N times, comparing each value against the threshold with an if statement."
+      ],
+      "tests": [
+        {
+          "stdin": "5\n4\n10\n3\n8\n2",
+          "expect": "2"
+        },
+        {
+          "stdin": "0\n3\n-1\n5\n2",
+          "expect": "2"
+        }
+      ]
+    },
+    {
+      "slug": "gcse-iteration-hw-15",
+      "lesson": 1,
+      "tier": 2,
+      "difficulty": 2,
+      "xp": 20,
+      "title": "Total distance over N days",
       "brief": "Input a whole number N. Input N distances run, in km, one per day (may include decimals). Print the total distance, rounded to 1 decimal place.",
-      "starter": "", "hints": ["Set a running total to 0 before the loop, then add each day's distance.", "Loop N times, casting and adding each distance, then round(total, 1) before printing."],
-      "tests": [{ "stdin": "3\n2.5\n3.0\n1.5", "expect": "7.0" }, { "stdin": "2\n5.0\n5.0", "expect": "10.0" }] },
-    { "slug": "gcse-iteration-hw-16", "lesson": 1, "tier": 2, "difficulty": 2, "xp": 20, "title": "Square numbers",
+      "starter": "",
+      "hints": [
+        "Set a running total to 0 before the loop, then add each day's distance.",
+        "Loop N times, casting and adding each distance, then round(total, 1) before printing."
+      ],
+      "tests": [
+        {
+          "stdin": "3\n2.5\n3.0\n1.5",
+          "expect": "7.0"
+        },
+        {
+          "stdin": "2\n5.0\n5.0",
+          "expect": "10.0"
+        }
+      ]
+    },
+    {
+      "slug": "gcse-iteration-hw-16",
+      "lesson": 1,
+      "tier": 2,
+      "difficulty": 2,
+      "xp": 20,
+      "title": "Square numbers",
       "brief": "Input a whole number N. Print the square of every whole number from 1 to N, each on its own line.",
-      "starter": "", "hints": ["A number's square is the number multiplied by itself.", "Loop from 1 to n, printing each value multiplied by itself."],
-      "tests": [{ "stdin": "4", "expect": "1\n4\n9\n16" }, { "stdin": "3", "expect": "1\n4\n9" }] },
-    { "slug": "gcse-iteration-hw-17", "lesson": 2, "tier": 2, "difficulty": 3, "xp": 25, "title": "Sum of even numbers",
+      "starter": "",
+      "hints": [
+        "A number's square is the number multiplied by itself.",
+        "Loop from 1 to n, printing each value multiplied by itself."
+      ],
+      "tests": [
+        {
+          "stdin": "4",
+          "expect": "1\n4\n9\n16"
+        },
+        {
+          "stdin": "3",
+          "expect": "1\n4\n9"
+        }
+      ]
+    },
+    {
+      "slug": "gcse-iteration-hw-17",
+      "lesson": 2,
+      "tier": 2,
+      "difficulty": 3,
+      "xp": 25,
+      "title": "Sum of even numbers",
       "brief": "Input a whole number N. Print the sum of every even number from 1 to N.",
-      "starter": "", "hints": ["Check each number with % inside the loop before adding it to the total.", "Loop from 1 to n, adding a value to the total only if it's even."],
-      "tests": [{ "stdin": "10", "expect": "30" }, { "stdin": "6", "expect": "12" }] },
-    { "slug": "gcse-iteration-hw-18", "lesson": 2, "tier": 2, "difficulty": 2, "xp": 20, "title": "Count multiples of three",
+      "starter": "",
+      "hints": [
+        "Check each number with % inside the loop before adding it to the total.",
+        "Loop from 1 to n, adding a value to the total only if it's even."
+      ],
+      "tests": [
+        {
+          "stdin": "10",
+          "expect": "30"
+        },
+        {
+          "stdin": "6",
+          "expect": "12"
+        }
+      ]
+    },
+    {
+      "slug": "gcse-iteration-hw-18",
+      "lesson": 2,
+      "tier": 2,
+      "difficulty": 2,
+      "xp": 20,
+      "title": "Count multiples of three",
       "brief": "Input a whole number N. Print how many whole numbers from 1 to N divide evenly by 3.",
-      "starter": "", "hints": ["Check each number with % 3 inside the loop.", "Loop from 1 to n, counting a value only if it's a multiple of 3."],
-      "tests": [{ "stdin": "10", "expect": "3" }, { "stdin": "15", "expect": "5" }] },
-    { "slug": "gcse-iteration-hw-19", "lesson": 2, "tier": 2, "difficulty": 3, "xp": 25, "title": "List the factors",
+      "starter": "",
+      "hints": [
+        "Check each number with % 3 inside the loop.",
+        "Loop from 1 to n, counting a value only if it's a multiple of 3."
+      ],
+      "tests": [
+        {
+          "stdin": "10",
+          "expect": "3"
+        },
+        {
+          "stdin": "15",
+          "expect": "5"
+        }
+      ]
+    },
+    {
+      "slug": "gcse-iteration-hw-19",
+      "lesson": 2,
+      "tier": 2,
+      "difficulty": 3,
+      "xp": 25,
+      "title": "List the factors",
       "brief": "Input a whole number N. Print every whole number from 1 to N that divides evenly into N, each on its own line.",
-      "starter": "", "hints": ["A number i is a factor of n if n % i == 0.", "Loop from 1 to n, printing a value only when it divides evenly into n."],
-      "tests": [{ "stdin": "6", "expect": "1\n2\n3\n6" }, { "stdin": "10", "expect": "1\n2\n5\n10" }] },
-    { "slug": "gcse-iteration-hw-20", "lesson": 1, "tier": 2, "difficulty": 2, "xp": 20, "title": "Total of N items",
+      "starter": "",
+      "hints": [
+        "A number i is a factor of n if n % i == 0.",
+        "Loop from 1 to n, printing a value only when it divides evenly into n."
+      ],
+      "tests": [
+        {
+          "stdin": "6",
+          "expect": "1\n2\n3\n6"
+        },
+        {
+          "stdin": "10",
+          "expect": "1\n2\n5\n10"
+        }
+      ]
+    },
+    {
+      "slug": "gcse-iteration-hw-20",
+      "lesson": 1,
+      "tier": 2,
+      "difficulty": 2,
+      "xp": 20,
+      "title": "Total of N items",
       "brief": "Input a whole number N. Input N item prices, which may include pence, one at a time. Print the total, rounded to 2 decimal places.",
-      "starter": "", "hints": ["Set a running total to 0 before the loop, then add each price to it.", "Loop N times, casting and adding each price, then round(total, 2) before printing."],
-      "tests": [{ "stdin": "3\n1.50\n2.25\n0.99", "expect": "4.74" }, { "stdin": "2\n5.00\n5.00", "expect": "10.0" }] },
-    { "slug": "gcse-iteration-hw-21", "lesson": 2, "tier": 2, "difficulty": 2, "xp": 20, "title": "Sum of odd numbers",
+      "starter": "",
+      "hints": [
+        "Set a running total to 0 before the loop, then add each price to it.",
+        "Loop N times, casting and adding each price, then round(total, 2) before printing."
+      ],
+      "tests": [
+        {
+          "stdin": "3\n1.50\n2.25\n0.99",
+          "expect": "4.74"
+        },
+        {
+          "stdin": "2\n5.00\n5.00",
+          "expect": "10.0"
+        }
+      ]
+    },
+    {
+      "slug": "gcse-iteration-hw-21",
+      "lesson": 2,
+      "tier": 2,
+      "difficulty": 2,
+      "xp": 20,
+      "title": "Sum of odd numbers",
       "brief": "Input a whole number N. Print the sum of every odd number from 1 to N.",
-      "starter": "", "hints": ["Check each number with % inside the loop before adding it to the total.", "Loop from 1 to n, adding a value to the total only if it's odd."],
-      "tests": [{ "stdin": "10", "expect": "25" }, { "stdin": "7", "expect": "16" }] },
-    { "slug": "gcse-iteration-hw-22", "lesson": 3, "tier": 3, "difficulty": 3, "xp": 25, "title": "Filling a jar",
+      "starter": "",
+      "hints": [
+        "Check each number with % inside the loop before adding it to the total.",
+        "Loop from 1 to n, adding a value to the total only if it's odd."
+      ],
+      "tests": [
+        {
+          "stdin": "10",
+          "expect": "25"
+        },
+        {
+          "stdin": "7",
+          "expect": "16"
+        }
+      ]
+    },
+    {
+      "slug": "gcse-iteration-hw-22",
+      "lesson": 3,
+      "tier": 3,
+      "difficulty": 3,
+      "xp": 25,
+      "title": "Filling a jar",
       "brief": "Input how much liquid is added each time, in ml (may include decimals). Input the jar's target capacity in ml (may include decimals). Starting from empty, print how many additions are needed for the jar to reach or exceed its target.",
-      "starter": "", "hints": ["A while loop can keep adding and counting for as long as the total is below the target.", "Track a running total and a counter together, stopping once the total reaches the target."],
-      "tests": [{ "stdin": "5\n250", "expect": "50" }, { "stdin": "10\n95", "expect": "10" }] },
-    { "slug": "gcse-iteration-hw-23", "lesson": 2, "tier": 2, "difficulty": 2, "xp": 20, "title": "Count five-star ratings",
+      "starter": "",
+      "hints": [
+        "A while loop can keep adding and counting for as long as the total is below the target.",
+        "Track a running total and a counter together, stopping once the total reaches the target."
+      ],
+      "tests": [
+        {
+          "stdin": "5\n250",
+          "expect": "50"
+        },
+        {
+          "stdin": "10\n95",
+          "expect": "10"
+        }
+      ]
+    },
+    {
+      "slug": "gcse-iteration-hw-23",
+      "lesson": 2,
+      "tier": 2,
+      "difficulty": 2,
+      "xp": 20,
+      "title": "Count five-star ratings",
       "brief": "Input a whole number N. Input N ratings on a scale of 1 to 5, one at a time. Print how many of them are exactly 5.",
-      "starter": "", "hints": ["Set a counter to 0 before the loop, then increase it whenever a rating is exactly 5.", "Loop N times, comparing each rating against 5 with an if statement."],
-      "tests": [{ "stdin": "4\n5\n3\n5\n2", "expect": "2" }, { "stdin": "3\n1\n2\n3", "expect": "0" }] },
-    { "slug": "gcse-iteration-hw-24", "lesson": 3, "tier": 3, "difficulty": 3, "xp": 25, "title": "How many weeks will it last?",
+      "starter": "",
+      "hints": [
+        "Set a counter to 0 before the loop, then increase it whenever a rating is exactly 5.",
+        "Loop N times, comparing each rating against 5 with an if statement."
+      ],
+      "tests": [
+        {
+          "stdin": "4\n5\n3\n5\n2",
+          "expect": "2"
+        },
+        {
+          "stdin": "3\n1\n2\n3",
+          "expect": "0"
+        }
+      ]
+    },
+    {
+      "slug": "gcse-iteration-hw-24",
+      "lesson": 3,
+      "tier": 3,
+      "difficulty": 3,
+      "xp": 25,
+      "title": "How many weeks will it last?",
       "brief": "Input a starting balance, which may include decimals. Input a fixed weekly spend (may include decimals). Print how many weeks the balance lasts before it runs out (drops to 0 or below).",
-      "starter": "", "hints": ["A while loop can keep subtracting and counting for as long as the balance is still above 0.", "Check the balance before each subtraction — the loop stops as soon as it's no longer positive."],
-      "tests": [{ "stdin": "100\n25", "expect": "4" }, { "stdin": "50\n20", "expect": "3" }] },
-    { "slug": "gcse-iteration-hw-25", "lesson": 2, "tier": 3, "difficulty": 3, "xp": 30, "title": "Growing number pattern",
+      "starter": "",
+      "hints": [
+        "A while loop can keep subtracting and counting for as long as the balance is still above 0.",
+        "Check the balance before each subtraction — the loop stops as soon as it's no longer positive."
+      ],
+      "tests": [
+        {
+          "stdin": "100\n25",
+          "expect": "4"
+        },
+        {
+          "stdin": "50\n20",
+          "expect": "3"
+        }
+      ]
+    },
+    {
+      "slug": "gcse-iteration-hw-25",
+      "lesson": 2,
+      "tier": 3,
+      "difficulty": 3,
+      "xp": 30,
+      "title": "Growing number pattern",
       "brief": "Input a whole number N. Print N lines: the first shows just 1, the second shows 12, the third shows 123, and so on up to N digits on the final line.",
-      "starter": "", "hints": ["Build up a string one digit at a time inside the loop, printing it after each addition.", "Start with an empty string, and on each pass through the loop add the next digit before printing."],
-      "tests": [{ "stdin": "4", "expect": "1\n12\n123\n1234" }, { "stdin": "3", "expect": "1\n12\n123" }] }
+      "starter": "",
+      "hints": [
+        "Build up a string one digit at a time inside the loop, printing it after each addition.",
+        "Start with an empty string, and on each pass through the loop add the next digit before printing."
+      ],
+      "tests": [
+        {
+          "stdin": "4",
+          "expect": "1\n12\n123\n1234"
+        },
+        {
+          "stdin": "3",
+          "expect": "1\n12\n123"
+        }
+      ]
+    }
   ],
   "projectTasks": [
-    { "slug": "gcse-iteration-project-01", "tier": 4, "difficulty": 2, "xp": 40, "title": "Class Average Report",
+    {
+      "slug": "gcse-iteration-project-01",
+      "tier": 4,
+      "difficulty": 2,
+      "xp": 40,
+      "title": "Class Average Report",
       "brief": "A teacher wants the average score for their class. Input a whole number for how many students there are — if it isn't between 1 and 30 inclusive, keep asking until it is. Then input that many whole number test scores, one at a time, keeping a running total as you go. Once every score has been read, print the total on one line, then the average rounded to 1 decimal place on the next line, then a grade based on that average: Distinction for 90 or above, Merit for 70 or above, Pass for 40 or above, or Fail otherwise, on the final line.",
-      "starter": "", "hints": ["A while loop can keep re-asking for the student count until it's within the allowed range, the same shape as the lesson's validation example.", "Keep a running total inside the loop that reads each score, then use it for both the total line and the average."],
+      "starter": "",
+      "hints": [
+        "A while loop can keep re-asking for the student count until it's within the allowed range, the same shape as the lesson's validation example.",
+        "Keep a running total inside the loop that reads each score, then use it for both the total line and the average."
+      ],
       "tests": [
-        { "stdin": "3\n10\n20\n30", "expect": "60\n20.0\nFail" },
-        { "stdin": "40\n0\n2\n95\n95", "expect": "190\n95.0\nDistinction" }
-      ] },
-    { "slug": "gcse-iteration-project-02", "tier": 4, "difficulty": 3, "xp": 60, "title": "Savings Goal Tracker",
+        {
+          "stdin": "3\n10\n20\n30",
+          "expect": "60\n20.0\nFail"
+        },
+        {
+          "stdin": "40\n0\n2\n95\n95",
+          "expect": "190\n95.0\nDistinction"
+        }
+      ]
+    },
+    {
+      "slug": "gcse-iteration-project-02",
+      "tier": 4,
+      "difficulty": 3,
+      "xp": 60,
+      "title": "Savings Goal Tracker",
       "brief": "Input a savings target, which may include pence. Input how much is saved each week, which may include pence. Starting from zero, add one week's saving at a time and print the running total after each addition, shown to exactly 2 decimal places, stopping as soon as the total reaches or exceeds the target. On the final line, print how many weeks it took, in the format `Reached the target in <n> week(s)`.",
-      "starter": "", "hints": ["A while loop can keep adding a week's saving and printing the new total for as long as the target hasn't been reached yet.", "Format each printed total with :.2f so it always shows exactly 2 decimal places."],
+      "starter": "",
+      "hints": [
+        "A while loop can keep adding a week's saving and printing the new total for as long as the target hasn't been reached yet.",
+        "Format each printed total with :.2f so it always shows exactly 2 decimal places."
+      ],
       "tests": [
-        { "stdin": "100\n25", "expect": "25.00\n50.00\n75.00\n100.00\nReached the target in 4 week(s)" },
-        { "stdin": "30\n20", "expect": "20.00\n40.00\nReached the target in 2 week(s)" }
-      ] },
-    { "slug": "gcse-iteration-project-03", "tier": 4, "difficulty": 4, "xp": 80, "title": "Exam Results Summary",
+        {
+          "stdin": "100\n25",
+          "expect": "25.00\n50.00\n75.00\n100.00\nReached the target in 4 week(s)"
+        },
+        {
+          "stdin": "30\n20",
+          "expect": "20.00\n40.00\nReached the target in 2 week(s)"
+        }
+      ]
+    },
+    {
+      "slug": "gcse-iteration-project-03",
+      "tier": 4,
+      "difficulty": 4,
+      "xp": 80,
+      "title": "Exam Results Summary",
       "brief": "A teacher wants a summary of exam results. Input a whole number for how many students there are — if it isn't between 1 and 30 inclusive, keep asking until it is. Then input that many whole number exam scores, one at a time. Count how many fall into each band: Distinction for 90 or above, Merit for 70 or above but below 90, Pass for 40 or above but below 70, and Fail for anything below 40. Print each count on its own line, in the format `Distinction: <n>`, then Merit: <n>, then Pass: <n>, then Fail: <n>.",
-      "starter": "", "hints": ["Validate the number of students the same way as the lesson's validation example, then use four separate counters, one per grade band.", "An elif chain checks each score once, checking the highest band first so lower checks only run when needed."],
+      "starter": "",
+      "hints": [
+        "Validate the number of students the same way as the lesson's validation example, then use four separate counters, one per grade band.",
+        "An elif chain checks each score once, checking the highest band first so lower checks only run when needed."
+      ],
       "tests": [
-        { "stdin": "5\n95\n72\n45\n20\n88", "expect": "Distinction: 1\nMerit: 2\nPass: 1\nFail: 1" },
-        { "stdin": "40\n0\n4\n60\n60\n60\n60", "expect": "Distinction: 0\nMerit: 0\nPass: 4\nFail: 0" }
-      ] },
-    { "slug": "gcse-iteration-project-04", "tier": 4, "difficulty": 5, "xp": 100, "title": "Delivery Route Summary",
+        {
+          "stdin": "5\n95\n72\n45\n20\n88",
+          "expect": "Distinction: 1\nMerit: 2\nPass: 1\nFail: 1"
+        },
+        {
+          "stdin": "40\n0\n4\n60\n60\n60\n60",
+          "expect": "Distinction: 0\nMerit: 0\nPass: 4\nFail: 0"
+        }
+      ]
+    },
+    {
+      "slug": "gcse-iteration-project-04",
+      "tier": 4,
+      "difficulty": 5,
+      "xp": 100,
+      "title": "Delivery Route Summary",
       "brief": "A delivery driver wants a summary of today's drop-offs. Input a whole number for how many deliveries there are — if it isn't between 1 and 50 inclusive, keep asking until it is. Then input that many delivery distances in km, one at a time (each may include decimals) — if a distance isn't greater than 0, keep asking again for that same delivery. Once every distance has been read, print the total distance travelled, then the longest single delivery, then the shortest single delivery, each rounded to 1 decimal place and each on its own line. Finally, print `Long day` if the total distance is over 100km, or `Normal day` otherwise.",
-      "starter": "", "hints": ["Two separate validations are needed here: one while loop for the number of deliveries, and a second while loop inside the reading loop for each individual distance.", "Track the total, the longest-so-far and the shortest-so-far together inside the same loop that reads each distance."],
+      "starter": "",
+      "hints": [
+        "Two separate validations are needed here: one while loop for the number of deliveries, and a second while loop inside the reading loop for each individual distance.",
+        "Track the total, the longest-so-far and the shortest-so-far together inside the same loop that reads each distance."
+      ],
       "tests": [
-        { "stdin": "3\n10.5\n20.0\n5.5", "expect": "36.0\n20.0\n5.5\nNormal day" },
-        { "stdin": "60\n0\n2\n-5\n60.0\n50.0", "expect": "110.0\n60.0\n50.0\nLong day" }
-      ] }
+        {
+          "stdin": "3\n10.5\n20.0\n5.5",
+          "expect": "36.0\n20.0\n5.5\nNormal day"
+        },
+        {
+          "stdin": "60\n0\n2\n-5\n60.0\n50.0",
+          "expect": "110.0\n60.0\n50.0\nLong day"
+        }
+      ]
+    }
   ],
   "practiceTasks": [
-    { "slug": "gcse-iteration-p-01", "tier": 1, "difficulty": 1, "xp": 10, "title": "Countdown",
+    {
+      "slug": "gcse-iteration-p-01",
+      "tier": 1,
+      "difficulty": 1,
+      "xp": 10,
+      "title": "Countdown",
       "brief": "Input a whole number. Print every number from it down to 1, one per line.",
-      "starter": "", "hints": ["range() can count downwards if you give it a negative step.", "for i in range(n, 0, -1): print(i)."],
-      "tests": [{ "stdin": "4", "expect": "4\n3\n2\n1" }] },
-    { "slug": "gcse-iteration-p-02", "tier": 2, "difficulty": 2, "xp": 15, "title": "Sum of even numbers",
+      "starter": "",
+      "hints": [
+        "range() can count downwards if you give it a negative step.",
+        "for i in range(n, 0, -1): print(i)."
+      ],
+      "tests": [
+        {
+          "stdin": "4",
+          "expect": "4\n3\n2\n1"
+        },
+        {
+          "stdin": "1",
+          "expect": "1"
+        },
+        {
+          "stdin": "6",
+          "expect": "6\n5\n4\n3\n2\n1"
+        },
+        {
+          "stdin": "10",
+          "expect": "10\n9\n8\n7\n6\n5\n4\n3\n2\n1"
+        }
+      ]
+    },
+    {
+      "slug": "gcse-iteration-p-02",
+      "tier": 2,
+      "difficulty": 2,
+      "xp": 15,
+      "title": "Sum of even numbers",
       "brief": "Input a whole number N. Print the sum of every even number from 2 up to and including N.",
-      "starter": "", "hints": ["range() can step by 2 to land on only the even numbers.", "total = 0, then for i in range(2, n + 1, 2): total = total + i, then print total."],
-      "tests": [{ "stdin": "10", "expect": "30" }, { "stdin": "7", "expect": "12" }] },
-    { "slug": "gcse-iteration-p-03", "tier": 2, "difficulty": 2, "xp": 15, "title": "Repeat a greeting",
+      "starter": "",
+      "hints": [
+        "range() can step by 2 to land on only the even numbers.",
+        "total = 0, then for i in range(2, n + 1, 2): total = total + i, then print total."
+      ],
+      "tests": [
+        {
+          "stdin": "10",
+          "expect": "30"
+        },
+        {
+          "stdin": "7",
+          "expect": "12"
+        },
+        {
+          "stdin": "1",
+          "expect": "0"
+        },
+        {
+          "stdin": "2",
+          "expect": "2"
+        },
+        {
+          "stdin": "20",
+          "expect": "110"
+        },
+        {
+          "stdin": "9",
+          "expect": "20"
+        }
+      ]
+    },
+    {
+      "slug": "gcse-iteration-p-03",
+      "tier": 2,
+      "difficulty": 2,
+      "xp": 15,
+      "title": "Repeat a greeting",
       "brief": "Input a name, then a whole number. Print `Hello, <name>!` that many times, once per line.",
-      "starter": "", "hints": ["The loop just needs to run the right number of times - it doesn't need to use the loop variable itself.", "for i in range(times): print(f\"Hello, {name}!\")."],
-      "tests": [{ "stdin": "Ada\n3", "expect": "Hello, Ada!\nHello, Ada!\nHello, Ada!" }] },
-    { "slug": "gcse-iteration-p-04", "tier": 2, "difficulty": 2, "xp": 15, "title": "Countdown to liftoff",
+      "starter": "",
+      "hints": [
+        "The loop just needs to run the right number of times - it doesn't need to use the loop variable itself.",
+        "for i in range(times): print(f\"Hello, {name}!\")."
+      ],
+      "tests": [
+        {
+          "stdin": "Ada\n3",
+          "expect": "Hello, Ada!\nHello, Ada!\nHello, Ada!"
+        },
+        {
+          "stdin": "Sam\n1",
+          "expect": "Hello, Sam!"
+        },
+        {
+          "stdin": "Bo\n4",
+          "expect": "Hello, Bo!\nHello, Bo!\nHello, Bo!\nHello, Bo!"
+        },
+        {
+          "stdin": "Mia Rose\n2",
+          "expect": "Hello, Mia Rose!\nHello, Mia Rose!"
+        }
+      ]
+    },
+    {
+      "slug": "gcse-iteration-p-04",
+      "tier": 2,
+      "difficulty": 2,
+      "xp": 15,
+      "title": "Countdown to liftoff",
       "brief": "Input a whole number. While it's still greater than 0, print it and reduce it by 1 each time. Once the loop ends, print `Liftoff!`.",
-      "starter": "", "hints": ["A while loop that keeps going as long as the number is above 0, reducing it by 1 inside the loop.", "while n > 0: print(n); n = n - 1 - then print(\"Liftoff!\") after the loop ends."],
-      "tests": [{ "stdin": "3", "expect": "3\n2\n1\nLiftoff!" }] },
-    { "slug": "gcse-iteration-p-05", "tier": 3, "difficulty": 3, "xp": 25, "title": "Multiples up to a limit",
+      "starter": "",
+      "hints": [
+        "A while loop that keeps going as long as the number is above 0, reducing it by 1 inside the loop.",
+        "while n > 0: print(n); n = n - 1 - then print(\"Liftoff!\") after the loop ends."
+      ],
+      "tests": [
+        {
+          "stdin": "3",
+          "expect": "3\n2\n1\nLiftoff!"
+        },
+        {
+          "stdin": "1",
+          "expect": "1\nLiftoff!"
+        },
+        {
+          "stdin": "5",
+          "expect": "5\n4\n3\n2\n1\nLiftoff!"
+        },
+        {
+          "stdin": "0",
+          "expect": "Liftoff!"
+        }
+      ]
+    },
+    {
+      "slug": "gcse-iteration-p-05",
+      "tier": 3,
+      "difficulty": 3,
+      "xp": 25,
+      "title": "Multiples up to a limit",
       "brief": "Input a whole number N, then a limit. Print every multiple of N from N up to the limit (inclusive), one per line.",
-      "starter": "", "hints": ["range() can start at N and step by N each time.", "for i in range(n, limit + 1, n): print(i)."],
-      "tests": [{ "stdin": "3\n15", "expect": "3\n6\n9\n12\n15" }] },
-    { "slug": "gcse-iteration-p-06", "tier": 1, "difficulty": 2, "xp": 15, "title": "Sum 1 to N",
+      "starter": "",
+      "hints": [
+        "range() can start at N and step by N each time.",
+        "for i in range(n, limit + 1, n): print(i)."
+      ],
+      "tests": [
+        {
+          "stdin": "3\n15",
+          "expect": "3\n6\n9\n12\n15"
+        },
+        {
+          "stdin": "5\n20",
+          "expect": "5\n10\n15\n20"
+        },
+        {
+          "stdin": "7\n7",
+          "expect": "7"
+        },
+        {
+          "stdin": "4\n10",
+          "expect": "4\n8"
+        },
+        {
+          "stdin": "10\n35",
+          "expect": "10\n20\n30"
+        }
+      ]
+    },
+    {
+      "slug": "gcse-iteration-p-06",
+      "tier": 1,
+      "difficulty": 2,
+      "xp": 15,
+      "title": "Sum 1 to N",
       "brief": "Input a whole number N. Add up every whole number from 1 to N (inclusive) using a loop, and print the total.",
-      "starter": "", "hints": ["range(1, n + 1) gives you every number from 1 up to and including n.", "total = 0; for i in range(1, n + 1): total += i — then print(total)."],
-      "tests": [{ "stdin": "5", "expect": "15" }, { "stdin": "10", "expect": "55" }] },
-    { "slug": "gcse-iteration-p-07", "tier": 2, "difficulty": 3, "xp": 20, "title": "Largest of N numbers",
+      "starter": "",
+      "hints": [
+        "range(1, n + 1) gives you every number from 1 up to and including n.",
+        "total = 0; for i in range(1, n + 1): total += i — then print(total)."
+      ],
+      "tests": [
+        {
+          "stdin": "5",
+          "expect": "15"
+        },
+        {
+          "stdin": "10",
+          "expect": "55"
+        },
+        {
+          "stdin": "1",
+          "expect": "1"
+        },
+        {
+          "stdin": "100",
+          "expect": "5050"
+        },
+        {
+          "stdin": "3",
+          "expect": "6"
+        }
+      ]
+    },
+    {
+      "slug": "gcse-iteration-p-07",
+      "tier": 2,
+      "difficulty": 3,
+      "xp": 20,
+      "title": "Largest of N numbers",
       "brief": "Input a whole number N. Then input N more whole numbers, one at a time. Print the largest one.",
-      "starter": "", "hints": ["Keep a running \"largest so far\" variable, updating it inside the loop whenever a bigger number comes in.", "largest = None; for _ in range(n): x = int(input()); if largest is None or x > largest: largest = x — then print(largest)."],
-      "tests": [{ "stdin": "4\n3\n8\n1\n5", "expect": "8" }, { "stdin": "3\n10\n2\n7", "expect": "10" }] },
-    { "slug": "gcse-iteration-p-08", "tier": 3, "difficulty": 3, "xp": 20, "title": "Countdown by twos",
+      "starter": "",
+      "hints": [
+        "Keep a running \"largest so far\" variable, updating it inside the loop whenever a bigger number comes in.",
+        "largest = None; for _ in range(n): x = int(input()); if largest is None or x > largest: largest = x — then print(largest)."
+      ],
+      "tests": [
+        {
+          "stdin": "4\n3\n8\n1\n5",
+          "expect": "8"
+        },
+        {
+          "stdin": "3\n10\n2\n7",
+          "expect": "10"
+        },
+        {
+          "stdin": "1\n-5",
+          "expect": "-5"
+        },
+        {
+          "stdin": "3\n-2\n-9\n-4",
+          "expect": "-2"
+        },
+        {
+          "stdin": "5\n1\n9\n9\n3\n2",
+          "expect": "9"
+        }
+      ]
+    },
+    {
+      "slug": "gcse-iteration-p-08",
+      "tier": 3,
+      "difficulty": 3,
+      "xp": 20,
+      "title": "Countdown by twos",
       "brief": "Input a starting even whole number N. Using a while loop, print N, then N minus 2, then N minus 4, and so on, down to and including 0 — one number per line.",
-      "starter": "", "hints": ["A while loop that keeps going while the number is 0 or more, subtracting 2 each time round.", "while n >= 0: print(n); n -= 2."],
-      "tests": [{ "stdin": "6", "expect": "6\n4\n2\n0" }, { "stdin": "10", "expect": "10\n8\n6\n4\n2\n0" }] },
-    { "slug": "gcse-iteration-p-09", "tier": 3, "difficulty": 4, "xp": 25, "title": "Times table",
+      "starter": "",
+      "hints": [
+        "A while loop that keeps going while the number is 0 or more, subtracting 2 each time round.",
+        "while n >= 0: print(n); n -= 2."
+      ],
+      "tests": [
+        {
+          "stdin": "6",
+          "expect": "6\n4\n2\n0"
+        },
+        {
+          "stdin": "10",
+          "expect": "10\n8\n6\n4\n2\n0"
+        },
+        {
+          "stdin": "2",
+          "expect": "2\n0"
+        },
+        {
+          "stdin": "0",
+          "expect": "0"
+        },
+        {
+          "stdin": "20",
+          "expect": "20\n18\n16\n14\n12\n10\n8\n6\n4\n2\n0"
+        },
+        {
+          "stdin": "8",
+          "expect": "8\n6\n4\n2\n0"
+        }
+      ]
+    },
+    {
+      "slug": "gcse-iteration-p-09",
+      "tier": 3,
+      "difficulty": 4,
+      "xp": 25,
+      "title": "Times table",
       "brief": "Input a whole number N, then a limit L. Print the N times table from 1×N up to L×N, one line each, in the format `<i> x <N> = <result>`.",
-      "starter": "", "hints": ["Loop i from 1 up to and including the limit, working out i times N on each pass.", "for i in range(1, limit + 1): print(f\"{i} x {n} = {i * n}\")."],
-      "tests": [{ "stdin": "3\n5", "expect": "1 x 3 = 3\n2 x 3 = 6\n3 x 3 = 9\n4 x 3 = 12\n5 x 3 = 15" }, { "stdin": "2\n3", "expect": "1 x 2 = 2\n2 x 2 = 4\n3 x 2 = 6" }] },
-    { "slug": "gcse-iteration-p-10", "tier": 4, "difficulty": 5, "xp": 30, "title": "FizzBuzz range",
+      "starter": "",
+      "hints": [
+        "Loop i from 1 up to and including the limit, working out i times N on each pass.",
+        "for i in range(1, limit + 1): print(f\"{i} x {n} = {i * n}\")."
+      ],
+      "tests": [
+        {
+          "stdin": "3\n5",
+          "expect": "1 x 3 = 3\n2 x 3 = 6\n3 x 3 = 9\n4 x 3 = 12\n5 x 3 = 15"
+        },
+        {
+          "stdin": "2\n3",
+          "expect": "1 x 2 = 2\n2 x 2 = 4\n3 x 2 = 6"
+        },
+        {
+          "stdin": "5\n1",
+          "expect": "1 x 5 = 5"
+        },
+        {
+          "stdin": "12\n3",
+          "expect": "1 x 12 = 12\n2 x 12 = 24\n3 x 12 = 36"
+        },
+        {
+          "stdin": "7\n2",
+          "expect": "1 x 7 = 7\n2 x 7 = 14"
+        }
+      ]
+    },
+    {
+      "slug": "gcse-iteration-p-10",
+      "tier": 4,
+      "difficulty": 5,
+      "xp": 30,
+      "title": "FizzBuzz range",
       "brief": "Input a start number, then an end number (inclusive). For every whole number in that range, print `FizzBuzz` if it divides evenly by both 3 and 5, `Fizz` if just by 3, `Buzz` if just by 5, or the number itself if none of those apply.",
-      "starter": "", "hints": ["Check divisibility by 15 first (both 3 and 5 at once), then 3, then 5, then fall back to the number.", "for i in range(start, end + 1): if i % 15 == 0: print(\"FizzBuzz\") elif i % 3 == 0: print(\"Fizz\") elif i % 5 == 0: print(\"Buzz\") else: print(i)."],
-      "tests": [{ "stdin": "1\n15", "expect": "1\n2\nFizz\n4\nBuzz\nFizz\n7\n8\nFizz\nBuzz\n11\nFizz\n13\n14\nFizzBuzz" }, { "stdin": "10\n16", "expect": "Buzz\n11\nFizz\n13\n14\nFizzBuzz\n16" }] },
-    { "slug": "gcse-iteration-p-s1", "tier": 4, "difficulty": 5, "xp": 40, "stretch": true, "title": "🌟 Prime checker",
+      "starter": "",
+      "hints": [
+        "Check divisibility by 15 first (both 3 and 5 at once), then 3, then 5, then fall back to the number.",
+        "for i in range(start, end + 1): if i % 15 == 0: print(\"FizzBuzz\") elif i % 3 == 0: print(\"Fizz\") elif i % 5 == 0: print(\"Buzz\") else: print(i)."
+      ],
+      "tests": [
+        {
+          "stdin": "1\n15",
+          "expect": "1\n2\nFizz\n4\nBuzz\nFizz\n7\n8\nFizz\nBuzz\n11\nFizz\n13\n14\nFizzBuzz"
+        },
+        {
+          "stdin": "10\n16",
+          "expect": "Buzz\n11\nFizz\n13\n14\nFizzBuzz\n16"
+        },
+        {
+          "stdin": "15\n15",
+          "expect": "FizzBuzz"
+        },
+        {
+          "stdin": "3\n3",
+          "expect": "Fizz"
+        },
+        {
+          "stdin": "5\n6",
+          "expect": "Buzz\nFizz"
+        },
+        {
+          "stdin": "28\n31",
+          "expect": "28\n29\nFizzBuzz\n31"
+        }
+      ]
+    },
+    {
+      "slug": "gcse-iteration-p-s1",
+      "tier": 4,
+      "difficulty": 5,
+      "xp": 40,
+      "stretch": true,
+      "title": "🌟 Prime checker",
       "brief": "Input a whole number greater than 1. Check every number from 2 up to (but not including) it — if any of them divides it evenly, it isn't prime. Print `Prime` or `Not prime`.",
-      "starter": "", "hints": ["Loop through the possible divisors, and if you ever find one that divides evenly, the number isn't prime — you can stop checking as soon as you know.", "is_prime = True; for i in range(2, n): if n % i == 0: is_prime = False; break — then print based on is_prime."],
-      "tests": [{ "stdin": "7", "expect": "Prime" }, { "stdin": "8", "expect": "Not prime" }, { "stdin": "2", "expect": "Prime" }] },
-    { "slug": "gcse-iteration-p-s2", "tier": 4, "difficulty": 5, "xp": 40, "stretch": true, "title": "🌟 Shrinking triangle",
+      "starter": "",
+      "hints": [
+        "Loop through the possible divisors, and if you ever find one that divides evenly, the number isn't prime — you can stop checking as soon as you know.",
+        "is_prime = True; for i in range(2, n): if n % i == 0: is_prime = False; break — then print based on is_prime."
+      ],
+      "tests": [
+        {
+          "stdin": "7",
+          "expect": "Prime"
+        },
+        {
+          "stdin": "8",
+          "expect": "Not prime"
+        },
+        {
+          "stdin": "2",
+          "expect": "Prime"
+        },
+        {
+          "stdin": "9",
+          "expect": "Not prime"
+        },
+        {
+          "stdin": "13",
+          "expect": "Prime"
+        },
+        {
+          "stdin": "4",
+          "expect": "Not prime"
+        },
+        {
+          "stdin": "97",
+          "expect": "Prime"
+        },
+        {
+          "stdin": "91",
+          "expect": "Not prime"
+        }
+      ]
+    },
+    {
+      "slug": "gcse-iteration-p-s2",
+      "tier": 4,
+      "difficulty": 5,
+      "xp": 40,
+      "stretch": true,
+      "title": "🌟 Shrinking triangle",
       "brief": "Input a whole number N. Print N rows of asterisks, where the first row has N asterisks, the next has one fewer, and so on down to a single asterisk on the last row — one row per line.",
-      "starter": "", "hints": ["A loop counting down, printing that many asterisks on each pass.", "for row in range(n, 0, -1): print(\"*\" * row)."],
-      "tests": [{ "stdin": "4", "expect": "****\n***\n**\n*" }, { "stdin": "3", "expect": "***\n**\n*" }] }
+      "starter": "",
+      "hints": [
+        "A loop counting down, printing that many asterisks on each pass.",
+        "for row in range(n, 0, -1): print(\"*\" * row)."
+      ],
+      "tests": [
+        {
+          "stdin": "4",
+          "expect": "****\n***\n**\n*"
+        },
+        {
+          "stdin": "3",
+          "expect": "***\n**\n*"
+        },
+        {
+          "stdin": "1",
+          "expect": "*"
+        },
+        {
+          "stdin": "5",
+          "expect": "*****\n****\n***\n**\n*"
+        },
+        {
+          "stdin": "2",
+          "expect": "**\n*"
+        }
+      ]
+    }
   ]
 }

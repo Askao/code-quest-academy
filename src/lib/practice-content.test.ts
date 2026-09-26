@@ -18,12 +18,11 @@ const migrations = fs
   .map((f) => fs.readFileSync(new URL(`../../supabase/migrations/${f}`, import.meta.url), "utf8"))
   .join("\n");
 
-// Topics whose practice pool has been through the full check (tests run against
-// reference solutions, wording proofread). The rest are being brought up to it.
-const CHECKED = new Set(["searching-sorting", "robust-programs"]);
+// Topics that must have a full practice pool, not just a handful of tasks.
+const FULL_POOL = new Set(["searching-sorting", "robust-programs"]);
 
-test("each of the two newest topics has a real practice pool", () => {
-  for (const t of CHECKED) {
+test("the newest topics have a real practice pool", () => {
+  for (const t of FULL_POOL) {
     const pool = topics.find((x) => x.data.topic === t)!.data.practiceTasks ?? [];
     assert.ok(pool.filter((p) => !p.stretch).length >= 20, `${t}: needs at least 20 core practice tasks`);
     assert.ok(pool.filter((p) => p.stretch).length >= 3, `${t}: needs stretch tasks`);
@@ -40,11 +39,13 @@ test("every practice task is complete, and unique within its topic", () => {
       assert.ok(p.hints.length >= 2, `${p.slug}: needs two hints`);
       assert.ok(p.tests.length >= 1, `${p.slug}: no test cases`);
       assert.ok(p.difficulty >= 1 && p.difficulty <= 5 && p.tier >= 1 && p.tier <= 4, `${p.slug}: bad tier/difficulty`);
-      if (data.topic && CHECKED.has(data.topic)) {
-        assert.ok(p.tests.length >= 3, `${p.slug}: checked topics need 3+ test cases`);
-        const inputs = p.tests.map((x) => x.stdin ?? "");
-        assert.equal(new Set(inputs).size, inputs.length, `${p.slug}: repeated test input`);
-      }
+      // Three or more cases, all different, so a program can't pass by printing
+      // one hard-coded answer; and none expecting no output at all, or an empty
+      // program would pass it.
+      assert.ok(p.tests.length >= 3, `${p.slug}: needs 3+ test cases`);
+      const inputs = p.tests.map((x) => x.stdin ?? "");
+      assert.equal(new Set(inputs).size, inputs.length, `${p.slug}: repeated test input`);
+      for (const x of p.tests) assert.ok(x.expect.trim().length > 0, `${p.slug}: a test expects empty output`);
     }
   }
 });

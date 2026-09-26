@@ -6,6 +6,8 @@
 const PYODIDE_VERSION = "0.26.4";
 const PYODIDE_URL = `https://cdn.jsdelivr.net/pyodide/v${PYODIDE_VERSION}/full/`;
 
+import { normaliseOutput, outputsMatch } from "./output-compare";
+
 export type TestCase = { stdin?: string; expect: string };
 
 export type TestResult = {
@@ -89,14 +91,7 @@ function runExclusive<T>(fn: () => Promise<T>): Promise<T> {
   return result;
 }
 
-function normalise(text: string) {
-  return text
-    .replace(/\r\n/g, "\n")
-    .split("\n")
-    .map((line) => line.trimEnd())
-    .join("\n")
-    .trim();
-}
+const normalise = normaliseOutput;
 
 function cleanTraceback(message: string) {
   const lines = message.split("\n").filter((l) => !l.includes("/lib/python") && l.trim() !== "");
@@ -128,10 +123,29 @@ def __make_test_input__(lines_json):
     return input
 `;
 
+// Files a program writes stay in the browser's in-memory folder until the page
+// is closed, so without this a second Test click would find the files the first
+// one left behind: a program that appends to log.txt would print the message
+// twice, and one that reads a file it never wrote would seem to work. Each test
+// starts from an empty folder, like a fresh computer.
+const CLEAN_WORKDIR_SNIPPET = `
+import os as __os__
+def __clean_workdir__():
+    for __name in __os__.listdir("."):
+        __path = __os__.path.join(".", __name)
+        if __os__.path.isfile(__path):
+            try:
+                __os__.remove(__path)
+            except OSError:
+                pass
+`;
+
 /** Run the student's program once against a single stdin payload. */
 export function runOnce(code: string, stdin: string) {
   return runExclusive(async () => {
     const pyodide = await getPyodide();
+    pyodide.runPython(CLEAN_WORKDIR_SNIPPET);
+    pyodide.runPython("__clean_workdir__()");
     const inputLines = stdin.length ? stdin.replace(/\r\n/g, "\n").split("\n") : [];
     const out: string[] = [];
 
@@ -295,7 +309,7 @@ export async function runTests(code: string, tests: TestCase[]): Promise<RunOutc
     const expected = normalise(test.expect);
     results.push({
       index: i,
-      passed: !error && actual === expected,
+      passed: !error && outputsMatch(actual, expected),
       stdin,
       expected,
       actual,

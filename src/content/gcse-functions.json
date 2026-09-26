@@ -9,7 +9,10 @@
       "notes": "A **function** is a named block of code that can be run whenever you need it, by *calling* it.\n\n```python\ndef square(n):\n    return n * n\n\nresult = square(5)\nprint(result)\n```\n\n`return` sends a value back to wherever the function was called. This is different from `print()`, which just displays something on screen — a value that's only printed can't be used in a calculation afterwards, but a returned value can.\n\n---\n\nA common mistake: `print()`-ing inside a function instead of `return`-ing. Always ask: does whoever calls this function need to *use* the result afterwards? If yes, `return` it.",
       "worked_example": "def add(a, b):\n    return a + b\n\nx = int(input())\ny = int(input())\nprint(add(x, y))",
       "worked_example_note": "add(x, y) runs the function with x and y substituted in for a and b. Whatever add returns is what print() actually receives and displays.",
-      "worked_example_demo_input": ["4", "7"]
+      "worked_example_demo_input": [
+        "4",
+        "7"
+      ]
     },
     {
       "slug": "gcse-functions-2",
@@ -18,7 +21,9 @@
       "notes": "A parameter can have a **default value**, used only when the caller doesn't supply one:\n\n```python\ndef power(base, exponent=2):\n    return base ** exponent\n\nprint(power(3))      # 9  - exponent defaults to 2\nprint(power(3, 3))   # 27 - exponent overridden\n```\n\n---\n\nA variable created *inside* a function only exists while that function is running — this is called its **scope**. It can't be used outside the function:\n\n```python\ndef double(n):\n    result = n * 2\n    return result\n\nprint(double(5))\nprint(result)   # error! result only exists inside double()\n```\n\nTo use a function's result outside it, store what it `return`s: `answer = double(5)`.",
       "worked_example": "def area(width, height=1):\n    return width * height\n\nw = int(input())\nprint(area(w))",
       "worked_example_note": "Because height has a default of 1, area(w) is allowed even though area's definition lists two parameters - the default fills in for the one that's missing.",
-      "worked_example_demo_input": ["6"]
+      "worked_example_demo_input": [
+        "6"
+      ]
     },
     {
       "slug": "gcse-functions-3",
@@ -27,284 +32,1667 @@
       "notes": "OCR's pseudocode distinguishes two kinds of subprogram:\n\n- a **function** returns a value, using `RETURN`\n- a **procedure** performs an action but doesn't hand a value back — often just printing something\n\nPython doesn't enforce this split (any `def` can do either), but exam questions use the words *function* and *procedure* on purpose, so notice which one is actually being asked for.\n\nBigger problems are easier to build as a few small functions, each doing one clear job, rather than one long block of code — and one function is allowed to call another.\n\n---\n\nOCR's pseudocode sometimes labels a parameter `byVal` or `byRef`, to show whether a subroutine gets its own **copy** of a value (`byVal` — changing it inside doesn't affect the original) or access to the **original** (`byRef` — changing it inside changes it outside too):\n\n```text\nprocedure foobar(x: byVal, y: byRef)\n    ...\nendprocedure\n```\n\nPython doesn't use these keywords, but the same idea still applies: passing a number or a string behaves like `byVal`, while passing a list behaves like `byRef`, because changing its *contents* inside the function changes the original list too:\n\n```python\ndef change_number(n):\n    n = 99          # only changes the local copy\n\ndef change_list(lst):\n    lst.append(99)  # changes the original list too\n\nx = 5\nchange_number(x)\nprint(x)             # still 5\n\nmy_list = [1, 2]\nchange_list(my_list)\nprint(my_list)        # [1, 2, 99] - changed!\n```",
       "worked_example": "def is_even(n):\n    return n % 2 == 0\n\ndef describe(n):\n    if is_even(n):\n        return f\"{n} is even\"\n    else:\n        return f\"{n} is odd\"\n\nnumber = int(input())\nprint(describe(number))",
       "worked_example_note": "describe() calls is_even() to do part of its job, rather than repeating the % 2 == 0 check itself. Splitting work into small functions like this makes each one easier to test on its own.",
-      "worked_example_demo_input": ["7"]
+      "worked_example_demo_input": [
+        "7"
+      ]
     }
   ],
   "quiz": [
-    { "lessonSlug": "gcse-functions-1", "question": "What keyword sends a value back from a function to whoever called it?", "options": ["return", "print", "yield", "output"], "answer": "return", "explanation": "return hands a value back to the caller; print() just displays something on screen and gives the caller nothing to use." },
-    { "lessonSlug": "gcse-functions-1", "question": "def add(a, b): return a + b — what does add(3, 4) evaluate to?", "options": ["7", "34", "\"3\"+\"4\"", "An error"], "answer": "7", "explanation": "The function adds the two numbers passed in and returns 7." },
-    { "lessonSlug": "gcse-functions-1", "question": "Why does a function that only uses print() (and never return) cause problems if you try to use its result in a calculation afterwards?", "options": ["print() doesn't give the caller a usable value back", "print() is slower than return", "print() only works with strings", "There is no problem"], "answer": "print() doesn't give the caller a usable value back", "explanation": "print() displays something on screen, but the function's actual return value is None - there's nothing there to calculate with." },
-    { "lessonSlug": "gcse-functions-2", "question": "def power(base, exponent=2): return base ** exponent — what does power(5) evaluate to?", "options": ["25", "10", "An error - missing argument", "5"], "answer": "25", "explanation": "exponent defaults to 2 when it isn't supplied, so power(5) is 5 ** 2 = 25." },
-    { "lessonSlug": "gcse-functions-2", "question": "A variable created inside a function only exists while that function is running. What is this called?", "options": ["Its scope", "Its type", "Its default", "Its parameter"], "answer": "Its scope", "explanation": "This is called the variable's scope - a local variable inside a function can't be used outside it." },
-    { "lessonSlug": "gcse-functions-2", "question": "def area(w, h): return w * h — with no default values given, how many arguments must be supplied to call it?", "options": ["2", "1", "0", "As many as you like"], "answer": "2", "explanation": "Both w and h have no default value, so both must be supplied every time area() is called." },
-    { "lessonSlug": "gcse-functions-3", "question": "In exam pseudocode, what's the key difference between a function and a procedure?", "options": ["A function returns a value, a procedure doesn't", "A function is always faster", "A procedure can't take parameters", "There is no real difference"], "answer": "A function returns a value, a procedure doesn't", "explanation": "A function's job is to hand back a result with RETURN; a procedure performs an action, like printing, without returning anything." },
-    { "lessonSlug": "gcse-functions-3", "question": "Why break a big program into several small functions instead of one long block of code?", "options": ["Each one is easier to understand, reuse and test on its own", "Python requires it", "It makes the program run faster", "It uses less memory"], "answer": "Each one is easier to understand, reuse and test on its own", "explanation": "Smaller, single-purpose functions are easier to read, test individually, and call from more than one place in a program." },
-    { "lessonSlug": "gcse-functions-3", "question": "If is_even(n) already returns True or False, what would a sensible count_evens(numbers) function do?", "options": ["Loop through numbers, call is_even on each one, and count the Trues", "Return is_even(numbers) directly", "Multiply every number in the list by 2", "Sort the list of numbers"], "answer": "Loop through numbers, call is_even on each one, and count the Trues", "explanation": "count_evens needs to check every item individually, which means calling is_even() once per item inside a loop." },
-    { "lessonSlug": "gcse-functions-3", "question": "A parameter is passed byRef. What does that mean?", "options": ["The subroutine has access to the original value - changing it inside changes it outside too", "The subroutine gets its own copy, and changes don't affect the original", "The parameter can't be changed at all", "byRef only applies to numbers"], "answer": "The subroutine has access to the original value - changing it inside changes it outside too", "explanation": "byRef gives access to the original, so a change inside the subroutine is visible outside it too - byVal gives a copy instead, so changes stay local." },
-    { "lessonSlug": "gcse-functions-3", "question": "In Python, passing a list into a function and appending to it changes the original list outside the function too. This behaves most like which OCR parameter-passing keyword?", "options": ["byRef", "byVal", "Neither - Python doesn't have this concept", "It depends on the list's length"], "answer": "byRef", "explanation": "Python's lists are mutable, so a function can change the original list's contents - the same effect as an OCR byRef parameter." }
+    {
+      "lessonSlug": "gcse-functions-1",
+      "question": "What keyword sends a value back from a function to whoever called it?",
+      "options": [
+        "return",
+        "print",
+        "yield",
+        "output"
+      ],
+      "answer": "return",
+      "explanation": "return hands a value back to the caller; print() just displays something on screen and gives the caller nothing to use."
+    },
+    {
+      "lessonSlug": "gcse-functions-1",
+      "question": "def add(a, b): return a + b — what does add(3, 4) evaluate to?",
+      "options": [
+        "7",
+        "34",
+        "\"3\"+\"4\"",
+        "An error"
+      ],
+      "answer": "7",
+      "explanation": "The function adds the two numbers passed in and returns 7."
+    },
+    {
+      "lessonSlug": "gcse-functions-1",
+      "question": "Why does a function that only uses print() (and never return) cause problems if you try to use its result in a calculation afterwards?",
+      "options": [
+        "print() doesn't give the caller a usable value back",
+        "print() is slower than return",
+        "print() only works with strings",
+        "There is no problem"
+      ],
+      "answer": "print() doesn't give the caller a usable value back",
+      "explanation": "print() displays something on screen, but the function's actual return value is None - there's nothing there to calculate with."
+    },
+    {
+      "lessonSlug": "gcse-functions-2",
+      "question": "def power(base, exponent=2): return base ** exponent — what does power(5) evaluate to?",
+      "options": [
+        "25",
+        "10",
+        "An error - missing argument",
+        "5"
+      ],
+      "answer": "25",
+      "explanation": "exponent defaults to 2 when it isn't supplied, so power(5) is 5 ** 2 = 25."
+    },
+    {
+      "lessonSlug": "gcse-functions-2",
+      "question": "A variable created inside a function only exists while that function is running. What is this called?",
+      "options": [
+        "Its scope",
+        "Its type",
+        "Its default",
+        "Its parameter"
+      ],
+      "answer": "Its scope",
+      "explanation": "This is called the variable's scope - a local variable inside a function can't be used outside it."
+    },
+    {
+      "lessonSlug": "gcse-functions-2",
+      "question": "def area(w, h): return w * h — with no default values given, how many arguments must be supplied to call it?",
+      "options": [
+        "2",
+        "1",
+        "0",
+        "As many as you like"
+      ],
+      "answer": "2",
+      "explanation": "Both w and h have no default value, so both must be supplied every time area() is called."
+    },
+    {
+      "lessonSlug": "gcse-functions-3",
+      "question": "In exam pseudocode, what's the key difference between a function and a procedure?",
+      "options": [
+        "A function returns a value, a procedure doesn't",
+        "A function is always faster",
+        "A procedure can't take parameters",
+        "There is no real difference"
+      ],
+      "answer": "A function returns a value, a procedure doesn't",
+      "explanation": "A function's job is to hand back a result with RETURN; a procedure performs an action, like printing, without returning anything."
+    },
+    {
+      "lessonSlug": "gcse-functions-3",
+      "question": "Why break a big program into several small functions instead of one long block of code?",
+      "options": [
+        "Each one is easier to understand, reuse and test on its own",
+        "Python requires it",
+        "It makes the program run faster",
+        "It uses less memory"
+      ],
+      "answer": "Each one is easier to understand, reuse and test on its own",
+      "explanation": "Smaller, single-purpose functions are easier to read, test individually, and call from more than one place in a program."
+    },
+    {
+      "lessonSlug": "gcse-functions-3",
+      "question": "If is_even(n) already returns True or False, what would a sensible count_evens(numbers) function do?",
+      "options": [
+        "Loop through numbers, call is_even on each one, and count the Trues",
+        "Return is_even(numbers) directly",
+        "Multiply every number in the list by 2",
+        "Sort the list of numbers"
+      ],
+      "answer": "Loop through numbers, call is_even on each one, and count the Trues",
+      "explanation": "count_evens needs to check every item individually, which means calling is_even() once per item inside a loop."
+    },
+    {
+      "lessonSlug": "gcse-functions-3",
+      "question": "A parameter is passed byRef. What does that mean?",
+      "options": [
+        "The subroutine has access to the original value - changing it inside changes it outside too",
+        "The subroutine gets its own copy, and changes don't affect the original",
+        "The parameter can't be changed at all",
+        "byRef only applies to numbers"
+      ],
+      "answer": "The subroutine has access to the original value - changing it inside changes it outside too",
+      "explanation": "byRef gives access to the original, so a change inside the subroutine is visible outside it too - byVal gives a copy instead, so changes stay local."
+    },
+    {
+      "lessonSlug": "gcse-functions-3",
+      "question": "In Python, passing a list into a function and appending to it changes the original list outside the function too. This behaves most like which OCR parameter-passing keyword?",
+      "options": [
+        "byRef",
+        "byVal",
+        "Neither - Python doesn't have this concept",
+        "It depends on the list's length"
+      ],
+      "answer": "byRef",
+      "explanation": "Python's lists are mutable, so a function can change the original list's contents - the same effect as an OCR byRef parameter."
+    }
   ],
   "tasks": [
-    { "slug": "gcse-functions-t1-01", "lesson": 1, "tier": 1, "difficulty": 1, "xp": 10,
+    {
+      "slug": "gcse-functions-t1-01",
+      "lesson": 1,
+      "tier": 1,
+      "difficulty": 1,
+      "xp": 10,
       "title": "Write a function",
       "brief": "Write a function called `square(n)` that returns n squared. Input a number and print the result of calling square on it.",
       "starter": "def square(n):\n    pass\n",
-      "hints": ["Use return inside the function, not print — the calling code below does the printing.", "Define the function with `def name(parameter): return <expression>`, then call it inside print()."],
-      "tests": [{ "stdin": "5", "expect": "25" }, { "stdin": "0", "expect": "0" }] },
-    { "slug": "gcse-functions-t1-02", "lesson": 1, "tier": 1, "difficulty": 1, "xp": 10,
+      "hints": [
+        "Use return inside the function, not print — the calling code below does the printing.",
+        "Define the function with `def name(parameter): return <expression>`, then call it inside print()."
+      ],
+      "tests": [
+        {
+          "stdin": "5",
+          "expect": "25"
+        },
+        {
+          "stdin": "0",
+          "expect": "0"
+        }
+      ]
+    },
+    {
+      "slug": "gcse-functions-t1-02",
+      "lesson": 1,
+      "tier": 1,
+      "difficulty": 1,
+      "xp": 10,
       "title": "Add two numbers",
       "brief": "Write a function called `add_two(a, b)` that returns the sum of a and b. Input two whole numbers, one per line, and print the result of calling add_two on them.",
       "starter": "def add_two(a, b):\n    pass\n",
-      "hints": ["A function with two parameters is defined like `def name(a, b):` and can return their combination with `return`.", "Call the function with two cast inputs as arguments, then print() the result."],
-      "tests": [{ "stdin": "3\n4", "expect": "7" }, { "stdin": "10\n-5", "expect": "5" }] },
-    { "slug": "gcse-functions-t1-03", "lesson": 1, "tier": 1, "difficulty": 1, "xp": 10,
+      "hints": [
+        "A function with two parameters is defined like `def name(a, b):` and can return their combination with `return`.",
+        "Call the function with two cast inputs as arguments, then print() the result."
+      ],
+      "tests": [
+        {
+          "stdin": "3\n4",
+          "expect": "7"
+        },
+        {
+          "stdin": "10\n-5",
+          "expect": "5"
+        }
+      ]
+    },
+    {
+      "slug": "gcse-functions-t1-03",
+      "lesson": 1,
+      "tier": 1,
+      "difficulty": 1,
+      "xp": 10,
       "title": "Greet by name",
       "brief": "Write a function called greet(name) that returns the text `Hello, <name>!` using the name passed in. Input a name and print the result of calling greet on it.",
       "starter": "def greet(name):\n    pass\n",
-      "hints": ["A function can build and return an f-string using its own parameter.", "You can pass input() directly as the argument when calling a function — no need to store it first."],
-      "tests": [{ "stdin": "Ada", "expect": "Hello, Ada!" }, { "stdin": "Sam", "expect": "Hello, Sam!" }] },
-    { "slug": "gcse-functions-t1-04", "lesson": 1, "tier": 1, "difficulty": 2, "xp": 15,
+      "hints": [
+        "A function can build and return an f-string using its own parameter.",
+        "You can pass input() directly as the argument when calling a function — no need to store it first."
+      ],
+      "tests": [
+        {
+          "stdin": "Ada",
+          "expect": "Hello, Ada!"
+        },
+        {
+          "stdin": "Sam",
+          "expect": "Hello, Sam!"
+        }
+      ]
+    },
+    {
+      "slug": "gcse-functions-t1-04",
+      "lesson": 1,
+      "tier": 1,
+      "difficulty": 2,
+      "xp": 15,
       "title": "Use the result in a calculation",
       "brief": "Write a function called `double(n)` that returns n multiplied by 2. Input a whole number. Print double(n) + 1 — using the function's returned value directly inside a further calculation.\n\nFor example, 5 gives double(5) + 1 = 11.",
       "starter": "def double(n):\n    pass\n",
-      "hints": ["Because double(n) returns a usable number (not just prints one), you can add 1 to it directly.", "A function that returns a value can be used directly inside a larger expression, just like a variable."],
-      "tests": [{ "stdin": "5", "expect": "11" }, { "stdin": "0", "expect": "1" }] },
-    { "slug": "gcse-functions-t1-stretch", "lesson": 1, "tier": 4, "difficulty": 5, "xp": 40, "stretch": true,
+      "hints": [
+        "Because double(n) returns a usable number (not just prints one), you can add 1 to it directly.",
+        "A function that returns a value can be used directly inside a larger expression, just like a variable."
+      ],
+      "tests": [
+        {
+          "stdin": "5",
+          "expect": "11"
+        },
+        {
+          "stdin": "0",
+          "expect": "1"
+        }
+      ]
+    },
+    {
+      "slug": "gcse-functions-t1-stretch",
+      "lesson": 1,
+      "tier": 4,
+      "difficulty": 5,
+      "xp": 40,
+      "stretch": true,
       "title": "One function calling another",
       "brief": "Write a function `square(n)` that returns n squared. Write a second function `sum_of_squares(a, b)` that returns the sum of a squared and b squared, by calling square twice — not by recalculating a*a and b*b itself.\n\nRead two whole numbers, one per line, and print the result of calling sum_of_squares on them.\n\nFor example, 3 and 4 give 3² + 4² = 9 + 16 = 25.",
-      "starter": "", "hints": ["sum_of_squares doesn't need to know how squaring works — it just calls the other function and combines its results.", "One function can call another inside its own return statement, the same way it would call any built-in function."],
-      "tests": [{ "stdin": "3\n4", "expect": "25" }, { "stdin": "1\n1", "expect": "2" }] },
-    { "slug": "gcse-functions-t2-01", "lesson": 2, "tier": 2, "difficulty": 2, "xp": 15,
+      "starter": "",
+      "hints": [
+        "sum_of_squares doesn't need to know how squaring works — it just calls the other function and combines its results.",
+        "One function can call another inside its own return statement, the same way it would call any built-in function."
+      ],
+      "tests": [
+        {
+          "stdin": "3\n4",
+          "expect": "25"
+        },
+        {
+          "stdin": "1\n1",
+          "expect": "2"
+        }
+      ]
+    },
+    {
+      "slug": "gcse-functions-t2-01",
+      "lesson": 2,
+      "tier": 2,
+      "difficulty": 2,
+      "xp": 15,
       "title": "Rectangle area",
       "brief": "Write a function called `area(width, height)` that returns width multiplied by height. Input the width, then the height (whole numbers, one per line). Print the result of calling area on them.",
       "starter": "def area(width, height):\n    pass\n",
-      "hints": ["A function can take more than one parameter, separated by commas.", "Multiply the two parameters together in the return statement."],
-      "tests": [{ "stdin": "3\n4", "expect": "12" }, { "stdin": "5\n5", "expect": "25" }] },
-    { "slug": "gcse-functions-t2-02", "lesson": 2, "tier": 2, "difficulty": 2, "xp": 15,
+      "hints": [
+        "A function can take more than one parameter, separated by commas.",
+        "Multiply the two parameters together in the return statement."
+      ],
+      "tests": [
+        {
+          "stdin": "3\n4",
+          "expect": "12"
+        },
+        {
+          "stdin": "5\n5",
+          "expect": "25"
+        }
+      ]
+    },
+    {
+      "slug": "gcse-functions-t2-02",
+      "lesson": 2,
+      "tier": 2,
+      "difficulty": 2,
+      "xp": 15,
       "title": "Default parameter",
       "brief": "Write a function called greet(name, greeting=\"Hello\") that returns `<greeting>, <name>!`, where greeting defaults to \"Hello\" if nothing else is supplied.\n\nInput a name. Print the result of calling greet with just the name, so the default greeting is used.",
       "starter": "def greet(name, greeting=\"Hello\"):\n    pass\n",
-      "hints": ["Because greeting already has a default value, greet(name) is a valid call even though the function is defined with two parameters.", "A parameter can have a default value with `name=value` in the function definition, making it optional when calling."],
-      "tests": [{ "stdin": "Ada", "expect": "Hello, Ada!" }, { "stdin": "Sam", "expect": "Hello, Sam!" }] },
-    { "slug": "gcse-functions-t2-03", "lesson": 2, "tier": 2, "difficulty": 2, "xp": 20,
+      "hints": [
+        "Because greeting already has a default value, greet(name) is a valid call even though the function is defined with two parameters.",
+        "A parameter can have a default value with `name=value` in the function definition, making it optional when calling."
+      ],
+      "tests": [
+        {
+          "stdin": "Ada",
+          "expect": "Hello, Ada!"
+        },
+        {
+          "stdin": "Sam",
+          "expect": "Hello, Sam!"
+        }
+      ]
+    },
+    {
+      "slug": "gcse-functions-t2-03",
+      "lesson": 2,
+      "tier": 2,
+      "difficulty": 2,
+      "xp": 20,
       "title": "Capture the return value",
       "brief": "Write a function called `triple(n)` that creates a local variable called `result` set to n multiplied by 3, and returns result.\n\nOutside the function: input a whole number, call triple on it, store what it returns in a variable called `final_result`, then print final_result.",
       "starter": "def triple(n):\n    pass\n",
-      "hints": ["result only exists while triple() is running, so you must store what triple() returns in your own variable outside it before you can print it.", "Store what the function returns in your own variable before you can print it — it doesn't exist outside the function otherwise."],
-      "tests": [{ "stdin": "4", "expect": "12" }, { "stdin": "0", "expect": "0" }] },
-    { "slug": "gcse-functions-t2-04", "lesson": 2, "tier": 2, "difficulty": 3, "xp": 20,
+      "hints": [
+        "result only exists while triple() is running, so you must store what triple() returns in your own variable outside it before you can print it.",
+        "Store what the function returns in your own variable before you can print it — it doesn't exist outside the function otherwise."
+      ],
+      "tests": [
+        {
+          "stdin": "4",
+          "expect": "12"
+        },
+        {
+          "stdin": "0",
+          "expect": "0"
+        }
+      ]
+    },
+    {
+      "slug": "gcse-functions-t2-04",
+      "lesson": 2,
+      "tier": 2,
+      "difficulty": 3,
+      "xp": 20,
       "title": "Three parameters",
       "brief": "Write a function called `total_cost(price, quantity, delivery)` that returns price multiplied by quantity, plus delivery.\n\nInput the price (a decimal), then the quantity (a whole number), then the delivery charge (a decimal), one per line. Print the result of calling total_cost on them, rounded to 2 decimal places.",
       "starter": "def total_cost(price, quantity, delivery):\n    pass\n",
-      "hints": ["A function can take three parameters, and its return statement can combine them with any calculation.", "Round the value where you print it, not inside the function's own return statement."],
-      "tests": [{ "stdin": "2.5\n3\n1.5", "expect": "9.0" }, { "stdin": "10\n2\n0", "expect": "20.0" }] },
-    { "slug": "gcse-functions-t2-stretch", "lesson": 2, "tier": 4, "difficulty": 5, "xp": 40, "stretch": true,
+      "hints": [
+        "A function can take three parameters, and its return statement can combine them with any calculation.",
+        "Round the value where you print it, not inside the function's own return statement."
+      ],
+      "tests": [
+        {
+          "stdin": "2.5\n3\n1.5",
+          "expect": "9.0"
+        },
+        {
+          "stdin": "10\n2\n0",
+          "expect": "20.0"
+        }
+      ]
+    },
+    {
+      "slug": "gcse-functions-t2-stretch",
+      "lesson": 2,
+      "tier": 4,
+      "difficulty": 5,
+      "xp": 40,
+      "stretch": true,
       "title": "Choosing which arguments to pass",
       "brief": "Write a function called `apply_discount(price, discount=10)` that returns price reduced by discount percent, rounded to 2 decimal places (do the rounding inside the function, so it always returns a rounded value).\n\nRead a price. Read a second line: either the word default, meaning call apply_discount with just the price (using its default discount), or a whole number, meaning call apply_discount with that number as the discount instead.\n\nPrint the result.\n\nFor example, a price of 100 with default gives 90.0 (10% off). A price of 100 with a discount of 20 gives 80.0.",
-      "starter": "", "hints": ["Read the second line as text first, then decide: if it's exactly \"default\", call the function with one argument; otherwise cast it to int and call it with two.", "A default parameter lets you call the function with just one argument when you want the default, or two when you want to override it."],
-      "tests": [{ "stdin": "100\ndefault", "expect": "90.0" }, { "stdin": "100\n20", "expect": "80.0" }] },
-    { "slug": "gcse-functions-t3-01", "lesson": 3, "tier": 3, "difficulty": 3, "xp": 25,
+      "starter": "",
+      "hints": [
+        "Read the second line as text first, then decide: if it's exactly \"default\", call the function with one argument; otherwise cast it to int and call it with two.",
+        "A default parameter lets you call the function with just one argument when you want the default, or two when you want to override it."
+      ],
+      "tests": [
+        {
+          "stdin": "100\ndefault",
+          "expect": "90.0"
+        },
+        {
+          "stdin": "100\n20",
+          "expect": "80.0"
+        }
+      ]
+    },
+    {
+      "slug": "gcse-functions-t3-01",
+      "lesson": 3,
+      "tier": 3,
+      "difficulty": 3,
+      "xp": 25,
       "title": "Is even function",
       "brief": "Write a function called `is_even(n)` that returns True if n is even, otherwise False. Read a whole number and print the result of calling is_even on it.",
       "starter": "def is_even(n):\n    pass\n",
-      "hints": ["The % operator combined with a comparison already produces True or False by itself.", "A function's return statement can hand back the result of a comparison directly, with no if statement needed."],
-      "tests": [{ "stdin": "4", "expect": "True" }, { "stdin": "7", "expect": "False" }] },
-    { "slug": "gcse-functions-t3-02", "lesson": 3, "tier": 3, "difficulty": 4, "xp": 30,
+      "hints": [
+        "The % operator combined with a comparison already produces True or False by itself.",
+        "A function's return statement can hand back the result of a comparison directly, with no if statement needed."
+      ],
+      "tests": [
+        {
+          "stdin": "4",
+          "expect": "True"
+        },
+        {
+          "stdin": "7",
+          "expect": "False"
+        }
+      ]
+    },
+    {
+      "slug": "gcse-functions-t3-02",
+      "lesson": 3,
+      "tier": 3,
+      "difficulty": 4,
+      "xp": 30,
       "title": "Prime checker",
       "brief": "Write a function called `is_prime(n)` that returns True if n is prime, otherwise False. Numbers below 2 are never prime.\n\nRead a whole number. Print `Prime` if is_prime(n) is True, otherwise print `Not prime`.",
       "starter": "def is_prime(n):\n    pass\n",
-      "hints": ["Numbers below 2 are never prime — check that first and return False immediately. Otherwise, test whether any number from 2 up to (but not including) n divides evenly into it.", "A function can return early from inside a loop the moment it finds a reason to — it doesn't have to wait until the loop finishes."],
-      "tests": [{ "stdin": "7", "expect": "Prime" }, { "stdin": "9", "expect": "Not prime" }, { "stdin": "1", "expect": "Not prime" }] },
-    { "slug": "gcse-functions-t3-03", "lesson": 3, "tier": 3, "difficulty": 4, "xp": 30,
+      "hints": [
+        "Numbers below 2 are never prime — check that first and return False immediately. Otherwise, test whether any number from 2 up to (but not including) n divides evenly into it.",
+        "A function can return early from inside a loop the moment it finds a reason to — it doesn't have to wait until the loop finishes."
+      ],
+      "tests": [
+        {
+          "stdin": "7",
+          "expect": "Prime"
+        },
+        {
+          "stdin": "9",
+          "expect": "Not prime"
+        },
+        {
+          "stdin": "1",
+          "expect": "Not prime"
+        }
+      ]
+    },
+    {
+      "slug": "gcse-functions-t3-03",
+      "lesson": 3,
+      "tier": 3,
+      "difficulty": 4,
+      "xp": 30,
       "title": "One function using another",
       "brief": "Write a function `is_even(n)` that returns True or False. Write a second function `count_evens(numbers)` that takes a list of numbers and returns how many of them are even, by calling is_even on each one.\n\nRead 5 whole numbers into a list. Print the result of calling count_evens on that list.",
       "starter": "def is_even(n):\n    pass\n\ndef count_evens(numbers):\n    pass\n",
-      "hints": ["count_evens doesn't need to repeat the % 2 == 0 check itself — it loops through numbers and calls the other function on each one, keeping a running count of the Trues.", "A function can loop over a list, calling another function on each item, and return a running count once the loop finishes."],
-      "tests": [{ "stdin": "1\n2\n3\n4\n5", "expect": "2" }, { "stdin": "2\n4\n6\n8\n10", "expect": "5" }] },
-    { "slug": "gcse-functions-t4-01", "lesson": 3, "tier": 4, "difficulty": 4, "xp": 35,
+      "hints": [
+        "count_evens doesn't need to repeat the % 2 == 0 check itself — it loops through numbers and calls the other function on each one, keeping a running count of the Trues.",
+        "A function can loop over a list, calling another function on each item, and return a running count once the loop finishes."
+      ],
+      "tests": [
+        {
+          "stdin": "1\n2\n3\n4\n5",
+          "expect": "2"
+        },
+        {
+          "stdin": "2\n4\n6\n8\n10",
+          "expect": "5"
+        }
+      ]
+    },
+    {
+      "slug": "gcse-functions-t4-01",
+      "lesson": 3,
+      "tier": 4,
+      "difficulty": 4,
+      "xp": 35,
       "title": "Temperature converter function",
       "brief": "Write a function called celsius_to_fahrenheit(c) that returns the Fahrenheit equivalent of c, using Fahrenheit = Celsius × 1.8 + 32, rounded to 1 decimal place inside the function.\n\nRead a temperature in Celsius, which may include a decimal part. Print the result in the format `<fahrenheit>F`.",
       "starter": "def celsius_to_fahrenheit(c):\n    pass\n",
-      "hints": ["Apply the same conversion formula from the Sequencing topic, but this time inside a function's return statement.", "Round the returned value to the same number of decimal places as before."],
-      "tests": [{ "stdin": "21.5", "expect": "70.7F" }, { "stdin": "0", "expect": "32.0F" }] },
-    { "slug": "gcse-functions-t4-02", "lesson": 3, "tier": 4, "difficulty": 5, "xp": 40,
+      "hints": [
+        "Apply the same conversion formula from the Sequencing topic, but this time inside a function's return statement.",
+        "Round the returned value to the same number of decimal places as before."
+      ],
+      "tests": [
+        {
+          "stdin": "21.5",
+          "expect": "70.7F"
+        },
+        {
+          "stdin": "0",
+          "expect": "32.0F"
+        }
+      ]
+    },
+    {
+      "slug": "gcse-functions-t4-02",
+      "lesson": 3,
+      "tier": 4,
+      "difficulty": 5,
+      "xp": 40,
       "title": "Procedure vs function",
       "brief": "Write a procedure called show_total(price, quantity) — a subprogram that does NOT return a value. Instead, it should print the total cost (price multiplied by quantity) directly, in the format `Total: £<amount>`, rounded to 2 decimal places.\n\nIn the main part of your program: read a price (a decimal), then a quantity (a whole number). Call show_total with them.",
       "starter": "def show_total(price, quantity):\n    pass\n",
-      "hints": ["Unlike every other task so far, this one wants the printing done inside the subprogram itself — that's what makes it a procedure rather than a function.", "A procedure does the printing itself, inside its own body, rather than returning a value for the caller to print."],
-      "tests": [{ "stdin": "2.5\n4", "expect": "Total: £10.0" }, { "stdin": "1.99\n3", "expect": "Total: £5.97" }] },
-    { "slug": "gcse-functions-t3-stretch", "lesson": 3, "tier": 4, "difficulty": 5, "xp": 40, "stretch": true,
+      "hints": [
+        "Unlike every other task so far, this one wants the printing done inside the subprogram itself — that's what makes it a procedure rather than a function.",
+        "A procedure does the printing itself, inside its own body, rather than returning a value for the caller to print."
+      ],
+      "tests": [
+        {
+          "stdin": "2.5\n4",
+          "expect": "Total: £10.0"
+        },
+        {
+          "stdin": "1.99\n3",
+          "expect": "Total: £5.97"
+        }
+      ]
+    },
+    {
+      "slug": "gcse-functions-t3-stretch",
+      "lesson": 3,
+      "tier": 4,
+      "difficulty": 5,
+      "xp": 40,
+      "stretch": true,
       "title": "Grade calculator built from functions",
       "brief": "Write a function `get_grade(mark)` that returns \"9\" for 80 or more, \"7\" for 60-79, \"4\" for 40-59, or \"1\" for anything lower.\n\nWrite a second function `summarize(marks)` that takes a list of marks, calls get_grade on each one, and returns how many of them got grade \"9\".\n\nRead 4 whole-number marks into a list. Print the result of calling summarize on that list.\n\nFor example, marks of 85, 90, 50, 60 give grades 9, 9, 4, 7 — two students got a 9, so print 2.",
-      "starter": "", "hints": ["summarize should call the grade function once per mark inside a loop, and only increment its count when the result matches the target grade.", "Build the grade-lookup function with an elif chain, checking boundaries from highest to lowest, then call it once per mark in the second function."],
-      "tests": [{ "stdin": "85\n90\n50\n60", "expect": "2" }, { "stdin": "10\n20\n30\n40", "expect": "0" }] }
+      "starter": "",
+      "hints": [
+        "summarize should call the grade function once per mark inside a loop, and only increment its count when the result matches the target grade.",
+        "Build the grade-lookup function with an elif chain, checking boundaries from highest to lowest, then call it once per mark in the second function."
+      ],
+      "tests": [
+        {
+          "stdin": "85\n90\n50\n60",
+          "expect": "2"
+        },
+        {
+          "stdin": "10\n20\n30\n40",
+          "expect": "0"
+        }
+      ]
+    }
   ],
   "homeworkTasks": [
-    { "slug": "gcse-functions-hw-01", "lesson": 1, "tier": 1, "difficulty": 1, "xp": 10, "title": "Cube a number",
+    {
+      "slug": "gcse-functions-hw-01",
+      "lesson": 1,
+      "tier": 1,
+      "difficulty": 1,
+      "xp": 10,
+      "title": "Cube a number",
       "brief": "Write a function called `cube` that takes one parameter and returns it cubed (multiplied by itself three times). Read a whole number and print the result of calling cube on it.",
-      "starter": "", "hints": ["Use return inside the function, not print.", "Define the function with `def name(parameter): return <expression>`, then call it inside print()."],
-      "tests": [{ "stdin": "3", "expect": "27" }, { "stdin": "4", "expect": "64" }] },
-    { "slug": "gcse-functions-hw-02", "lesson": 2, "tier": 1, "difficulty": 1, "xp": 10, "title": "Subtract two numbers",
+      "starter": "",
+      "hints": [
+        "Use return inside the function, not print.",
+        "Define the function with `def name(parameter): return <expression>`, then call it inside print()."
+      ],
+      "tests": [
+        {
+          "stdin": "3",
+          "expect": "27"
+        },
+        {
+          "stdin": "4",
+          "expect": "64"
+        }
+      ]
+    },
+    {
+      "slug": "gcse-functions-hw-02",
+      "lesson": 2,
+      "tier": 1,
+      "difficulty": 1,
+      "xp": 10,
+      "title": "Subtract two numbers",
       "brief": "Write a function called `subtract` that takes two parameters and returns the first minus the second. Read two whole numbers and print the result of calling subtract on them.",
-      "starter": "", "hints": ["A function with two parameters is defined like `def name(a, b):`.", "Call the function with two cast inputs as arguments, then print() the result."],
-      "tests": [{ "stdin": "10\n4", "expect": "6" }, { "stdin": "5\n8", "expect": "-3" }] },
-    { "slug": "gcse-functions-hw-03", "lesson": 2, "tier": 2, "difficulty": 2, "xp": 15, "title": "Formal greeting",
+      "starter": "",
+      "hints": [
+        "A function with two parameters is defined like `def name(a, b):`.",
+        "Call the function with two cast inputs as arguments, then print() the result."
+      ],
+      "tests": [
+        {
+          "stdin": "10\n4",
+          "expect": "6"
+        },
+        {
+          "stdin": "5\n8",
+          "expect": "-3"
+        }
+      ]
+    },
+    {
+      "slug": "gcse-functions-hw-03",
+      "lesson": 2,
+      "tier": 2,
+      "difficulty": 2,
+      "xp": 15,
+      "title": "Formal greeting",
       "brief": "Write a function called `greet_formal` that takes a title and a name, and returns Dear <title> <name>. Read a title, then a name, and print the result of calling the function.",
-      "starter": "", "hints": ["A function can build and return an f-string using its own parameters.", "def greet_formal(title, name): return f\"Dear {title} {name}\"."],
-      "tests": [{ "stdin": "Dr\nSmith", "expect": "Dear Dr Smith" }, { "stdin": "Mr\nJones", "expect": "Dear Mr Jones" }] },
-    { "slug": "gcse-functions-hw-04", "lesson": 1, "tier": 1, "difficulty": 1, "xp": 10, "title": "Is it odd?",
+      "starter": "",
+      "hints": [
+        "A function can build and return an f-string using its own parameters.",
+        "def greet_formal(title, name): return f\"Dear {title} {name}\"."
+      ],
+      "tests": [
+        {
+          "stdin": "Dr\nSmith",
+          "expect": "Dear Dr Smith"
+        },
+        {
+          "stdin": "Mr\nJones",
+          "expect": "Dear Mr Jones"
+        }
+      ]
+    },
+    {
+      "slug": "gcse-functions-hw-04",
+      "lesson": 1,
+      "tier": 1,
+      "difficulty": 1,
+      "xp": 10,
+      "title": "Is it odd?",
       "brief": "Write a function called `is_odd` that takes one parameter and returns whether it's an odd number. Read a whole number and print the result of calling is_odd on it.",
-      "starter": "", "hints": ["The % operator combined with a comparison already produces True or False by itself.", "A function's return statement can hand back the result of a comparison directly."],
-      "tests": [{ "stdin": "7", "expect": "True" }, { "stdin": "4", "expect": "False" }] },
-    { "slug": "gcse-functions-hw-05", "lesson": 2, "tier": 2, "difficulty": 2, "xp": 20, "title": "The larger of two",
+      "starter": "",
+      "hints": [
+        "The % operator combined with a comparison already produces True or False by itself.",
+        "A function's return statement can hand back the result of a comparison directly."
+      ],
+      "tests": [
+        {
+          "stdin": "7",
+          "expect": "True"
+        },
+        {
+          "stdin": "4",
+          "expect": "False"
+        }
+      ]
+    },
+    {
+      "slug": "gcse-functions-hw-05",
+      "lesson": 2,
+      "tier": 2,
+      "difficulty": 2,
+      "xp": 20,
+      "title": "The larger of two",
       "brief": "Write a function called `max_of_two` that takes two parameters and returns whichever is larger. Read two whole numbers and print the result of calling the function.",
-      "starter": "", "hints": ["An if/else inside a function can decide which value to return.", "def max_of_two(a, b): if a > b: return a, else: return b."],
-      "tests": [{ "stdin": "5\n9", "expect": "9" }, { "stdin": "8\n2", "expect": "8" }] },
-    { "slug": "gcse-functions-hw-06", "lesson": 2, "tier": 1, "difficulty": 1, "xp": 10, "title": "Rectangle perimeter",
+      "starter": "",
+      "hints": [
+        "An if/else inside a function can decide which value to return.",
+        "def max_of_two(a, b): if a > b: return a, else: return b."
+      ],
+      "tests": [
+        {
+          "stdin": "5\n9",
+          "expect": "9"
+        },
+        {
+          "stdin": "8\n2",
+          "expect": "8"
+        }
+      ]
+    },
+    {
+      "slug": "gcse-functions-hw-06",
+      "lesson": 2,
+      "tier": 1,
+      "difficulty": 1,
+      "xp": 10,
+      "title": "Rectangle perimeter",
       "brief": "Write a function called `perimeter_rectangle` that takes a width and a height, and returns the perimeter (2 times the sum of the two). Read a width and a height and print the result of calling the function.",
-      "starter": "", "hints": ["A function can take more than one parameter, separated by commas.", "def perimeter_rectangle(w, h): return 2 * (w + h)."],
-      "tests": [{ "stdin": "4\n6", "expect": "20" }, { "stdin": "3\n3", "expect": "12" }] },
-    { "slug": "gcse-functions-hw-07", "lesson": 2, "tier": 2, "difficulty": 2, "xp": 20, "title": "Average of three",
+      "starter": "",
+      "hints": [
+        "A function can take more than one parameter, separated by commas.",
+        "def perimeter_rectangle(w, h): return 2 * (w + h)."
+      ],
+      "tests": [
+        {
+          "stdin": "4\n6",
+          "expect": "20"
+        },
+        {
+          "stdin": "3\n3",
+          "expect": "12"
+        }
+      ]
+    },
+    {
+      "slug": "gcse-functions-hw-07",
+      "lesson": 2,
+      "tier": 2,
+      "difficulty": 2,
+      "xp": 20,
+      "title": "Average of three",
       "brief": "Write a function called `average_of_three` that takes three parameters and returns their average, rounded to 1 decimal place. Read three whole numbers and print the result of calling the function.",
-      "starter": "", "hints": ["round() can be used directly inside a return statement.", "def average_of_three(a, b, c): return round((a + b + c) / 3, 1)."],
-      "tests": [{ "stdin": "4\n5\n9", "expect": "6.0" }, { "stdin": "10\n11\n12", "expect": "11.0" }] },
-    { "slug": "gcse-functions-hw-08", "lesson": 1, "tier": 2, "difficulty": 2, "xp": 15, "title": "Is it a vowel?",
+      "starter": "",
+      "hints": [
+        "round() can be used directly inside a return statement.",
+        "def average_of_three(a, b, c): return round((a + b + c) / 3, 1)."
+      ],
+      "tests": [
+        {
+          "stdin": "4\n5\n9",
+          "expect": "6.0"
+        },
+        {
+          "stdin": "10\n11\n12",
+          "expect": "11.0"
+        }
+      ]
+    },
+    {
+      "slug": "gcse-functions-hw-08",
+      "lesson": 1,
+      "tier": 2,
+      "difficulty": 2,
+      "xp": 15,
+      "title": "Is it a vowel?",
       "brief": "Write a function called `is_vowel` that takes one letter and returns whether it's one of a, e, i, o or u. Read a single letter and print the result of calling the function.",
-      "starter": "", "hints": ["The in keyword checks membership inside a string of vowels.", "def is_vowel(letter): return letter in \"aeiou\"."],
-      "tests": [{ "stdin": "e", "expect": "True" }, { "stdin": "b", "expect": "False" }] },
-    { "slug": "gcse-functions-hw-09", "lesson": 1, "tier": 2, "difficulty": 2, "xp": 20, "title": "Capitalise a word",
+      "starter": "",
+      "hints": [
+        "The in keyword checks membership inside a string of vowels.",
+        "def is_vowel(letter): return letter in \"aeiou\"."
+      ],
+      "tests": [
+        {
+          "stdin": "e",
+          "expect": "True"
+        },
+        {
+          "stdin": "b",
+          "expect": "False"
+        }
+      ]
+    },
+    {
+      "slug": "gcse-functions-hw-09",
+      "lesson": 1,
+      "tier": 2,
+      "difficulty": 2,
+      "xp": 20,
+      "title": "Capitalise a word",
       "brief": "Write a function called `capitalise` that takes a word and returns it with the first letter as upper case, and the rest unchanged. Read a word and print the result of calling the function.",
-      "starter": "", "hints": ["Slice the word into its first character and everything after it, transform the first piece, then join both back together.", "def capitalise(word): return word[0].upper() + word[1:]."],
-      "tests": [{ "stdin": "python", "expect": "Python" }, { "stdin": "hello", "expect": "Hello" }] },
-    { "slug": "gcse-functions-hw-10", "lesson": 3, "tier": 2, "difficulty": 2, "xp": 20, "title": "A countdown procedure",
+      "starter": "",
+      "hints": [
+        "Slice the word into its first character and everything after it, transform the first piece, then join both back together.",
+        "def capitalise(word): return word[0].upper() + word[1:]."
+      ],
+      "tests": [
+        {
+          "stdin": "python",
+          "expect": "Python"
+        },
+        {
+          "stdin": "hello",
+          "expect": "Hello"
+        }
+      ]
+    },
+    {
+      "slug": "gcse-functions-hw-10",
+      "lesson": 3,
+      "tier": 2,
+      "difficulty": 2,
+      "xp": 20,
+      "title": "A countdown procedure",
       "brief": "Write a procedure called `countdown` that takes one parameter and prints every whole number from that value down to 1, each on its own line. It should not return anything. Read a whole number and call countdown with it.",
-      "starter": "", "hints": ["A procedure does the printing itself, inside its own body, rather than returning a value.", "def countdown(n): loop with range(n, 0, -1), printing each value — no return needed."],
-      "tests": [{ "stdin": "3", "expect": "3\n2\n1" }, { "stdin": "5", "expect": "5\n4\n3\n2\n1" }] },
-    { "slug": "gcse-functions-hw-11", "lesson": 1, "tier": 2, "difficulty": 2, "xp": 15, "title": "Seconds to whole minutes",
+      "starter": "",
+      "hints": [
+        "A procedure does the printing itself, inside its own body, rather than returning a value.",
+        "def countdown(n): loop with range(n, 0, -1), printing each value — no return needed."
+      ],
+      "tests": [
+        {
+          "stdin": "3",
+          "expect": "3\n2\n1"
+        },
+        {
+          "stdin": "5",
+          "expect": "5\n4\n3\n2\n1"
+        }
+      ]
+    },
+    {
+      "slug": "gcse-functions-hw-11",
+      "lesson": 1,
+      "tier": 2,
+      "difficulty": 2,
+      "xp": 15,
+      "title": "Seconds to whole minutes",
       "brief": "Write a function called `minutes_from_seconds` that takes a number of seconds and returns the whole number of minutes it contains (rounded down). Read a whole number of seconds and print the result.",
-      "starter": "", "hints": ["// gives a whole number result, rounding down.", "def minutes_from_seconds(seconds): return seconds // 60."],
-      "tests": [{ "stdin": "150", "expect": "2" }, { "stdin": "300", "expect": "5" }] },
-    { "slug": "gcse-functions-hw-12", "lesson": 1, "tier": 3, "difficulty": 4, "xp": 30, "title": "Leap year function",
+      "starter": "",
+      "hints": [
+        "// gives a whole number result, rounding down.",
+        "def minutes_from_seconds(seconds): return seconds // 60."
+      ],
+      "tests": [
+        {
+          "stdin": "150",
+          "expect": "2"
+        },
+        {
+          "stdin": "300",
+          "expect": "5"
+        }
+      ]
+    },
+    {
+      "slug": "gcse-functions-hw-12",
+      "lesson": 1,
+      "tier": 3,
+      "difficulty": 4,
+      "xp": 30,
+      "title": "Leap year function",
       "brief": "Write a function called `is_leap_year` that takes a year and returns whether it's a leap year: it divides evenly by 4, unless it also divides by 100 — in which case it's only a leap year if it also divides by 400. Read a year and print the result of calling the function.",
-      "starter": "", "hints": ["Combine and/or carefully: divides by 4 AND (doesn't divide by 100 OR does divide by 400).", "The whole condition can be built directly in the return statement."],
-      "tests": [{ "stdin": "2024", "expect": "True" }, { "stdin": "1900", "expect": "False" }] },
-    { "slug": "gcse-functions-hw-13", "lesson": 2, "tier": 2, "difficulty": 2, "xp": 20, "title": "Calculate tax",
+      "starter": "",
+      "hints": [
+        "Combine and/or carefully: divides by 4 AND (doesn't divide by 100 OR does divide by 400).",
+        "The whole condition can be built directly in the return statement."
+      ],
+      "tests": [
+        {
+          "stdin": "2024",
+          "expect": "True"
+        },
+        {
+          "stdin": "1900",
+          "expect": "False"
+        }
+      ]
+    },
+    {
+      "slug": "gcse-functions-hw-13",
+      "lesson": 2,
+      "tier": 2,
+      "difficulty": 2,
+      "xp": 20,
+      "title": "Calculate tax",
       "brief": "Write a function called `calculate_tax` that takes a price and a tax rate (as a whole percentage), and returns the tax amount, rounded to 2 decimal places. Read a price and a rate and print the result.",
-      "starter": "", "hints": ["Tax is the price multiplied by the rate, divided by 100.", "def calculate_tax(price, rate): return round(price * rate / 100, 2)."],
-      "tests": [{ "stdin": "100\n20", "expect": "20.0" }, { "stdin": "50\n10", "expect": "5.0" }] },
-    { "slug": "gcse-functions-hw-14", "lesson": 3, "tier": 2, "difficulty": 3, "xp": 25, "title": "Times table procedure",
+      "starter": "",
+      "hints": [
+        "Tax is the price multiplied by the rate, divided by 100.",
+        "def calculate_tax(price, rate): return round(price * rate / 100, 2)."
+      ],
+      "tests": [
+        {
+          "stdin": "100\n20",
+          "expect": "20.0"
+        },
+        {
+          "stdin": "50\n10",
+          "expect": "5.0"
+        }
+      ]
+    },
+    {
+      "slug": "gcse-functions-hw-14",
+      "lesson": 3,
+      "tier": 2,
+      "difficulty": 3,
+      "xp": 25,
+      "title": "Times table procedure",
       "brief": "Write a procedure called `print_table` that takes a number and prints its times table from 1 to 5, one line per row, in the format `<number> x <i> = <result>`. It should not return anything. Read a number and call print_table with it.",
-      "starter": "", "hints": ["A procedure does the printing itself, inside its own body.", "def print_table(n): loop i from 1 to 5, printing an f-string each time — no return needed."],
-      "tests": [{ "stdin": "3", "expect": "3 x 1 = 3\n3 x 2 = 6\n3 x 3 = 9\n3 x 4 = 12\n3 x 5 = 15" }, { "stdin": "2", "expect": "2 x 1 = 2\n2 x 2 = 4\n2 x 3 = 6\n2 x 4 = 8\n2 x 5 = 10" }] },
-    { "slug": "gcse-functions-hw-15", "lesson": 1, "tier": 2, "difficulty": 2, "xp": 20, "title": "Palindrome function",
+      "starter": "",
+      "hints": [
+        "A procedure does the printing itself, inside its own body.",
+        "def print_table(n): loop i from 1 to 5, printing an f-string each time — no return needed."
+      ],
+      "tests": [
+        {
+          "stdin": "3",
+          "expect": "3 x 1 = 3\n3 x 2 = 6\n3 x 3 = 9\n3 x 4 = 12\n3 x 5 = 15"
+        },
+        {
+          "stdin": "2",
+          "expect": "2 x 1 = 2\n2 x 2 = 4\n2 x 3 = 6\n2 x 4 = 8\n2 x 5 = 10"
+        }
+      ]
+    },
+    {
+      "slug": "gcse-functions-hw-15",
+      "lesson": 1,
+      "tier": 2,
+      "difficulty": 2,
+      "xp": 20,
+      "title": "Palindrome function",
       "brief": "Write a function called `is_palindrome` that takes a word and returns whether it reads the same forwards and backwards. Read a word and print the result of calling the function.",
-      "starter": "", "hints": ["Compare the word to its own reversed version.", "def is_palindrome(word): return word == word[::-1]."],
-      "tests": [{ "stdin": "level", "expect": "True" }, { "stdin": "hello", "expect": "False" }] },
-    { "slug": "gcse-functions-hw-16", "lesson": 2, "tier": 1, "difficulty": 1, "xp": 10, "title": "Combine names",
+      "starter": "",
+      "hints": [
+        "Compare the word to its own reversed version.",
+        "def is_palindrome(word): return word == word[::-1]."
+      ],
+      "tests": [
+        {
+          "stdin": "level",
+          "expect": "True"
+        },
+        {
+          "stdin": "hello",
+          "expect": "False"
+        }
+      ]
+    },
+    {
+      "slug": "gcse-functions-hw-16",
+      "lesson": 2,
+      "tier": 1,
+      "difficulty": 1,
+      "xp": 10,
+      "title": "Combine names",
       "brief": "Write a function called `combine_names` that takes a first name and a last name, and returns them joined with a space between. Read a first name, then a last name, and print the result.",
-      "starter": "", "hints": ["An f-string can join two parameters with a space between them.", "def combine_names(first, last): return f\"{first} {last}\"."],
-      "tests": [{ "stdin": "Ada\nLovelace", "expect": "Ada Lovelace" }, { "stdin": "Alan\nTuring", "expect": "Alan Turing" }] },
-    { "slug": "gcse-functions-hw-17", "lesson": 1, "tier": 3, "difficulty": 3, "xp": 25, "title": "Temperature advice function",
+      "starter": "",
+      "hints": [
+        "An f-string can join two parameters with a space between them.",
+        "def combine_names(first, last): return f\"{first} {last}\"."
+      ],
+      "tests": [
+        {
+          "stdin": "Ada\nLovelace",
+          "expect": "Ada Lovelace"
+        },
+        {
+          "stdin": "Alan\nTuring",
+          "expect": "Alan Turing"
+        }
+      ]
+    },
+    {
+      "slug": "gcse-functions-hw-17",
+      "lesson": 1,
+      "tier": 3,
+      "difficulty": 3,
+      "xp": 25,
+      "title": "Temperature advice function",
       "brief": "Write a function called `temperature_advice` that takes a whole number temperature in °C and returns Freezing if it's below 0, Cold if it's below 15, Mild if it's below 25, or Hot otherwise. Read a temperature and print the result of calling the function.",
-      "starter": "", "hints": ["An elif chain inside a function can return a different string from each branch.", "The pattern is `if temp < 0: return ... elif temp < 15: return ... elif temp < 25: return ... else: return ...`."],
-      "tests": [{ "stdin": "-5", "expect": "Freezing" }, { "stdin": "20", "expect": "Mild" }] },
-    { "slug": "gcse-functions-hw-18", "lesson": 2, "tier": 3, "difficulty": 3, "xp": 30, "title": "Member discount function",
+      "starter": "",
+      "hints": [
+        "An elif chain inside a function can return a different string from each branch.",
+        "The pattern is `if temp < 0: return ... elif temp < 15: return ... elif temp < 25: return ... else: return ...`."
+      ],
+      "tests": [
+        {
+          "stdin": "-5",
+          "expect": "Freezing"
+        },
+        {
+          "stdin": "20",
+          "expect": "Mild"
+        }
+      ]
+    },
+    {
+      "slug": "gcse-functions-hw-18",
+      "lesson": 2,
+      "tier": 3,
+      "difficulty": 3,
+      "xp": 30,
+      "title": "Member discount function",
       "brief": "Write a function called `discounted_price` that takes a price and a Boolean is_member (defaulting to False), and returns the price with 10% off if is_member is True, or the price unchanged otherwise, rounded to 2 decimal places. Read a price. Read whether the customer is a member (yes or no) and convert this to a Boolean before calling the function. Print the result.",
-      "starter": "", "hints": ["A default parameter is written as `is_member=False` in the function definition.", "Compare the yes/no input to \"yes\" to get a Boolean before passing it into the function."],
-      "tests": [{ "stdin": "100.00\nyes", "expect": "90.0" }, { "stdin": "100.00\nno", "expect": "100.0" }] },
-    { "slug": "gcse-functions-hw-19", "lesson": 1, "tier": 3, "difficulty": 3, "xp": 25, "title": "Sum a list with a function",
+      "starter": "",
+      "hints": [
+        "A default parameter is written as `is_member=False` in the function definition.",
+        "Compare the yes/no input to \"yes\" to get a Boolean before passing it into the function."
+      ],
+      "tests": [
+        {
+          "stdin": "100.00\nyes",
+          "expect": "90.0"
+        },
+        {
+          "stdin": "100.00\nno",
+          "expect": "100.0"
+        }
+      ]
+    },
+    {
+      "slug": "gcse-functions-hw-19",
+      "lesson": 1,
+      "tier": 3,
+      "difficulty": 3,
+      "xp": 25,
+      "title": "Sum a list with a function",
       "brief": "Write a function called `sum_of_list` that takes a list of numbers as its parameter and returns their total, calculated with a loop inside the function (not the built-in sum() function). Read a whole number N, then N whole numbers into a list, then print the result of calling sum_of_list on that list.",
-      "starter": "", "hints": ["A function's parameter can be a whole list, not just a single value.", "def sum_of_list(numbers): total = 0, loop over numbers adding each to total, then return total."],
-      "tests": [{ "stdin": "3\n10\n20\n30", "expect": "60" }, { "stdin": "2\n5\n5", "expect": "10" }] },
-    { "slug": "gcse-functions-hw-20", "lesson": 3, "tier": 3, "difficulty": 3, "xp": 30, "title": "Count positives with two functions",
+      "starter": "",
+      "hints": [
+        "A function's parameter can be a whole list, not just a single value.",
+        "def sum_of_list(numbers): total = 0, loop over numbers adding each to total, then return total."
+      ],
+      "tests": [
+        {
+          "stdin": "3\n10\n20\n30",
+          "expect": "60"
+        },
+        {
+          "stdin": "2\n5\n5",
+          "expect": "10"
+        }
+      ]
+    },
+    {
+      "slug": "gcse-functions-hw-20",
+      "lesson": 3,
+      "tier": 3,
+      "difficulty": 3,
+      "xp": 30,
+      "title": "Count positives with two functions",
       "brief": "Write a function called `is_positive` that takes a number and returns whether it's greater than 0. Write a second function called `count_positives` that takes a list of numbers, calls is_positive on each one, and returns how many were positive. Read a whole number N, then N whole numbers into a list, then print the result of calling count_positives on that list.",
-      "starter": "", "hints": ["count_positives doesn't need to repeat the > 0 check itself — it loops through the list and calls the other function on each item.", "def count_positives(numbers): count = 0, for n in numbers: if is_positive(n): count = count + 1, return count."],
-      "tests": [{ "stdin": "4\n-2\n5\n-8\n3", "expect": "2" }, { "stdin": "3\n1\n2\n3", "expect": "3" }] },
-    { "slug": "gcse-functions-hw-21", "lesson": 1, "tier": 2, "difficulty": 2, "xp": 20, "title": "Contains a digit?",
+      "starter": "",
+      "hints": [
+        "count_positives doesn't need to repeat the > 0 check itself — it loops through the list and calls the other function on each item.",
+        "def count_positives(numbers): count = 0, for n in numbers: if is_positive(n): count = count + 1, return count."
+      ],
+      "tests": [
+        {
+          "stdin": "4\n-2\n5\n-8\n3",
+          "expect": "2"
+        },
+        {
+          "stdin": "3\n1\n2\n3",
+          "expect": "3"
+        }
+      ]
+    },
+    {
+      "slug": "gcse-functions-hw-21",
+      "lesson": 1,
+      "tier": 2,
+      "difficulty": 2,
+      "xp": 20,
+      "title": "Contains a digit?",
       "brief": "Write a function called `contains_digit` that takes a piece of text and returns whether at least one character in it is a digit. Read some text and print the result of calling the function.",
-      "starter": "", "hints": ["A generator expression like any(<condition> for c in text) is True if at least one character meets that condition.", "def contains_digit(text): return any(c.isdigit() for c in text)."],
-      "tests": [{ "stdin": "abc123", "expect": "True" }, { "stdin": "abcdef", "expect": "False" }] },
-    { "slug": "gcse-functions-hw-22", "lesson": 1, "tier": 1, "difficulty": 1, "xp": 10, "title": "Format as currency",
+      "starter": "",
+      "hints": [
+        "A generator expression like any(<condition> for c in text) is True if at least one character meets that condition.",
+        "def contains_digit(text): return any(c.isdigit() for c in text)."
+      ],
+      "tests": [
+        {
+          "stdin": "abc123",
+          "expect": "True"
+        },
+        {
+          "stdin": "abcdef",
+          "expect": "False"
+        }
+      ]
+    },
+    {
+      "slug": "gcse-functions-hw-22",
+      "lesson": 1,
+      "tier": 1,
+      "difficulty": 1,
+      "xp": 10,
+      "title": "Format as currency",
       "brief": "Write a function called `format_currency` that takes an amount and returns it formatted as a price, in the format `£<amount>`, always shown to 2 decimal places. Read an amount and print the result of calling the function.",
-      "starter": "", "hints": ["A format specifier like :.2f inside an f-string forces exactly 2 decimal places.", "def format_currency(amount): return f\"£{amount:.2f}\"."],
-      "tests": [{ "stdin": "9.5", "expect": "£9.50" }, { "stdin": "12", "expect": "£12.00" }] },
-    { "slug": "gcse-functions-hw-23", "lesson": 3, "tier": 2, "difficulty": 2, "xp": 20, "title": "Receipt line procedure",
+      "starter": "",
+      "hints": [
+        "A format specifier like :.2f inside an f-string forces exactly 2 decimal places.",
+        "def format_currency(amount): return f\"£{amount:.2f}\"."
+      ],
+      "tests": [
+        {
+          "stdin": "9.5",
+          "expect": "£9.50"
+        },
+        {
+          "stdin": "12",
+          "expect": "£12.00"
+        }
+      ]
+    },
+    {
+      "slug": "gcse-functions-hw-23",
+      "lesson": 3,
+      "tier": 2,
+      "difficulty": 2,
+      "xp": 20,
+      "title": "Receipt line procedure",
       "brief": "Write a procedure called `print_receipt_line` that takes an item name, a quantity, and a price, and prints one line in the format `<item> x<quantity> = £<total>`, with the total shown to 2 decimal places. It should not return anything. Read an item, a quantity, and a price, then call the procedure.",
-      "starter": "", "hints": ["A procedure does the printing itself, inside its own body, rather than returning a value.", "def print_receipt_line(item, qty, price): print(f\"{item} x{qty} = £{qty * price:.2f}\")."],
-      "tests": [{ "stdin": "Pen\n3\n1.20", "expect": "Pen x3 = £3.60" }, { "stdin": "Book\n2\n5.00", "expect": "Book x2 = £10.00" }] },
-    { "slug": "gcse-functions-hw-24", "lesson": 2, "tier": 3, "difficulty": 4, "xp": 30, "title": "Order total function",
+      "starter": "",
+      "hints": [
+        "A procedure does the printing itself, inside its own body, rather than returning a value.",
+        "def print_receipt_line(item, qty, price): print(f\"{item} x{qty} = £{qty * price:.2f}\")."
+      ],
+      "tests": [
+        {
+          "stdin": "Pen\n3\n1.20",
+          "expect": "Pen x3 = £3.60"
+        },
+        {
+          "stdin": "Book\n2\n5.00",
+          "expect": "Book x2 = £10.00"
+        }
+      ]
+    },
+    {
+      "slug": "gcse-functions-hw-24",
+      "lesson": 2,
+      "tier": 3,
+      "difficulty": 4,
+      "xp": 30,
+      "title": "Order total function",
       "brief": "Write a function called `calculate_total` that takes a price, a quantity, a discount percentage, and a delivery fee. It should work out the cost of the items (price times quantity), apply the discount percentage to that, then add the delivery fee — and return the result, rounded to 2 decimal places. Read all four values and print the result of calling the function.",
-      "starter": "", "hints": ["Work out the items' cost first, apply the discount to it, then add delivery separately afterwards.", "def calculate_total(price, qty, discount_pct, delivery): return round((price * qty) * (1 - discount_pct / 100) + delivery, 2)."],
-      "tests": [{ "stdin": "10.00\n2\n10\n3.00", "expect": "21.0" }, { "stdin": "5.00\n4\n0\n0.00", "expect": "20.0" }] },
-    { "slug": "gcse-functions-hw-25", "lesson": 3, "tier": 3, "difficulty": 3, "xp": 30, "title": "Sum of squares in a list",
+      "starter": "",
+      "hints": [
+        "Work out the items' cost first, apply the discount to it, then add delivery separately afterwards.",
+        "def calculate_total(price, qty, discount_pct, delivery): return round((price * qty) * (1 - discount_pct / 100) + delivery, 2)."
+      ],
+      "tests": [
+        {
+          "stdin": "10.00\n2\n10\n3.00",
+          "expect": "21.0"
+        },
+        {
+          "stdin": "5.00\n4\n0\n0.00",
+          "expect": "20.0"
+        }
+      ]
+    },
+    {
+      "slug": "gcse-functions-hw-25",
+      "lesson": 3,
+      "tier": 3,
+      "difficulty": 3,
+      "xp": 30,
+      "title": "Sum of squares in a list",
       "brief": "Write a function called `square` that takes a number and returns it squared. Write a second function called `sum_of_squares_list` that takes a list of numbers, calls square on each one, and returns the total of all the squares. Read a whole number N, then N whole numbers into a list, then print the result of calling sum_of_squares_list on that list.",
-      "starter": "", "hints": ["sum_of_squares_list doesn't need to know how squaring works — it just calls the other function on each item and adds up the results.", "def sum_of_squares_list(numbers): total = 0, for n in numbers: total = total + square(n), return total."],
-      "tests": [{ "stdin": "3\n1\n2\n3", "expect": "14" }, { "stdin": "2\n4\n5", "expect": "41" }] }
+      "starter": "",
+      "hints": [
+        "sum_of_squares_list doesn't need to know how squaring works — it just calls the other function on each item and adds up the results.",
+        "def sum_of_squares_list(numbers): total = 0, for n in numbers: total = total + square(n), return total."
+      ],
+      "tests": [
+        {
+          "stdin": "3\n1\n2\n3",
+          "expect": "14"
+        },
+        {
+          "stdin": "2\n4\n5",
+          "expect": "41"
+        }
+      ]
+    }
   ],
   "projectTasks": [
-    { "slug": "gcse-functions-proj1a", "tier": 4, "difficulty": 3, "xp": 30, "group": "gcse-functions-bigproj1", "part": "A",
+    {
+      "slug": "gcse-functions-proj1a",
+      "tier": 4,
+      "difficulty": 3,
+      "xp": 30,
+      "group": "gcse-functions-bigproj1",
+      "part": "A",
       "title": "Shape area calculator — Part A: rectangles",
       "brief": "A DIY app is building a shape area calculator, split into three parts — each part builds directly on the code you write for the one before it, so keep what you've written rather than starting over.\n\n**Part A.** Write a function `rectangle_area(width, height)` that returns the area of a rectangle. Read a width and a height. Print the area, using your function, in the format `Area: <n>`.",
-      "starter": "", "hints": ["A function that returns width * height, called with the two values you read.", "def rectangle_area(width, height): return width * height - then call it and print the result in an f-string."],
-      "tests": [{ "stdin": "4\n5", "expect": "Area: 20.0" }, { "stdin": "3\n3", "expect": "Area: 9.0" }] },
-    { "slug": "gcse-functions-proj1b", "tier": 4, "difficulty": 4, "xp": 40, "group": "gcse-functions-bigproj1", "part": "B",
+      "starter": "",
+      "hints": [
+        "A function that returns width * height, called with the two values you read.",
+        "def rectangle_area(width, height): return width * height - then call it and print the result in an f-string."
+      ],
+      "tests": [
+        {
+          "stdin": "4\n5",
+          "expect": "Area: 20.0"
+        },
+        {
+          "stdin": "3\n3",
+          "expect": "Area: 9.0"
+        }
+      ]
+    },
+    {
+      "slug": "gcse-functions-proj1b",
+      "tier": 4,
+      "difficulty": 4,
+      "xp": 40,
+      "group": "gcse-functions-bigproj1",
+      "part": "B",
       "title": "Shape area calculator — Part B: triangles too",
       "brief": "**Part B.** Your code carries on from Part A — keep everything you already wrote and add to it. Also write a function `triangle_area(base, height)` that returns 0.5 × base × height. After your Part A line, read one more line: `triangle` if the user also wants a triangle's area worked out, or `none` if not. If it's `triangle`, read a base and a height, call your new function, and print a second area line in the format `Area: <n>`. If it's `none`, print nothing more.",
-      "starter": "", "hints": ["Don't delete your Part A code — keep rectangle_area and the rectangle's Area line exactly as they are, then add the new function and the new input below it.", "shape2 = input(); if shape2 == \"triangle\": base2 = float(input()); height2 = float(input()); print(f\"Area: {triangle_area(base2, height2)}\") — added after your existing Part A lines."],
-      "tests": [{ "stdin": "4\n5\ntriangle\n6\n4", "expect": "Area: 20.0\nArea: 12.0" }, { "stdin": "3\n3\nnone", "expect": "Area: 9.0" }] },
-    { "slug": "gcse-functions-proj1c", "tier": 4, "difficulty": 5, "xp": 50, "group": "gcse-functions-bigproj1", "part": "C",
+      "starter": "",
+      "hints": [
+        "Don't delete your Part A code — keep rectangle_area and the rectangle's Area line exactly as they are, then add the new function and the new input below it.",
+        "shape2 = input(); if shape2 == \"triangle\": base2 = float(input()); height2 = float(input()); print(f\"Area: {triangle_area(base2, height2)}\") — added after your existing Part A lines."
+      ],
+      "tests": [
+        {
+          "stdin": "4\n5\ntriangle\n6\n4",
+          "expect": "Area: 20.0\nArea: 12.0"
+        },
+        {
+          "stdin": "3\n3\nnone",
+          "expect": "Area: 9.0"
+        }
+      ]
+    },
+    {
+      "slug": "gcse-functions-proj1c",
+      "tier": 4,
+      "difficulty": 5,
+      "xp": 50,
+      "group": "gcse-functions-bigproj1",
+      "part": "C",
       "title": "Shape area calculator — Part C: circles too",
       "brief": "**Part C.** Keep everything from Parts A and B. Also write a function `circle_area(radius)` that returns round(3.14159 × radius², 2). After your Part B lines, read one more line: `circle` if the user also wants a circle's area worked out, or `none` if not. If it's `circle`, read a radius, call your new function, and print another area line in the format `Area: <n>`. If it's `none`, print nothing more.",
-      "starter": "", "hints": ["Don't touch your Part A or Part B code - just add the new function and a matching check underneath.", "shape3 = input(); if shape3 == \"circle\": radius = float(input()); print(f\"Area: {circle_area(radius)}\") — added after your existing Part B lines."],
-      "tests": [{ "stdin": "4\n5\ntriangle\n6\n4\ncircle\n3", "expect": "Area: 20.0\nArea: 12.0\nArea: 28.27" }, { "stdin": "3\n3\nnone\nnone", "expect": "Area: 9.0" }] }
+      "starter": "",
+      "hints": [
+        "Don't touch your Part A or Part B code - just add the new function and a matching check underneath.",
+        "shape3 = input(); if shape3 == \"circle\": radius = float(input()); print(f\"Area: {circle_area(radius)}\") — added after your existing Part B lines."
+      ],
+      "tests": [
+        {
+          "stdin": "4\n5\ntriangle\n6\n4\ncircle\n3",
+          "expect": "Area: 20.0\nArea: 12.0\nArea: 28.27"
+        },
+        {
+          "stdin": "3\n3\nnone\nnone",
+          "expect": "Area: 9.0"
+        }
+      ]
+    }
   ],
   "practiceTasks": [
-    { "slug": "gcse-functions-p-01", "tier": 1, "difficulty": 1, "xp": 10, "title": "Greet function",
+    {
+      "slug": "gcse-functions-p-01",
+      "tier": 1,
+      "difficulty": 1,
+      "xp": 10,
+      "title": "Greet function",
       "brief": "Write a function `greet(name)` that returns `Hello, <name>!`. Input a name, call your function, then print the result.",
-      "starter": "", "hints": ["The function returns the greeting; it doesn't print it itself.", "def greet(name): return f\"Hello, {name}!\" - then print(greet(input()))."],
-      "tests": [{ "stdin": "Ada", "expect": "Hello, Ada!" }] },
-    { "slug": "gcse-functions-p-02", "tier": 1, "difficulty": 1, "xp": 10, "title": "Double function",
+      "starter": "",
+      "hints": [
+        "The function returns the greeting; it doesn't print it itself.",
+        "def greet(name): return f\"Hello, {name}!\" - then print(greet(input()))."
+      ],
+      "tests": [
+        {
+          "stdin": "Ada",
+          "expect": "Hello, Ada!"
+        },
+        {
+          "stdin": "Sam",
+          "expect": "Hello, Sam!"
+        },
+        {
+          "stdin": "Mia Rose",
+          "expect": "Hello, Mia Rose!"
+        }
+      ]
+    },
+    {
+      "slug": "gcse-functions-p-02",
+      "tier": 1,
+      "difficulty": 1,
+      "xp": 10,
+      "title": "Double function",
       "brief": "Write a function `double(n)` that returns n doubled. Input a number, call your function, then print the result.",
-      "starter": "", "hints": ["A one-line function: return n * 2.", "def double(n): return n * 2 - then print(double(int(input())))."],
-      "tests": [{ "stdin": "6", "expect": "12" }] },
-    { "slug": "gcse-functions-p-03", "tier": 2, "difficulty": 2, "xp": 15, "title": "Is even function",
+      "starter": "",
+      "hints": [
+        "A one-line function: return n * 2.",
+        "def double(n): return n * 2 - then print(double(int(input())))."
+      ],
+      "tests": [
+        {
+          "stdin": "6",
+          "expect": "12"
+        },
+        {
+          "stdin": "0",
+          "expect": "0"
+        },
+        {
+          "stdin": "-4",
+          "expect": "-8"
+        },
+        {
+          "stdin": "21",
+          "expect": "42"
+        }
+      ]
+    },
+    {
+      "slug": "gcse-functions-p-03",
+      "tier": 2,
+      "difficulty": 2,
+      "xp": 15,
+      "title": "Is even function",
       "brief": "Write a function `is_even(n)` that returns True if n is even, otherwise False. Input a number and print `Even` if your function says it's even, otherwise print `Odd`.",
-      "starter": "", "hints": ["n % 2 == 0 is itself a True/False value - you can return it directly.", "def is_even(n): return n % 2 == 0 - then if is_even(number): print(\"Even\") else: print(\"Odd\")."],
-      "tests": [{ "stdin": "4", "expect": "Even" }, { "stdin": "7", "expect": "Odd" }] },
-    { "slug": "gcse-functions-p-04", "tier": 2, "difficulty": 2, "xp": 15, "title": "Max of two",
+      "starter": "",
+      "hints": [
+        "n % 2 == 0 is itself a True/False value - you can return it directly.",
+        "def is_even(n): return n % 2 == 0 - then if is_even(number): print(\"Even\") else: print(\"Odd\")."
+      ],
+      "tests": [
+        {
+          "stdin": "4",
+          "expect": "Even"
+        },
+        {
+          "stdin": "7",
+          "expect": "Odd"
+        },
+        {
+          "stdin": "0",
+          "expect": "Even"
+        },
+        {
+          "stdin": "-2",
+          "expect": "Even"
+        },
+        {
+          "stdin": "1",
+          "expect": "Odd"
+        },
+        {
+          "stdin": "100",
+          "expect": "Even"
+        }
+      ]
+    },
+    {
+      "slug": "gcse-functions-p-04",
+      "tier": 2,
+      "difficulty": 2,
+      "xp": 15,
+      "title": "Max of two",
       "brief": "Write a function `max_of_two(a, b)` that returns whichever of the two is larger. Input two numbers, call your function, then print the result.",
-      "starter": "", "hints": ["A simple if inside the function decides which one to return.", "def max_of_two(a, b): if a > b: return a; return b."],
-      "tests": [{ "stdin": "8\n3", "expect": "8" }] },
-    { "slug": "gcse-functions-p-05", "tier": 3, "difficulty": 3, "xp": 25, "title": "Total with VAT",
+      "starter": "",
+      "hints": [
+        "A simple if inside the function decides which one to return.",
+        "def max_of_two(a, b): if a > b: return a; return b."
+      ],
+      "tests": [
+        {
+          "stdin": "8\n3",
+          "expect": "8"
+        },
+        {
+          "stdin": "3\n8",
+          "expect": "8"
+        },
+        {
+          "stdin": "5\n5",
+          "expect": "5"
+        },
+        {
+          "stdin": "-2\n-9",
+          "expect": "-2"
+        },
+        {
+          "stdin": "0\n0",
+          "expect": "0"
+        }
+      ]
+    },
+    {
+      "slug": "gcse-functions-p-05",
+      "tier": 3,
+      "difficulty": 3,
+      "xp": 25,
+      "title": "Total with VAT",
       "brief": "Write a function `add_vat(price)` that returns the price with 20% VAT added, rounded to 2 decimal places. Input a price, call your function, then print the result.",
-      "starter": "", "hints": ["Multiplying by 1.2 adds 20% on top, then round() the result before returning it.", "def add_vat(price): return round(price * 1.2, 2)."],
-      "tests": [{ "stdin": "10", "expect": "12.0" }] },
-    { "slug": "gcse-functions-p-06", "tier": 1, "difficulty": 2, "xp": 15, "title": "Square function",
+      "starter": "",
+      "hints": [
+        "Multiplying by 1.2 adds 20% on top, then round() the result before returning it.",
+        "def add_vat(price): return round(price * 1.2, 2)."
+      ],
+      "tests": [
+        {
+          "stdin": "10",
+          "expect": "12.0"
+        },
+        {
+          "stdin": "0",
+          "expect": "0.0"
+        },
+        {
+          "stdin": "100",
+          "expect": "120.0"
+        },
+        {
+          "stdin": "9.99",
+          "expect": "11.99"
+        },
+        {
+          "stdin": "1",
+          "expect": "1.2"
+        }
+      ]
+    },
+    {
+      "slug": "gcse-functions-p-06",
+      "tier": 1,
+      "difficulty": 2,
+      "xp": 15,
+      "title": "Square function",
       "brief": "Write a function `square(n)` that returns n multiplied by itself. Input a number, call your function, then print the result in the format `Square: <n>`.",
-      "starter": "", "hints": ["A one-line function: return n * n.", "def square(n): return n * n — then print(f\"Square: {square(number)}\")."],
-      "tests": [{ "stdin": "5", "expect": "Square: 25" }, { "stdin": "9", "expect": "Square: 81" }] },
-    { "slug": "gcse-functions-p-07", "tier": 2, "difficulty": 3, "xp": 20, "title": "Min of three",
+      "starter": "",
+      "hints": [
+        "A one-line function: return n * n.",
+        "def square(n): return n * n — then print(f\"Square: {square(number)}\")."
+      ],
+      "tests": [
+        {
+          "stdin": "5",
+          "expect": "Square: 25"
+        },
+        {
+          "stdin": "9",
+          "expect": "Square: 81"
+        },
+        {
+          "stdin": "0",
+          "expect": "Square: 0"
+        },
+        {
+          "stdin": "-3",
+          "expect": "Square: 9"
+        },
+        {
+          "stdin": "12",
+          "expect": "Square: 144"
+        }
+      ]
+    },
+    {
+      "slug": "gcse-functions-p-07",
+      "tier": 2,
+      "difficulty": 3,
+      "xp": 20,
+      "title": "Min of three",
       "brief": "Write a function `min_of_three(a, b, c)` that returns the smallest of the three values. Input three numbers, call your function, then print the result.",
-      "starter": "", "hints": ["Python's built-in min() already accepts three arguments at once.", "def min_of_three(a, b, c): return min(a, b, c)."],
-      "tests": [{ "stdin": "5\n2\n8", "expect": "2" }, { "stdin": "10\n3\n7", "expect": "3" }] },
-    { "slug": "gcse-functions-p-08", "tier": 2, "difficulty": 3, "xp": 20, "title": "Convert temperature function",
+      "starter": "",
+      "hints": [
+        "Python's built-in min() already accepts three arguments at once.",
+        "def min_of_three(a, b, c): return min(a, b, c)."
+      ],
+      "tests": [
+        {
+          "stdin": "5\n2\n8",
+          "expect": "2"
+        },
+        {
+          "stdin": "10\n3\n7",
+          "expect": "3"
+        },
+        {
+          "stdin": "1\n1\n1",
+          "expect": "1"
+        },
+        {
+          "stdin": "-5\n0\n5",
+          "expect": "-5"
+        },
+        {
+          "stdin": "9\n3\n3",
+          "expect": "3"
+        }
+      ]
+    },
+    {
+      "slug": "gcse-functions-p-08",
+      "tier": 2,
+      "difficulty": 3,
+      "xp": 20,
+      "title": "Convert temperature function",
       "brief": "Write a function `celsius_to_fahrenheit(c)` that returns c × 9 / 5 + 32, rounded to 2 decimal places. Input a temperature in Celsius, call your function, then print the result in the format `Fahrenheit: <n>`.",
-      "starter": "", "hints": ["Follow the exact formula given, then round the result before returning it.", "def celsius_to_fahrenheit(c): return round(c * 9 / 5 + 32, 2)."],
-      "tests": [{ "stdin": "0", "expect": "Fahrenheit: 32.0" }, { "stdin": "100", "expect": "Fahrenheit: 212.0" }, { "stdin": "37", "expect": "Fahrenheit: 98.6" }] },
-    { "slug": "gcse-functions-p-09", "tier": 3, "difficulty": 4, "xp": 25, "title": "Area and perimeter",
+      "starter": "",
+      "hints": [
+        "Follow the exact formula given, then round the result before returning it.",
+        "def celsius_to_fahrenheit(c): return round(c * 9 / 5 + 32, 2)."
+      ],
+      "tests": [
+        {
+          "stdin": "0",
+          "expect": "Fahrenheit: 32.0"
+        },
+        {
+          "stdin": "100",
+          "expect": "Fahrenheit: 212.0"
+        },
+        {
+          "stdin": "37",
+          "expect": "Fahrenheit: 98.6"
+        },
+        {
+          "stdin": "-40",
+          "expect": "Fahrenheit: -40.0"
+        },
+        {
+          "stdin": "25",
+          "expect": "Fahrenheit: 77.0"
+        },
+        {
+          "stdin": "36.6",
+          "expect": "Fahrenheit: 97.88"
+        }
+      ]
+    },
+    {
+      "slug": "gcse-functions-p-09",
+      "tier": 3,
+      "difficulty": 4,
+      "xp": 25,
+      "title": "Area and perimeter",
       "brief": "Write two functions: `rectangle_area(w, h)` returning w × h, and `rectangle_perimeter(w, h)` returning 2 × (w + h). Input a width and a height, then print the area, then the perimeter, using your functions, in the format `Area: <n>` then `Perimeter: <n>`.",
-      "starter": "", "hints": ["Two separate one-line functions, each called once after reading both inputs.", "def rectangle_area(w, h): return w * h\ndef rectangle_perimeter(w, h): return 2 * (w + h)."],
-      "tests": [{ "stdin": "4\n5", "expect": "Area: 20.0\nPerimeter: 18.0" }, { "stdin": "3\n3", "expect": "Area: 9.0\nPerimeter: 12.0" }] },
-    { "slug": "gcse-functions-p-10", "tier": 4, "difficulty": 5, "xp": 30, "title": "Grade function with bonus",
+      "starter": "",
+      "hints": [
+        "Two separate one-line functions, each called once after reading both inputs.",
+        "def rectangle_area(w, h): return w * h\ndef rectangle_perimeter(w, h): return 2 * (w + h)."
+      ],
+      "tests": [
+        {
+          "stdin": "4\n5",
+          "expect": "Area: 20.0\nPerimeter: 18.0"
+        },
+        {
+          "stdin": "3\n3",
+          "expect": "Area: 9.0\nPerimeter: 12.0"
+        },
+        {
+          "stdin": "2\n7",
+          "expect": "Area: 14.0\nPerimeter: 18.0"
+        },
+        {
+          "stdin": "1.5\n2",
+          "expect": "Area: 3.0\nPerimeter: 7.0"
+        },
+        {
+          "stdin": "10\n10",
+          "expect": "Area: 100.0\nPerimeter: 40.0"
+        }
+      ]
+    },
+    {
+      "slug": "gcse-functions-p-10",
+      "tier": 4,
+      "difficulty": 5,
+      "xp": 30,
+      "title": "Grade function with bonus",
       "brief": "Write two functions: `classify(score)` returns `\"Pass\"` if score is 40 or above, otherwise `\"Fail\"`. `bonus(score)` returns 5 if score is 90 or above, otherwise 0. Input a score, then print the result of `classify()`, then a line `Bonus: <n>` using the result of `bonus()`.",
-      "starter": "", "hints": ["Two independent functions, each with their own condition on the same score.", "def classify(score): return \"Pass\" if score >= 40 else \"Fail\"\ndef bonus(score): return 5 if score >= 90 else 0."],
-      "tests": [{ "stdin": "95", "expect": "Pass\nBonus: 5" }, { "stdin": "35", "expect": "Fail\nBonus: 0" }, { "stdin": "50", "expect": "Pass\nBonus: 0" }] },
-    { "slug": "gcse-functions-p-s1", "tier": 4, "difficulty": 5, "xp": 40, "stretch": true, "title": "🌟 Factorial with validation",
+      "starter": "",
+      "hints": [
+        "Two independent functions, each with their own condition on the same score.",
+        "def classify(score): return \"Pass\" if score >= 40 else \"Fail\"\ndef bonus(score): return 5 if score >= 90 else 0."
+      ],
+      "tests": [
+        {
+          "stdin": "95",
+          "expect": "Pass\nBonus: 5"
+        },
+        {
+          "stdin": "35",
+          "expect": "Fail\nBonus: 0"
+        },
+        {
+          "stdin": "50",
+          "expect": "Pass\nBonus: 0"
+        },
+        {
+          "stdin": "40",
+          "expect": "Pass\nBonus: 0"
+        },
+        {
+          "stdin": "90",
+          "expect": "Pass\nBonus: 5"
+        },
+        {
+          "stdin": "89",
+          "expect": "Pass\nBonus: 0"
+        },
+        {
+          "stdin": "39",
+          "expect": "Fail\nBonus: 0"
+        },
+        {
+          "stdin": "100",
+          "expect": "Pass\nBonus: 5"
+        }
+      ]
+    },
+    {
+      "slug": "gcse-functions-p-s1",
+      "tier": 4,
+      "difficulty": 5,
+      "xp": 40,
+      "stretch": true,
+      "title": "🌟 Factorial with validation",
       "brief": "Write a function `factorial(n)` that returns n! (n × (n-1) × ... × 1) using a loop. Write a second function `is_valid(n)` that returns True if n is 0 or more, otherwise False. Input a number: if it's valid, print its factorial; otherwise print `Invalid input`.",
-      "starter": "", "hints": ["Build the factorial with a loop that multiplies a running total by each number from 1 up to n.", "def factorial(n): result = 1; for i in range(1, n + 1): result *= i; return result\ndef is_valid(n): return n >= 0."],
-      "tests": [{ "stdin": "5", "expect": "120" }, { "stdin": "-3", "expect": "Invalid input" }, { "stdin": "0", "expect": "1" }] },
-    { "slug": "gcse-functions-p-s2", "tier": 4, "difficulty": 5, "xp": 40, "stretch": true, "title": "🌟 Temperature converter suite",
+      "starter": "",
+      "hints": [
+        "Build the factorial with a loop that multiplies a running total by each number from 1 up to n.",
+        "def factorial(n): result = 1; for i in range(1, n + 1): result *= i; return result\ndef is_valid(n): return n >= 0."
+      ],
+      "tests": [
+        {
+          "stdin": "5",
+          "expect": "120"
+        },
+        {
+          "stdin": "-3",
+          "expect": "Invalid input"
+        },
+        {
+          "stdin": "0",
+          "expect": "1"
+        },
+        {
+          "stdin": "1",
+          "expect": "1"
+        },
+        {
+          "stdin": "3",
+          "expect": "6"
+        },
+        {
+          "stdin": "10",
+          "expect": "3628800"
+        },
+        {
+          "stdin": "-1",
+          "expect": "Invalid input"
+        }
+      ]
+    },
+    {
+      "slug": "gcse-functions-p-s2",
+      "tier": 4,
+      "difficulty": 5,
+      "xp": 40,
+      "stretch": true,
+      "title": "🌟 Temperature converter suite",
       "brief": "Write three functions: `c_to_f(c)` (Celsius to Fahrenheit: c × 9/5 + 32), `f_to_c(f)` (Fahrenheit to Celsius: (f − 32) × 5/9), and `c_to_k(c)` (Celsius to Kelvin: c + 273.15) — each rounded to 2 decimal places. Input a value, then a code (`CF`, `FC`, or `CK`) saying which conversion to do. Call the matching function and print the result in the format `Result: <n>`.",
-      "starter": "", "hints": ["Three small functions, each with its own formula, then an if/elif/else picks which one to call based on the code.", "if code == \"CF\": result = c_to_f(value) elif code == \"FC\": result = f_to_c(value) else: result = c_to_k(value)."],
-      "tests": [{ "stdin": "0\nCF", "expect": "Result: 32.0" }, { "stdin": "100\nCK", "expect": "Result: 373.15" }, { "stdin": "98.6\nFC", "expect": "Result: 37.0" }] }
+      "starter": "",
+      "hints": [
+        "Three small functions, each with its own formula, then an if/elif/else picks which one to call based on the code.",
+        "if code == \"CF\": result = c_to_f(value) elif code == \"FC\": result = f_to_c(value) else: result = c_to_k(value)."
+      ],
+      "tests": [
+        {
+          "stdin": "0\nCF",
+          "expect": "Result: 32.0"
+        },
+        {
+          "stdin": "100\nCK",
+          "expect": "Result: 373.15"
+        },
+        {
+          "stdin": "98.6\nFC",
+          "expect": "Result: 37.0"
+        },
+        {
+          "stdin": "37\nCF",
+          "expect": "Result: 98.6"
+        },
+        {
+          "stdin": "212\nFC",
+          "expect": "Result: 100.0"
+        },
+        {
+          "stdin": "-273.15\nCK",
+          "expect": "Result: 0.0"
+        },
+        {
+          "stdin": "0\nCK",
+          "expect": "Result: 273.15"
+        },
+        {
+          "stdin": "-40\nCF",
+          "expect": "Result: -40.0"
+        }
+      ]
+    }
   ]
 }

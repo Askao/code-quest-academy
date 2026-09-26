@@ -27,338 +27,1505 @@
       "notes": "`input()` reads whatever the user typed and always hands it back as a **string**, even if they typed a number. If you try to do maths with it directly, Python either crashes or does the wrong thing: `\"3\" + \"4\"` gives `\"34\"`, not `7`, because it's joining two pieces of text, not adding two numbers.\n\n**Casting** converts a value from one data type to another:\n\n- `int(\"3\")` → the integer `3`\n- `float(\"3.5\")` → the float `3.5`\n- `str(3)` → the string `\"3\"` (needed to join a number onto text with `+`)\n\nThe usual pattern is to cast the moment you read input: `age = int(input())`.\n\n---\n\nOCR exam wording tells you which function to use even when it doesn't say \"input\" or \"print\" directly:\n\n| Wording in the question | What it means |\n| --- | --- |\n| *read*, *accept*, *ask the user for* | `input()` |\n| *display*, *output*, *report* | `print()` |\n\nAn f-string (`f\"...\"`) lets you drop variables straight into text you print, without manually casting them with `str()` first: `print(f\"Age: {age}\")` works even though `age` is an integer.",
       "worked_example": "# Accept two numbers as text, cast them, then report the total\nfirst_text = input()\nsecond_text = input()\nfirst = int(first_text)\nsecond = int(second_text)\nprint(f\"Total: {first + second}\")",
       "worked_example_note": "Casting can happen in one step too: `first = int(input())`. Splitting it here just shows what's actually happening underneath.",
-      "worked_example_demo_input": ["12", "8"]
+      "worked_example_demo_input": [
+        "12",
+        "8"
+      ]
     }
   ],
   "quiz": [
     {
       "lessonSlug": "gcse-fundamentals-1",
       "question": "Which symbol assigns a value to a variable in Python?",
-      "options": ["=", "==", "->", ":="],
+      "options": [
+        "=",
+        "==",
+        "->",
+        ":="
+      ],
       "answer": "=",
       "explanation": "`=` is the assignment operator. `==` is used later on to compare two values for equality, which is a different thing."
     },
     {
       "lessonSlug": "gcse-fundamentals-1",
       "question": "After running `total = 4` then `total = total + 1`, what is the value of total?",
-      "options": ["4", "5", "1", "total + 1"],
+      "options": [
+        "4",
+        "5",
+        "1",
+        "total + 1"
+      ],
       "answer": "5",
       "explanation": "The right-hand side is worked out first using the old value of total (4), giving 5, which is then stored back in total."
     },
     {
       "lessonSlug": "gcse-fundamentals-1",
       "question": "Which of these is a valid Python variable name?",
-      "options": ["student age", "2ndScore", "student_age", "student-age"],
+      "options": [
+        "student age",
+        "2ndScore",
+        "student_age",
+        "student-age"
+      ],
       "answer": "student_age",
       "explanation": "Names can't contain spaces or hyphens, and can't start with a digit. Underscores are allowed, so student_age is valid."
     },
     {
       "lessonSlug": "gcse-fundamentals-2",
       "question": "Which data type would you use to store a person's height in metres, e.g. 1.75?",
-      "options": ["Integer", "Float", "String", "Boolean"],
+      "options": [
+        "Integer",
+        "Float",
+        "String",
+        "Boolean"
+      ],
       "answer": "Float",
       "explanation": "A value with a decimal part is a float. Integer is for whole numbers only."
     },
     {
       "lessonSlug": "gcse-fundamentals-2",
       "question": "Which of these is NOT a Python data type, even though exam pseudocode often lists it separately?",
-      "options": ["Integer", "Character", "String", "Boolean"],
+      "options": [
+        "Integer",
+        "Character",
+        "String",
+        "Boolean"
+      ],
       "answer": "Character",
       "explanation": "Python has no separate character type — a single character is just a string of length 1."
     },
     {
       "lessonSlug": "gcse-fundamentals-2",
       "question": "Which data type would you use for a value that is exactly True or False?",
-      "options": ["Boolean", "Integer", "String", "Float"],
+      "options": [
+        "Boolean",
+        "Integer",
+        "String",
+        "Float"
+      ],
       "answer": "Boolean",
       "explanation": "A value that can only ever be True or False is a Boolean — Python's bool type."
     },
     {
       "lessonSlug": "gcse-fundamentals-3",
       "question": "What data type does input() always return, no matter what the user types?",
-      "options": ["Integer", "Float", "String", "Boolean"],
+      "options": [
+        "Integer",
+        "Float",
+        "String",
+        "Boolean"
+      ],
       "answer": "String",
       "explanation": "input() always hands back text. You must cast it with int() or float() before doing maths with it."
     },
     {
       "lessonSlug": "gcse-fundamentals-3",
       "question": "An exam question says \"the program should display the total cost\". Which Python function does this describe?",
-      "options": ["input()", "print()", "int()", "str()"],
+      "options": [
+        "input()",
+        "print()",
+        "int()",
+        "str()"
+      ],
       "answer": "print()",
       "explanation": "\"Display\", \"output\" and \"report\" all describe print() in exam wording."
     },
     {
       "lessonSlug": "gcse-fundamentals-3",
       "question": "What does int(\"3\") + int(\"4\") evaluate to?",
-      "options": ["7", "\"34\"", "\"7\"", "34"],
+      "options": [
+        "7",
+        "\"34\"",
+        "\"7\"",
+        "34"
+      ],
       "answer": "7",
       "explanation": "Casting both strings to integers first means + performs numeric addition (7), not string joining (which would give \"34\")."
     }
   ],
   "tasks": [
-    { "slug": "gcse-fundamentals-t1-01", "lesson": 1, "tier": 1, "difficulty": 1, "xp": 10,
+    {
+      "slug": "gcse-fundamentals-t1-01",
+      "lesson": 1,
+      "tier": 1,
+      "difficulty": 1,
+      "xp": 10,
       "title": "Store and print",
       "brief": "Create a variable called `message` with the value `\"Hello, OCR\"`. Print message.",
-      "starter": "", "hints": ["Think of it as two steps: first put the text in the box, then look inside the box and print what's there.", "Create it with `name = \"text\"`, then show it with `print(name)`."],
-      "tests": [{ "expect": "Hello, OCR" }] },
-    { "slug": "gcse-fundamentals-t1-02", "lesson": 1, "tier": 1, "difficulty": 1, "xp": 10,
+      "starter": "",
+      "hints": [
+        "Think of it as two steps: first put the text in the box, then look inside the box and print what's there.",
+        "Create it with `name = \"text\"`, then show it with `print(name)`."
+      ],
+      "tests": [
+        {
+          "expect": "Hello, OCR"
+        }
+      ]
+    },
+    {
+      "slug": "gcse-fundamentals-t1-02",
+      "lesson": 1,
+      "tier": 1,
+      "difficulty": 1,
+      "xp": 10,
       "title": "Update a variable",
       "brief": "Set a variable called `total` to 10. Add 5 to total. Print total.",
-      "starter": "", "hints": ["\"Add 5 to total\" means: work out total + 5, then store the answer back in total.", "Update a variable with `name = name + amount`, then print it afterwards."],
-      "tests": [{ "expect": "15" }] },
-    { "slug": "gcse-fundamentals-t1-03", "lesson": 1, "tier": 1, "difficulty": 1, "xp": 10,
+      "starter": "",
+      "hints": [
+        "\"Add 5 to total\" means: work out total + 5, then store the answer back in total.",
+        "Update a variable with `name = name + amount`, then print it afterwards."
+      ],
+      "tests": [
+        {
+          "expect": "15"
+        }
+      ]
+    },
+    {
+      "slug": "gcse-fundamentals-t1-03",
+      "lesson": 1,
+      "tier": 1,
+      "difficulty": 1,
+      "xp": 10,
       "title": "Two variables",
       "brief": "Input a value and store it in a variable called `first`. Input a second value and store it in a variable called `second`. Print first, then print second, each on its own line.",
-      "starter": "", "hints": ["You need two separate input() calls, one stored in each variable.", "input() already gives you a string — store each one in its own variable, then print them in that order."],
-      "tests": [{ "stdin": "3\n9", "expect": "3\n9" }, { "stdin": "-1\n0", "expect": "-1\n0" }] },
-    { "slug": "gcse-fundamentals-t1-04", "lesson": 1, "tier": 1, "difficulty": 2, "xp": 15,
+      "starter": "",
+      "hints": [
+        "You need two separate input() calls, one stored in each variable.",
+        "input() already gives you a string — store each one in its own variable, then print them in that order."
+      ],
+      "tests": [
+        {
+          "stdin": "3\n9",
+          "expect": "3\n9"
+        },
+        {
+          "stdin": "-1\n0",
+          "expect": "-1\n0"
+        }
+      ]
+    },
+    {
+      "slug": "gcse-fundamentals-t1-04",
+      "lesson": 1,
+      "tier": 1,
+      "difficulty": 2,
+      "xp": 15,
       "title": "Overwrite a variable",
       "brief": "Set a variable called `value` to 6. Multiply value by 2 and store the result back in value. Print value.",
-      "starter": "", "hints": ["\"Store the result back in value\" means updating it, the same pattern as adding to a variable in the last task.", "Reassign the same variable to a new expression built from its own old value, e.g. value = value * 2."],
-      "tests": [{ "expect": "12" }] },
-    { "slug": "gcse-fundamentals-t1-stretch", "lesson": 1, "tier": 4, "difficulty": 5, "xp": 40, "stretch": true,
+      "starter": "",
+      "hints": [
+        "\"Store the result back in value\" means updating it, the same pattern as adding to a variable in the last task.",
+        "Reassign the same variable to a new expression built from its own old value, e.g. value = value * 2."
+      ],
+      "tests": [
+        {
+          "expect": "12"
+        }
+      ]
+    },
+    {
+      "slug": "gcse-fundamentals-t1-stretch",
+      "lesson": 1,
+      "tier": 4,
+      "difficulty": 5,
+      "xp": 40,
+      "stretch": true,
       "title": "Swap two variables",
       "brief": "Read two whole numbers from the user. Store the first in a variable called `a`, and the second in a variable called `b`. Swap their values, so a ends up holding what was in b, and b ends up holding what was in a. Print a, then print b, each on its own line.\n\nYou will need a third variable `to` hold a value temporarily while you swap — if you just wrote a = b, you'd overwrite a before you'd used its original value anywhere.\n\nFor example, if 3 and 9 are entered, a should end up as 9 and b should end up as 3.",
-      "starter": "", "hints": ["If you just wrote a = b, you'd overwrite a before you'd used its original value anywhere — you need somewhere to keep it safe first. Work through what happens to each variable on paper before coding it.", "A third variable can hold one value temporarily while you overwrite it, so nothing gets lost in the process."],
-      "tests": [{ "stdin": "3\n9", "expect": "9\n3" }, { "stdin": "-1\n5", "expect": "5\n-1" }] },
-    { "slug": "gcse-fundamentals-t2-01", "lesson": 3, "tier": 2, "difficulty": 1, "xp": 15,
+      "starter": "",
+      "hints": [
+        "If you just wrote a = b, you'd overwrite a before you'd used its original value anywhere — you need somewhere to keep it safe first. Work through what happens to each variable on paper before coding it.",
+        "A third variable can hold one value temporarily while you overwrite it, so nothing gets lost in the process."
+      ],
+      "tests": [
+        {
+          "stdin": "3\n9",
+          "expect": "9\n3"
+        },
+        {
+          "stdin": "-1\n5",
+          "expect": "5\n-1"
+        }
+      ]
+    },
+    {
+      "slug": "gcse-fundamentals-t2-01",
+      "lesson": 3,
+      "tier": 2,
+      "difficulty": 1,
+      "xp": 15,
       "title": "Keep the decimal place",
       "brief": "A weather app stores temperature readings, which may include decimal places. Input a temperature reading. Add 10 to it. Print the result.\n\nFor example, if 5.5 is entered, print 15.5.",
-      "starter": "", "hints": ["The reading may include decimals, so store it as a float, not a whole number — otherwise any decimal part would be lost.", "Cast with `float(input())` to keep any decimal part, then use the result directly in your calculation."],
-      "tests": [{ "stdin": "5.5", "expect": "15.5" }, { "stdin": "2.25", "expect": "12.25" }] },
-    { "slug": "gcse-fundamentals-t2-02", "lesson": 3, "tier": 2, "difficulty": 2, "xp": 15,
+      "starter": "",
+      "hints": [
+        "The reading may include decimals, so store it as a float, not a whole number — otherwise any decimal part would be lost.",
+        "Cast with `float(input())` to keep any decimal part, then use the result directly in your calculation."
+      ],
+      "tests": [
+        {
+          "stdin": "5.5",
+          "expect": "15.5"
+        },
+        {
+          "stdin": "2.25",
+          "expect": "12.25"
+        }
+      ]
+    },
+    {
+      "slug": "gcse-fundamentals-t2-02",
+      "lesson": 3,
+      "tier": 2,
+      "difficulty": 2,
+      "xp": 15,
       "title": "Pick the right type",
       "brief": "A school stores each student's exam score as a whole number, out of 100. Input a score. Store it as an integer, so any decimal point a teacher accidentally types is removed. Print the score.\n\nFor example, if 87 is entered, print 87.",
-      "starter": "", "hints": ["Reading with int(input()) removes any decimal part on the way in — it doesn't round, it just cuts it off.", "Cast the input straight to an integer, store it, then print it."],
-      "tests": [{ "stdin": "87", "expect": "87" }, { "stdin": "100", "expect": "100" }] },
-    { "slug": "gcse-fundamentals-t2-04", "lesson": 2, "tier": 2, "difficulty": 2, "xp": 20,
+      "starter": "",
+      "hints": [
+        "Reading with int(input()) removes any decimal part on the way in — it doesn't round, it just cuts it off.",
+        "Cast the input straight to an integer, store it, then print it."
+      ],
+      "tests": [
+        {
+          "stdin": "87",
+          "expect": "87"
+        },
+        {
+          "stdin": "100",
+          "expect": "100"
+        }
+      ]
+    },
+    {
+      "slug": "gcse-fundamentals-t2-04",
+      "lesson": 2,
+      "tier": 2,
+      "difficulty": 2,
+      "xp": 20,
       "title": "A single character",
       "brief": "OCR's pseudocode has a character data type for a single letter. Python doesn't have one — a one-letter string does the same job.\n\nInput one letter grade, for example A, B or C. Print it with a label in front, in the format `Grade received: <grade>`, where `<grade>` is replaced by whatever letter was entered.\n\nFor example, if the user enters B, print `Grade received: B`.",
-      "starter": "", "hints": ["input() already gives you a string, so the grade needs no casting - just build the output with an f-string.", "An f-string can drop a variable straight into fixed text: `f\"label: {variable}\"`."],
-      "tests": [{ "stdin": "A", "expect": "Grade received: A" }, { "stdin": "C", "expect": "Grade received: C" }] },
-    { "slug": "gcse-fundamentals-t2-stretch", "lesson": 3, "tier": 4, "difficulty": 5, "xp": 40, "stretch": true,
+      "starter": "",
+      "hints": [
+        "input() already gives you a string, so the grade needs no casting - just build the output with an f-string.",
+        "An f-string can drop a variable straight into fixed text: `f\"label: {variable}\"`."
+      ],
+      "tests": [
+        {
+          "stdin": "A",
+          "expect": "Grade received: A"
+        },
+        {
+          "stdin": "C",
+          "expect": "Grade received: C"
+        }
+      ]
+    },
+    {
+      "slug": "gcse-fundamentals-t2-stretch",
+      "lesson": 3,
+      "tier": 4,
+      "difficulty": 5,
+      "xp": 40,
+      "stretch": true,
       "title": "Same value, three types",
       "brief": "Read a decimal number from the user as text — do not cast it on the way in.\n\nPrint it three times, on three separate lines:\n- first, exactly as it was read (a string)\n- then, converted to an integer\n- then, converted to a float\n\nCasting straight to an integer truncates (cuts off) the decimal part rather than rounding it.\n\nFor example, if 7.9 is entered, print 7.9, then 7, then 7.9.",
-      "starter": "", "hints": ["Try int(\"7.9\") on paper — it crashes, because int() can't parse a decimal point in text directly.", "Casting straight to an integer fails on decimal-looking text — going via float() first, then casting that result, works."],
-      "tests": [{ "stdin": "7.9", "expect": "7.9\n7\n7.9" }, { "stdin": "2.1", "expect": "2.1\n2\n2.1" }] },
-    { "slug": "gcse-fundamentals-t3-01", "lesson": 3, "tier": 3, "difficulty": 2, "xp": 20,
+      "starter": "",
+      "hints": [
+        "Try int(\"7.9\") on paper — it crashes, because int() can't parse a decimal point in text directly.",
+        "Casting straight to an integer fails on decimal-looking text — going via float() first, then casting that result, works."
+      ],
+      "tests": [
+        {
+          "stdin": "7.9",
+          "expect": "7.9\n7\n7.9"
+        },
+        {
+          "stdin": "2.1",
+          "expect": "2.1\n2\n2.1"
+        }
+      ]
+    },
+    {
+      "slug": "gcse-fundamentals-t3-01",
+      "lesson": 3,
+      "tier": 3,
+      "difficulty": 2,
+      "xp": 20,
       "title": "Age next year",
       "brief": "A form asks the user to state their age. Read the age as a whole number. Add 1 to it. Print the result in the format `Next year you will be <age>`, where `<age>` is the new age.\n\nFor example, if 12 is entered, print `Next year you will be 13`.",
-      "starter": "", "hints": ["Cast the input to an integer before adding 1 to it — you can't add 1 to text.", "Cast to an integer first, then build the sentence with an f-string that does the arithmetic inside the braces."],
-      "tests": [{ "stdin": "12", "expect": "Next year you will be 13" }, { "stdin": "15", "expect": "Next year you will be 16" }] },
-    { "slug": "gcse-fundamentals-t3-02", "lesson": 3, "tier": 3, "difficulty": 3, "xp": 25,
+      "starter": "",
+      "hints": [
+        "Cast the input to an integer before adding 1 to it — you can't add 1 to text.",
+        "Cast to an integer first, then build the sentence with an f-string that does the arithmetic inside the braces."
+      ],
+      "tests": [
+        {
+          "stdin": "12",
+          "expect": "Next year you will be 13"
+        },
+        {
+          "stdin": "15",
+          "expect": "Next year you will be 16"
+        }
+      ]
+    },
+    {
+      "slug": "gcse-fundamentals-t3-02",
+      "lesson": 3,
+      "tier": 3,
+      "difficulty": 3,
+      "xp": 25,
       "title": "Product price",
       "brief": "A till system accepts the price of an item, which may include pence. The till always receives this as text, so it must be converted to a float before use.\n\nRead the price and convert it to a float. Print it in the format `Price: £<price>`, where `<price>` is the number that was read in.\n\nFor example, if 3.5 is entered, print `Price: £3.5`.",
-      "starter": "", "hints": ["Cast the reading to a float, then build the output with an f-string.", "An f-string drops a variable straight into fixed text, in whatever position you place the braces."],
-      "tests": [{ "stdin": "3.5", "expect": "Price: £3.5" }, { "stdin": "10", "expect": "Price: £10.0" }] },
-    { "slug": "gcse-fundamentals-t3-03", "lesson": 3, "tier": 3, "difficulty": 3, "xp": 25,
+      "starter": "",
+      "hints": [
+        "Cast the reading to a float, then build the output with an f-string.",
+        "An f-string drops a variable straight into fixed text, in whatever position you place the braces."
+      ],
+      "tests": [
+        {
+          "stdin": "3.5",
+          "expect": "Price: £3.5"
+        },
+        {
+          "stdin": "10",
+          "expect": "Price: £10.0"
+        }
+      ]
+    },
+    {
+      "slug": "gcse-fundamentals-t3-03",
+      "lesson": 3,
+      "tier": 3,
+      "difficulty": 3,
+      "xp": 25,
       "title": "Joining text and numbers",
       "brief": "A school office wants a program that reports a student's details as one sentence.\n\nRead the student's name. Read their year group as a whole number. Print a sentence in the format `<name> is in year <year>`.\n\nJoining text and a number directly with + causes an error in Python, so combine them safely — for example with an f-string.\n\nFor example, if the name is Ada and the year group is 10, print `Ada is in year 10`.",
-      "starter": "", "hints": ["An f-string handles the conversion for you automatically — you don't need str() as well.", "An f-string can mix a string variable and a number variable in the same sentence without manual casting."],
-      "tests": [{ "stdin": "Ada\n10", "expect": "Ada is in year 10" }, { "stdin": "Alan\n11", "expect": "Alan is in year 11" }] },
-    { "slug": "gcse-fundamentals-t4-01", "lesson": 3, "tier": 4, "difficulty": 4, "xp": 30,
+      "starter": "",
+      "hints": [
+        "An f-string handles the conversion for you automatically — you don't need str() as well.",
+        "An f-string can mix a string variable and a number variable in the same sentence without manual casting."
+      ],
+      "tests": [
+        {
+          "stdin": "Ada\n10",
+          "expect": "Ada is in year 10"
+        },
+        {
+          "stdin": "Alan\n11",
+          "expect": "Alan is in year 11"
+        }
+      ]
+    },
+    {
+      "slug": "gcse-fundamentals-t4-01",
+      "lesson": 3,
+      "tier": 4,
+      "difficulty": 4,
+      "xp": 30,
       "title": "Validated-looking receipt line",
       "brief": "A shop's till software processes one item at a time.\n\nWrite a program that:\n- reads the name of the item\n- reads the price of the item, which may include pence\n- reads the quantity bought, which is always a whole number\n- calculates the total: price multiplied by quantity\n- prints one receipt line in the format `<item> x<quantity> = £<total>`, with the total shown to 2 decimal places\n\nFor example, if the item is Bread, the price is 1.2, and the quantity is 2, print `Bread x2 = £2.40`.",
-      "starter": "", "hints": ["Read the three values in the order given, casting each to the right type, then work out what calculation connects them.", "A format specifier like `:.2f` inside an f-string's braces controls how many decimal places are shown."],
-      "tests": [{ "stdin": "Bread\n1.2\n2", "expect": "Bread x2 = £2.40" }, { "stdin": "Milk\n0.9\n3", "expect": "Milk x3 = £2.70" }] },
-    { "slug": "gcse-fundamentals-t4-02", "lesson": 3, "tier": 4, "difficulty": 4, "xp": 35,
+      "starter": "",
+      "hints": [
+        "Read the three values in the order given, casting each to the right type, then work out what calculation connects them.",
+        "A format specifier like `:.2f` inside an f-string's braces controls how many decimal places are shown."
+      ],
+      "tests": [
+        {
+          "stdin": "Bread\n1.2\n2",
+          "expect": "Bread x2 = £2.40"
+        },
+        {
+          "stdin": "Milk\n0.9\n3",
+          "expect": "Milk x3 = £2.70"
+        }
+      ]
+    },
+    {
+      "slug": "gcse-fundamentals-t4-02",
+      "lesson": 3,
+      "tier": 4,
+      "difficulty": 4,
+      "xp": 35,
       "title": "Type-safe area calculator",
       "brief": "A DIY store's website calculates how much paint a customer needs.\n\nOne litre of paint covers 12 square metres. The customer enters the width and height of a wall in metres — these may include decimals.\n\nWrite a program that:\n- reads the width\n- reads the height\n- calculates the wall's area: width multiplied by height\n- calculates the litres of paint needed: area divided by 12\n- rounds the litres up to the nearest whole number, so there is always enough paint\n- prints the result in the format `Litres needed: <litres>`\n\nFor example, if the width is 6 and the height is 5, the area is 30, which needs 2.5 litres — rounded up to 3, so print `Litres needed: 3`.",
-      "starter": "", "hints": ["Work out the wall's area first, then how many litres that needs, one calculation at a time.", "Plain round() rounds a tie to the nearest even number, not always up — `math.ceil()` from the math module always rounds up."],
-      "tests": [{ "stdin": "4\n3", "expect": "Litres needed: 1" }, { "stdin": "6\n5", "expect": "Litres needed: 3" }] },
-    { "slug": "gcse-fundamentals-t4-big1a", "lesson": 3, "tier": 4, "difficulty": 3, "xp": 25, "group": "gcse-fundamentals-big1", "part": "A",
+      "starter": "",
+      "hints": [
+        "Work out the wall's area first, then how many litres that needs, one calculation at a time.",
+        "Plain round() rounds a tie to the nearest even number, not always up — `math.ceil()` from the math module always rounds up."
+      ],
+      "tests": [
+        {
+          "stdin": "4\n3",
+          "expect": "Litres needed: 1"
+        },
+        {
+          "stdin": "6\n5",
+          "expect": "Litres needed: 3"
+        }
+      ]
+    },
+    {
+      "slug": "gcse-fundamentals-t4-big1a",
+      "lesson": 3,
+      "tier": 4,
+      "difficulty": 3,
+      "xp": 25,
+      "group": "gcse-fundamentals-big1",
+      "part": "A",
       "title": "Cinema booking system — Part A: customer details",
       "brief": "A cinema is building a booking system, split into two parts.\n\n**Part A.** Read a customer's name. Read their age as a whole number. Print both in the format `Name: <name>, Age: <age>`.\n\nFor example, if the name is Ada and the age is 14, print `Name: Ada, Age: 14`.",
-      "starter": "", "hints": ["Two input() calls: one for name, one cast to int() for age.", "Build the exact output format with an f-string combining both pieces of data."],
-      "tests": [{ "stdin": "Ada\n14", "expect": "Name: Ada, Age: 14" }, { "stdin": "Alan\n30", "expect": "Name: Alan, Age: 30" }] },
-    { "slug": "gcse-fundamentals-t4-big1b", "lesson": 3, "tier": 4, "difficulty": 4, "xp": 30, "group": "gcse-fundamentals-big1", "part": "B",
+      "starter": "",
+      "hints": [
+        "Two input() calls: one for name, one cast to int() for age.",
+        "Build the exact output format with an f-string combining both pieces of data."
+      ],
+      "tests": [
+        {
+          "stdin": "Ada\n14",
+          "expect": "Name: Ada, Age: 14"
+        },
+        {
+          "stdin": "Alan\n30",
+          "expect": "Name: Alan, Age: 30"
+        }
+      ]
+    },
+    {
+      "slug": "gcse-fundamentals-t4-big1b",
+      "lesson": 3,
+      "tier": 4,
+      "difficulty": 4,
+      "xp": 30,
+      "group": "gcse-fundamentals-big1",
+      "part": "B",
       "title": "Cinema booking system — Part B: ticket type",
       "brief": "**Part B.** Continuing the booking system: read a customer's age as a whole number. Anyone under 12 gets a child ticket. Everyone else gets an adult ticket. Print exactly one of two results: `Ticket type: Child` or `Ticket type: Adult`.",
-      "starter": "", "hints": ["Read and cast the age the same way as in earlier tasks.", "An if/else compares the value against the boundary already given in the brief to decide which single line to print."],
-      "tests": [{ "stdin": "14", "expect": "Ticket type: Adult" }, { "stdin": "8", "expect": "Ticket type: Child" }, { "stdin": "12", "expect": "Ticket type: Adult" }] },
-    { "slug": "gcse-fundamentals-t3-stretch", "lesson": 3, "tier": 4, "difficulty": 5, "xp": 40, "stretch": true,
+      "starter": "",
+      "hints": [
+        "Read and cast the age the same way as in earlier tasks.",
+        "An if/else compares the value against the boundary already given in the brief to decide which single line to print."
+      ],
+      "tests": [
+        {
+          "stdin": "14",
+          "expect": "Ticket type: Adult"
+        },
+        {
+          "stdin": "8",
+          "expect": "Ticket type: Child"
+        },
+        {
+          "stdin": "12",
+          "expect": "Ticket type: Adult"
+        }
+      ]
+    },
+    {
+      "slug": "gcse-fundamentals-t3-stretch",
+      "lesson": 3,
+      "tier": 4,
+      "difficulty": 5,
+      "xp": 40,
+      "stretch": true,
       "title": "Split the bill",
       "brief": "Read the total bill amount as a decimal number. Read the number of people splitting it as a whole number. Calculate how much each person owes, rounded to exactly 2 decimal places. Print the result in the format `Each person pays £<amount>`.\n\nUse Python's round() function to round to 2 decimal places, rather than truncating with a format string — round() adjusts the actual value, which matters if you use it in further calculations later.\n\nFor example, if the bill is 10 and 3 people are splitting it, each person pays £3.33.",
-      "starter": "", "hints": ["round(value, 2) rounds the number itself to 2 decimal places — different from just formatting how it displays.", "Cast both inputs to the right types, work out the division, then round() the result before printing it in an f-string."],
-      "tests": [{ "stdin": "10\n3", "expect": "Each person pays £3.33" }, { "stdin": "20\n4", "expect": "Each person pays £5.0" }] }
+      "starter": "",
+      "hints": [
+        "round(value, 2) rounds the number itself to 2 decimal places — different from just formatting how it displays.",
+        "Cast both inputs to the right types, work out the division, then round() the result before printing it in an f-string."
+      ],
+      "tests": [
+        {
+          "stdin": "10\n3",
+          "expect": "Each person pays £3.33"
+        },
+        {
+          "stdin": "20\n4",
+          "expect": "Each person pays £5.0"
+        }
+      ]
+    }
   ],
   "homeworkTasks": [
-    { "slug": "gcse-fundamentals-hw-01", "lesson": 2, "tier": 1, "difficulty": 1, "xp": 10,
+    {
+      "slug": "gcse-fundamentals-hw-01",
+      "lesson": 2,
+      "tier": 1,
+      "difficulty": 1,
+      "xp": 10,
       "title": "Store a price",
       "brief": "Create a variable called `price` with the value 4.5. Print price.",
-      "starter": "", "hints": ["Numbers with a decimal point don't need quotes.", "name = value, then print(name)."],
-      "tests": [{ "expect": "4.5" }] },
-    { "slug": "gcse-fundamentals-hw-02", "lesson": 2, "tier": 1, "difficulty": 1, "xp": 10,
+      "starter": "",
+      "hints": [
+        "Numbers with a decimal point don't need quotes.",
+        "name = value, then print(name)."
+      ],
+      "tests": [
+        {
+          "expect": "4.5"
+        }
+      ]
+    },
+    {
+      "slug": "gcse-fundamentals-hw-02",
+      "lesson": 2,
+      "tier": 1,
+      "difficulty": 1,
+      "xp": 10,
       "title": "Store a Boolean",
       "brief": "Create a variable called `is_open` with the value True. Print is_open.",
-      "starter": "", "hints": ["True and False are written without quotes — they're not text.", "name = value (no quotes), then print(name)."],
-      "tests": [{ "expect": "True" }] },
-    { "slug": "gcse-fundamentals-hw-03", "lesson": 1, "tier": 1, "difficulty": 1, "xp": 10,
+      "starter": "",
+      "hints": [
+        "True and False are written without quotes — they're not text.",
+        "name = value (no quotes), then print(name)."
+      ],
+      "tests": [
+        {
+          "expect": "True"
+        }
+      ]
+    },
+    {
+      "slug": "gcse-fundamentals-hw-03",
+      "lesson": 1,
+      "tier": 1,
+      "difficulty": 1,
+      "xp": 10,
       "title": "Greet by name",
       "brief": "Input a name. Print `Hi`, followed by the name and an exclamation mark, in the format `Hi, <name>!`",
-      "starter": "", "hints": ["An f-string can drop a variable straight into fixed text.", "name = input(), then print(f\"Hi, {name}!\")."],
-      "tests": [{ "stdin": "Ada", "expect": "Hi, Ada!" }, { "stdin": "Sam", "expect": "Hi, Sam!" }] },
-    { "slug": "gcse-fundamentals-hw-04", "lesson": 3, "tier": 2, "difficulty": 2, "xp": 15,
+      "starter": "",
+      "hints": [
+        "An f-string can drop a variable straight into fixed text.",
+        "name = input(), then print(f\"Hi, {name}!\")."
+      ],
+      "tests": [
+        {
+          "stdin": "Ada",
+          "expect": "Hi, Ada!"
+        },
+        {
+          "stdin": "Sam",
+          "expect": "Hi, Sam!"
+        }
+      ]
+    },
+    {
+      "slug": "gcse-fundamentals-hw-04",
+      "lesson": 3,
+      "tier": 2,
+      "difficulty": 2,
+      "xp": 15,
       "title": "Age in five years",
       "brief": "Input a whole number age. Print In 5 years you'll be <age>, where <age> is 5 more than the age entered.",
-      "starter": "", "hints": ["Cast the input to an integer before adding to it.", "Cast, add 5, then build the sentence with an f-string."],
-      "tests": [{ "stdin": "12", "expect": "In 5 years you'll be 17" }, { "stdin": "30", "expect": "In 5 years you'll be 35" }] },
-    { "slug": "gcse-fundamentals-hw-05", "lesson": 3, "tier": 2, "difficulty": 2, "xp": 15,
+      "starter": "",
+      "hints": [
+        "Cast the input to an integer before adding to it.",
+        "Cast, add 5, then build the sentence with an f-string."
+      ],
+      "tests": [
+        {
+          "stdin": "12",
+          "expect": "In 5 years you'll be 17"
+        },
+        {
+          "stdin": "30",
+          "expect": "In 5 years you'll be 35"
+        }
+      ]
+    },
+    {
+      "slug": "gcse-fundamentals-hw-05",
+      "lesson": 3,
+      "tier": 2,
+      "difficulty": 2,
+      "xp": 15,
       "title": "Double a distance",
       "brief": "Input a distance in km, which may include decimals. Print double the distance.",
-      "starter": "", "hints": ["Cast to a float to keep any decimal part.", "float(input()), then multiply by 2 and print the result."],
-      "tests": [{ "stdin": "5.0", "expect": "10.0" }, { "stdin": "3.2", "expect": "6.4" }] },
-    { "slug": "gcse-fundamentals-hw-06", "lesson": 3, "tier": 1, "difficulty": 1, "xp": 10,
+      "starter": "",
+      "hints": [
+        "Cast to a float to keep any decimal part.",
+        "float(input()), then multiply by 2 and print the result."
+      ],
+      "tests": [
+        {
+          "stdin": "5.0",
+          "expect": "10.0"
+        },
+        {
+          "stdin": "3.2",
+          "expect": "6.4"
+        }
+      ]
+    },
+    {
+      "slug": "gcse-fundamentals-hw-06",
+      "lesson": 3,
+      "tier": 1,
+      "difficulty": 1,
+      "xp": 10,
       "title": "Double a whole number",
       "brief": "Input a whole number. Print double the number.",
-      "starter": "", "hints": ["Cast to an integer before multiplying.", "int(input()), then multiply by 2 and print the result."],
-      "tests": [{ "stdin": "6", "expect": "12" }, { "stdin": "9", "expect": "18" }] },
-    { "slug": "gcse-fundamentals-hw-07", "lesson": 3, "tier": 2, "difficulty": 2, "xp": 15,
+      "starter": "",
+      "hints": [
+        "Cast to an integer before multiplying.",
+        "int(input()), then multiply by 2 and print the result."
+      ],
+      "tests": [
+        {
+          "stdin": "6",
+          "expect": "12"
+        },
+        {
+          "stdin": "9",
+          "expect": "18"
+        }
+      ]
+    },
+    {
+      "slug": "gcse-fundamentals-hw-07",
+      "lesson": 3,
+      "tier": 2,
+      "difficulty": 2,
+      "xp": 15,
       "title": "Multiply two whole numbers",
       "brief": "Input two whole numbers, one at a time. Print their product (the result of multiplying them together).",
-      "starter": "", "hints": ["Cast both inputs before multiplying.", "Two separate int(input()) casts, stored, then multiplied and printed."],
-      "tests": [{ "stdin": "3\n4", "expect": "12" }, { "stdin": "5\n6", "expect": "30" }] },
-    { "slug": "gcse-fundamentals-hw-08", "lesson": 3, "tier": 2, "difficulty": 2, "xp": 15,
+      "starter": "",
+      "hints": [
+        "Cast both inputs before multiplying.",
+        "Two separate int(input()) casts, stored, then multiplied and printed."
+      ],
+      "tests": [
+        {
+          "stdin": "3\n4",
+          "expect": "12"
+        },
+        {
+          "stdin": "5\n6",
+          "expect": "30"
+        }
+      ]
+    },
+    {
+      "slug": "gcse-fundamentals-hw-08",
+      "lesson": 3,
+      "tier": 2,
+      "difficulty": 2,
+      "xp": 15,
       "title": "Halve a length",
       "brief": "Input a length in metres, which may include decimals. Print half the length.",
-      "starter": "", "hints": ["Cast to a float, then divide by 2.", "float(input()), then divide by 2 and print the result."],
-      "tests": [{ "stdin": "10.4", "expect": "5.2" }, { "stdin": "9.0", "expect": "4.5" }] },
-    { "slug": "gcse-fundamentals-hw-10", "lesson": 1, "tier": 1, "difficulty": 1, "xp": 10,
+      "starter": "",
+      "hints": [
+        "Cast to a float, then divide by 2.",
+        "float(input()), then divide by 2 and print the result."
+      ],
+      "tests": [
+        {
+          "stdin": "10.4",
+          "expect": "5.2"
+        },
+        {
+          "stdin": "9.0",
+          "expect": "4.5"
+        }
+      ]
+    },
+    {
+      "slug": "gcse-fundamentals-hw-10",
+      "lesson": 1,
+      "tier": 1,
+      "difficulty": 1,
+      "xp": 10,
       "title": "A single grade",
       "brief": "Input one letter grade. Print it in the format `Grade: <grade>`.",
-      "starter": "", "hints": ["input() already gives you a string, so the grade needs no casting.", "Build the output with an f-string."],
-      "tests": [{ "stdin": "A", "expect": "Grade: A" }, { "stdin": "C", "expect": "Grade: C" }] },
-    { "slug": "gcse-fundamentals-hw-11", "lesson": 3, "tier": 2, "difficulty": 2, "xp": 15,
+      "starter": "",
+      "hints": [
+        "input() already gives you a string, so the grade needs no casting.",
+        "Build the output with an f-string."
+      ],
+      "tests": [
+        {
+          "stdin": "A",
+          "expect": "Grade: A"
+        },
+        {
+          "stdin": "C",
+          "expect": "Grade: C"
+        }
+      ]
+    },
+    {
+      "slug": "gcse-fundamentals-hw-11",
+      "lesson": 3,
+      "tier": 2,
+      "difficulty": 2,
+      "xp": 15,
       "title": "Add ten to an input",
       "brief": "Input a whole number. Print the result of adding 10 to it.",
-      "starter": "", "hints": ["Cast the input to an integer before adding to it.", "int(input()), then add 10 and print the result."],
-      "tests": [{ "stdin": "5", "expect": "15" }, { "stdin": "20", "expect": "30" }] },
-    { "slug": "gcse-fundamentals-hw-12", "lesson": 3, "tier": 3, "difficulty": 3, "xp": 25,
+      "starter": "",
+      "hints": [
+        "Cast the input to an integer before adding to it.",
+        "int(input()), then add 10 and print the result."
+      ],
+      "tests": [
+        {
+          "stdin": "5",
+          "expect": "15"
+        },
+        {
+          "stdin": "20",
+          "expect": "30"
+        }
+      ]
+    },
+    {
+      "slug": "gcse-fundamentals-hw-12",
+      "lesson": 3,
+      "tier": 3,
+      "difficulty": 3,
+      "xp": 25,
       "title": "Shopping total",
       "brief": "Input the price of an item, which may include pence. Input the quantity bought, as a whole number. Print the total cost (price multiplied by quantity), shown to exactly 2 decimal places.",
-      "starter": "", "hints": ["Cast the price to a float and the quantity to an integer before multiplying.", "Format the total with an f-string using :.2f so it always shows exactly 2 decimal places."],
-      "tests": [{ "stdin": "1.2\n3", "expect": "3.60" }, { "stdin": "2.5\n4", "expect": "10.00" }] },
-    { "slug": "gcse-fundamentals-hw-13", "lesson": 2, "tier": 1, "difficulty": 1, "xp": 15,
+      "starter": "",
+      "hints": [
+        "Cast the price to a float and the quantity to an integer before multiplying.",
+        "Format the total with an f-string using :.2f so it always shows exactly 2 decimal places."
+      ],
+      "tests": [
+        {
+          "stdin": "1.2\n3",
+          "expect": "3.60"
+        },
+        {
+          "stdin": "2.5\n4",
+          "expect": "10.00"
+        }
+      ]
+    },
+    {
+      "slug": "gcse-fundamentals-hw-13",
+      "lesson": 2,
+      "tier": 1,
+      "difficulty": 1,
+      "xp": 15,
       "title": "Four data types",
       "brief": "Create four variables: name with the value `\"Ada\"` (a string), age with the value 14 (an integer), height with the value 1.6 (a float), and is_student with the value True (a Boolean). Print each one on its own line, in that order.",
-      "starter": "", "hints": ["Each variable holds a different data type — string, integer, float, Boolean.", "Four variables, four print() calls, in the order given."],
-      "tests": [{ "expect": "Ada\n14\n1.6\nTrue" }] },
-    { "slug": "gcse-fundamentals-hw-15", "lesson": 1, "tier": 2, "difficulty": 2, "xp": 15,
+      "starter": "",
+      "hints": [
+        "Each variable holds a different data type — string, integer, float, Boolean.",
+        "Four variables, four print() calls, in the order given."
+      ],
+      "tests": [
+        {
+          "expect": "Ada\n14\n1.6\nTrue"
+        }
+      ]
+    },
+    {
+      "slug": "gcse-fundamentals-hw-15",
+      "lesson": 1,
+      "tier": 2,
+      "difficulty": 2,
+      "xp": 15,
       "title": "A rating out of five",
       "brief": "Input a whole number rating. Print it in the format `Rating: <rating>/5`.",
-      "starter": "", "hints": ["Cast the input to an integer.", "Cast, then build the output with an f-string."],
-      "tests": [{ "stdin": "4", "expect": "Rating: 4/5" }, { "stdin": "2", "expect": "Rating: 2/5" }] },
-    { "slug": "gcse-fundamentals-hw-16", "lesson": 1, "tier": 2, "difficulty": 3, "xp": 20,
+      "starter": "",
+      "hints": [
+        "Cast the input to an integer.",
+        "Cast, then build the output with an f-string."
+      ],
+      "tests": [
+        {
+          "stdin": "4",
+          "expect": "Rating: 4/5"
+        },
+        {
+          "stdin": "2",
+          "expect": "Rating: 2/5"
+        }
+      ]
+    },
+    {
+      "slug": "gcse-fundamentals-hw-16",
+      "lesson": 1,
+      "tier": 2,
+      "difficulty": 3,
+      "xp": 20,
       "title": "Name and age together",
       "brief": "Input a name. Input a whole number age. Print a sentence in the format `<name> is <age> years old`.",
-      "starter": "", "hints": ["Only the age needs casting — the name is already a usable string.", "An f-string can mix a string variable and a number variable in the same sentence without manual casting."],
-      "tests": [{ "stdin": "Ada\n14", "expect": "Ada is 14 years old" }, { "stdin": "Sam\n16", "expect": "Sam is 16 years old" }] },
-    { "slug": "gcse-fundamentals-hw-17", "lesson": 1, "tier": 2, "difficulty": 3, "xp": 20,
+      "starter": "",
+      "hints": [
+        "Only the age needs casting — the name is already a usable string.",
+        "An f-string can mix a string variable and a number variable in the same sentence without manual casting."
+      ],
+      "tests": [
+        {
+          "stdin": "Ada\n14",
+          "expect": "Ada is 14 years old"
+        },
+        {
+          "stdin": "Sam\n16",
+          "expect": "Sam is 16 years old"
+        }
+      ]
+    },
+    {
+      "slug": "gcse-fundamentals-hw-17",
+      "lesson": 1,
+      "tier": 2,
+      "difficulty": 3,
+      "xp": 20,
       "title": "A weight reading",
       "brief": "Input a weight in kg, which may include decimals. Print it in the format `Weight: <weight>kg`.",
-      "starter": "", "hints": ["Cast to a float to keep any decimal part.", "Cast, then build the output with an f-string."],
-      "tests": [{ "stdin": "62.5", "expect": "Weight: 62.5kg" }, { "stdin": "48.0", "expect": "Weight: 48.0kg" }] },
-    { "slug": "gcse-fundamentals-hw-18", "lesson": 1, "tier": 2, "difficulty": 2, "xp": 20,
+      "starter": "",
+      "hints": [
+        "Cast to a float to keep any decimal part.",
+        "Cast, then build the output with an f-string."
+      ],
+      "tests": [
+        {
+          "stdin": "62.5",
+          "expect": "Weight: 62.5kg"
+        },
+        {
+          "stdin": "48.0",
+          "expect": "Weight: 48.0kg"
+        }
+      ]
+    },
+    {
+      "slug": "gcse-fundamentals-hw-18",
+      "lesson": 1,
+      "tier": 2,
+      "difficulty": 2,
+      "xp": 20,
       "title": "A score out of 100",
       "brief": "Input a whole number score. Print it in the format `Score: <score>/100`.",
-      "starter": "", "hints": ["Cast the input to an integer.", "Cast, then build the output with an f-string."],
-      "tests": [{ "stdin": "85", "expect": "Score: 85/100" }, { "stdin": "40", "expect": "Score: 40/100" }] },
-    { "slug": "gcse-fundamentals-hw-19", "lesson": 3, "tier": 3, "difficulty": 3, "xp": 25,
+      "starter": "",
+      "hints": [
+        "Cast the input to an integer.",
+        "Cast, then build the output with an f-string."
+      ],
+      "tests": [
+        {
+          "stdin": "85",
+          "expect": "Score: 85/100"
+        },
+        {
+          "stdin": "40",
+          "expect": "Score: 40/100"
+        }
+      ]
+    },
+    {
+      "slug": "gcse-fundamentals-hw-19",
+      "lesson": 3,
+      "tier": 3,
+      "difficulty": 3,
+      "xp": 25,
       "title": "A race time, three ways",
       "brief": "Read a race time from the user as text — do not cast it on the way in. Print it three times, on three separate lines: first exactly as it was read (a string), then converted to an integer, then converted to a float. Casting straight to an integer truncates the decimal part rather than rounding it.",
-      "starter": "", "hints": ["Casting text with a decimal point straight to int() fails — go via float() first, then cast that result.", "text = input(), print(text), print(int(float(text))), print(float(text))."],
-      "tests": [{ "stdin": "9.6", "expect": "9.6\n9\n9.6" }, { "stdin": "12.3", "expect": "12.3\n12\n12.3" }] },
-    { "slug": "gcse-fundamentals-hw-20", "lesson": 3, "tier": 2, "difficulty": 2, "xp": 15,
+      "starter": "",
+      "hints": [
+        "Casting text with a decimal point straight to int() fails — go via float() first, then cast that result.",
+        "text = input(), print(text), print(int(float(text))), print(float(text))."
+      ],
+      "tests": [
+        {
+          "stdin": "9.6",
+          "expect": "9.6\n9\n9.6"
+        },
+        {
+          "stdin": "12.3",
+          "expect": "12.3\n12\n12.3"
+        }
+      ]
+    },
+    {
+      "slug": "gcse-fundamentals-hw-20",
+      "lesson": 3,
+      "tier": 2,
+      "difficulty": 2,
+      "xp": 15,
       "title": "Minutes to seconds",
       "brief": "Input a whole number of minutes. Print the equivalent number of seconds.",
-      "starter": "", "hints": ["There are 60 seconds in a minute.", "Cast the input, multiply by 60, then print the result."],
-      "tests": [{ "stdin": "3", "expect": "180" }, { "stdin": "5", "expect": "300" }] },
-    { "slug": "gcse-fundamentals-hw-21", "lesson": 3, "tier": 2, "difficulty": 2, "xp": 20,
+      "starter": "",
+      "hints": [
+        "There are 60 seconds in a minute.",
+        "Cast the input, multiply by 60, then print the result."
+      ],
+      "tests": [
+        {
+          "stdin": "3",
+          "expect": "180"
+        },
+        {
+          "stdin": "5",
+          "expect": "300"
+        }
+      ]
+    },
+    {
+      "slug": "gcse-fundamentals-hw-21",
+      "lesson": 3,
+      "tier": 2,
+      "difficulty": 2,
+      "xp": 20,
       "title": "Always two decimal places",
       "brief": "Input a number, which may include decimals. Print it formatted to exactly 2 decimal places, even if the number entered has none.",
-      "starter": "", "hints": ["Cast to a float first.", "Use an f-string with :.2f to force exactly 2 decimal places on display."],
-      "tests": [{ "stdin": "7.5", "expect": "7.50" }, { "stdin": "12", "expect": "12.00" }] },
-    { "slug": "gcse-fundamentals-hw-22", "lesson": 2, "tier": 1, "difficulty": 1, "xp": 10,
+      "starter": "",
+      "hints": [
+        "Cast to a float first.",
+        "Use an f-string with :.2f to force exactly 2 decimal places on display."
+      ],
+      "tests": [
+        {
+          "stdin": "7.5",
+          "expect": "7.50"
+        },
+        {
+          "stdin": "12",
+          "expect": "12.00"
+        }
+      ]
+    },
+    {
+      "slug": "gcse-fundamentals-hw-22",
+      "lesson": 2,
+      "tier": 1,
+      "difficulty": 1,
+      "xp": 10,
       "title": "Store a False value",
       "brief": "Create a variable called `has_key` with the value False. Print has_key.",
-      "starter": "", "hints": ["True and False are written without quotes.", "name = value (no quotes), then print(name)."],
-      "tests": [{ "expect": "False" }] },
-    { "slug": "gcse-fundamentals-hw-23", "lesson": 1, "tier": 3, "difficulty": 4, "xp": 30,
+      "starter": "",
+      "hints": [
+        "True and False are written without quotes.",
+        "name = value (no quotes), then print(name)."
+      ],
+      "tests": [
+        {
+          "expect": "False"
+        }
+      ]
+    },
+    {
+      "slug": "gcse-fundamentals-hw-23",
+      "lesson": 1,
+      "tier": 3,
+      "difficulty": 4,
+      "xp": 30,
       "title": "Pet ownership summary",
       "brief": "Input a name. Input a whole number of pets owned. Input the weight of the heaviest pet, which may include decimals. Print a sentence in the format `<name> owns <pets> pet(s), the heaviest weighing <weight>kg`.",
-      "starter": "", "hints": ["Cast the pet count to an integer and the weight to a float — the name needs no casting.", "Build the sentence with a single f-string mixing all three variables."],
-      "tests": [{ "stdin": "Ada\n2\n5.5", "expect": "Ada owns 2 pet(s), the heaviest weighing 5.5kg" }, { "stdin": "Sam\n1\n3.2", "expect": "Sam owns 1 pet(s), the heaviest weighing 3.2kg" }] },
-    { "slug": "gcse-fundamentals-hw-25", "lesson": 3, "tier": 3, "difficulty": 3, "xp": 25,
+      "starter": "",
+      "hints": [
+        "Cast the pet count to an integer and the weight to a float — the name needs no casting.",
+        "Build the sentence with a single f-string mixing all three variables."
+      ],
+      "tests": [
+        {
+          "stdin": "Ada\n2\n5.5",
+          "expect": "Ada owns 2 pet(s), the heaviest weighing 5.5kg"
+        },
+        {
+          "stdin": "Sam\n1\n3.2",
+          "expect": "Sam owns 1 pet(s), the heaviest weighing 3.2kg"
+        }
+      ]
+    },
+    {
+      "slug": "gcse-fundamentals-hw-25",
+      "lesson": 3,
+      "tier": 3,
+      "difficulty": 3,
+      "xp": 25,
       "title": "Text vs. cast display",
       "brief": "Read a price from the user as text — do not cast it on the way in. Print it exactly as it was read. Then convert it to a float and print that instead, on the next line. Notice a trailing zero in the original text may disappear once it's a float.",
-      "starter": "", "hints": ["The raw text keeps exactly what was typed; casting to float can change how it displays.", "text = input(), num = float(text), then print(text) followed by print(num)."],
-      "tests": [{ "stdin": "12.50", "expect": "12.50\n12.5" }, { "stdin": "9.00", "expect": "9.00\n9.0" }] }
+      "starter": "",
+      "hints": [
+        "The raw text keeps exactly what was typed; casting to float can change how it displays.",
+        "text = input(), num = float(text), then print(text) followed by print(num)."
+      ],
+      "tests": [
+        {
+          "stdin": "12.50",
+          "expect": "12.50\n12.5"
+        },
+        {
+          "stdin": "9.00",
+          "expect": "9.00\n9.0"
+        }
+      ]
+    }
   ],
   "projectTasks": [
-    { "slug": "gcse-fundamentals-proj1a", "tier": 4, "difficulty": 2, "xp": 30, "group": "gcse-fundamentals-bigproj1", "part": "A",
+    {
+      "slug": "gcse-fundamentals-proj1a",
+      "tier": 4,
+      "difficulty": 2,
+      "xp": 30,
+      "group": "gcse-fundamentals-bigproj1",
+      "part": "A",
       "title": "Currency exchange kiosk — Part A: converting",
       "brief": "A currency exchange kiosk is building a till system, split into three parts — each part builds directly on the code you write for the one before it, so keep what you've written rather than starting over.\n\n**Part A.** Read an amount in pounds, which may include pence. Read today's exchange rate for US dollars. Print the converted amount in dollars, rounded to 2 decimal places, in the format `$<amount>`.",
-      "starter": "", "hints": ["Multiply the amount in pounds by the exchange rate, then use Python's round() function to round the result to 2 decimal places — round(value, 2) rounds the number itself, not just how it displays.", "Cast both inputs to floats, multiply them, then round(result, 2) before building the output with an f-string."],
-      "tests": [{ "stdin": "100\n1.25", "expect": "$125.0" }, { "stdin": "40\n1.3", "expect": "$52.0" }] },
-    { "slug": "gcse-fundamentals-proj1b", "tier": 4, "difficulty": 3, "xp": 35, "group": "gcse-fundamentals-bigproj1", "part": "B",
+      "starter": "",
+      "hints": [
+        "Multiply the amount in pounds by the exchange rate, then use Python's round() function to round the result to 2 decimal places — round(value, 2) rounds the number itself, not just how it displays.",
+        "Cast both inputs to floats, multiply them, then round(result, 2) before building the output with an f-string."
+      ],
+      "tests": [
+        {
+          "stdin": "100\n1.25",
+          "expect": "$125.0"
+        },
+        {
+          "stdin": "40\n1.3",
+          "expect": "$52.0"
+        }
+      ]
+    },
+    {
+      "slug": "gcse-fundamentals-proj1b",
+      "tier": 4,
+      "difficulty": 3,
+      "xp": 35,
+      "group": "gcse-fundamentals-bigproj1",
+      "part": "B",
       "title": "Currency exchange kiosk — Part B: the handling fee",
       "brief": "**Part B.** Your code carries on from Part A — keep everything you already wrote and add to it. The kiosk also charges a flat £1.50 handling fee, taken off the pounds amount before converting. No new input needed. After your Part A line, print the converted amount after the fee, rounded to 2 decimal places, as a new line in the format `After fee: $<amount>`.",
-      "starter": "", "hints": ["Don't delete your Part A code — reuse the pounds and rate variables you already have, then add a new print statement.", "after_fee = round((pounds - 1.50) * rate, 2); print(f\"After fee: ${after_fee}\") — added after your existing Part A line."],
-      "tests": [{ "stdin": "100\n1.25", "expect": "$125.0\nAfter fee: $123.12" }, { "stdin": "40\n1.3", "expect": "$52.0\nAfter fee: $50.05" }] },
-    { "slug": "gcse-fundamentals-proj1c", "tier": 4, "difficulty": 4, "xp": 40, "group": "gcse-fundamentals-bigproj1", "part": "C",
+      "starter": "",
+      "hints": [
+        "Don't delete your Part A code — reuse the pounds and rate variables you already have, then add a new print statement.",
+        "after_fee = round((pounds - 1.50) * rate, 2); print(f\"After fee: ${after_fee}\") — added after your existing Part A line."
+      ],
+      "tests": [
+        {
+          "stdin": "100\n1.25",
+          "expect": "$125.0\nAfter fee: $123.12"
+        },
+        {
+          "stdin": "40\n1.3",
+          "expect": "$52.0\nAfter fee: $50.05"
+        }
+      ]
+    },
+    {
+      "slug": "gcse-fundamentals-proj1c",
+      "tier": 4,
+      "difficulty": 4,
+      "xp": 40,
+      "group": "gcse-fundamentals-bigproj1",
+      "part": "C",
       "title": "Currency exchange kiosk — Part C: a customer ID",
       "brief": "**Part C.** Keep everything from Parts A and B. Also read a customer ID, typed as text, and cast it to a whole number. After your Part B lines, print the customer ID and the fee-adjusted amount you already calculated, as a new line in the format `Customer <id>: $<amount>`.",
-      "starter": "", "hints": ["The ID is typed as text, so it needs casting to a number before it can be used - though here you only need to print it back.", "cid = int(input()); print(f\"Customer {cid}: ${after_fee}\") — reusing after_fee from Part B, added after your existing lines."],
-      "tests": [{ "stdin": "100\n1.25\n4021", "expect": "$125.0\nAfter fee: $123.12\nCustomer 4021: $123.12" }, { "stdin": "40\n1.3\n88", "expect": "$52.0\nAfter fee: $50.05\nCustomer 88: $50.05" }] }
+      "starter": "",
+      "hints": [
+        "The ID is typed as text, so it needs casting to a number before it can be used - though here you only need to print it back.",
+        "cid = int(input()); print(f\"Customer {cid}: ${after_fee}\") — reusing after_fee from Part B, added after your existing lines."
+      ],
+      "tests": [
+        {
+          "stdin": "100\n1.25\n4021",
+          "expect": "$125.0\nAfter fee: $123.12\nCustomer 4021: $123.12"
+        },
+        {
+          "stdin": "40\n1.3\n88",
+          "expect": "$52.0\nAfter fee: $50.05\nCustomer 88: $50.05"
+        }
+      ]
+    }
   ],
   "practiceTasks": [
-    { "slug": "gcse-fundamentals-p-01", "tier": 1, "difficulty": 1, "xp": 10, "title": "Pet's age",
+    {
+      "slug": "gcse-fundamentals-p-01",
+      "tier": 1,
+      "difficulty": 1,
+      "xp": 10,
+      "title": "Pet's age",
       "brief": "Input a pet's age, a whole number. Print it in the format `My pet is <age> years old.` using an f-string.",
-      "starter": "", "hints": ["Cast the input to a whole number before using it in the f-string.", "age = int(input()), then print(f\"My pet is {age} years old.\")."],
-      "tests": [{ "stdin": "3", "expect": "My pet is 3 years old." }, { "stdin": "7", "expect": "My pet is 7 years old." }] },
-    { "slug": "gcse-fundamentals-p-02", "tier": 1, "difficulty": 1, "xp": 10, "title": "Book price",
+      "starter": "",
+      "hints": [
+        "Cast the input to a whole number before using it in the f-string.",
+        "age = int(input()), then print(f\"My pet is {age} years old.\")."
+      ],
+      "tests": [
+        {
+          "stdin": "3",
+          "expect": "My pet is 3 years old."
+        },
+        {
+          "stdin": "7",
+          "expect": "My pet is 7 years old."
+        },
+        {
+          "stdin": "12",
+          "expect": "My pet is 12 years old."
+        },
+        {
+          "stdin": "0",
+          "expect": "My pet is 0 years old."
+        }
+      ]
+    },
+    {
+      "slug": "gcse-fundamentals-p-02",
+      "tier": 1,
+      "difficulty": 1,
+      "xp": 10,
+      "title": "Book price",
       "brief": "Input a book's price, which may include pence. Print it in the format `This book costs £<price>` using an f-string.",
-      "starter": "", "hints": ["A price with pence needs casting to a float, not a whole number.", "price = float(input()), then print(f\"This book costs £{price}\")."],
-      "tests": [{ "stdin": "9.99", "expect": "This book costs £9.99" }, { "stdin": "12.5", "expect": "This book costs £12.5" }] },
-    { "slug": "gcse-fundamentals-p-03", "tier": 2, "difficulty": 2, "xp": 15, "title": "Two totals",
+      "starter": "",
+      "hints": [
+        "A price with pence needs casting to a float, not a whole number.",
+        "price = float(input()), then print(f\"This book costs £{price}\")."
+      ],
+      "tests": [
+        {
+          "stdin": "9.99",
+          "expect": "This book costs £9.99"
+        },
+        {
+          "stdin": "12.5",
+          "expect": "This book costs £12.5"
+        },
+        {
+          "stdin": "7.5",
+          "expect": "This book costs £7.5"
+        },
+        {
+          "stdin": "12.99",
+          "expect": "This book costs £12.99"
+        },
+        {
+          "stdin": "4",
+          "expect": "This book costs £4.0"
+        }
+      ]
+    },
+    {
+      "slug": "gcse-fundamentals-p-03",
+      "tier": 2,
+      "difficulty": 2,
+      "xp": 15,
+      "title": "Two totals",
       "brief": "Input the price of a drink, then a snack, both of which may include pence. Print their combined total in the format `Total: £<amount>` using an f-string.",
-      "starter": "", "hints": ["Cast both inputs to floats before adding them.", "print(f\"Total: £{drink + snack}\") after casting both inputs."],
-      "tests": [{ "stdin": "1.50\n2.50", "expect": "Total: £4.0" }, { "stdin": "2.0\n3.0", "expect": "Total: £5.0" }] },
-    { "slug": "gcse-fundamentals-p-04", "tier": 2, "difficulty": 2, "xp": 15, "title": "Temperature swing",
+      "starter": "",
+      "hints": [
+        "Cast both inputs to floats before adding them.",
+        "print(f\"Total: £{drink + snack}\") after casting both inputs."
+      ],
+      "tests": [
+        {
+          "stdin": "1.50\n2.50",
+          "expect": "Total: £4.0"
+        },
+        {
+          "stdin": "2.0\n3.0",
+          "expect": "Total: £5.0"
+        },
+        {
+          "stdin": "1.5\n2.25",
+          "expect": "Total: £3.75"
+        },
+        {
+          "stdin": "2\n3",
+          "expect": "Total: £5.0"
+        },
+        {
+          "stdin": "0.5\n0.5",
+          "expect": "Total: £1.0"
+        }
+      ]
+    },
+    {
+      "slug": "gcse-fundamentals-p-04",
+      "tier": 2,
+      "difficulty": 2,
+      "xp": 15,
+      "title": "Temperature swing",
       "brief": "Input today's high temperature, then the low temperature, both of which may include decimals. Print the difference between them (high minus low) in the format `Swing: <amount>` using an f-string.",
-      "starter": "", "hints": ["Cast both temperatures to floats, then subtract the low from the high.", "print(f\"Swing: {high - low}\") after casting both inputs."],
-      "tests": [{ "stdin": "22.5\n14.5", "expect": "Swing: 8.0" }, { "stdin": "18.0\n9.0", "expect": "Swing: 9.0" }] },
-    { "slug": "gcse-fundamentals-p-05", "tier": 3, "difficulty": 3, "xp": 25, "title": "Trip cost per person",
+      "starter": "",
+      "hints": [
+        "Cast both temperatures to floats, then subtract the low from the high.",
+        "print(f\"Swing: {high - low}\") after casting both inputs."
+      ],
+      "tests": [
+        {
+          "stdin": "22.5\n14.5",
+          "expect": "Swing: 8.0"
+        },
+        {
+          "stdin": "18.0\n9.0",
+          "expect": "Swing: 9.0"
+        },
+        {
+          "stdin": "21.5\n9.5",
+          "expect": "Swing: 12.0"
+        },
+        {
+          "stdin": "10\n10",
+          "expect": "Swing: 0.0"
+        },
+        {
+          "stdin": "15.5\n-2",
+          "expect": "Swing: 17.5"
+        }
+      ]
+    },
+    {
+      "slug": "gcse-fundamentals-p-05",
+      "tier": 3,
+      "difficulty": 3,
+      "xp": 25,
+      "title": "Trip cost per person",
       "brief": "A group is splitting the cost of a trip evenly. Input the total cost, which may include pence, then the number of people. Print how much each person pays, in the format `Each pays: £<amount>` using an f-string.",
-      "starter": "", "hints": ["Cast the cost to a float and the number of people to a whole number, then divide.", "print(f\"Each pays: £{total / people}\") after casting both inputs."],
-      "tests": [{ "stdin": "100\n4", "expect": "Each pays: £25.0" }, { "stdin": "60\n3", "expect": "Each pays: £20.0" }] },
-    { "slug": "gcse-fundamentals-p-06", "tier": 2, "difficulty": 3, "xp": 20, "title": "Total after tip",
+      "starter": "",
+      "hints": [
+        "Cast the cost to a float and the number of people to a whole number, then divide.",
+        "print(f\"Each pays: £{total / people}\") after casting both inputs."
+      ],
+      "tests": [
+        {
+          "stdin": "100\n4",
+          "expect": "Each pays: £25.0"
+        },
+        {
+          "stdin": "60\n3",
+          "expect": "Each pays: £20.0"
+        },
+        {
+          "stdin": "90\n3",
+          "expect": "Each pays: £30.0"
+        },
+        {
+          "stdin": "50\n4",
+          "expect": "Each pays: £12.5"
+        },
+        {
+          "stdin": "10\n1",
+          "expect": "Each pays: £10.0"
+        }
+      ]
+    },
+    {
+      "slug": "gcse-fundamentals-p-06",
+      "tier": 2,
+      "difficulty": 3,
+      "xp": 20,
+      "title": "Total after tip",
       "brief": "Input a bill amount, which may include pence, then a tip percentage as a whole number. Print the total including the tip, in the format `Total: £<amount>` using an f-string.",
-      "starter": "", "hints": ["Cast the bill to a float and the tip to a whole number, work out the tip amount, then add it to the bill.", "print(f\"Total: £{bill + bill * tip / 100}\") after casting both inputs."],
-      "tests": [{ "stdin": "50\n10", "expect": "Total: £55.0" }, { "stdin": "80\n25", "expect": "Total: £100.0" }] },
-    { "slug": "gcse-fundamentals-p-07", "tier": 3, "difficulty": 3, "xp": 20, "title": "Product of three",
+      "starter": "",
+      "hints": [
+        "Cast the bill to a float and the tip to a whole number, work out the tip amount, then add it to the bill.",
+        "print(f\"Total: £{bill + bill * tip / 100}\") after casting both inputs."
+      ],
+      "tests": [
+        {
+          "stdin": "50\n10",
+          "expect": "Total: £55.0"
+        },
+        {
+          "stdin": "80\n25",
+          "expect": "Total: £100.0"
+        },
+        {
+          "stdin": "80\n0",
+          "expect": "Total: £80.0"
+        },
+        {
+          "stdin": "40\n25",
+          "expect": "Total: £50.0"
+        }
+      ]
+    },
+    {
+      "slug": "gcse-fundamentals-p-07",
+      "tier": 3,
+      "difficulty": 3,
+      "xp": 20,
+      "title": "Product of three",
       "brief": "Input three whole numbers, one at a time. Print their product (all three multiplied together), in the format `Product: <n>` using an f-string.",
-      "starter": "", "hints": ["Cast all three inputs to whole numbers before multiplying them.", "print(f\"Product: {a * b * c}\") after casting all three inputs with int()."],
-      "tests": [{ "stdin": "2\n3\n4", "expect": "Product: 24" }, { "stdin": "5\n5\n2", "expect": "Product: 50" }] },
-    { "slug": "gcse-fundamentals-p-08", "tier": 3, "difficulty": 4, "xp": 25, "title": "Average height",
+      "starter": "",
+      "hints": [
+        "Cast all three inputs to whole numbers before multiplying them.",
+        "print(f\"Product: {a * b * c}\") after casting all three inputs with int()."
+      ],
+      "tests": [
+        {
+          "stdin": "2\n3\n4",
+          "expect": "Product: 24"
+        },
+        {
+          "stdin": "5\n5\n2",
+          "expect": "Product: 50"
+        },
+        {
+          "stdin": "5\n0\n9",
+          "expect": "Product: 0"
+        },
+        {
+          "stdin": "-2\n3\n4",
+          "expect": "Product: -24"
+        }
+      ]
+    },
+    {
+      "slug": "gcse-fundamentals-p-08",
+      "tier": 3,
+      "difficulty": 4,
+      "xp": 25,
+      "title": "Average height",
       "brief": "Input three people's heights in metres, one at a time, which may include decimals. Print the total of all three, then their average, in the format `Total: <n>` then `Average: <n>`.",
-      "starter": "", "hints": ["Cast each height to a float, add them for the total, then divide the total by 3 for the average.", "total = a + b + c; average = total / 3 — then print both, each on its own line."],
-      "tests": [{ "stdin": "150\n160\n170", "expect": "Total: 480.0\nAverage: 160.0" }, { "stdin": "140\n150\n160", "expect": "Total: 450.0\nAverage: 150.0" }] },
-    { "slug": "gcse-fundamentals-p-09", "tier": 3, "difficulty": 4, "xp": 25, "title": "Fuel tank check",
+      "starter": "",
+      "hints": [
+        "Cast each height to a float, add them for the total, then divide the total by 3 for the average.",
+        "total = a + b + c; average = total / 3 — then print both, each on its own line."
+      ],
+      "tests": [
+        {
+          "stdin": "150\n160\n170",
+          "expect": "Total: 480.0\nAverage: 160.0"
+        },
+        {
+          "stdin": "140\n150\n160",
+          "expect": "Total: 450.0\nAverage: 150.0"
+        },
+        {
+          "stdin": "1.5\n1.5\n1.5",
+          "expect": "Total: 4.5\nAverage: 1.5"
+        },
+        {
+          "stdin": "1.6\n1.8\n1.7",
+          "expect": "Total: 5.1000000000000005\nAverage: 1.7000000000000002"
+        }
+      ]
+    },
+    {
+      "slug": "gcse-fundamentals-p-09",
+      "tier": 3,
+      "difficulty": 4,
+      "xp": 25,
+      "title": "Fuel tank check",
       "brief": "Input a fuel tank's capacity in litres, then how much fuel is currently in it, both of which may include decimals. Print how many more litres are needed to fill it, then what percentage full it currently is, in the format `Needed: <n>` then `Percent full: <n>%`.",
-      "starter": "", "hints": ["The amount needed is capacity minus current fuel; the percentage full is current divided by capacity, times 100.", "needed = capacity - current; percent = current / capacity * 100 — then print both, each on its own line."],
-      "tests": [{ "stdin": "50\n37.5", "expect": "Needed: 12.5\nPercent full: 75.0%" }, { "stdin": "80\n20", "expect": "Needed: 60.0\nPercent full: 25.0%" }] },
-    { "slug": "gcse-fundamentals-p-10", "tier": 4, "difficulty": 5, "xp": 30, "title": "Membership receipt",
+      "starter": "",
+      "hints": [
+        "The amount needed is capacity minus current fuel; the percentage full is current divided by capacity, times 100.",
+        "needed = capacity - current; percent = current / capacity * 100 — then print both, each on its own line."
+      ],
+      "tests": [
+        {
+          "stdin": "50\n37.5",
+          "expect": "Needed: 12.5\nPercent full: 75.0%"
+        },
+        {
+          "stdin": "80\n20",
+          "expect": "Needed: 60.0\nPercent full: 25.0%"
+        },
+        {
+          "stdin": "50\n25",
+          "expect": "Needed: 25.0\nPercent full: 50.0%"
+        },
+        {
+          "stdin": "60\n60",
+          "expect": "Needed: 0.0\nPercent full: 100.0%"
+        },
+        {
+          "stdin": "40\n10",
+          "expect": "Needed: 30.0\nPercent full: 25.0%"
+        }
+      ]
+    },
+    {
+      "slug": "gcse-fundamentals-p-10",
+      "tier": 4,
+      "difficulty": 5,
+      "xp": 30,
+      "title": "Membership receipt",
       "brief": "Input a customer's name, then their membership number as text, cast it to a whole number, then a pounds amount and an exchange rate, both of which may include decimals. Print the customer line, then the converted amount, in the format `Customer: <name> (#<membership>)` then `Converted: $<amount>`.",
-      "starter": "", "hints": ["Four separate inputs, each cast to the right type before it's used.", "Cast membership with int(), amount and rate with float(), then print both lines using f-strings."],
-      "tests": [{ "stdin": "Ada\n1001\n100\n1.2", "expect": "Customer: Ada (#1001)\nConverted: $120.0" }, { "stdin": "Sam\n2002\n50\n2.0", "expect": "Customer: Sam (#2002)\nConverted: $100.0" }] },
-    { "slug": "gcse-fundamentals-p-s1", "tier": 4, "difficulty": 5, "xp": 35, "stretch": true, "title": "🌟 Restaurant bill split",
+      "starter": "",
+      "hints": [
+        "Four separate inputs, each cast to the right type before it's used.",
+        "Cast membership with int(), amount and rate with float(), then print both lines using f-strings."
+      ],
+      "tests": [
+        {
+          "stdin": "Ada\n1001\n100\n1.2",
+          "expect": "Customer: Ada (#1001)\nConverted: $120.0"
+        },
+        {
+          "stdin": "Sam\n2002\n50\n2.0",
+          "expect": "Customer: Sam (#2002)\nConverted: $100.0"
+        },
+        {
+          "stdin": "Sam\n204\n100\n1.25",
+          "expect": "Customer: Sam (#204)\nConverted: $125.0"
+        },
+        {
+          "stdin": "Mia\n7\n20\n1.5",
+          "expect": "Customer: Mia (#7)\nConverted: $30.0"
+        }
+      ]
+    },
+    {
+      "slug": "gcse-fundamentals-p-s1",
+      "tier": 4,
+      "difficulty": 5,
+      "xp": 35,
+      "stretch": true,
+      "title": "🌟 Restaurant bill split",
       "brief": "Input a bill total, which may include pence, then the number of people splitting it, a whole number, then a tip percentage, a whole number. Print the tip amount, then the total including tip, then each person's share, all rounded to 2 decimal places, in the format `Tip: £<amount>`, `Total: £<amount>`, `Each pays: £<amount>`.",
-      "starter": "", "hints": ["Work out the tip first, then add it to the bill for the total, then divide by the number of people for the share — round each one as you print it.", "tip = round(bill * tip_pct / 100, 2); total = round(bill + tip, 2); share = round(total / people, 2)."],
-      "tests": [{ "stdin": "80\n4\n10", "expect": "Tip: £8.0\nTotal: £88.0\nEach pays: £22.0" }, { "stdin": "100\n3\n15", "expect": "Tip: £15.0\nTotal: £115.0\nEach pays: £38.33" }] },
-    { "slug": "gcse-fundamentals-p-s2", "tier": 4, "difficulty": 5, "xp": 35, "stretch": true, "title": "🌟 Unit price comparison",
+      "starter": "",
+      "hints": [
+        "Work out the tip first, then add it to the bill for the total, then divide by the number of people for the share — round each one as you print it.",
+        "tip = round(bill * tip_pct / 100, 2); total = round(bill + tip, 2); share = round(total / people, 2)."
+      ],
+      "tests": [
+        {
+          "stdin": "80\n4\n10",
+          "expect": "Tip: £8.0\nTotal: £88.0\nEach pays: £22.0"
+        },
+        {
+          "stdin": "100\n3\n15",
+          "expect": "Tip: £15.0\nTotal: £115.0\nEach pays: £38.33"
+        },
+        {
+          "stdin": "60\n4\n10",
+          "expect": "Tip: £6.0\nTotal: £66.0\nEach pays: £16.5"
+        },
+        {
+          "stdin": "45.5\n2\n20",
+          "expect": "Tip: £9.1\nTotal: £54.6\nEach pays: £27.3"
+        }
+      ]
+    },
+    {
+      "slug": "gcse-fundamentals-p-s2",
+      "tier": 4,
+      "difficulty": 5,
+      "xp": 35,
+      "stretch": true,
+      "title": "🌟 Unit price comparison",
       "brief": "Input two products, one at a time: a name, a price (which may include pence), and a quantity, a whole number. Print each product's price per single unit, rounded to 2 decimal places, in the format `<name>: £<amount> each`. Then print which product is the better value (the lower unit price), in the format `Better value: <name>`.",
-      "starter": "", "hints": ["A unit price is the price divided by the quantity — work this out for both products before comparing them.", "unit1 = round(price1 / qty1, 2); unit2 = round(price2 / qty2, 2); the better value is whichever name has the smaller unit price."],
-      "tests": [{ "stdin": "Small\n2.50\n5\nLarge\n4.00\n10", "expect": "Small: £0.5 each\nLarge: £0.4 each\nBetter value: Large" }, { "stdin": "A\n3.00\n3\nB\n5.00\n4", "expect": "A: £1.0 each\nB: £1.25 each\nBetter value: A" }] }
+      "starter": "",
+      "hints": [
+        "A unit price is the price divided by the quantity — work this out for both products before comparing them.",
+        "unit1 = round(price1 / qty1, 2); unit2 = round(price2 / qty2, 2); the better value is whichever name has the smaller unit price."
+      ],
+      "tests": [
+        {
+          "stdin": "Small\n2.50\n5\nLarge\n4.00\n10",
+          "expect": "Small: £0.5 each\nLarge: £0.4 each\nBetter value: Large"
+        },
+        {
+          "stdin": "A\n3.00\n3\nB\n5.00\n4",
+          "expect": "A: £1.0 each\nB: £1.25 each\nBetter value: A"
+        },
+        {
+          "stdin": "Cola\n3\n6\nJuice\n2\n4",
+          "expect": "Cola: £0.5 each\nJuice: £0.5 each\nBetter value: Juice"
+        }
+      ]
+    }
   ]
 }

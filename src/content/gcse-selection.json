@@ -9,7 +9,9 @@
       "notes": "**Selection** means the program picks which lines to run.\n\n```python\nif age >= 18:\n    print(\"Adult\")\nelse:\n    print(\"Child\")\n```\n\nComparison operators: `==` equal to, `!=` not equal to, `<`, `>`, `<=`, `>=`.\n\n---\n\nTwo classic mistakes:\n- using `=` (assignment) when you mean `==` (comparison)\n- forgetting the colon or the indentation under the `if`",
       "worked_example": "score = int(input())\nif score >= 40:\n    print(\"Pass\")\nelse:\n    print(\"Fail\")",
       "worked_example_note": "Only one of the two `print` lines can ever run. The indented block belongs to the branch above it.",
-      "worked_example_demo_input": ["55"]
+      "worked_example_demo_input": [
+        "55"
+      ]
     },
     {
       "slug": "gcse-selection-4",
@@ -18,7 +20,9 @@
       "notes": "Before adding more branches, it's worth being completely comfortable with a single `if` / `else` and the six comparison operators: `==`, `!=`, `<`, `>`, `<=`, `>=`.\n\nRemember the two classic mistakes from the last lesson: `=` instead of `==`, and a missing colon or indentation.\n\nA condition can compare numbers, or compare text with `==` — but text comparisons are **case sensitive**, so `\"Yes\"` and `\"yes\"` are not equal.",
       "worked_example": "n = int(input())\nif n % 2 == 0:\n    print(\"Even\")\nelse:\n    print(\"Odd\")",
       "worked_example_note": "% gives the remainder after dividing by 2 — a remainder of 0 means the number divides evenly.",
-      "worked_example_demo_input": ["7"]
+      "worked_example_demo_input": [
+        "7"
+      ]
     },
     {
       "slug": "gcse-selection-2",
@@ -27,7 +31,10 @@
       "notes": "Use `elif` for a chain of options. Python checks them in order and stops at the first one that is true, so **order matters** — put the strictest boundary first.\n\n```python\nif mark >= 80:\n    grade = \"9\"\nelif mark >= 60:\n    grade = \"7\"\nelse:\n    grade = \"4\"\n```\n\n---\n\nJoin conditions with `and` (both must be true), `or` (at least one), `not` (reverses it).\n\nOCR wording tip: *\"between 10 and 20 inclusive\"* becomes `if 10 <= n <= 20:` or `if n >= 10 and n <= 20:`.\n\n---\n\nOCR's exam pseudocode also has a **switch/case** structure, used when checking one variable against several exact values:\n\n```text\nswitch entry:\n    case \"A\":\n        print(\"You selected A\")\n    case \"B\":\n        print(\"You selected B\")\n    default:\n        print(\"Unrecognised selection\")\nendswitch\n```\n\nThis does exactly the same job as an `if`/`elif`/`else` chain checking `entry == \"A\"`, then `entry == \"B\"`, and so on. Python has no `switch` keyword expected at GCSE, so always write this shape as an `if`/`elif`/`else` chain in your own code.",
       "worked_example": "temp = int(input())\nrain = input()\nif temp > 20 and rain == \"no\":\n    print(\"Go outside\")\nelse:\n    print(\"Stay in\")",
       "worked_example_note": "`and` needs both sides to be true. Compare strings with `==` and remember they are case sensitive.",
-      "worked_example_demo_input": ["25", "no"]
+      "worked_example_demo_input": [
+        "25",
+        "no"
+      ]
     },
     {
       "slug": "gcse-selection-3",
@@ -36,352 +43,2021 @@
       "notes": "Exam scenarios hide the conditions inside sentences. Build a small table before you code:\n\n```text\nCondition          Output\n90 or more         Gold\n70 to 89           Silver\nless than 70       Bronze\n```\n\n---\n\nThen write one branch per row, strictest first. Check the **boundary values** (exactly 90, exactly 70) — that is where marks are usually lost.",
       "worked_example": "# Discount: 10% off orders of 50 or more, 5% off orders of 20 or more\ntotal = float(input())\nif total >= 50:\n    total = total * 0.9\nelif total >= 20:\n    total = total * 0.95\nprint(round(total, 2))",
       "worked_example_note": "There is no `else` here because orders under £20 need no change at all.",
-      "worked_example_demo_input": ["60"]
+      "worked_example_demo_input": [
+        "60"
+      ]
     }
   ],
   "quiz": [
-    { "lessonSlug": "gcse-selection-1", "question": "Which operator checks if two values are equal in Python?", "options": ["==", "=", "!=", "<>"], "answer": "==", "explanation": "= assigns a value; == compares two values for equality." },
-    { "lessonSlug": "gcse-selection-1", "question": "In if age >= 18: print(\"Adult\") else: print(\"Child\"), what happens when age is exactly 18?", "options": ["\"Adult\" is printed", "\"Child\" is printed", "Both are printed", "An error occurs"], "answer": "\"Adult\" is printed", "explanation": ">= includes the boundary value itself, so 18 counts as \"18 or more\"." },
-    { "lessonSlug": "gcse-selection-1", "question": "What's wrong with if age = 18:?", "options": ["= is assignment, not comparison — it should be ==", "Nothing, it's correct", "age needs quotes", "18 needs to be in brackets"], "answer": "= is assignment, not comparison — it should be ==", "explanation": "Using = instead of == is one of the two classic if-statement mistakes." },
-    { "lessonSlug": "gcse-selection-4", "question": "Are \"Yes\" and \"yes\" equal when compared with ==?", "options": ["No — text comparison is case sensitive", "Yes, Python ignores case", "Only if both are lowercase", "It depends on the computer"], "answer": "No — text comparison is case sensitive", "explanation": "Python compares text exactly as written, so a different capital letter makes two strings unequal." },
-    { "lessonSlug": "gcse-selection-4", "question": "In if a > b: ... elif a < b: ... else: ..., when does the else branch run?", "options": ["When a and b are equal", "When a is bigger", "When b is bigger", "Never"], "answer": "When a and b are equal", "explanation": "The else only runs once both the > and < checks above it have failed, which leaves equality as the only case left." },
-    { "lessonSlug": "gcse-selection-2", "question": "In an elif chain, what happens once Python finds a true condition?", "options": ["It runs that branch and skips the rest of the chain", "It checks every remaining condition anyway", "It runs every true branch", "It stops the whole program"], "answer": "It runs that branch and skips the rest of the chain", "explanation": "Python checks elif conditions in order and stops at the first true one — this is why order matters." },
-    { "lessonSlug": "gcse-selection-2", "question": "Why does order matter in an elif chain checking exam grade boundaries?", "options": ["Because the first true condition wins, so stricter boundaries must come first", "It doesn't matter what order they're in", "Because Python runs them alphabetically", "Because elif only works with 2 branches"], "answer": "Because the first true condition wins, so stricter boundaries must come first" },
-    { "lessonSlug": "gcse-selection-2", "question": "Which operator requires both conditions to be true?", "options": ["and", "or", "not", "=="], "answer": "and", "explanation": "and only lets the combined condition through if both sides are true; or only needs one." },
-    { "lessonSlug": "gcse-selection-2", "question": "OCR's exam pseudocode shows a switch/case structure. What's the equivalent way to write this in Python?", "options": ["An if/elif/else chain", "A for loop", "A single if with no else", "Python has an identical switch keyword"], "answer": "An if/elif/else chain", "explanation": "switch/case checks one variable against several exact values, one branch per case - exactly what an if/elif/else chain does, which is how you'd write it in Python." },
-    { "lessonSlug": "gcse-selection-3", "question": "Where are marks usually lost in boundary-based selection questions?", "options": ["At the exact boundary values, like exactly 90 or exactly 70", "In the print statements", "In variable names", "At the very start of the program"], "answer": "At the exact boundary values, like exactly 90 or exactly 70" },
-    { "lessonSlug": "gcse-selection-3", "question": "Before coding a scenario with multiple bands (like Gold/Silver/Bronze), what should you do first?", "options": ["Build a small table of conditions and their outputs", "Start writing if statements immediately", "Guess which band is most common", "Skip straight to testing"], "answer": "Build a small table of conditions and their outputs" },
-    { "lessonSlug": "gcse-selection-3", "question": "In an elif chain for grade bands, which boundary should usually be checked first?", "options": ["The strictest / highest one", "The loosest / lowest one", "It doesn't matter", "Whichever is easiest to type"], "answer": "The strictest / highest one", "explanation": "Since the first true condition wins, checking the highest band first stops higher scorers being wrongly caught by a lower band's condition." }
+    {
+      "lessonSlug": "gcse-selection-1",
+      "question": "Which operator checks if two values are equal in Python?",
+      "options": [
+        "==",
+        "=",
+        "!=",
+        "<>"
+      ],
+      "answer": "==",
+      "explanation": "= assigns a value; == compares two values for equality."
+    },
+    {
+      "lessonSlug": "gcse-selection-1",
+      "question": "In if age >= 18: print(\"Adult\") else: print(\"Child\"), what happens when age is exactly 18?",
+      "options": [
+        "\"Adult\" is printed",
+        "\"Child\" is printed",
+        "Both are printed",
+        "An error occurs"
+      ],
+      "answer": "\"Adult\" is printed",
+      "explanation": ">= includes the boundary value itself, so 18 counts as \"18 or more\"."
+    },
+    {
+      "lessonSlug": "gcse-selection-1",
+      "question": "What's wrong with if age = 18:?",
+      "options": [
+        "= is assignment, not comparison — it should be ==",
+        "Nothing, it's correct",
+        "age needs quotes",
+        "18 needs to be in brackets"
+      ],
+      "answer": "= is assignment, not comparison — it should be ==",
+      "explanation": "Using = instead of == is one of the two classic if-statement mistakes."
+    },
+    {
+      "lessonSlug": "gcse-selection-4",
+      "question": "Are \"Yes\" and \"yes\" equal when compared with ==?",
+      "options": [
+        "No — text comparison is case sensitive",
+        "Yes, Python ignores case",
+        "Only if both are lowercase",
+        "It depends on the computer"
+      ],
+      "answer": "No — text comparison is case sensitive",
+      "explanation": "Python compares text exactly as written, so a different capital letter makes two strings unequal."
+    },
+    {
+      "lessonSlug": "gcse-selection-4",
+      "question": "In if a > b: ... elif a < b: ... else: ..., when does the else branch run?",
+      "options": [
+        "When a and b are equal",
+        "When a is bigger",
+        "When b is bigger",
+        "Never"
+      ],
+      "answer": "When a and b are equal",
+      "explanation": "The else only runs once both the > and < checks above it have failed, which leaves equality as the only case left."
+    },
+    {
+      "lessonSlug": "gcse-selection-2",
+      "question": "In an elif chain, what happens once Python finds a true condition?",
+      "options": [
+        "It runs that branch and skips the rest of the chain",
+        "It checks every remaining condition anyway",
+        "It runs every true branch",
+        "It stops the whole program"
+      ],
+      "answer": "It runs that branch and skips the rest of the chain",
+      "explanation": "Python checks elif conditions in order and stops at the first true one — this is why order matters."
+    },
+    {
+      "lessonSlug": "gcse-selection-2",
+      "question": "Why does order matter in an elif chain checking exam grade boundaries?",
+      "options": [
+        "Because the first true condition wins, so stricter boundaries must come first",
+        "It doesn't matter what order they're in",
+        "Because Python runs them alphabetically",
+        "Because elif only works with 2 branches"
+      ],
+      "answer": "Because the first true condition wins, so stricter boundaries must come first"
+    },
+    {
+      "lessonSlug": "gcse-selection-2",
+      "question": "Which operator requires both conditions to be true?",
+      "options": [
+        "and",
+        "or",
+        "not",
+        "=="
+      ],
+      "answer": "and",
+      "explanation": "and only lets the combined condition through if both sides are true; or only needs one."
+    },
+    {
+      "lessonSlug": "gcse-selection-2",
+      "question": "OCR's exam pseudocode shows a switch/case structure. What's the equivalent way to write this in Python?",
+      "options": [
+        "An if/elif/else chain",
+        "A for loop",
+        "A single if with no else",
+        "Python has an identical switch keyword"
+      ],
+      "answer": "An if/elif/else chain",
+      "explanation": "switch/case checks one variable against several exact values, one branch per case - exactly what an if/elif/else chain does, which is how you'd write it in Python."
+    },
+    {
+      "lessonSlug": "gcse-selection-3",
+      "question": "Where are marks usually lost in boundary-based selection questions?",
+      "options": [
+        "At the exact boundary values, like exactly 90 or exactly 70",
+        "In the print statements",
+        "In variable names",
+        "At the very start of the program"
+      ],
+      "answer": "At the exact boundary values, like exactly 90 or exactly 70"
+    },
+    {
+      "lessonSlug": "gcse-selection-3",
+      "question": "Before coding a scenario with multiple bands (like Gold/Silver/Bronze), what should you do first?",
+      "options": [
+        "Build a small table of conditions and their outputs",
+        "Start writing if statements immediately",
+        "Guess which band is most common",
+        "Skip straight to testing"
+      ],
+      "answer": "Build a small table of conditions and their outputs"
+    },
+    {
+      "lessonSlug": "gcse-selection-3",
+      "question": "In an elif chain for grade bands, which boundary should usually be checked first?",
+      "options": [
+        "The strictest / highest one",
+        "The loosest / lowest one",
+        "It doesn't matter",
+        "Whichever is easiest to type"
+      ],
+      "answer": "The strictest / highest one",
+      "explanation": "Since the first true condition wins, checking the highest band first stops higher scorers being wrongly caught by a lower band's condition."
+    }
   ],
   "tasks": [
     {
-      "slug": "gcse-selection-t1-01", "lesson": 1, "tier": 1, "difficulty": 1, "xp": 10,
+      "slug": "gcse-selection-t1-01",
+      "lesson": 1,
+      "tier": 1,
+      "difficulty": 1,
+      "xp": 10,
       "title": "Positive or negative",
       "brief": "Input a whole number. Print `Positive` if it is greater than 0. Otherwise print `Not positive`.",
       "starter": "",
-      "hints": ["Exactly one of the two branches runs — decide the condition first, then fill in what each branch prints.", "The pattern is `if <condition>: ... else: ...` — work out what the condition should compare first."],
-      "tests": [{ "stdin": "5", "expect": "Positive" }, { "stdin": "0", "expect": "Not positive" }, { "stdin": "-2", "expect": "Not positive" }]
+      "hints": [
+        "Exactly one of the two branches runs — decide the condition first, then fill in what each branch prints.",
+        "The pattern is `if <condition>: ... else: ...` — work out what the condition should compare first."
+      ],
+      "tests": [
+        {
+          "stdin": "5",
+          "expect": "Positive"
+        },
+        {
+          "stdin": "0",
+          "expect": "Not positive"
+        },
+        {
+          "stdin": "-2",
+          "expect": "Not positive"
+        }
+      ]
     },
     {
-      "slug": "gcse-selection-t1-02", "lesson": 1, "tier": 1, "difficulty": 1, "xp": 10,
+      "slug": "gcse-selection-t1-02",
+      "lesson": 1,
+      "tier": 1,
+      "difficulty": 1,
+      "xp": 10,
       "title": "Old enough to vote",
       "brief": "Input an age. Print `Can vote` if the age is 18 or more. Otherwise print `Too young`.",
       "starter": "",
-      "hints": ["\"18 or more\" includes exactly 18, so use >= rather than >.", "Use `>=` rather than `>` whenever the boundary value itself should count as meeting the rule."],
-      "tests": [{ "stdin": "18", "expect": "Can vote" }, { "stdin": "17", "expect": "Too young" }, { "stdin": "40", "expect": "Can vote" }]
+      "hints": [
+        "\"18 or more\" includes exactly 18, so use >= rather than >.",
+        "Use `>=` rather than `>` whenever the boundary value itself should count as meeting the rule."
+      ],
+      "tests": [
+        {
+          "stdin": "18",
+          "expect": "Can vote"
+        },
+        {
+          "stdin": "17",
+          "expect": "Too young"
+        },
+        {
+          "stdin": "40",
+          "expect": "Can vote"
+        }
+      ]
     },
     {
-      "slug": "gcse-selection-t1-03", "lesson": 1, "tier": 1, "difficulty": 2, "xp": 15,
+      "slug": "gcse-selection-t1-03",
+      "lesson": 1,
+      "tier": 1,
+      "difficulty": 2,
+      "xp": 15,
       "title": "Bigger of two",
       "brief": "Input two whole numbers, one per line. Print the larger one. If they are equal, print `Equal` instead.",
       "starter": "",
-      "hints": ["There are three possible outcomes here, not two — you need a third branch for the equal case.", "Three outcomes need an `if / elif / else` chain, not just `if / else` — compare the two values in each branch."],
-      "tests": [{ "stdin": "3\n9", "expect": "9" }, { "stdin": "9\n3", "expect": "9" }, { "stdin": "4\n4", "expect": "Equal" }]
+      "hints": [
+        "There are three possible outcomes here, not two — you need a third branch for the equal case.",
+        "Three outcomes need an `if / elif / else` chain, not just `if / else` — compare the two values in each branch."
+      ],
+      "tests": [
+        {
+          "stdin": "3\n9",
+          "expect": "9"
+        },
+        {
+          "stdin": "9\n3",
+          "expect": "9"
+        },
+        {
+          "stdin": "4\n4",
+          "expect": "Equal"
+        }
+      ]
     },
     {
-      "slug": "gcse-selection-t1-stretch", "lesson": 1, "tier": 4, "difficulty": 5, "xp": 40, "stretch": true,
+      "slug": "gcse-selection-t1-stretch",
+      "lesson": 1,
+      "tier": 4,
+      "difficulty": 5,
+      "xp": 40,
+      "stretch": true,
       "title": "Largest of three",
       "brief": "Read three whole numbers, one per line. Print the largest of the three. If two or more of them are tied for the largest, print `Tie` instead.\n\nFor example, 3, 9 and 5 prints 9. 7, 7 and 2 prints Tie.",
       "starter": "",
-      "hints": ["Python's built-in max() finds the largest of several values for you. Think about what it would mean if more than one value matched that largest value.", "Once you know the largest value, compare each of the original values against it to work out how many match."],
-      "tests": [{ "stdin": "3\n9\n5", "expect": "9" }, { "stdin": "7\n7\n2", "expect": "Tie" }]
+      "hints": [
+        "Python's built-in max() finds the largest of several values for you. Think about what it would mean if more than one value matched that largest value.",
+        "Once you know the largest value, compare each of the original values against it to work out how many match."
+      ],
+      "tests": [
+        {
+          "stdin": "3\n9\n5",
+          "expect": "9"
+        },
+        {
+          "stdin": "7\n7\n2",
+          "expect": "Tie"
+        }
+      ]
     },
     {
-      "slug": "gcse-selection-r1-01", "lesson": 4, "tier": 1, "difficulty": 1, "xp": 10,
+      "slug": "gcse-selection-r1-01",
+      "lesson": 4,
+      "tier": 1,
+      "difficulty": 1,
+      "xp": 10,
       "title": "Even or odd",
       "brief": "Input a whole number. Print `Even` if it divides evenly by 2. Otherwise print `Odd`.",
       "starter": "",
-      "hints": ["% gives the remainder after dividing by 2 — zero means it divides evenly.", "The pattern is `if n % 2 == 0: ... else: ...`."],
-      "tests": [{ "stdin": "4", "expect": "Even" }, { "stdin": "7", "expect": "Odd" }, { "stdin": "0", "expect": "Even" }]
+      "hints": [
+        "% gives the remainder after dividing by 2 — zero means it divides evenly.",
+        "The pattern is `if n % 2 == 0: ... else: ...`."
+      ],
+      "tests": [
+        {
+          "stdin": "4",
+          "expect": "Even"
+        },
+        {
+          "stdin": "7",
+          "expect": "Odd"
+        },
+        {
+          "stdin": "0",
+          "expect": "Even"
+        }
+      ]
     },
     {
-      "slug": "gcse-selection-r1-02", "lesson": 4, "tier": 1, "difficulty": 1, "xp": 10,
+      "slug": "gcse-selection-r1-02",
+      "lesson": 4,
+      "tier": 1,
+      "difficulty": 1,
+      "xp": 10,
       "title": "Enough money",
       "brief": "Input the price of an item, then how much money you have, one per line. Print `Can afford` if you have enough money to buy it. Otherwise print `Not enough`.",
       "starter": "",
-      "hints": ["\"Enough\" includes having exactly the price, so use >= rather than >.", "The pattern is `if money >= price: ... else: ...`."],
-      "tests": [{ "stdin": "5\n10", "expect": "Can afford" }, { "stdin": "10\n5", "expect": "Not enough" }, { "stdin": "5\n5", "expect": "Can afford" }]
+      "hints": [
+        "\"Enough\" includes having exactly the price, so use >= rather than >.",
+        "The pattern is `if money >= price: ... else: ...`."
+      ],
+      "tests": [
+        {
+          "stdin": "5\n10",
+          "expect": "Can afford"
+        },
+        {
+          "stdin": "10\n5",
+          "expect": "Not enough"
+        },
+        {
+          "stdin": "5\n5",
+          "expect": "Can afford"
+        }
+      ]
     },
     {
-      "slug": "gcse-selection-r1-03", "lesson": 4, "tier": 2, "difficulty": 2, "xp": 15,
+      "slug": "gcse-selection-r1-03",
+      "lesson": 4,
+      "tier": 2,
+      "difficulty": 2,
+      "xp": 15,
       "title": "Warmer, cooler or the same",
       "brief": "Input today's temperature, then yesterday's temperature, one per line. Print `Warmer` if today is higher, `Cooler` if today is lower, or `Same` if they are equal.",
       "starter": "",
-      "hints": ["There are three possible outcomes here, not two, so you need a third branch.", "The pattern is `if today > yesterday: ... elif today < yesterday: ... else: ...`."],
-      "tests": [{ "stdin": "20\n15", "expect": "Warmer" }, { "stdin": "10\n15", "expect": "Cooler" }, { "stdin": "15\n15", "expect": "Same" }]
+      "hints": [
+        "There are three possible outcomes here, not two, so you need a third branch.",
+        "The pattern is `if today > yesterday: ... elif today < yesterday: ... else: ...`."
+      ],
+      "tests": [
+        {
+          "stdin": "20\n15",
+          "expect": "Warmer"
+        },
+        {
+          "stdin": "10\n15",
+          "expect": "Cooler"
+        },
+        {
+          "stdin": "15\n15",
+          "expect": "Same"
+        }
+      ]
     },
     {
-      "slug": "gcse-selection-r1-04", "lesson": 4, "tier": 2, "difficulty": 2, "xp": 15,
+      "slug": "gcse-selection-r1-04",
+      "lesson": 4,
+      "tier": 2,
+      "difficulty": 2,
+      "xp": 15,
       "title": "Correct password",
       "brief": "Input a password. Print `Correct` if it exactly matches `python123`. Otherwise print `Incorrect`.",
       "starter": "",
-      "hints": ["String comparisons are case sensitive — check the exact spelling given.", "The pattern is `if password == \"python123\": ... else: ...`."],
-      "tests": [{ "stdin": "python123", "expect": "Correct" }, { "stdin": "Python123", "expect": "Incorrect" }, { "stdin": "guess", "expect": "Incorrect" }]
+      "hints": [
+        "String comparisons are case sensitive — check the exact spelling given.",
+        "The pattern is `if password == \"python123\": ... else: ...`."
+      ],
+      "tests": [
+        {
+          "stdin": "python123",
+          "expect": "Correct"
+        },
+        {
+          "stdin": "Python123",
+          "expect": "Incorrect"
+        },
+        {
+          "stdin": "guess",
+          "expect": "Incorrect"
+        }
+      ]
     },
     {
-      "slug": "gcse-selection-r1-stretch", "lesson": 4, "tier": 4, "difficulty": 5, "xp": 40, "stretch": true,
+      "slug": "gcse-selection-r1-stretch",
+      "lesson": 4,
+      "tier": 4,
+      "difficulty": 5,
+      "xp": 40,
+      "stretch": true,
       "title": "Closest to the target",
       "brief": "Input a target number, then two other numbers, one per line. Print whichever of the two numbers is closer to the target. If they are equally close, print `Tie` instead.\n\nFor example, target 10 with 7 and 12 prints 12 (it's 2 away, versus 3 away for 7).",
       "starter": "",
-      "hints": ["Work out how far each number is from the target first — a negative difference is just as far away as a positive one.", "Compare the two distances from the target, using abs() to ignore whether each difference is positive or negative."],
-      "tests": [{ "stdin": "10\n7\n12", "expect": "12" }, { "stdin": "5\n5\n5", "expect": "Tie" }]
+      "hints": [
+        "Work out how far each number is from the target first — a negative difference is just as far away as a positive one.",
+        "Compare the two distances from the target, using abs() to ignore whether each difference is positive or negative."
+      ],
+      "tests": [
+        {
+          "stdin": "10\n7\n12",
+          "expect": "12"
+        },
+        {
+          "stdin": "5\n5\n5",
+          "expect": "Tie"
+        }
+      ]
     },
     {
-      "slug": "gcse-selection-t2-01", "lesson": 2, "tier": 2, "difficulty": 2, "xp": 15,
+      "slug": "gcse-selection-t2-01",
+      "lesson": 2,
+      "tier": 2,
+      "difficulty": 2,
+      "xp": 15,
       "title": "Traffic light",
       "brief": "Input the colour of a traffic light. Print `Stop` for `red`, `Get ready` for `amber` and `Go` for `green`. For anything else, print `Broken`.",
       "starter": "",
-      "hints": ["You have four possible outputs, so you need an if / elif / elif / else chain, not just if / else.", "String comparisons are case sensitive — \"red\" and \"Red\" are not equal"],
-      "tests": [{ "stdin": "red", "expect": "Stop" }, { "stdin": "amber", "expect": "Get ready" }, { "stdin": "green", "expect": "Go" }, { "stdin": "blue", "expect": "Broken" }]
+      "hints": [
+        "You have four possible outputs, so you need an if / elif / elif / else chain, not just if / else.",
+        "String comparisons are case sensitive — \"red\" and \"Red\" are not equal"
+      ],
+      "tests": [
+        {
+          "stdin": "red",
+          "expect": "Stop"
+        },
+        {
+          "stdin": "amber",
+          "expect": "Get ready"
+        },
+        {
+          "stdin": "green",
+          "expect": "Go"
+        },
+        {
+          "stdin": "blue",
+          "expect": "Broken"
+        }
+      ]
     },
     {
-      "slug": "gcse-selection-t2-02", "lesson": 2, "tier": 2, "difficulty": 3, "xp": 20,
+      "slug": "gcse-selection-t2-02",
+      "lesson": 2,
+      "tier": 2,
+      "difficulty": 3,
+      "xp": 20,
       "title": "In range",
       "brief": "Input a whole number. Print `In range` if it is between 10 and 20 inclusive — meaning 10 and 20 themselves both count as in range. Otherwise print `Out of range`.",
       "starter": "",
-      "hints": ["Python lets you chain two comparisons in one condition to check a value falls between two boundaries, inclusive on both ends.", "The pattern is `if lower <= value <= upper: ... else: ...`, using the boundaries given in the brief."],
-      "tests": [{ "stdin": "10", "expect": "In range" }, { "stdin": "20", "expect": "In range" }, { "stdin": "21", "expect": "Out of range" }, { "stdin": "9", "expect": "Out of range" }]
+      "hints": [
+        "Python lets you chain two comparisons in one condition to check a value falls between two boundaries, inclusive on both ends.",
+        "The pattern is `if lower <= value <= upper: ... else: ...`, using the boundaries given in the brief."
+      ],
+      "tests": [
+        {
+          "stdin": "10",
+          "expect": "In range"
+        },
+        {
+          "stdin": "20",
+          "expect": "In range"
+        },
+        {
+          "stdin": "21",
+          "expect": "Out of range"
+        },
+        {
+          "stdin": "9",
+          "expect": "Out of range"
+        }
+      ]
     },
     {
-      "slug": "gcse-selection-t2-03", "lesson": 2, "tier": 2, "difficulty": 3, "xp": 20,
+      "slug": "gcse-selection-t2-03",
+      "lesson": 2,
+      "tier": 2,
+      "difficulty": 3,
+      "xp": 20,
       "title": "Login with two checks",
       "brief": "Input a username, then a password, one per line. Print `Welcome` only if the username is exactly `admin` and the password is exactly `hcode`. Otherwise print `Rejected`.",
       "starter": "",
-      "hints": ["Both checks must be true at once, so join the two conditions with and.", "The pattern is `if <condition1> and <condition2>: ... else: ...` — both sides must be true."],
-      "tests": [{ "stdin": "admin\nhcode", "expect": "Welcome" }, { "stdin": "admin\nwrong", "expect": "Rejected" }, { "stdin": "guest\nhcode", "expect": "Rejected" }]
+      "hints": [
+        "Both checks must be true at once, so join the two conditions with and.",
+        "The pattern is `if <condition1> and <condition2>: ... else: ...` — both sides must be true."
+      ],
+      "tests": [
+        {
+          "stdin": "admin\nhcode",
+          "expect": "Welcome"
+        },
+        {
+          "stdin": "admin\nwrong",
+          "expect": "Rejected"
+        },
+        {
+          "stdin": "guest\nhcode",
+          "expect": "Rejected"
+        }
+      ]
     },
     {
-      "slug": "gcse-selection-t2-stretch", "lesson": 2, "tier": 4, "difficulty": 5, "xp": 40, "stretch": true,
+      "slug": "gcse-selection-t2-stretch",
+      "lesson": 2,
+      "tier": 4,
+      "difficulty": 5,
+      "xp": 40,
+      "stretch": true,
       "title": "VIP eligibility",
       "brief": "A loyalty scheme grants VIP status under either of two rules:\n\n- the customer is 18 or older AND has been a member for at least 2 years, OR\n- the customer has been a member for at least 5 years, whatever their age\n\nRead the customer's age, then the number of years they've been a member, one per line. Print `VIP` if either rule applies, otherwise print `Not VIP`.\n\nFor example, age 20 with 3 years membership is VIP (meets the first rule). Age 16 with 6 years membership is also VIP (meets the second rule — age doesn't matter there).",
       "starter": "",
-      "hints": ["Write the two rules as two separate conditions first, then think about how to combine them so meeting either one is enough.", "Join the two separate conditions with `or` inside a single if statement — brackets around each combined part can help keep it readable."],
-      "tests": [{ "stdin": "20\n3", "expect": "VIP" }, { "stdin": "16\n6", "expect": "VIP" }, { "stdin": "16\n1", "expect": "Not VIP" }]
+      "hints": [
+        "Write the two rules as two separate conditions first, then think about how to combine them so meeting either one is enough.",
+        "Join the two separate conditions with `or` inside a single if statement — brackets around each combined part can help keep it readable."
+      ],
+      "tests": [
+        {
+          "stdin": "20\n3",
+          "expect": "VIP"
+        },
+        {
+          "stdin": "16\n6",
+          "expect": "VIP"
+        },
+        {
+          "stdin": "16\n1",
+          "expect": "Not VIP"
+        }
+      ]
     },
     {
-      "slug": "gcse-selection-t3-01", "lesson": 3, "tier": 3, "difficulty": 3, "xp": 25,
+      "slug": "gcse-selection-t3-01",
+      "lesson": 3,
+      "tier": 3,
+      "difficulty": 3,
+      "xp": 25,
       "title": "Swimming pool entry",
       "brief": "A swimming pool charges different prices by age:\n\n- under 5: free\n- 5 to 15: £2\n- 16 to 64 (adult): £4\n- 65 or over: £2\n\nRead a person's age. Display the price they pay, as a whole number of pounds.\n\nFor example, age 30 pays £4, so print `4`.",
       "starter": "",
-      "hints": ["Build the branches in age order, from youngest to oldest, checking the strictest boundary first. There are four price groups, not two, so you'll need an elif chain.", "The pattern is `if age < a: ... elif age < b: ... elif age < c: ... else: ...` — two branches can end up giving the same price, they're just different age groups."],
-      "tests": [{ "stdin": "3", "expect": "0" }, { "stdin": "15", "expect": "2" }, { "stdin": "30", "expect": "4" }, { "stdin": "70", "expect": "2" }]
+      "hints": [
+        "Build the branches in age order, from youngest to oldest, checking the strictest boundary first. There are four price groups, not two, so you'll need an elif chain.",
+        "The pattern is `if age < a: ... elif age < b: ... elif age < c: ... else: ...` — two branches can end up giving the same price, they're just different age groups."
+      ],
+      "tests": [
+        {
+          "stdin": "3",
+          "expect": "0"
+        },
+        {
+          "stdin": "15",
+          "expect": "2"
+        },
+        {
+          "stdin": "30",
+          "expect": "4"
+        },
+        {
+          "stdin": "70",
+          "expect": "2"
+        }
+      ]
     },
     {
-      "slug": "gcse-selection-t3-02", "lesson": 3, "tier": 3, "difficulty": 4, "xp": 30,
+      "slug": "gcse-selection-t3-02",
+      "lesson": 3,
+      "tier": 3,
+      "difficulty": 4,
+      "xp": 30,
       "title": "Parcel size checker",
       "brief": "A courier classifies parcels by weight in kilograms:\n\n- up to and including 2 kg: `Small`\n- over 2 kg, up to and including 10 kg: `Medium`\n- over 10 kg, up to and including 30 kg: `Large`\n- over 30 kg: `Refused`\n\nRead the weight as a decimal. Display the classification.",
       "starter": "",
-      "hints": ["Check the Refused case and the Large case before the smaller ones, so the boundaries at exactly 2, 10 and 30 land in the right group.", "The pattern is `if weight > biggest: ... elif weight > next: ... else: ...` — checking from the largest boundary down avoids overlap."],
-      "tests": [{ "stdin": "1.5", "expect": "Small" }, { "stdin": "2", "expect": "Small" }, { "stdin": "9.9", "expect": "Medium" }, { "stdin": "12", "expect": "Large" }, { "stdin": "31", "expect": "Refused" }]
+      "hints": [
+        "Check the Refused case and the Large case before the smaller ones, so the boundaries at exactly 2, 10 and 30 land in the right group.",
+        "The pattern is `if weight > biggest: ... elif weight > next: ... else: ...` — checking from the largest boundary down avoids overlap."
+      ],
+      "tests": [
+        {
+          "stdin": "1.5",
+          "expect": "Small"
+        },
+        {
+          "stdin": "2",
+          "expect": "Small"
+        },
+        {
+          "stdin": "9.9",
+          "expect": "Medium"
+        },
+        {
+          "stdin": "12",
+          "expect": "Large"
+        },
+        {
+          "stdin": "31",
+          "expect": "Refused"
+        }
+      ]
     },
     {
-      "slug": "gcse-selection-t3-03", "lesson": 3, "tier": 3, "difficulty": 4, "xp": 30,
+      "slug": "gcse-selection-t3-03",
+      "lesson": 3,
+      "tier": 3,
+      "difficulty": 4,
+      "xp": 30,
       "title": "Quiz feedback",
       "brief": "A quiz is marked out of 20:\n\n- 18 or more: `Excellent`\n- 14 to 17: `Good`\n- 10 to 13: `Pass`\n- below 10: `Revise this topic`\n\nA mark outside the range 0 to 20 is invalid and should display `Invalid mark` instead of any of the above.\n\nRead the mark scored. Display the appropriate result.",
       "starter": "",
-      "hints": ["Check whether the mark is invalid (below 0 or above 20) before checking any of the grade boundaries.", "Order the grade boundaries from highest down, same pattern as the lesson's elif example"],
-      "tests": [{ "stdin": "20", "expect": "Excellent" }, { "stdin": "14", "expect": "Good" }, { "stdin": "10", "expect": "Pass" }, { "stdin": "3", "expect": "Revise this topic" }, { "stdin": "25", "expect": "Invalid mark" }]
+      "hints": [
+        "Check whether the mark is invalid (below 0 or above 20) before checking any of the grade boundaries.",
+        "Order the grade boundaries from highest down, same pattern as the lesson's elif example"
+      ],
+      "tests": [
+        {
+          "stdin": "20",
+          "expect": "Excellent"
+        },
+        {
+          "stdin": "14",
+          "expect": "Good"
+        },
+        {
+          "stdin": "10",
+          "expect": "Pass"
+        },
+        {
+          "stdin": "3",
+          "expect": "Revise this topic"
+        },
+        {
+          "stdin": "25",
+          "expect": "Invalid mark"
+        }
+      ]
     },
     {
-      "slug": "gcse-selection-t4-01", "lesson": 3, "tier": 4, "difficulty": 4, "xp": 35,
+      "slug": "gcse-selection-t4-01",
+      "lesson": 3,
+      "tier": 4,
+      "difficulty": 4,
+      "xp": 35,
       "title": "Theme park ride restrictions",
       "brief": "A theme park needs software to check whether a visitor may ride a rollercoaster.\n\n- A visitor may ride if they are at least 140 cm tall AND aged 12 or over.\n- A visitor who is tall enough (140 cm or more) but under 12 may still ride if an adult is with them.\n- Anyone under 140 cm may never ride, whatever their age or whether an adult is with them.\n\nRead three lines of input: height in centimetres (whole number), age (whole number), then `yes` or `no` for whether an adult is with them.\n\nOutput exactly one of:\n- `Ride allowed`\n- `Ride allowed with adult`\n- `Ride refused`",
       "starter": "",
-      "hints": ["Deal with the height rule first — anyone under 140 cm is refused no matter what the other answers are.", "Then, among those tall enough, split on age, then on the adult answer"],
-      "tests": [{ "stdin": "150\n14\nno", "expect": "Ride allowed" }, { "stdin": "150\n10\nyes", "expect": "Ride allowed with adult" }, { "stdin": "150\n10\nno", "expect": "Ride refused" }, { "stdin": "120\n30\nyes", "expect": "Ride refused" }]
+      "hints": [
+        "Deal with the height rule first — anyone under 140 cm is refused no matter what the other answers are.",
+        "Then, among those tall enough, split on age, then on the adult answer"
+      ],
+      "tests": [
+        {
+          "stdin": "150\n14\nno",
+          "expect": "Ride allowed"
+        },
+        {
+          "stdin": "150\n10\nyes",
+          "expect": "Ride allowed with adult"
+        },
+        {
+          "stdin": "150\n10\nno",
+          "expect": "Ride refused"
+        },
+        {
+          "stdin": "120\n30\nyes",
+          "expect": "Ride refused"
+        }
+      ]
     },
     {
-      "slug": "gcse-selection-t4-02", "lesson": 3, "tier": 4, "difficulty": 5, "xp": 40,
+      "slug": "gcse-selection-t4-02",
+      "lesson": 3,
+      "tier": 4,
+      "difficulty": 5,
+      "xp": 40,
       "title": "Broadband billing",
       "brief": "An internet provider bills customers monthly:\n\n- The standard package costs £25 per month and includes 100 GB of data.\n- Data used above the 100 GB allowance costs £1.50 per whole gigabyte over the limit.\n- Customers who have been with the provider for 24 months or more get a 10% discount on the whole bill, applied after any excess data charge has been added.\n\nRead the gigabytes used (a whole number), then the number of months the customer has been with the provider (a whole number). Output the final bill, rounded to 2 decimal places, in the format `Bill: £<amount>`.\n\nFor example, 80 GB used over 5 months (no excess, no discount) gives `Bill: £25.0`.",
       "starter": "",
-      "hints": ["Excess data only applies when usage is above 100 — work that out first and add it to the base £25.", "Apply the loyalty discount last, to the total bill so far, not just to the excess charge"],
-      "tests": [{ "stdin": "80\n5", "expect": "Bill: £25.0" }, { "stdin": "105\n5", "expect": "Bill: £32.5" }, { "stdin": "105\n30", "expect": "Bill: £29.25" }]
+      "hints": [
+        "Excess data only applies when usage is above 100 — work that out first and add it to the base £25.",
+        "Apply the loyalty discount last, to the total bill so far, not just to the excess charge"
+      ],
+      "tests": [
+        {
+          "stdin": "80\n5",
+          "expect": "Bill: £25.0"
+        },
+        {
+          "stdin": "105\n5",
+          "expect": "Bill: £32.5"
+        },
+        {
+          "stdin": "105\n30",
+          "expect": "Bill: £29.25"
+        }
+      ]
     },
     {
-      "slug": "gcse-selection-t4-03", "lesson": 3, "tier": 4, "difficulty": 5, "xp": 40,
+      "slug": "gcse-selection-t4-03",
+      "lesson": 3,
+      "tier": 4,
+      "difficulty": 5,
+      "xp": 40,
       "title": "Library fine system",
       "brief": "A school library charges fines for late books:\n\n- returned up to 3 days late: no fine\n- from day 4 onwards: 20p per day late, counting all the days late, not just the days after day 3\n- the fine is capped at £5.00, however late the book is\n- students in Year 7 are never fined, whatever the rules above say\n\nRead the number of days late (a whole number), then the student's year group (a whole number). Output the fine, in pounds, to 2 decimal places, in the format `Fine: £<amount>`.",
       "starter": "",
-      "hints": ["Check the Year 7 rule first — it overrides every other rule, so it should be the very first thing you check.", "Work out the uncapped fine first, then use a second if statement to bring it down to the stated maximum if it's gone over."],
-      "tests": [{ "stdin": "2\n9", "expect": "Fine: £0.0" }, { "stdin": "5\n9", "expect": "Fine: £1.0" }, { "stdin": "40\n11", "expect": "Fine: £5.0" }, { "stdin": "40\n7", "expect": "Fine: £0.0" }]
+      "hints": [
+        "Check the Year 7 rule first — it overrides every other rule, so it should be the very first thing you check.",
+        "Work out the uncapped fine first, then use a second if statement to bring it down to the stated maximum if it's gone over."
+      ],
+      "tests": [
+        {
+          "stdin": "2\n9",
+          "expect": "Fine: £0.0"
+        },
+        {
+          "stdin": "5\n9",
+          "expect": "Fine: £1.0"
+        },
+        {
+          "stdin": "40\n11",
+          "expect": "Fine: £5.0"
+        },
+        {
+          "stdin": "40\n7",
+          "expect": "Fine: £0.0"
+        }
+      ]
     },
     {
-      "slug": "gcse-selection-t3-stretch", "lesson": 3, "tier": 4, "difficulty": 5, "xp": 40, "stretch": true,
+      "slug": "gcse-selection-t3-stretch",
+      "lesson": 3,
+      "tier": 4,
+      "difficulty": 5,
+      "xp": 40,
+      "stretch": true,
       "title": "Exam retake eligibility",
       "brief": "An exam board decides whether a student may retake an exam:\n\n- if the mark is 40 or above, the student has passed and does not need a retake, however many attempts they've had\n- if the mark is below 40, the student may retake the exam if they have had fewer than 3 previous attempts\n- if the mark is below 40 and they have already had 3 or more attempts, no more retakes are allowed\n\nRead the mark (whole number), then the number of previous attempts (whole number). Print exactly one of `Passed`, `Retake allowed` or `No more attempts`.",
       "starter": "",
-      "hints": ["Check the pass condition first — if it's true, the number of attempts doesn't matter at all, so nothing else needs checking.", "The pattern is `if <pass condition>: ... elif <retake condition>: ... else: ...` — order matters here."],
-      "tests": [{ "stdin": "30\n1", "expect": "Retake allowed" }, { "stdin": "30\n3", "expect": "No more attempts" }, { "stdin": "45\n5", "expect": "Passed" }]
+      "hints": [
+        "Check the pass condition first — if it's true, the number of attempts doesn't matter at all, so nothing else needs checking.",
+        "The pattern is `if <pass condition>: ... elif <retake condition>: ... else: ...` — order matters here."
+      ],
+      "tests": [
+        {
+          "stdin": "30\n1",
+          "expect": "Retake allowed"
+        },
+        {
+          "stdin": "30\n3",
+          "expect": "No more attempts"
+        },
+        {
+          "stdin": "45\n5",
+          "expect": "Passed"
+        }
+      ]
     }
   ],
   "homeworkTasks": [
-    { "slug": "gcse-selection-hw-01", "lesson": 1, "tier": 1, "difficulty": 1, "xp": 10, "title": "Even or odd",
+    {
+      "slug": "gcse-selection-hw-01",
+      "lesson": 1,
+      "tier": 1,
+      "difficulty": 1,
+      "xp": 10,
+      "title": "Even or odd",
       "brief": "Input a whole number. Print `Even` if it divides evenly by 2, otherwise print `Odd`.",
-      "starter": "", "hints": ["% gives the remainder after division — zero means it divides evenly.", "The pattern is `if n % 2 == 0: ... else: ...`."],
-      "tests": [{ "stdin": "4", "expect": "Even" }, { "stdin": "7", "expect": "Odd" }] },
-    { "slug": "gcse-selection-hw-02", "lesson": 3, "tier": 1, "difficulty": 2, "xp": 20, "title": "Positive, negative or zero",
+      "starter": "",
+      "hints": [
+        "% gives the remainder after division — zero means it divides evenly.",
+        "The pattern is `if n % 2 == 0: ... else: ...`."
+      ],
+      "tests": [
+        {
+          "stdin": "4",
+          "expect": "Even"
+        },
+        {
+          "stdin": "7",
+          "expect": "Odd"
+        }
+      ]
+    },
+    {
+      "slug": "gcse-selection-hw-02",
+      "lesson": 3,
+      "tier": 1,
+      "difficulty": 2,
+      "xp": 20,
+      "title": "Positive, negative or zero",
       "brief": "Input a whole number. Print `Positive` if it's greater than 0, `Negative` if it's less than 0, or `Zero` if it's exactly 0.",
-      "starter": "", "hints": ["There are three outcomes, so you need an if / elif / else chain, not just if / else.", "Check greater than 0 first, then less than 0, with else catching exactly 0."],
-      "tests": [{ "stdin": "5", "expect": "Positive" }, { "stdin": "-3", "expect": "Negative" }, { "stdin": "0", "expect": "Zero" }] },
-    { "slug": "gcse-selection-hw-03", "lesson": 1, "tier": 1, "difficulty": 1, "xp": 10, "title": "Pass or fail",
+      "starter": "",
+      "hints": [
+        "There are three outcomes, so you need an if / elif / else chain, not just if / else.",
+        "Check greater than 0 first, then less than 0, with else catching exactly 0."
+      ],
+      "tests": [
+        {
+          "stdin": "5",
+          "expect": "Positive"
+        },
+        {
+          "stdin": "-3",
+          "expect": "Negative"
+        },
+        {
+          "stdin": "0",
+          "expect": "Zero"
+        }
+      ]
+    },
+    {
+      "slug": "gcse-selection-hw-03",
+      "lesson": 1,
+      "tier": 1,
+      "difficulty": 1,
+      "xp": 10,
+      "title": "Pass or fail",
       "brief": "Input a whole number mark out of 100. Print `Pass` if it's 50 or above, otherwise print `Fail`.",
-      "starter": "", "hints": ["\"50 or above\" includes exactly 50, so use >= rather than >.", "The pattern is `if mark >= 50: ... else: ...`."],
-      "tests": [{ "stdin": "62", "expect": "Pass" }, { "stdin": "40", "expect": "Fail" }] },
-    { "slug": "gcse-selection-hw-04", "lesson": 1, "tier": 1, "difficulty": 1, "xp": 10, "title": "Speeding check",
+      "starter": "",
+      "hints": [
+        "\"50 or above\" includes exactly 50, so use >= rather than >.",
+        "The pattern is `if mark >= 50: ... else: ...`."
+      ],
+      "tests": [
+        {
+          "stdin": "62",
+          "expect": "Pass"
+        },
+        {
+          "stdin": "40",
+          "expect": "Fail"
+        }
+      ]
+    },
+    {
+      "slug": "gcse-selection-hw-04",
+      "lesson": 1,
+      "tier": 1,
+      "difficulty": 1,
+      "xp": 10,
+      "title": "Speeding check",
       "brief": "The speed limit is 70. Input a whole number speed. Print `Ticket` if the speed is over 70, otherwise print `OK`.",
-      "starter": "", "hints": ["\"Over\" the limit means strictly greater than, not equal to.", "The pattern is `if speed > 70: ... else: ...`."],
-      "tests": [{ "stdin": "85", "expect": "Ticket" }, { "stdin": "70", "expect": "OK" }] },
-    { "slug": "gcse-selection-hw-05", "lesson": 3, "tier": 2, "difficulty": 2, "xp": 20, "title": "Member discount",
+      "starter": "",
+      "hints": [
+        "\"Over\" the limit means strictly greater than, not equal to.",
+        "The pattern is `if speed > 70: ... else: ...`."
+      ],
+      "tests": [
+        {
+          "stdin": "85",
+          "expect": "Ticket"
+        },
+        {
+          "stdin": "70",
+          "expect": "OK"
+        }
+      ]
+    },
+    {
+      "slug": "gcse-selection-hw-05",
+      "lesson": 3,
+      "tier": 2,
+      "difficulty": 2,
+      "xp": 20,
+      "title": "Member discount",
       "brief": "A shop gives a discount to members who spend £50 or more. Input whether the customer is a member (yes or no). Input how much they spent, which may include pence. Print `Discount` if they are a member and spent at least £50, otherwise print `No discount`.",
-      "starter": "", "hints": ["Both conditions must be true at once, so join them with and.", "The pattern is `if is_member == \"yes\" and spent >= 50: ... else: ...`."],
-      "tests": [{ "stdin": "yes\n60.00", "expect": "Discount" }, { "stdin": "yes\n40.00", "expect": "No discount" }] },
-    { "slug": "gcse-selection-hw-06", "lesson": 3, "tier": 2, "difficulty": 2, "xp": 20, "title": "Free shipping",
+      "starter": "",
+      "hints": [
+        "Both conditions must be true at once, so join them with and.",
+        "The pattern is `if is_member == \"yes\" and spent >= 50: ... else: ...`."
+      ],
+      "tests": [
+        {
+          "stdin": "yes\n60.00",
+          "expect": "Discount"
+        },
+        {
+          "stdin": "yes\n40.00",
+          "expect": "No discount"
+        }
+      ]
+    },
+    {
+      "slug": "gcse-selection-hw-06",
+      "lesson": 3,
+      "tier": 2,
+      "difficulty": 2,
+      "xp": 20,
+      "title": "Free shipping",
       "brief": "An online shop gives free shipping if a customer spends £30 or more, or if they are already a member. Input how much they spent (may include pence). Input whether they are a member (yes or no). Print `Free shipping` if either condition is true, otherwise print `Shipping charged`.",
-      "starter": "", "hints": ["Only one of the two conditions needs to be true, so join them with or.", "The pattern is `if spent >= 30 or is_member == \"yes\": ... else: ...`."],
-      "tests": [{ "stdin": "20.00\nyes", "expect": "Free shipping" }, { "stdin": "20.00\nno", "expect": "Shipping charged" }] },
-    { "slug": "gcse-selection-hw-07", "lesson": 3, "tier": 2, "difficulty": 3, "xp": 25, "title": "Weather advice",
+      "starter": "",
+      "hints": [
+        "Only one of the two conditions needs to be true, so join them with or.",
+        "The pattern is `if spent >= 30 or is_member == \"yes\": ... else: ...`."
+      ],
+      "tests": [
+        {
+          "stdin": "20.00\nyes",
+          "expect": "Free shipping"
+        },
+        {
+          "stdin": "20.00\nno",
+          "expect": "Shipping charged"
+        }
+      ]
+    },
+    {
+      "slug": "gcse-selection-hw-07",
+      "lesson": 3,
+      "tier": 2,
+      "difficulty": 3,
+      "xp": 25,
+      "title": "Weather advice",
       "brief": "Input a whole number temperature in °C. Print `Freezing` if it's below 0, `Cold` if it's below 15, `Mild` if it's below 25, or `Hot` otherwise.",
-      "starter": "", "hints": ["Check the boundaries in order from lowest to highest, so each elif only needs to handle what the earlier checks ruled out.", "The pattern is `if temp < 0: ... elif temp < 15: ... elif temp < 25: ... else: ...`."],
-      "tests": [{ "stdin": "-5", "expect": "Freezing" }, { "stdin": "10", "expect": "Cold" }, { "stdin": "20", "expect": "Mild" }, { "stdin": "30", "expect": "Hot" }] },
-    { "slug": "gcse-selection-hw-08", "lesson": 3, "tier": 1, "difficulty": 2, "xp": 15, "title": "In range 1 to 10",
+      "starter": "",
+      "hints": [
+        "Check the boundaries in order from lowest to highest, so each elif only needs to handle what the earlier checks ruled out.",
+        "The pattern is `if temp < 0: ... elif temp < 15: ... elif temp < 25: ... else: ...`."
+      ],
+      "tests": [
+        {
+          "stdin": "-5",
+          "expect": "Freezing"
+        },
+        {
+          "stdin": "10",
+          "expect": "Cold"
+        },
+        {
+          "stdin": "20",
+          "expect": "Mild"
+        },
+        {
+          "stdin": "30",
+          "expect": "Hot"
+        }
+      ]
+    },
+    {
+      "slug": "gcse-selection-hw-08",
+      "lesson": 3,
+      "tier": 1,
+      "difficulty": 2,
+      "xp": 15,
+      "title": "In range 1 to 10",
       "brief": "Input a whole number. Print `In range` if it's between 1 and 10 inclusive, otherwise print `Out of range`.",
-      "starter": "", "hints": ["Python lets you chain two comparisons in one condition to check a value falls between two boundaries.", "The pattern is `if 1 <= n <= 10: ... else: ...`."],
-      "tests": [{ "stdin": "5", "expect": "In range" }, { "stdin": "15", "expect": "Out of range" }] },
-    { "slug": "gcse-selection-hw-09", "lesson": 1, "tier": 1, "difficulty": 2, "xp": 15, "title": "Password length check",
+      "starter": "",
+      "hints": [
+        "Python lets you chain two comparisons in one condition to check a value falls between two boundaries.",
+        "The pattern is `if 1 <= n <= 10: ... else: ...`."
+      ],
+      "tests": [
+        {
+          "stdin": "5",
+          "expect": "In range"
+        },
+        {
+          "stdin": "15",
+          "expect": "Out of range"
+        }
+      ]
+    },
+    {
+      "slug": "gcse-selection-hw-09",
+      "lesson": 1,
+      "tier": 1,
+      "difficulty": 2,
+      "xp": 15,
+      "title": "Password length check",
       "brief": "Input a password. Print `Valid` if it's at least 8 characters long, otherwise print `Too short`.",
-      "starter": "", "hints": ["len() gives the number of characters in a string.", "The pattern is `if len(password) >= 8: ... else: ...`."],
-      "tests": [{ "stdin": "sunshine123", "expect": "Valid" }, { "stdin": "cat", "expect": "Too short" }] },
-    { "slug": "gcse-selection-hw-10", "lesson": 4, "tier": 3, "difficulty": 4, "xp": 30, "title": "Leap year check",
+      "starter": "",
+      "hints": [
+        "len() gives the number of characters in a string.",
+        "The pattern is `if len(password) >= 8: ... else: ...`."
+      ],
+      "tests": [
+        {
+          "stdin": "sunshine123",
+          "expect": "Valid"
+        },
+        {
+          "stdin": "cat",
+          "expect": "Too short"
+        }
+      ]
+    },
+    {
+      "slug": "gcse-selection-hw-10",
+      "lesson": 4,
+      "tier": 3,
+      "difficulty": 4,
+      "xp": 30,
+      "title": "Leap year check",
       "brief": "A year is a leap year if it divides evenly by 4, unless it also divides evenly by 100 — in which case it's only a leap year if it also divides evenly by 400. Input a whole number year. Print `Leap year` or `Not a leap year`.",
-      "starter": "", "hints": ["Combine and/or carefully: divides by 4 AND (doesn't divide by 100 OR does divide by 400).", "The full condition can be built and stored in one Boolean variable before the if statement, to keep it readable."],
-      "tests": [{ "stdin": "2024", "expect": "Leap year" }, { "stdin": "1900", "expect": "Not a leap year" }] },
-    { "slug": "gcse-selection-hw-11", "lesson": 3, "tier": 2, "difficulty": 3, "xp": 25, "title": "Grade classification",
+      "starter": "",
+      "hints": [
+        "Combine and/or carefully: divides by 4 AND (doesn't divide by 100 OR does divide by 400).",
+        "The full condition can be built and stored in one Boolean variable before the if statement, to keep it readable."
+      ],
+      "tests": [
+        {
+          "stdin": "2024",
+          "expect": "Leap year"
+        },
+        {
+          "stdin": "1900",
+          "expect": "Not a leap year"
+        }
+      ]
+    },
+    {
+      "slug": "gcse-selection-hw-11",
+      "lesson": 3,
+      "tier": 2,
+      "difficulty": 3,
+      "xp": 25,
+      "title": "Grade classification",
       "brief": "Input a whole number percentage. Print `Distinction` for 90 or above, `Merit` for 70 or above, `Pass` for 40 or above, or `Fail` otherwise.",
-      "starter": "", "hints": ["Check the highest boundary first, then work downward.", "The pattern is `if pct >= 90: ... elif pct >= 70: ... elif pct >= 40: ... else: ...`."],
-      "tests": [{ "stdin": "95", "expect": "Distinction" }, { "stdin": "75", "expect": "Merit" }, { "stdin": "50", "expect": "Pass" }, { "stdin": "20", "expect": "Fail" }] },
-    { "slug": "gcse-selection-hw-12", "lesson": 3, "tier": 2, "difficulty": 3, "xp": 25, "title": "Ticket age category",
+      "starter": "",
+      "hints": [
+        "Check the highest boundary first, then work downward.",
+        "The pattern is `if pct >= 90: ... elif pct >= 70: ... elif pct >= 40: ... else: ...`."
+      ],
+      "tests": [
+        {
+          "stdin": "95",
+          "expect": "Distinction"
+        },
+        {
+          "stdin": "75",
+          "expect": "Merit"
+        },
+        {
+          "stdin": "50",
+          "expect": "Pass"
+        },
+        {
+          "stdin": "20",
+          "expect": "Fail"
+        }
+      ]
+    },
+    {
+      "slug": "gcse-selection-hw-12",
+      "lesson": 3,
+      "tier": 2,
+      "difficulty": 3,
+      "xp": 25,
+      "title": "Ticket age category",
       "brief": "Input a whole number age. Print `Child` if under 12, `Senior` if 65 or over, or `Adult` otherwise.",
-      "starter": "", "hints": ["Check the child boundary first, then the senior boundary, with else covering everyone left.", "The pattern is `if age < 12: ... elif age >= 65: ... else: ...`."],
-      "tests": [{ "stdin": "8", "expect": "Child" }, { "stdin": "70", "expect": "Senior" }, { "stdin": "30", "expect": "Adult" }] },
-    { "slug": "gcse-selection-hw-13", "lesson": 3, "tier": 2, "difficulty": 3, "xp": 25, "title": "Two-factor check",
+      "starter": "",
+      "hints": [
+        "Check the child boundary first, then the senior boundary, with else covering everyone left.",
+        "The pattern is `if age < 12: ... elif age >= 65: ... else: ...`."
+      ],
+      "tests": [
+        {
+          "stdin": "8",
+          "expect": "Child"
+        },
+        {
+          "stdin": "70",
+          "expect": "Senior"
+        },
+        {
+          "stdin": "30",
+          "expect": "Adult"
+        }
+      ]
+    },
+    {
+      "slug": "gcse-selection-hw-13",
+      "lesson": 3,
+      "tier": 2,
+      "difficulty": 3,
+      "xp": 25,
+      "title": "Two-factor check",
       "brief": "Input a 4-digit code. Input whether the device is trusted (yes or no). Print `Access granted` only if the code is exactly 1234 and the device is trusted, otherwise print `Access denied`.",
-      "starter": "", "hints": ["Both checks must be true at once, so join them with and.", "The pattern is `if code == \"1234\" and device == \"yes\": ... else: ...`."],
-      "tests": [{ "stdin": "1234\nyes", "expect": "Access granted" }, { "stdin": "1234\nno", "expect": "Access denied" }] },
-    { "slug": "gcse-selection-hw-14", "lesson": 3, "tier": 3, "difficulty": 3, "xp": 30, "title": "Simple calculator",
+      "starter": "",
+      "hints": [
+        "Both checks must be true at once, so join them with and.",
+        "The pattern is `if code == \"1234\" and device == \"yes\": ... else: ...`."
+      ],
+      "tests": [
+        {
+          "stdin": "1234\nyes",
+          "expect": "Access granted"
+        },
+        {
+          "stdin": "1234\nno",
+          "expect": "Access denied"
+        }
+      ]
+    },
+    {
+      "slug": "gcse-selection-hw-14",
+      "lesson": 3,
+      "tier": 3,
+      "difficulty": 3,
+      "xp": 30,
+      "title": "Simple calculator",
       "brief": "Input a mathematical operator, which will be one of +, - or *. Input two whole numbers, one at a time. Print the result of applying that operator to the two numbers, in that order.",
-      "starter": "", "hints": ["Three possible operators means an if / elif / elif chain, comparing the operator string in each branch.", "The pattern is `if op == \"+\": ... elif op == \"-\": ... elif op == \"*\": ...`."],
-      "tests": [{ "stdin": "+\n5\n3", "expect": "8" }, { "stdin": "-\n10\n4", "expect": "6" }] },
-    { "slug": "gcse-selection-hw-15", "lesson": 4, "tier": 2, "difficulty": 2, "xp": 20, "title": "Store open check",
+      "starter": "",
+      "hints": [
+        "Three possible operators means an if / elif / elif chain, comparing the operator string in each branch.",
+        "The pattern is `if op == \"+\": ... elif op == \"-\": ... elif op == \"*\": ...`."
+      ],
+      "tests": [
+        {
+          "stdin": "+\n5\n3",
+          "expect": "8"
+        },
+        {
+          "stdin": "-\n10\n4",
+          "expect": "6"
+        }
+      ]
+    },
+    {
+      "slug": "gcse-selection-hw-15",
+      "lesson": 4,
+      "tier": 2,
+      "difficulty": 2,
+      "xp": 20,
+      "title": "Store open check",
       "brief": "A store is open from 9 (inclusive) until 18 (exclusive), on a 24-hour clock. Input a whole number hour. Print `Open` if the store is open at that hour, otherwise print `Closed`.",
-      "starter": "", "hints": ["Both boundaries must hold at once, so join them with and.", "The pattern is `if hour >= 9 and hour < 18: ... else: ...`."],
-      "tests": [{ "stdin": "12", "expect": "Open" }, { "stdin": "20", "expect": "Closed" }] },
-    { "slug": "gcse-selection-hw-16", "lesson": 1, "tier": 1, "difficulty": 1, "xp": 10, "title": "Ice warning",
+      "starter": "",
+      "hints": [
+        "Both boundaries must hold at once, so join them with and.",
+        "The pattern is `if hour >= 9 and hour < 18: ... else: ...`."
+      ],
+      "tests": [
+        {
+          "stdin": "12",
+          "expect": "Open"
+        },
+        {
+          "stdin": "20",
+          "expect": "Closed"
+        }
+      ]
+    },
+    {
+      "slug": "gcse-selection-hw-16",
+      "lesson": 1,
+      "tier": 1,
+      "difficulty": 1,
+      "xp": 10,
+      "title": "Ice warning",
       "brief": "Input a whole number temperature in °C. Print `Ice warning` if it's 0 or below, otherwise print `Safe`.",
-      "starter": "", "hints": ["\"0 or below\" includes exactly 0, so use <= rather than <.", "The pattern is `if temp <= 0: ... else: ...`."],
-      "tests": [{ "stdin": "-2", "expect": "Ice warning" }, { "stdin": "5", "expect": "Safe" }] },
-    { "slug": "gcse-selection-hw-17", "lesson": 3, "tier": 2, "difficulty": 2, "xp": 20, "title": "Speed category",
+      "starter": "",
+      "hints": [
+        "\"0 or below\" includes exactly 0, so use <= rather than <.",
+        "The pattern is `if temp <= 0: ... else: ...`."
+      ],
+      "tests": [
+        {
+          "stdin": "-2",
+          "expect": "Ice warning"
+        },
+        {
+          "stdin": "5",
+          "expect": "Safe"
+        }
+      ]
+    },
+    {
+      "slug": "gcse-selection-hw-17",
+      "lesson": 3,
+      "tier": 2,
+      "difficulty": 2,
+      "xp": 20,
+      "title": "Speed category",
       "brief": "Input a whole number speed. Print `Slow` for under 30, `Medium` for under 60, or `Fast` otherwise.",
-      "starter": "", "hints": ["Check the lowest boundary first, then the next.", "The pattern is `if speed < 30: ... elif speed < 60: ... else: ...`."],
-      "tests": [{ "stdin": "20", "expect": "Slow" }, { "stdin": "45", "expect": "Medium" }, { "stdin": "80", "expect": "Fast" }] },
-    { "slug": "gcse-selection-hw-18", "lesson": 1, "tier": 1, "difficulty": 1, "xp": 15, "title": "Discount code",
+      "starter": "",
+      "hints": [
+        "Check the lowest boundary first, then the next.",
+        "The pattern is `if speed < 30: ... elif speed < 60: ... else: ...`."
+      ],
+      "tests": [
+        {
+          "stdin": "20",
+          "expect": "Slow"
+        },
+        {
+          "stdin": "45",
+          "expect": "Medium"
+        },
+        {
+          "stdin": "80",
+          "expect": "Fast"
+        }
+      ]
+    },
+    {
+      "slug": "gcse-selection-hw-18",
+      "lesson": 1,
+      "tier": 1,
+      "difficulty": 1,
+      "xp": 15,
+      "title": "Discount code",
       "brief": "Input a discount code. Print `Applied` if it exactly matches SAVE10, otherwise print `Invalid code`.",
-      "starter": "", "hints": ["String comparisons are case sensitive — check the exact spelling given.", "The pattern is `if code == \"SAVE10\": ... else: ...`."],
-      "tests": [{ "stdin": "SAVE10", "expect": "Applied" }, { "stdin": "save10", "expect": "Invalid code" }] },
-    { "slug": "gcse-selection-hw-19", "lesson": 3, "tier": 2, "difficulty": 3, "xp": 25, "title": "Multiple of 3 and 5",
+      "starter": "",
+      "hints": [
+        "String comparisons are case sensitive — check the exact spelling given.",
+        "The pattern is `if code == \"SAVE10\": ... else: ...`."
+      ],
+      "tests": [
+        {
+          "stdin": "SAVE10",
+          "expect": "Applied"
+        },
+        {
+          "stdin": "save10",
+          "expect": "Invalid code"
+        }
+      ]
+    },
+    {
+      "slug": "gcse-selection-hw-19",
+      "lesson": 3,
+      "tier": 2,
+      "difficulty": 3,
+      "xp": 25,
+      "title": "Multiple of 3 and 5",
       "brief": "Input a whole number. Print `Both` if it divides evenly by both 3 and 5, otherwise print `No`.",
-      "starter": "", "hints": ["Two separate % checks, joined with and.", "The pattern is `if n % 3 == 0 and n % 5 == 0: ... else: ...`."],
-      "tests": [{ "stdin": "15", "expect": "Both" }, { "stdin": "9", "expect": "No" }] },
-    { "slug": "gcse-selection-hw-20", "lesson": 3, "tier": 2, "difficulty": 3, "xp": 25, "title": "Refund eligibility",
+      "starter": "",
+      "hints": [
+        "Two separate % checks, joined with and.",
+        "The pattern is `if n % 3 == 0 and n % 5 == 0: ... else: ...`."
+      ],
+      "tests": [
+        {
+          "stdin": "15",
+          "expect": "Both"
+        },
+        {
+          "stdin": "9",
+          "expect": "No"
+        }
+      ]
+    },
+    {
+      "slug": "gcse-selection-hw-20",
+      "lesson": 3,
+      "tier": 2,
+      "difficulty": 3,
+      "xp": 25,
+      "title": "Refund eligibility",
       "brief": "Input how many days before an event a ticket is being returned, a whole number. Print `Full refund` for 7 or more days, `Partial refund` for 2 or more days, or `No refund` otherwise.",
-      "starter": "", "hints": ["Check the largest boundary first, then work downward.", "The pattern is `if days >= 7: ... elif days >= 2: ... else: ...`."],
-      "tests": [{ "stdin": "10", "expect": "Full refund" }, { "stdin": "3", "expect": "Partial refund" }, { "stdin": "1", "expect": "No refund" }] },
-    { "slug": "gcse-selection-hw-21", "lesson": 3, "tier": 3, "difficulty": 3, "xp": 30, "title": "Membership tier",
+      "starter": "",
+      "hints": [
+        "Check the largest boundary first, then work downward.",
+        "The pattern is `if days >= 7: ... elif days >= 2: ... else: ...`."
+      ],
+      "tests": [
+        {
+          "stdin": "10",
+          "expect": "Full refund"
+        },
+        {
+          "stdin": "3",
+          "expect": "Partial refund"
+        },
+        {
+          "stdin": "1",
+          "expect": "No refund"
+        }
+      ]
+    },
+    {
+      "slug": "gcse-selection-hw-21",
+      "lesson": 3,
+      "tier": 3,
+      "difficulty": 3,
+      "xp": 30,
+      "title": "Membership tier",
       "brief": "Input a whole number of loyalty points. Print `Gold` for 1000 or more, `Silver` for 500 or more, `Bronze` for 100 or more, or `None` otherwise.",
-      "starter": "", "hints": ["Check the highest boundary first, then work downward through the rest.", "The pattern is `if points >= 1000: ... elif points >= 500: ... elif points >= 100: ... else: ...`."],
-      "tests": [{ "stdin": "1200", "expect": "Gold" }, { "stdin": "600", "expect": "Silver" }, { "stdin": "150", "expect": "Bronze" }, { "stdin": "50", "expect": "None" }] },
-    { "slug": "gcse-selection-hw-22", "lesson": 3, "tier": 2, "difficulty": 3, "xp": 25, "title": "Certificate eligibility",
+      "starter": "",
+      "hints": [
+        "Check the highest boundary first, then work downward through the rest.",
+        "The pattern is `if points >= 1000: ... elif points >= 500: ... elif points >= 100: ... else: ...`."
+      ],
+      "tests": [
+        {
+          "stdin": "1200",
+          "expect": "Gold"
+        },
+        {
+          "stdin": "600",
+          "expect": "Silver"
+        },
+        {
+          "stdin": "150",
+          "expect": "Bronze"
+        },
+        {
+          "stdin": "50",
+          "expect": "None"
+        }
+      ]
+    },
+    {
+      "slug": "gcse-selection-hw-22",
+      "lesson": 3,
+      "tier": 2,
+      "difficulty": 3,
+      "xp": 25,
+      "title": "Certificate eligibility",
       "brief": "Input a whole number mark and a whole number attendance percentage. Print `Certificate` if the mark is 40 or above and attendance is 80 or above, otherwise print `No certificate`.",
-      "starter": "", "hints": ["Both conditions must hold at once, so join them with and.", "The pattern is `if mark >= 40 and attendance >= 80: ... else: ...`."],
-      "tests": [{ "stdin": "55\n90", "expect": "Certificate" }, { "stdin": "55\n60", "expect": "No certificate" }] },
-    { "slug": "gcse-selection-hw-23", "lesson": 3, "tier": 1, "difficulty": 2, "xp": 20, "title": "Age category",
+      "starter": "",
+      "hints": [
+        "Both conditions must hold at once, so join them with and.",
+        "The pattern is `if mark >= 40 and attendance >= 80: ... else: ...`."
+      ],
+      "tests": [
+        {
+          "stdin": "55\n90",
+          "expect": "Certificate"
+        },
+        {
+          "stdin": "55\n60",
+          "expect": "No certificate"
+        }
+      ]
+    },
+    {
+      "slug": "gcse-selection-hw-23",
+      "lesson": 3,
+      "tier": 1,
+      "difficulty": 2,
+      "xp": 20,
+      "title": "Age category",
       "brief": "Input a whole number age. Print `Child` for under 13, `Teen` for under 20, or `Adult` otherwise.",
-      "starter": "", "hints": ["Check the lowest boundary first, then the next.", "The pattern is `if age < 13: ... elif age < 20: ... else: ...`."],
-      "tests": [{ "stdin": "8", "expect": "Child" }, { "stdin": "16", "expect": "Teen" }, { "stdin": "30", "expect": "Adult" }] },
-    { "slug": "gcse-selection-hw-24", "lesson": 3, "tier": 2, "difficulty": 2, "xp": 20, "title": "Positive even check",
+      "starter": "",
+      "hints": [
+        "Check the lowest boundary first, then the next.",
+        "The pattern is `if age < 13: ... elif age < 20: ... else: ...`."
+      ],
+      "tests": [
+        {
+          "stdin": "8",
+          "expect": "Child"
+        },
+        {
+          "stdin": "16",
+          "expect": "Teen"
+        },
+        {
+          "stdin": "30",
+          "expect": "Adult"
+        }
+      ]
+    },
+    {
+      "slug": "gcse-selection-hw-24",
+      "lesson": 3,
+      "tier": 2,
+      "difficulty": 2,
+      "xp": 20,
+      "title": "Positive even check",
       "brief": "Input a whole number. Print `Positive even` if it's greater than 0 and divides evenly by 2, otherwise print `Other`.",
-      "starter": "", "hints": ["Both conditions must hold at once, so join them with and.", "The pattern is `if n > 0 and n % 2 == 0: ... else: ...`."],
-      "tests": [{ "stdin": "8", "expect": "Positive even" }, { "stdin": "-4", "expect": "Other" }] },
-    { "slug": "gcse-selection-hw-25", "lesson": 3, "tier": 2, "difficulty": 3, "xp": 25, "title": "Exam entry check",
+      "starter": "",
+      "hints": [
+        "Both conditions must hold at once, so join them with and.",
+        "The pattern is `if n > 0 and n % 2 == 0: ... else: ...`."
+      ],
+      "tests": [
+        {
+          "stdin": "8",
+          "expect": "Positive even"
+        },
+        {
+          "stdin": "-4",
+          "expect": "Other"
+        }
+      ]
+    },
+    {
+      "slug": "gcse-selection-hw-25",
+      "lesson": 3,
+      "tier": 2,
+      "difficulty": 3,
+      "xp": 25,
+      "title": "Exam entry check",
       "brief": "Input a whole number age. Input whether coursework has been submitted (yes or no). Print `Entered` if the student is at least 16 and has submitted coursework, otherwise print `Not entered`.",
-      "starter": "", "hints": ["Both conditions must hold at once, so join them with and.", "The pattern is `if age >= 16 and coursework == \"yes\": ... else: ...`."],
-      "tests": [{ "stdin": "17\nyes", "expect": "Entered" }, { "stdin": "17\nno", "expect": "Not entered" }] }
+      "starter": "",
+      "hints": [
+        "Both conditions must hold at once, so join them with and.",
+        "The pattern is `if age >= 16 and coursework == \"yes\": ... else: ...`."
+      ],
+      "tests": [
+        {
+          "stdin": "17\nyes",
+          "expect": "Entered"
+        },
+        {
+          "stdin": "17\nno",
+          "expect": "Not entered"
+        }
+      ]
+    }
   ],
   "projectTasks": [
-    { "slug": "gcse-selection-proj1a", "tier": 4, "difficulty": 2, "xp": 30, "group": "gcse-selection-bigproj1", "part": "A",
+    {
+      "slug": "gcse-selection-proj1a",
+      "tier": 4,
+      "difficulty": 2,
+      "xp": 30,
+      "group": "gcse-selection-bigproj1",
+      "part": "A",
       "title": "Parcel delivery estimator — Part A: heavy or standard",
       "brief": "A courier is building a delivery cost estimator, split into three parts — each part builds directly on the code you write for the one before it, so keep what you've written rather than starting over.\n\n**Part A.** Read a parcel's weight in kg, which may include decimals. Print `Heavy parcel` if it weighs more than 5kg, otherwise print `Standard parcel`.",
-      "starter": "", "hints": ["Compare the weight to 5 using an if/else.", "Cast the input to a float, then check if it's greater than 5 before printing the matching message."],
-      "tests": [{ "stdin": "6", "expect": "Heavy parcel" }, { "stdin": "3", "expect": "Standard parcel" }] },
-    { "slug": "gcse-selection-proj1b", "tier": 4, "difficulty": 3, "xp": 35, "group": "gcse-selection-bigproj1", "part": "B",
+      "starter": "",
+      "hints": [
+        "Compare the weight to 5 using an if/else.",
+        "Cast the input to a float, then check if it's greater than 5 before printing the matching message."
+      ],
+      "tests": [
+        {
+          "stdin": "6",
+          "expect": "Heavy parcel"
+        },
+        {
+          "stdin": "3",
+          "expect": "Standard parcel"
+        }
+      ]
+    },
+    {
+      "slug": "gcse-selection-proj1b",
+      "tier": 4,
+      "difficulty": 3,
+      "xp": 35,
+      "group": "gcse-selection-bigproj1",
+      "part": "B",
       "title": "Parcel delivery estimator — Part B: the cost",
       "brief": "**Part B.** Your code carries on from Part A — keep everything you already wrote and add to it. Standard parcels (5kg or under) cost a flat £3.50. Heavy parcels cost £3.50 plus £1.20 for every kg over 5. No new input needed — reuse the weight you already read. After your Part A message, print the delivery cost, rounded to 2 decimal places, as a new line in the format `Cost: £<amount>`.",
-      "starter": "", "hints": ["Don't delete your Part A code — reuse the weight variable you already have, then add a new print statement.", "if weight > 5: cost = round(3.50 + 1.20 * (weight - 5), 2) else: cost = 3.50 — then print it, added after your existing Part A message."],
-      "tests": [{ "stdin": "3", "expect": "Standard parcel\nCost: £3.5" }, { "stdin": "8", "expect": "Heavy parcel\nCost: £7.1" }] },
-    { "slug": "gcse-selection-proj1c", "tier": 4, "difficulty": 4, "xp": 40, "group": "gcse-selection-bigproj1", "part": "C",
+      "starter": "",
+      "hints": [
+        "Don't delete your Part A code — reuse the weight variable you already have, then add a new print statement.",
+        "if weight > 5: cost = round(3.50 + 1.20 * (weight - 5), 2) else: cost = 3.50 — then print it, added after your existing Part A message."
+      ],
+      "tests": [
+        {
+          "stdin": "3",
+          "expect": "Standard parcel\nCost: £3.5"
+        },
+        {
+          "stdin": "8",
+          "expect": "Heavy parcel\nCost: £7.1"
+        }
+      ]
+    },
+    {
+      "slug": "gcse-selection-proj1c",
+      "tier": 4,
+      "difficulty": 4,
+      "xp": 40,
+      "group": "gcse-selection-bigproj1",
+      "part": "C",
       "title": "Parcel delivery estimator — Part C: next-day surcharge",
       "brief": "**Part C.** Keep everything from Parts A and B. Also read whether next-day delivery is wanted (`yes` or `no`). After your Part B lines, print the final cost (the cost you already calculated, plus a flat £4.00 surcharge if next-day delivery was chosen), rounded to 2 decimal places, as a new line in the format `Total: £<amount>`.",
-      "starter": "", "hints": ["Reuse the cost variable from Part B rather than recalculating it from scratch.", "nextday = input(); total = round(cost + 4.00, 2) if nextday == \"yes\" else cost — then print it, added after your existing lines."],
-      "tests": [{ "stdin": "3\nno", "expect": "Standard parcel\nCost: £3.5\nTotal: £3.5" }, { "stdin": "8\nyes", "expect": "Heavy parcel\nCost: £7.1\nTotal: £11.1" }] }
+      "starter": "",
+      "hints": [
+        "Reuse the cost variable from Part B rather than recalculating it from scratch.",
+        "nextday = input(); total = round(cost + 4.00, 2) if nextday == \"yes\" else cost — then print it, added after your existing lines."
+      ],
+      "tests": [
+        {
+          "stdin": "3\nno",
+          "expect": "Standard parcel\nCost: £3.5\nTotal: £3.5"
+        },
+        {
+          "stdin": "8\nyes",
+          "expect": "Heavy parcel\nCost: £7.1\nTotal: £11.1"
+        }
+      ]
+    }
   ],
   "practiceTasks": [
-    { "slug": "gcse-selection-p-01", "tier": 1, "difficulty": 1, "xp": 10, "title": "Voting age checker",
+    {
+      "slug": "gcse-selection-p-01",
+      "tier": 1,
+      "difficulty": 1,
+      "xp": 10,
+      "title": "Voting age checker",
       "brief": "Input a person's age. Print `Can vote` if they are 18 or over, otherwise print `Cannot vote`.",
-      "starter": "", "hints": ["Compare the age to 18 with >=.", "if age >= 18: print(\"Can vote\") else: print(\"Cannot vote\")."],
-      "tests": [{ "stdin": "20", "expect": "Can vote" }, { "stdin": "15", "expect": "Cannot vote" }] },
-    { "slug": "gcse-selection-p-02", "tier": 1, "difficulty": 1, "xp": 10, "title": "Positive or negative",
+      "starter": "",
+      "hints": [
+        "Compare the age to 18 with >=.",
+        "if age >= 18: print(\"Can vote\") else: print(\"Cannot vote\")."
+      ],
+      "tests": [
+        {
+          "stdin": "20",
+          "expect": "Can vote"
+        },
+        {
+          "stdin": "15",
+          "expect": "Cannot vote"
+        },
+        {
+          "stdin": "18",
+          "expect": "Can vote"
+        },
+        {
+          "stdin": "17",
+          "expect": "Cannot vote"
+        },
+        {
+          "stdin": "100",
+          "expect": "Can vote"
+        },
+        {
+          "stdin": "0",
+          "expect": "Cannot vote"
+        }
+      ]
+    },
+    {
+      "slug": "gcse-selection-p-02",
+      "tier": 1,
+      "difficulty": 1,
+      "xp": 10,
+      "title": "Positive or negative",
       "brief": "Input a whole number. Print `Positive` if it's greater than 0, `Negative` if it's less than 0, or `Zero` if it's exactly 0.",
-      "starter": "", "hints": ["Three possible outcomes needs an if / elif / else chain.", "if n > 0: ... elif n < 0: ... else: print(\"Zero\")."],
-      "tests": [{ "stdin": "5", "expect": "Positive" }, { "stdin": "-3", "expect": "Negative" }, { "stdin": "0", "expect": "Zero" }] },
-    { "slug": "gcse-selection-p-03", "tier": 2, "difficulty": 2, "xp": 15, "title": "Speed camera",
+      "starter": "",
+      "hints": [
+        "Three possible outcomes needs an if / elif / else chain.",
+        "if n > 0: ... elif n < 0: ... else: print(\"Zero\")."
+      ],
+      "tests": [
+        {
+          "stdin": "5",
+          "expect": "Positive"
+        },
+        {
+          "stdin": "-3",
+          "expect": "Negative"
+        },
+        {
+          "stdin": "0",
+          "expect": "Zero"
+        },
+        {
+          "stdin": "1",
+          "expect": "Positive"
+        },
+        {
+          "stdin": "-1",
+          "expect": "Negative"
+        },
+        {
+          "stdin": "100",
+          "expect": "Positive"
+        },
+        {
+          "stdin": "-50",
+          "expect": "Negative"
+        }
+      ]
+    },
+    {
+      "slug": "gcse-selection-p-03",
+      "tier": 2,
+      "difficulty": 2,
+      "xp": 15,
+      "title": "Speed camera",
       "brief": "A road has a 30mph speed limit. Input a car's speed. Print `Speeding` if it's over 30, otherwise print `Within limit`.",
-      "starter": "", "hints": ["Compare the speed to 30 with >.", "if speed > 30: print(\"Speeding\") else: print(\"Within limit\")."],
-      "tests": [{ "stdin": "35", "expect": "Speeding" }, { "stdin": "28", "expect": "Within limit" }] },
-    { "slug": "gcse-selection-p-04", "tier": 3, "difficulty": 3, "xp": 25, "title": "Cinema age rating",
+      "starter": "",
+      "hints": [
+        "Compare the speed to 30 with >.",
+        "if speed > 30: print(\"Speeding\") else: print(\"Within limit\")."
+      ],
+      "tests": [
+        {
+          "stdin": "35",
+          "expect": "Speeding"
+        },
+        {
+          "stdin": "28",
+          "expect": "Within limit"
+        },
+        {
+          "stdin": "30",
+          "expect": "Within limit"
+        },
+        {
+          "stdin": "31",
+          "expect": "Speeding"
+        },
+        {
+          "stdin": "0",
+          "expect": "Within limit"
+        },
+        {
+          "stdin": "70",
+          "expect": "Speeding"
+        }
+      ]
+    },
+    {
+      "slug": "gcse-selection-p-04",
+      "tier": 3,
+      "difficulty": 3,
+      "xp": 25,
+      "title": "Cinema age rating",
       "brief": "A cinema uses age ratings U, 12, 15 and 18. Input a person's age. Print the highest rating they're allowed to watch: `18` for 18 or over, `15` for 15 or over, `12` for 12 or over, otherwise `U`.",
-      "starter": "", "hints": ["Check the highest boundary first in an elif chain, so a 20-year-old doesn't also match the 12+ or 15+ checks.", "if age >= 18: ... elif age >= 15: ... elif age >= 12: ... else: print(\"U\")."],
-      "tests": [{ "stdin": "20", "expect": "18" }, { "stdin": "16", "expect": "15" }, { "stdin": "13", "expect": "12" }, { "stdin": "8", "expect": "U" }] },
-    { "slug": "gcse-selection-p-05", "tier": 3, "difficulty": 3, "xp": 25, "title": "Data allowance",
+      "starter": "",
+      "hints": [
+        "Check the highest boundary first in an elif chain, so a 20-year-old doesn't also match the 12+ or 15+ checks.",
+        "if age >= 18: ... elif age >= 15: ... elif age >= 12: ... else: print(\"U\")."
+      ],
+      "tests": [
+        {
+          "stdin": "20",
+          "expect": "18"
+        },
+        {
+          "stdin": "16",
+          "expect": "15"
+        },
+        {
+          "stdin": "13",
+          "expect": "12"
+        },
+        {
+          "stdin": "8",
+          "expect": "U"
+        },
+        {
+          "stdin": "18",
+          "expect": "18"
+        },
+        {
+          "stdin": "15",
+          "expect": "15"
+        },
+        {
+          "stdin": "12",
+          "expect": "12"
+        },
+        {
+          "stdin": "14",
+          "expect": "12"
+        },
+        {
+          "stdin": "11",
+          "expect": "U"
+        },
+        {
+          "stdin": "17",
+          "expect": "15"
+        },
+        {
+          "stdin": "0",
+          "expect": "U"
+        }
+      ]
+    },
+    {
+      "slug": "gcse-selection-p-05",
+      "tier": 3,
+      "difficulty": 3,
+      "xp": 25,
+      "title": "Data allowance",
       "brief": "A phone plan includes 500MB of data. Input how many MB have been used. If it's over 500, print how many MB over in the format `Over allowance: <n>MB`; otherwise print how many MB are left, in the format `Remaining: <n>MB`.",
-      "starter": "", "hints": ["Compare the used amount to 500, then work out the difference either way round.", "if used > 500: print(f\"Over allowance: {used - 500}MB\") else: print(f\"Remaining: {500 - used}MB\")."],
-      "tests": [{ "stdin": "620", "expect": "Over allowance: 120MB" }, { "stdin": "350", "expect": "Remaining: 150MB" }] },
-    { "slug": "gcse-selection-p-06", "tier": 1, "difficulty": 2, "xp": 15, "title": "Grade classifier",
+      "starter": "",
+      "hints": [
+        "Compare the used amount to 500, then work out the difference either way round.",
+        "if used > 500: print(f\"Over allowance: {used - 500}MB\") else: print(f\"Remaining: {500 - used}MB\")."
+      ],
+      "tests": [
+        {
+          "stdin": "620",
+          "expect": "Over allowance: 120MB"
+        },
+        {
+          "stdin": "350",
+          "expect": "Remaining: 150MB"
+        },
+        {
+          "stdin": "500",
+          "expect": "Remaining: 0MB"
+        },
+        {
+          "stdin": "501",
+          "expect": "Over allowance: 1MB"
+        },
+        {
+          "stdin": "0",
+          "expect": "Remaining: 500MB"
+        },
+        {
+          "stdin": "499",
+          "expect": "Remaining: 1MB"
+        }
+      ]
+    },
+    {
+      "slug": "gcse-selection-p-06",
+      "tier": 1,
+      "difficulty": 2,
+      "xp": 15,
+      "title": "Grade classifier",
       "brief": "Input a score out of 100, a whole number. Print `Pass` if it's 40 or above, otherwise print `Fail`.",
-      "starter": "", "hints": ["A single if/else compares the score to 40.", "if score >= 40: print(\"Pass\") else: print(\"Fail\")."],
-      "tests": [{ "stdin": "55", "expect": "Pass" }, { "stdin": "30", "expect": "Fail" }] },
-    { "slug": "gcse-selection-p-07", "tier": 2, "difficulty": 3, "xp": 20, "title": "Even, odd or zero",
+      "starter": "",
+      "hints": [
+        "A single if/else compares the score to 40.",
+        "if score >= 40: print(\"Pass\") else: print(\"Fail\")."
+      ],
+      "tests": [
+        {
+          "stdin": "55",
+          "expect": "Pass"
+        },
+        {
+          "stdin": "30",
+          "expect": "Fail"
+        },
+        {
+          "stdin": "40",
+          "expect": "Pass"
+        },
+        {
+          "stdin": "39",
+          "expect": "Fail"
+        },
+        {
+          "stdin": "100",
+          "expect": "Pass"
+        },
+        {
+          "stdin": "0",
+          "expect": "Fail"
+        }
+      ]
+    },
+    {
+      "slug": "gcse-selection-p-07",
+      "tier": 2,
+      "difficulty": 3,
+      "xp": 20,
+      "title": "Even, odd or zero",
       "brief": "Input a whole number. Print `Zero` if it's 0, `Even` if it's even, or `Odd` if it's odd.",
-      "starter": "", "hints": ["Check for 0 first, then use % 2 to tell even from odd for everything else.", "if n == 0: print(\"Zero\") elif n % 2 == 0: print(\"Even\") else: print(\"Odd\")."],
-      "tests": [{ "stdin": "0", "expect": "Zero" }, { "stdin": "4", "expect": "Even" }, { "stdin": "7", "expect": "Odd" }] },
-    { "slug": "gcse-selection-p-08", "tier": 3, "difficulty": 4, "xp": 25, "title": "Triangle classifier",
+      "starter": "",
+      "hints": [
+        "Check for 0 first, then use % 2 to tell even from odd for everything else.",
+        "if n == 0: print(\"Zero\") elif n % 2 == 0: print(\"Even\") else: print(\"Odd\")."
+      ],
+      "tests": [
+        {
+          "stdin": "0",
+          "expect": "Zero"
+        },
+        {
+          "stdin": "4",
+          "expect": "Even"
+        },
+        {
+          "stdin": "7",
+          "expect": "Odd"
+        },
+        {
+          "stdin": "-3",
+          "expect": "Odd"
+        },
+        {
+          "stdin": "-4",
+          "expect": "Even"
+        },
+        {
+          "stdin": "1",
+          "expect": "Odd"
+        },
+        {
+          "stdin": "100",
+          "expect": "Even"
+        }
+      ]
+    },
+    {
+      "slug": "gcse-selection-p-08",
+      "tier": 3,
+      "difficulty": 4,
+      "xp": 25,
+      "title": "Triangle classifier",
       "brief": "Input three side lengths of a triangle, one at a time, whole numbers. If the two shortest sides don't add up to more than the longest, the shape isn't a valid triangle at all — print `Not a triangle`. Otherwise, print `Equilateral` if all three sides are equal, `Isosceles` if exactly two are equal, or `Scalene` if all three are different.",
-      "starter": "", "hints": ["Sort the three sides first so you always know which is longest, then check the triangle rule before checking for equal sides.", "sides = sorted([a, b, c]); if sides[0] + sides[1] <= sides[2]: print(\"Not a triangle\") — otherwise compare a, b and c for equality to decide between the other three."],
-      "tests": [{ "stdin": "3\n3\n3", "expect": "Equilateral" }, { "stdin": "3\n3\n5", "expect": "Isosceles" }, { "stdin": "3\n4\n5", "expect": "Scalene" }, { "stdin": "1\n1\n5", "expect": "Not a triangle" }] },
-    { "slug": "gcse-selection-p-09", "tier": 3, "difficulty": 4, "xp": 25, "title": "Loyalty discount tier",
+      "starter": "",
+      "hints": [
+        "Sort the three sides first so you always know which is longest, then check the triangle rule before checking for equal sides.",
+        "sides = sorted([a, b, c]); if sides[0] + sides[1] <= sides[2]: print(\"Not a triangle\") — otherwise compare a, b and c for equality to decide between the other three."
+      ],
+      "tests": [
+        {
+          "stdin": "3\n3\n3",
+          "expect": "Equilateral"
+        },
+        {
+          "stdin": "3\n3\n5",
+          "expect": "Isosceles"
+        },
+        {
+          "stdin": "3\n4\n5",
+          "expect": "Scalene"
+        },
+        {
+          "stdin": "1\n1\n5",
+          "expect": "Not a triangle"
+        },
+        {
+          "stdin": "2\n2\n3",
+          "expect": "Isosceles"
+        },
+        {
+          "stdin": "5\n5\n10",
+          "expect": "Not a triangle"
+        },
+        {
+          "stdin": "6\n8\n10",
+          "expect": "Scalene"
+        },
+        {
+          "stdin": "10\n1\n10",
+          "expect": "Isosceles"
+        },
+        {
+          "stdin": "2\n3\n5",
+          "expect": "Not a triangle"
+        }
+      ]
+    },
+    {
+      "slug": "gcse-selection-p-09",
+      "tier": 3,
+      "difficulty": 4,
+      "xp": 25,
+      "title": "Loyalty discount tier",
       "brief": "Input a total spend, which may include pence, then whether the customer has a loyalty card (`yes` or `no`). With a card: 20% off if spend is £100 or more, 10% off if £50 or more, otherwise 5% off. Without a card: 10% off if £100 or more, 5% off if £50 or more, otherwise no discount. Print the discount percentage, then the final price rounded to 2 decimal places, in the format `Discount: <n>%` then `Final: £<amount>`.",
-      "starter": "", "hints": ["Two separate if/elif/else chains, one nested inside a check for whether they have a card.", "if card == \"yes\": (a 3-way if/elif/else for 20/10/5) else: (a 3-way if/elif/else for 10/5/0) — then apply whichever percentage was chosen."],
-      "tests": [{ "stdin": "120\nyes", "expect": "Discount: 20%\nFinal: £96.0" }, { "stdin": "120\nno", "expect": "Discount: 10%\nFinal: £108.0" }, { "stdin": "30\nyes", "expect": "Discount: 5%\nFinal: £28.5" }] },
-    { "slug": "gcse-selection-p-10", "tier": 4, "difficulty": 5, "xp": 30, "title": "Exam grade boundaries with resit flag",
+      "starter": "",
+      "hints": [
+        "Two separate if/elif/else chains, one nested inside a check for whether they have a card.",
+        "if card == \"yes\": (a 3-way if/elif/else for 20/10/5) else: (a 3-way if/elif/else for 10/5/0) — then apply whichever percentage was chosen."
+      ],
+      "tests": [
+        {
+          "stdin": "120\nyes",
+          "expect": "Discount: 20%\nFinal: £96.0"
+        },
+        {
+          "stdin": "120\nno",
+          "expect": "Discount: 10%\nFinal: £108.0"
+        },
+        {
+          "stdin": "30\nyes",
+          "expect": "Discount: 5%\nFinal: £28.5"
+        },
+        {
+          "stdin": "50\nyes",
+          "expect": "Discount: 10%\nFinal: £45.0"
+        },
+        {
+          "stdin": "49.99\nno",
+          "expect": "Discount: 0%\nFinal: £49.99"
+        },
+        {
+          "stdin": "100\nno",
+          "expect": "Discount: 10%\nFinal: £90.0"
+        },
+        {
+          "stdin": "75\nno",
+          "expect": "Discount: 5%\nFinal: £71.25"
+        },
+        {
+          "stdin": "99.99\nyes",
+          "expect": "Discount: 10%\nFinal: £89.99"
+        }
+      ]
+    },
+    {
+      "slug": "gcse-selection-p-10",
+      "tier": 4,
+      "difficulty": 5,
+      "xp": 30,
+      "title": "Exam grade boundaries with resit flag",
       "brief": "Input a percentage score, a whole number, then whether this is a resit (`yes` or `no`). Print the grade using these boundaries: 80+ is `A*`, 70+ is `A`, 60+ is `B`, 50+ is `C`, 40+ is `D`, below that is `U`. If it's a resit **and** the grade is `D` or `U`, also print a second line, `Resit recommended`.",
-      "starter": "", "hints": ["Work out the grade first with an if/elif chain, then a separate check afterwards decides whether to print the extra line.", "Use `in (\"U\", \"D\")` to test the grade against both values at once, combined with the resit check using and."],
-      "tests": [{ "stdin": "85\nno", "expect": "A*" }, { "stdin": "35\nyes", "expect": "U\nResit recommended" }, { "stdin": "45\nyes", "expect": "D\nResit recommended" }, { "stdin": "55\nyes", "expect": "C" }] },
-    { "slug": "gcse-selection-p-s1", "tier": 4, "difficulty": 5, "xp": 40, "stretch": true, "title": "🌟 Insurance premium calculator",
+      "starter": "",
+      "hints": [
+        "Work out the grade first with an if/elif chain, then a separate check afterwards decides whether to print the extra line.",
+        "Use `in (\"U\", \"D\")` to test the grade against both values at once, combined with the resit check using and."
+      ],
+      "tests": [
+        {
+          "stdin": "85\nno",
+          "expect": "A*"
+        },
+        {
+          "stdin": "35\nyes",
+          "expect": "U\nResit recommended"
+        },
+        {
+          "stdin": "45\nyes",
+          "expect": "D\nResit recommended"
+        },
+        {
+          "stdin": "55\nyes",
+          "expect": "C"
+        },
+        {
+          "stdin": "80\nno",
+          "expect": "A*"
+        },
+        {
+          "stdin": "79\nno",
+          "expect": "A"
+        },
+        {
+          "stdin": "40\nyes",
+          "expect": "D\nResit recommended"
+        },
+        {
+          "stdin": "39\nno",
+          "expect": "U"
+        },
+        {
+          "stdin": "60\nyes",
+          "expect": "B"
+        },
+        {
+          "stdin": "50\nno",
+          "expect": "C"
+        },
+        {
+          "stdin": "70\nyes",
+          "expect": "A"
+        }
+      ]
+    },
+    {
+      "slug": "gcse-selection-p-s1",
+      "tier": 4,
+      "difficulty": 5,
+      "xp": 40,
+      "stretch": true,
+      "title": "🌟 Insurance premium calculator",
       "brief": "Input a driver's age, their years of experience, and their number of past claims — three whole numbers. Start from a base premium of £500. Add £300 if they're under 25. Add £150 if they have under 2 years' experience. Add £100 for every claim. Print the final premium, in the format `Premium: £<amount>`. If they have 3 or more claims, also print a second line, `High risk — refer to underwriter`.",
-      "starter": "", "hints": ["Each condition either adds to the premium or doesn't — build it up with several separate if statements, not one big chain.", "premium = 500; if age < 25: premium += 300; if exp < 2: premium += 150; premium += claims * 100 — then a separate if claims >= 3 for the warning line."],
-      "tests": [{ "stdin": "22\n1\n1", "expect": "Premium: £1050" }, { "stdin": "30\n5\n4", "expect": "Premium: £900\nHigh risk — refer to underwriter" }, { "stdin": "40\n10\n0", "expect": "Premium: £500" }] },
-    { "slug": "gcse-selection-p-s2", "tier": 4, "difficulty": 5, "xp": 40, "stretch": true, "title": "🌟 Banded tax calculator",
+      "starter": "",
+      "hints": [
+        "Each condition either adds to the premium or doesn't — build it up with several separate if statements, not one big chain.",
+        "premium = 500; if age < 25: premium += 300; if exp < 2: premium += 150; premium += claims * 100 — then a separate if claims >= 3 for the warning line."
+      ],
+      "tests": [
+        {
+          "stdin": "22\n1\n1",
+          "expect": "Premium: £1050"
+        },
+        {
+          "stdin": "30\n5\n4",
+          "expect": "Premium: £900\nHigh risk — refer to underwriter"
+        },
+        {
+          "stdin": "40\n10\n0",
+          "expect": "Premium: £500"
+        },
+        {
+          "stdin": "24\n2\n0",
+          "expect": "Premium: £800"
+        },
+        {
+          "stdin": "25\n1\n3",
+          "expect": "Premium: £950\nHigh risk — refer to underwriter"
+        },
+        {
+          "stdin": "18\n0\n2",
+          "expect": "Premium: £1150"
+        },
+        {
+          "stdin": "25\n2\n2",
+          "expect": "Premium: £700"
+        }
+      ]
+    },
+    {
+      "slug": "gcse-selection-p-s2",
+      "tier": 4,
+      "difficulty": 5,
+      "xp": 40,
+      "stretch": true,
+      "title": "🌟 Banded tax calculator",
       "brief": "Input an annual income, which may include pence. Tax is banded: the first £12,000 is tax-free, the portion between £12,000 and £50,000 is taxed at 20%, and any portion above £50,000 is taxed at 40%. Work out the total tax owed across all the bands that apply, rounded to 2 decimal places, and print it in the format `Tax owed: £<amount>`.",
-      "starter": "", "hints": ["Only the portion of income inside each band is taxed at that band's rate — someone earning £60,000 pays 20% on the £12,000–£50,000 portion and 40% only on the £10,000 above that, not 40% on everything.", "if income <= 12000: tax = 0.0; elif income <= 50000: tax = (income - 12000) * 0.20; else: tax = (50000 - 12000) * 0.20 + (income - 50000) * 0.40."],
-      "tests": [{ "stdin": "8000", "expect": "Tax owed: £0.0" }, { "stdin": "30000", "expect": "Tax owed: £3600.0" }, { "stdin": "60000", "expect": "Tax owed: £11600.0" }] }
+      "starter": "",
+      "hints": [
+        "Only the portion of income inside each band is taxed at that band's rate — someone earning £60,000 pays 20% on the £12,000–£50,000 portion and 40% only on the £10,000 above that, not 40% on everything.",
+        "if income <= 12000: tax = 0.0; elif income <= 50000: tax = (income - 12000) * 0.20; else: tax = (50000 - 12000) * 0.20 + (income - 50000) * 0.40."
+      ],
+      "tests": [
+        {
+          "stdin": "8000",
+          "expect": "Tax owed: £0.0"
+        },
+        {
+          "stdin": "30000",
+          "expect": "Tax owed: £3600.0"
+        },
+        {
+          "stdin": "60000",
+          "expect": "Tax owed: £11600.0"
+        },
+        {
+          "stdin": "12000",
+          "expect": "Tax owed: £0"
+        },
+        {
+          "stdin": "12001.50",
+          "expect": "Tax owed: £0.3"
+        },
+        {
+          "stdin": "50000",
+          "expect": "Tax owed: £7600.0"
+        },
+        {
+          "stdin": "100000",
+          "expect": "Tax owed: £27600.0"
+        },
+        {
+          "stdin": "0",
+          "expect": "Tax owed: £0"
+        }
+      ]
+    }
   ]
 }

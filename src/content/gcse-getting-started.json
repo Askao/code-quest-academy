@@ -27,7 +27,9 @@
       "notes": "**input()** lets your program ask a question and wait for an answer.\n\nHere's what happens:\n1. Python reaches `input()`.\n2. The program **pauses**.\n3. The user types something and presses Enter.\n4. Whatever they typed comes back as the answer.\n\n---\n\nThe simplest way to use it: print it straight away.\n\n```\nprint(input())\n```\n\nThis just echoes back whatever was typed.\n\nYou already know how to store things in a variable — do the same here, so you can use the answer more than once:\n\n```\nname = input()\nprint(name)\n```\n\n---\n\nIt's good practice to print a question first, so the user knows what to type:\n\n```\nprint(\"What's your name?\")\nname = input()\nprint(name)\n```",
       "worked_example": "print(\"What's your name?\")\nname = input()\nprint(name)",
       "worked_example_note": "The program pauses at input(). It waits until the user types something and presses Enter. Whatever they typed gets stored under name, so print(name) can show it.",
-      "worked_example_demo_input": ["Ada"]
+      "worked_example_demo_input": [
+        "Ada"
+      ]
     },
     {
       "slug": "gcse-getting-started-4",
@@ -36,300 +38,1477 @@
       "notes": "**Concatenation** means joining pieces of text together. In Python, you do this with `+`:\n\n```\nprint(\"Py\" + \"thon\")\n```\n\nThis prints `Python`. The two pieces are glued together — nothing extra gets added.\n\nWant a space between them? You have to add it yourself:\n\n```\nprint(\"Hello\" + \" \" + \"World\")\n```\n\nThis prints `Hello World`, not `HelloWorld`.\n\n---\n\nConcatenation is handy for mixing fixed text with something the user typed:\n\n```\nname = input()\nprint(\"Hello, \" + name)\n```\n\n**Careful:** `+` only works when both sides are text. Joining text and a number, like `\"Score: \" + 7`, causes an error. You'll learn how to fix that — it's called casting — in the next topic.",
       "worked_example": "name = input()\nprint(\"Hello, \" + name)",
       "worked_example_note": "\"Hello, \" already has the comma and space built in. + just glues name onto the end — nothing extra gets added.",
-      "worked_example_demo_input": ["Ada"]
+      "worked_example_demo_input": [
+        "Ada"
+      ]
     }
   ],
   "quiz": [
-    { "lessonSlug": "gcse-getting-started-1", "question": "Which function displays text on the screen in Python?", "options": ["print()", "input()", "show()", "display()"], "answer": "print()", "explanation": "print() is Python's function for displaying output on the screen." },
-    { "lessonSlug": "gcse-getting-started-1", "question": "Which of these will run without an error?", "options": ["print(\"hello\")", "print(hello)", "print(Hello)", "print(hello\")"], "answer": "print(\"hello\")", "explanation": "Text must be inside matching quotes. Without quotes, Python looks for something called hello, which doesn't exist, and the program crashes." },
-    { "lessonSlug": "gcse-getting-started-1", "question": "How many lines of output does this produce?\n\nprint(\"A\")\nprint(\"B\")", "options": ["1", "2", "3", "0"], "answer": "2", "explanation": "Each print() call adds one new line of output, so two print() calls produce two lines." },
-    { "lessonSlug": "gcse-getting-started-2", "question": "What symbol is used to store a value in a variable?", "options": ["=", "==", "->", ":="], "answer": "=", "explanation": "= stores whatever is on the right under the name on the left." },
-    { "lessonSlug": "gcse-getting-started-2", "question": "After running score = 10 then score = 20, what does print(score) show?", "options": ["10", "20", "1020", "An error"], "answer": "20", "explanation": "Reassigning a variable replaces its old value — the second assignment wins." },
-    { "lessonSlug": "gcse-getting-started-2", "question": "If message = \"hi\", what's the difference between print(message) and print(\"message\")?", "options": ["print(message) shows hi (the stored value); print(\"message\") shows the literal word message", "They both show hi", "They both show the word message", "print(\"message\") would cause an error"], "answer": "print(message) shows hi (the stored value); print(\"message\") shows the literal word message", "explanation": "A bare name tells Python to look up a variable. Quotes mean \"treat this as literal text\", not a name to look up." },
-    { "lessonSlug": "gcse-getting-started-3", "question": "What does input() do?", "options": ["Pauses the program and waits for the user to type something", "Prints text to the screen", "Deletes a variable", "Runs the program faster"], "answer": "Pauses the program and waits for the user to type something", "explanation": "input() pauses the program until the user types an answer and presses Enter." },
-    { "lessonSlug": "gcse-getting-started-3", "question": "After answer = input(), how do you display what the user typed?", "options": ["print(answer)", "print(input)", "show(answer)", "answer.print()"], "answer": "print(answer)", "explanation": "The user's answer is stored under the name answer, so print(answer) shows it." },
-    { "lessonSlug": "gcse-getting-started-3", "question": "Which line correctly stores what the user types under the name reply?", "options": ["reply = input()", "input() = reply", "reply == input()", "input(reply)"], "answer": "reply = input()", "explanation": "= stores the value on the right under the name on the left. == compares two things instead of storing anything, so it wouldn't work here." },
-    { "lessonSlug": "gcse-getting-started-4", "question": "What does \"Py\" + \"thon\" evaluate to?", "options": ["Python", "Py thon", "Py+thon", "An error"], "answer": "Python", "explanation": "+ joins the two strings directly with nothing in between." },
-    { "lessonSlug": "gcse-getting-started-4", "question": "Why doesn't \"Hello\" + \"World\" print Hello World with a space in the middle?", "options": ["+ doesn't add spaces automatically — you have to include one yourself", "It's a typo in Python", "Only print() adds spaces", "+ only works on numbers"], "answer": "+ doesn't add spaces automatically — you have to include one yourself", "explanation": "Concatenation glues the two strings exactly as they are — any spacing or punctuation has to already be part of one of them." },
-    { "lessonSlug": "gcse-getting-started-4", "question": "What's wrong with \"Score: \" + 7?", "options": ["You can't join text and a number directly with + — it causes an error", "Nothing, it works fine", "7 needs to be in brackets", "+ only works with input()"], "answer": "You can't join text and a number directly with + — it causes an error", "explanation": "+ only works when both sides are strings. Joining text and a number needs casting first — covered in the next topic." }
+    {
+      "lessonSlug": "gcse-getting-started-1",
+      "question": "Which function displays text on the screen in Python?",
+      "options": [
+        "print()",
+        "input()",
+        "show()",
+        "display()"
+      ],
+      "answer": "print()",
+      "explanation": "print() is Python's function for displaying output on the screen."
+    },
+    {
+      "lessonSlug": "gcse-getting-started-1",
+      "question": "Which of these will run without an error?",
+      "options": [
+        "print(\"hello\")",
+        "print(hello)",
+        "print(Hello)",
+        "print(hello\")"
+      ],
+      "answer": "print(\"hello\")",
+      "explanation": "Text must be inside matching quotes. Without quotes, Python looks for something called hello, which doesn't exist, and the program crashes."
+    },
+    {
+      "lessonSlug": "gcse-getting-started-1",
+      "question": "How many lines of output does this produce?\n\nprint(\"A\")\nprint(\"B\")",
+      "options": [
+        "1",
+        "2",
+        "3",
+        "0"
+      ],
+      "answer": "2",
+      "explanation": "Each print() call adds one new line of output, so two print() calls produce two lines."
+    },
+    {
+      "lessonSlug": "gcse-getting-started-2",
+      "question": "What symbol is used to store a value in a variable?",
+      "options": [
+        "=",
+        "==",
+        "->",
+        ":="
+      ],
+      "answer": "=",
+      "explanation": "= stores whatever is on the right under the name on the left."
+    },
+    {
+      "lessonSlug": "gcse-getting-started-2",
+      "question": "After running score = 10 then score = 20, what does print(score) show?",
+      "options": [
+        "10",
+        "20",
+        "1020",
+        "An error"
+      ],
+      "answer": "20",
+      "explanation": "Reassigning a variable replaces its old value — the second assignment wins."
+    },
+    {
+      "lessonSlug": "gcse-getting-started-2",
+      "question": "If message = \"hi\", what's the difference between print(message) and print(\"message\")?",
+      "options": [
+        "print(message) shows hi (the stored value); print(\"message\") shows the literal word message",
+        "They both show hi",
+        "They both show the word message",
+        "print(\"message\") would cause an error"
+      ],
+      "answer": "print(message) shows hi (the stored value); print(\"message\") shows the literal word message",
+      "explanation": "A bare name tells Python to look up a variable. Quotes mean \"treat this as literal text\", not a name to look up."
+    },
+    {
+      "lessonSlug": "gcse-getting-started-3",
+      "question": "What does input() do?",
+      "options": [
+        "Pauses the program and waits for the user to type something",
+        "Prints text to the screen",
+        "Deletes a variable",
+        "Runs the program faster"
+      ],
+      "answer": "Pauses the program and waits for the user to type something",
+      "explanation": "input() pauses the program until the user types an answer and presses Enter."
+    },
+    {
+      "lessonSlug": "gcse-getting-started-3",
+      "question": "After answer = input(), how do you display what the user typed?",
+      "options": [
+        "print(answer)",
+        "print(input)",
+        "show(answer)",
+        "answer.print()"
+      ],
+      "answer": "print(answer)",
+      "explanation": "The user's answer is stored under the name answer, so print(answer) shows it."
+    },
+    {
+      "lessonSlug": "gcse-getting-started-3",
+      "question": "Which line correctly stores what the user types under the name reply?",
+      "options": [
+        "reply = input()",
+        "input() = reply",
+        "reply == input()",
+        "input(reply)"
+      ],
+      "answer": "reply = input()",
+      "explanation": "= stores the value on the right under the name on the left. == compares two things instead of storing anything, so it wouldn't work here."
+    },
+    {
+      "lessonSlug": "gcse-getting-started-4",
+      "question": "What does \"Py\" + \"thon\" evaluate to?",
+      "options": [
+        "Python",
+        "Py thon",
+        "Py+thon",
+        "An error"
+      ],
+      "answer": "Python",
+      "explanation": "+ joins the two strings directly with nothing in between."
+    },
+    {
+      "lessonSlug": "gcse-getting-started-4",
+      "question": "Why doesn't \"Hello\" + \"World\" print Hello World with a space in the middle?",
+      "options": [
+        "+ doesn't add spaces automatically — you have to include one yourself",
+        "It's a typo in Python",
+        "Only print() adds spaces",
+        "+ only works on numbers"
+      ],
+      "answer": "+ doesn't add spaces automatically — you have to include one yourself",
+      "explanation": "Concatenation glues the two strings exactly as they are — any spacing or punctuation has to already be part of one of them."
+    },
+    {
+      "lessonSlug": "gcse-getting-started-4",
+      "question": "What's wrong with \"Score: \" + 7?",
+      "options": [
+        "You can't join text and a number directly with + — it causes an error",
+        "Nothing, it works fine",
+        "7 needs to be in brackets",
+        "+ only works with input()"
+      ],
+      "answer": "You can't join text and a number directly with + — it causes an error",
+      "explanation": "+ only works when both sides are strings. Joining text and a number needs casting first — covered in the next topic."
+    }
   ],
   "tasks": [
-    { "slug": "gcse-getting-started-t1-01", "lesson": 1, "tier": 1, "difficulty": 1, "xp": 10,
+    {
+      "slug": "gcse-getting-started-t1-01",
+      "lesson": 1,
+      "tier": 1,
+      "difficulty": 1,
+      "xp": 10,
       "title": "Print a greeting",
       "brief": "Print the exact text `Hello, world!`",
-      "starter": "", "hints": ["Text needs to go inside quotes for Python to treat it as text: print(\"...\")", "Use print() with the exact text in quotes, spelled and punctuated exactly as shown."],
-      "tests": [{ "expect": "Hello, world!" }] },
-    { "slug": "gcse-getting-started-t1-02", "lesson": 1, "tier": 1, "difficulty": 1, "xp": 10,
+      "starter": "",
+      "hints": [
+        "Text needs to go inside quotes for Python to treat it as text: print(\"...\")",
+        "Use print() with the exact text in quotes, spelled and punctuated exactly as shown."
+      ],
+      "tests": [
+        {
+          "expect": "Hello, world!"
+        }
+      ]
+    },
+    {
+      "slug": "gcse-getting-started-t1-02",
+      "lesson": 1,
+      "tier": 1,
+      "difficulty": 1,
+      "xp": 10,
       "title": "Two lines",
       "brief": "Print `I love coding` on the first line. Print `Python is fun` on the second line.",
-      "starter": "", "hints": ["You need two separate print() calls, one for each line.", "Each print(\"...\") call writes exactly one line — call it once per line of text needed."],
-      "tests": [{ "expect": "I love coding\nPython is fun" }] },
-    { "slug": "gcse-getting-started-t1-03", "lesson": 1, "tier": 1, "difficulty": 1, "xp": 10,
+      "starter": "",
+      "hints": [
+        "You need two separate print() calls, one for each line.",
+        "Each print(\"...\") call writes exactly one line — call it once per line of text needed."
+      ],
+      "tests": [
+        {
+          "expect": "I love coding\nPython is fun"
+        }
+      ]
+    },
+    {
+      "slug": "gcse-getting-started-t1-03",
+      "lesson": 1,
+      "tier": 1,
+      "difficulty": 1,
+      "xp": 10,
       "title": "Text then a number",
       "brief": "Print the word Score on one line. Print the number 100 on the next line.",
-      "starter": "", "hints": ["Score needs quotes because it's text. 100 doesn't, because it's a number.", "print(\"text\") for words in quotes, print(number) for a plain number with no quotes."],
-      "tests": [{ "expect": "Score\n100" }] },
-    { "slug": "gcse-getting-started-t1-04", "lesson": 1, "tier": 1, "difficulty": 2, "xp": 15,
+      "starter": "",
+      "hints": [
+        "Score needs quotes because it's text. 100 doesn't, because it's a number.",
+        "print(\"text\") for words in quotes, print(number) for a plain number with no quotes."
+      ],
+      "tests": [
+        {
+          "expect": "Score\n100"
+        }
+      ]
+    },
+    {
+      "slug": "gcse-getting-started-t1-04",
+      "lesson": 1,
+      "tier": 1,
+      "difficulty": 2,
+      "xp": 15,
       "title": "Three lines",
       "brief": "Print three lines, in this exact order: `Chocolate`, then `Football`, then `Music`.",
-      "starter": "", "hints": ["Use three separate print() calls, one per line, in the order given.", "print(\"text\") — one call per line, keeping the same order as the question."],
-      "tests": [{ "expect": "Chocolate\nFootball\nMusic" }] },
-    { "slug": "gcse-getting-started-t1-stretch", "lesson": 1, "tier": 3, "difficulty": 3, "xp": 30, "stretch": true,
+      "starter": "",
+      "hints": [
+        "Use three separate print() calls, one per line, in the order given.",
+        "print(\"text\") — one call per line, keeping the same order as the question."
+      ],
+      "tests": [
+        {
+          "expect": "Chocolate\nFootball\nMusic"
+        }
+      ]
+    },
+    {
+      "slug": "gcse-getting-started-t1-stretch",
+      "lesson": 1,
+      "tier": 3,
+      "difficulty": 3,
+      "xp": 30,
+      "stretch": true,
       "title": "Robot introduction",
       "brief": "Print exactly these three lines, using three separate print() calls:\n\n`A robot says:`\n`Beep boop!`\n`I am learning Python.`",
-      "starter": "", "hints": ["Three print() calls, one per line, in the exact order and spelling given.", "Each required line of output is its own print(\"...\") call, in order, spelled exactly as given."],
-      "tests": [{ "expect": "A robot says:\nBeep boop!\nI am learning Python." }] },
-    { "slug": "gcse-getting-started-tvars-01", "lesson": 2, "tier": 1, "difficulty": 1, "xp": 10,
+      "starter": "",
+      "hints": [
+        "Three print() calls, one per line, in the exact order and spelling given.",
+        "Each required line of output is its own print(\"...\") call, in order, spelled exactly as given."
+      ],
+      "tests": [
+        {
+          "expect": "A robot says:\nBeep boop!\nI am learning Python."
+        }
+      ]
+    },
+    {
+      "slug": "gcse-getting-started-tvars-01",
+      "lesson": 2,
+      "tier": 1,
+      "difficulty": 1,
+      "xp": 10,
       "title": "Store and print",
       "brief": "Create a variable called `message` with the value `\"Hello!\"`. Print message.",
-      "starter": "", "hints": ["Think of it as two steps: first put the text in the box, then print what's in the box.", "Create it with `name = value`, then show it with `print(name)` — no quotes around the variable name."],
-      "tests": [{ "expect": "Hello!" }] },
-    { "slug": "gcse-getting-started-tvars-02", "lesson": 2, "tier": 1, "difficulty": 1, "xp": 10,
+      "starter": "",
+      "hints": [
+        "Think of it as two steps: first put the text in the box, then print what's in the box.",
+        "Create it with `name = value`, then show it with `print(name)` — no quotes around the variable name."
+      ],
+      "tests": [
+        {
+          "expect": "Hello!"
+        }
+      ]
+    },
+    {
+      "slug": "gcse-getting-started-tvars-02",
+      "lesson": 2,
+      "tier": 1,
+      "difficulty": 1,
+      "xp": 10,
       "title": "Store a number",
       "brief": "Create a variable called `total` with the value 5. Print total.",
-      "starter": "", "hints": ["Numbers don't need quotes when you store them.", "Same pattern as storing text — `name = value` — but no quotes around a number."],
-      "tests": [{ "expect": "5" }] },
-    { "slug": "gcse-getting-started-tvars-03", "lesson": 2, "tier": 1, "difficulty": 2, "xp": 15,
+      "starter": "",
+      "hints": [
+        "Numbers don't need quotes when you store them.",
+        "Same pattern as storing text — `name = value` — but no quotes around a number."
+      ],
+      "tests": [
+        {
+          "expect": "5"
+        }
+      ]
+    },
+    {
+      "slug": "gcse-getting-started-tvars-03",
+      "lesson": 2,
+      "tier": 1,
+      "difficulty": 2,
+      "xp": 15,
       "title": "Change the value",
       "brief": "Create a variable called `colour` with the value `\"red\"`. Then change colour to \"blue\". Print colour.",
-      "starter": "", "hints": ["Assigning to colour a second time replaces what was there before.", "Assign to the same variable name twice — the second assignment wins. Print it after both."],
-      "tests": [{ "expect": "blue" }] },
-    { "slug": "gcse-getting-started-tvars-04", "lesson": 2, "tier": 1, "difficulty": 2, "xp": 15,
+      "starter": "",
+      "hints": [
+        "Assigning to colour a second time replaces what was there before.",
+        "Assign to the same variable name twice — the second assignment wins. Print it after both."
+      ],
+      "tests": [
+        {
+          "expect": "blue"
+        }
+      ]
+    },
+    {
+      "slug": "gcse-getting-started-tvars-04",
+      "lesson": 2,
+      "tier": 1,
+      "difficulty": 2,
+      "xp": 15,
       "title": "Two variables",
       "brief": "Create a variable called `first` with the value `\"Ada\"`. Create a variable called `second` with the value `\"Alan\"`. Print first, then print second, each on its own line.",
-      "starter": "", "hints": ["Two separate variables, each with its own name and value.", "Two variables need two different names — create both, then print each one separately."],
-      "tests": [{ "expect": "Ada\nAlan" }] },
-    { "slug": "gcse-getting-started-tvars-stretch", "lesson": 2, "tier": 3, "difficulty": 3, "xp": 30, "stretch": true,
+      "starter": "",
+      "hints": [
+        "Two separate variables, each with its own name and value.",
+        "Two variables need two different names — create both, then print each one separately."
+      ],
+      "tests": [
+        {
+          "expect": "Ada\nAlan"
+        }
+      ]
+    },
+    {
+      "slug": "gcse-getting-started-tvars-stretch",
+      "lesson": 2,
+      "tier": 3,
+      "difficulty": 3,
+      "xp": 30,
+      "stretch": true,
       "title": "Three in a row",
       "brief": "Create three variables called a, b and c holding the values 1, 2 and 3. Print them in this order: c, then a, then b.",
-      "starter": "", "hints": ["Create all three variables first, then print them in the order asked for — not the order you created them.", "Create every variable first — the order you print() them in doesn't have to match the order you made them."],
-      "tests": [{ "expect": "3\n1\n2" }] },
-    { "slug": "gcse-getting-started-t2-01", "lesson": 3, "tier": 1, "difficulty": 1, "xp": 10,
+      "starter": "",
+      "hints": [
+        "Create all three variables first, then print them in the order asked for — not the order you created them.",
+        "Create every variable first — the order you print() them in doesn't have to match the order you made them."
+      ],
+      "tests": [
+        {
+          "expect": "3\n1\n2"
+        }
+      ]
+    },
+    {
+      "slug": "gcse-getting-started-t2-01",
+      "lesson": 3,
+      "tier": 1,
+      "difficulty": 1,
+      "xp": 10,
       "title": "Echo it back",
       "brief": "Input some text from the user and print it straight back out, exactly as it was typed.",
-      "starter": "", "hints": ["You can pass input() straight into print() without storing it first.", "input() can go directly inside print() — you don't have to store it in a variable first."],
-      "tests": [{ "stdin": "Ada", "expect": "Ada" }, { "stdin": "hello", "expect": "hello" }] },
-    { "slug": "gcse-getting-started-t2-02", "lesson": 3, "tier": 1, "difficulty": 1, "xp": 10,
+      "starter": "",
+      "hints": [
+        "You can pass input() straight into print() without storing it first.",
+        "input() can go directly inside print() — you don't have to store it in a variable first."
+      ],
+      "tests": [
+        {
+          "stdin": "Ada",
+          "expect": "Ada"
+        },
+        {
+          "stdin": "hello",
+          "expect": "hello"
+        }
+      ]
+    },
+    {
+      "slug": "gcse-getting-started-t2-02",
+      "lesson": 3,
+      "tier": 1,
+      "difficulty": 1,
+      "xp": 10,
       "title": "Store and show",
       "brief": "Input the user's favourite colour and store it under the name colour. Print colour.",
-      "starter": "", "hints": ["colour = input() stores the answer, then print(colour) shows it.", "Store the result of input() under a name, then print that same name."],
-      "tests": [{ "stdin": "blue", "expect": "blue" }, { "stdin": "green", "expect": "green" }] },
-    { "slug": "gcse-getting-started-t2-03", "lesson": 3, "tier": 1, "difficulty": 2, "xp": 15,
+      "starter": "",
+      "hints": [
+        "colour = input() stores the answer, then print(colour) shows it.",
+        "Store the result of input() under a name, then print that same name."
+      ],
+      "tests": [
+        {
+          "stdin": "blue",
+          "expect": "blue"
+        },
+        {
+          "stdin": "green",
+          "expect": "green"
+        }
+      ]
+    },
+    {
+      "slug": "gcse-getting-started-t2-03",
+      "lesson": 3,
+      "tier": 1,
+      "difficulty": 2,
+      "xp": 15,
       "title": "Two answers",
       "brief": "Input the user's first name and store it under first_name. Input their favourite food and store it under food. Print first_name, then print food, each on its own line.",
-      "starter": "", "hints": ["You need two separate input() calls, one stored in each name.", "Two input() calls, each stored under its own name, then two print() calls in the same order."],
-      "tests": [{ "stdin": "Ada\nPizza", "expect": "Ada\nPizza" }, { "stdin": "Sam\nChips", "expect": "Sam\nChips" }] },
-    { "slug": "gcse-getting-started-t2-04", "lesson": 3, "tier": 2, "difficulty": 2, "xp": 15,
+      "starter": "",
+      "hints": [
+        "You need two separate input() calls, one stored in each name.",
+        "Two input() calls, each stored under its own name, then two print() calls in the same order."
+      ],
+      "tests": [
+        {
+          "stdin": "Ada\nPizza",
+          "expect": "Ada\nPizza"
+        },
+        {
+          "stdin": "Sam\nChips",
+          "expect": "Sam\nChips"
+        }
+      ]
+    },
+    {
+      "slug": "gcse-getting-started-t2-04",
+      "lesson": 3,
+      "tier": 2,
+      "difficulty": 2,
+      "xp": 15,
       "title": "Say it twice",
       "brief": "Input a word from the user. Print it, then print it again on the next line.",
-      "starter": "", "hints": ["Store the input under a name first, then you can print that name twice.", "Store the answer under a name once — then you're free to print() that same name more than once."],
-      "tests": [{ "stdin": "wow", "expect": "wow\nwow" }, { "stdin": "hi", "expect": "hi\nhi" }] },
-    { "slug": "gcse-getting-started-t2-stretch", "lesson": 3, "tier": 3, "difficulty": 3, "xp": 30, "stretch": true,
+      "starter": "",
+      "hints": [
+        "Store the input under a name first, then you can print that name twice.",
+        "Store the answer under a name once — then you're free to print() that same name more than once."
+      ],
+      "tests": [
+        {
+          "stdin": "wow",
+          "expect": "wow\nwow"
+        },
+        {
+          "stdin": "hi",
+          "expect": "hi\nhi"
+        }
+      ]
+    },
+    {
+      "slug": "gcse-getting-started-t2-stretch",
+      "lesson": 3,
+      "tier": 3,
+      "difficulty": 3,
+      "xp": 30,
+      "stretch": true,
       "title": "Swap the order",
       "brief": "Input two words, one at a time. Print the second word first, then the first word, each on its own line.",
-      "starter": "", "hints": ["Store both answers under two different names before printing anything.", "Store both answers under different names first — then print() them in whatever order the question asks for."],
-      "tests": [{ "stdin": "Sun\nMoon", "expect": "Moon\nSun" }, { "stdin": "Cat\nDog", "expect": "Dog\nCat" }] },
-    { "slug": "gcse-getting-started-t3-01", "lesson": 4, "tier": 1, "difficulty": 1, "xp": 10,
+      "starter": "",
+      "hints": [
+        "Store both answers under two different names before printing anything.",
+        "Store both answers under different names first — then print() them in whatever order the question asks for."
+      ],
+      "tests": [
+        {
+          "stdin": "Sun\nMoon",
+          "expect": "Moon\nSun"
+        },
+        {
+          "stdin": "Cat\nDog",
+          "expect": "Dog\nCat"
+        }
+      ]
+    },
+    {
+      "slug": "gcse-getting-started-t3-01",
+      "lesson": 4,
+      "tier": 1,
+      "difficulty": 1,
+      "xp": 10,
       "title": "Join two words",
       "brief": "Print the result of joining the text Sun and the text Flower together with +, so it reads SunFlower.",
-      "starter": "", "hints": ["+ glues two strings together with nothing extra added.", "Use `+` between two pieces of text in quotes to join them, with nothing extra added between them."],
-      "tests": [{ "expect": "SunFlower" }] },
-    { "slug": "gcse-getting-started-t3-02", "lesson": 4, "tier": 1, "difficulty": 1, "xp": 10,
+      "starter": "",
+      "hints": [
+        "+ glues two strings together with nothing extra added.",
+        "Use `+` between two pieces of text in quotes to join them, with nothing extra added between them."
+      ],
+      "tests": [
+        {
+          "expect": "SunFlower"
+        }
+      ]
+    },
+    {
+      "slug": "gcse-getting-started-t3-02",
+      "lesson": 4,
+      "tier": 1,
+      "difficulty": 1,
+      "xp": 10,
       "title": "Add a space",
       "brief": "Print the text Good and the text Morning joined with +, with a space between them, so it reads Good Morning.",
-      "starter": "", "hints": ["+ doesn't add spaces on its own — join in a separate \" \" piece in between.", "You need three pieces joined with `+`: the first word, a space in its own quotes, and the second word."],
-      "tests": [{ "expect": "Good Morning" }] },
-    { "slug": "gcse-getting-started-t3-03", "lesson": 4, "tier": 2, "difficulty": 2, "xp": 15,
+      "starter": "",
+      "hints": [
+        "+ doesn't add spaces on its own — join in a separate \" \" piece in between.",
+        "You need three pieces joined with `+`: the first word, a space in its own quotes, and the second word."
+      ],
+      "tests": [
+        {
+          "expect": "Good Morning"
+        }
+      ]
+    },
+    {
+      "slug": "gcse-getting-started-t3-03",
+      "lesson": 4,
+      "tier": 2,
+      "difficulty": 2,
+      "xp": 15,
       "title": "Greet the user",
       "brief": "Input the user's name. Print `Hello`, followed by their name, joined with +, so entering Ada prints Hello, Ada. Remember + doesn't add spaces or punctuation for you.",
-      "starter": "", "hints": ["Build the greeting text so it already includes the comma and space: \"Hello, \".", "Store the input first, then join fixed text (punctuation and spacing already inside its quotes) to it with `+`."],
-      "tests": [{ "stdin": "Ada", "expect": "Hello, Ada" }, { "stdin": "Sam", "expect": "Hello, Sam" }] },
-    { "slug": "gcse-getting-started-t3-04", "lesson": 4, "tier": 2, "difficulty": 2, "xp": 20,
+      "starter": "",
+      "hints": [
+        "Build the greeting text so it already includes the comma and space: \"Hello, \".",
+        "Store the input first, then join fixed text (punctuation and spacing already inside its quotes) to it with `+`."
+      ],
+      "tests": [
+        {
+          "stdin": "Ada",
+          "expect": "Hello, Ada"
+        },
+        {
+          "stdin": "Sam",
+          "expect": "Hello, Sam"
+        }
+      ]
+    },
+    {
+      "slug": "gcse-getting-started-t3-04",
+      "lesson": 4,
+      "tier": 2,
+      "difficulty": 2,
+      "xp": 20,
       "title": "Build a sentence",
       "brief": "Input a person's name. Input their pet's name. Print a sentence in the format `<name>'s pet is called <pet>`, built using +. For example, entering Ada then Rex prints Ada's pet is called Rex.",
-      "starter": "", "hints": ["Break the sentence into pieces: name, then \"'s pet is called \", then pet.", "Store both inputs first, then join variable + fixed text + variable with `+`, in that order."],
-      "tests": [{ "stdin": "Ada\nRex", "expect": "Ada's pet is called Rex" }, { "stdin": "Sam\nMax", "expect": "Sam's pet is called Max" }] },
-    { "slug": "gcse-getting-started-t3-stretch", "lesson": 4, "tier": 3, "difficulty": 3, "xp": 30, "stretch": true,
+      "starter": "",
+      "hints": [
+        "Break the sentence into pieces: name, then \"'s pet is called \", then pet.",
+        "Store both inputs first, then join variable + fixed text + variable with `+`, in that order."
+      ],
+      "tests": [
+        {
+          "stdin": "Ada\nRex",
+          "expect": "Ada's pet is called Rex"
+        },
+        {
+          "stdin": "Sam\nMax",
+          "expect": "Sam's pet is called Max"
+        }
+      ]
+    },
+    {
+      "slug": "gcse-getting-started-t3-stretch",
+      "lesson": 4,
+      "tier": 3,
+      "difficulty": 3,
+      "xp": 30,
+      "stretch": true,
       "title": "Three-part message",
       "brief": "Input a name, then input a place, then input an activity. Print a sentence in the format `<name> went to <place> to <activity>`, built entirely using +. For example, entering Ada, then the park, then play gives Ada went to the park to play.",
-      "starter": "", "hints": ["Break it into pieces: name, \" went to \", place, \" to \", activity.", "Store all three inputs first, then chain them with `+`, including the fixed words and spaces as their own quoted pieces."],
-      "tests": [{ "stdin": "Ada\nthe park\nplay", "expect": "Ada went to the park to play" }, { "stdin": "Sam\nschool\nlearn", "expect": "Sam went to school to learn" }] }
+      "starter": "",
+      "hints": [
+        "Break it into pieces: name, \" went to \", place, \" to \", activity.",
+        "Store all three inputs first, then chain them with `+`, including the fixed words and spaces as their own quoted pieces."
+      ],
+      "tests": [
+        {
+          "stdin": "Ada\nthe park\nplay",
+          "expect": "Ada went to the park to play"
+        },
+        {
+          "stdin": "Sam\nschool\nlearn",
+          "expect": "Sam went to school to learn"
+        }
+      ]
+    }
   ],
   "homeworkTasks": [
-    { "slug": "gcse-getting-started-hw-01", "lesson": 1, "tier": 1, "difficulty": 1, "xp": 10,
+    {
+      "slug": "gcse-getting-started-hw-01",
+      "lesson": 1,
+      "tier": 1,
+      "difficulty": 1,
+      "xp": 10,
       "title": "Print a welcome",
       "brief": "Print the exact text `Welcome to Python!`",
-      "starter": "", "hints": ["Text needs to go inside quotes for Python to treat it as text.", "print(\"...\") with the exact wording and punctuation given."],
-      "tests": [{ "expect": "Welcome to Python!" }] },
-    { "slug": "gcse-getting-started-hw-02", "lesson": 1, "tier": 1, "difficulty": 1, "xp": 10,
+      "starter": "",
+      "hints": [
+        "Text needs to go inside quotes for Python to treat it as text.",
+        "print(\"...\") with the exact wording and punctuation given."
+      ],
+      "tests": [
+        {
+          "expect": "Welcome to Python!"
+        }
+      ]
+    },
+    {
+      "slug": "gcse-getting-started-hw-02",
+      "lesson": 1,
+      "tier": 1,
+      "difficulty": 1,
+      "xp": 10,
       "title": "Two lines, again",
       "brief": "Print `Learning` on the first line. Print `Coding` on the second line.",
-      "starter": "", "hints": ["Each line needs its own print() call.", "print(\"text\") twice, once per line, in the order given."],
-      "tests": [{ "expect": "Learning\nCoding" }] },
-    { "slug": "gcse-getting-started-hw-03", "lesson": 1, "tier": 1, "difficulty": 1, "xp": 10,
+      "starter": "",
+      "hints": [
+        "Each line needs its own print() call.",
+        "print(\"text\") twice, once per line, in the order given."
+      ],
+      "tests": [
+        {
+          "expect": "Learning\nCoding"
+        }
+      ]
+    },
+    {
+      "slug": "gcse-getting-started-hw-03",
+      "lesson": 1,
+      "tier": 1,
+      "difficulty": 1,
+      "xp": 10,
       "title": "A label and a number",
       "brief": "Print the word Total on one line. Print the number 50 on the next line.",
-      "starter": "", "hints": ["Total needs quotes because it's text. 50 doesn't, because it's a number.", "print(\"text\") then print(number), on separate lines."],
-      "tests": [{ "expect": "Total\n50" }] },
-    { "slug": "gcse-getting-started-hw-04", "lesson": 1, "tier": 1, "difficulty": 2, "xp": 15,
+      "starter": "",
+      "hints": [
+        "Total needs quotes because it's text. 50 doesn't, because it's a number.",
+        "print(\"text\") then print(number), on separate lines."
+      ],
+      "tests": [
+        {
+          "expect": "Total\n50"
+        }
+      ]
+    },
+    {
+      "slug": "gcse-getting-started-hw-04",
+      "lesson": 1,
+      "tier": 1,
+      "difficulty": 2,
+      "xp": 15,
       "title": "Four colours",
       "brief": "Print four lines, in this exact order: `Red`, then `Blue`, then `Green`, then `Yellow`.",
-      "starter": "", "hints": ["Four separate print() calls, one per line, in the order given.", "print(\"text\") repeated once per line, keeping the same order as the question."],
-      "tests": [{ "expect": "Red\nBlue\nGreen\nYellow" }] },
-    { "slug": "gcse-getting-started-hw-05", "lesson": 2, "tier": 1, "difficulty": 1, "xp": 10,
+      "starter": "",
+      "hints": [
+        "Four separate print() calls, one per line, in the order given.",
+        "print(\"text\") repeated once per line, keeping the same order as the question."
+      ],
+      "tests": [
+        {
+          "expect": "Red\nBlue\nGreen\nYellow"
+        }
+      ]
+    },
+    {
+      "slug": "gcse-getting-started-hw-05",
+      "lesson": 2,
+      "tier": 1,
+      "difficulty": 1,
+      "xp": 10,
       "title": "Store a place",
       "brief": "Create a variable called `city` with the value `\"London\"`. Print city.",
-      "starter": "", "hints": ["Create it first, then print what's stored.", "name = \"text\", then print(name), with no quotes around the variable name."],
-      "tests": [{ "expect": "London" }] },
-    { "slug": "gcse-getting-started-hw-06", "lesson": 2, "tier": 1, "difficulty": 1, "xp": 10,
+      "starter": "",
+      "hints": [
+        "Create it first, then print what's stored.",
+        "name = \"text\", then print(name), with no quotes around the variable name."
+      ],
+      "tests": [
+        {
+          "expect": "London"
+        }
+      ]
+    },
+    {
+      "slug": "gcse-getting-started-hw-06",
+      "lesson": 2,
+      "tier": 1,
+      "difficulty": 1,
+      "xp": 10,
       "title": "Store a whole number",
       "brief": "Create a variable called `count` with the value 10. Print count.",
-      "starter": "", "hints": ["Numbers don't need quotes when you store them.", "name = value with no quotes around a number, then print(name)."],
-      "tests": [{ "expect": "10" }] },
-    { "slug": "gcse-getting-started-hw-07", "lesson": 2, "tier": 1, "difficulty": 2, "xp": 15,
+      "starter": "",
+      "hints": [
+        "Numbers don't need quotes when you store them.",
+        "name = value with no quotes around a number, then print(name)."
+      ],
+      "tests": [
+        {
+          "expect": "10"
+        }
+      ]
+    },
+    {
+      "slug": "gcse-getting-started-hw-07",
+      "lesson": 2,
+      "tier": 1,
+      "difficulty": 2,
+      "xp": 15,
       "title": "Change a variable twice",
       "brief": "Create a variable called `animal` with the value `\"cat\"`. Then change animal to \"dog\". Print animal.",
-      "starter": "", "hints": ["The second assignment replaces the first.", "Assign to the same name twice, then print it after both assignments."],
-      "tests": [{ "expect": "dog" }] },
-    { "slug": "gcse-getting-started-hw-08", "lesson": 2, "tier": 1, "difficulty": 2, "xp": 15,
+      "starter": "",
+      "hints": [
+        "The second assignment replaces the first.",
+        "Assign to the same name twice, then print it after both assignments."
+      ],
+      "tests": [
+        {
+          "expect": "dog"
+        }
+      ]
+    },
+    {
+      "slug": "gcse-getting-started-hw-08",
+      "lesson": 2,
+      "tier": 1,
+      "difficulty": 2,
+      "xp": 15,
       "title": "Three variables, mixed order",
       "brief": "Create a variable `x` with the value 5. Create y with the value 10. Create z with the value 15. Print y, then z, then x, each on its own line.",
-      "starter": "", "hints": ["Create all three first, then print them in the order asked for.", "Three separate variables, printed in whatever order the question asks for — not the order you made them."],
-      "tests": [{ "expect": "10\n15\n5" }] },
-    { "slug": "gcse-getting-started-hw-09", "lesson": 3, "tier": 1, "difficulty": 1, "xp": 10,
+      "starter": "",
+      "hints": [
+        "Create all three first, then print them in the order asked for.",
+        "Three separate variables, printed in whatever order the question asks for — not the order you made them."
+      ],
+      "tests": [
+        {
+          "expect": "10\n15\n5"
+        }
+      ]
+    },
+    {
+      "slug": "gcse-getting-started-hw-09",
+      "lesson": 3,
+      "tier": 1,
+      "difficulty": 1,
+      "xp": 10,
       "title": "Favourite subject",
       "brief": "Input the user's favourite school subject and print it straight back out.",
-      "starter": "", "hints": ["input() can go directly inside print().", "print(input()) needs nothing stored first."],
-      "tests": [{ "stdin": "Maths", "expect": "Maths" }, { "stdin": "Art", "expect": "Art" }] },
-    { "slug": "gcse-getting-started-hw-10", "lesson": 3, "tier": 1, "difficulty": 1, "xp": 10,
+      "starter": "",
+      "hints": [
+        "input() can go directly inside print().",
+        "print(input()) needs nothing stored first."
+      ],
+      "tests": [
+        {
+          "stdin": "Maths",
+          "expect": "Maths"
+        },
+        {
+          "stdin": "Art",
+          "expect": "Art"
+        }
+      ]
+    },
+    {
+      "slug": "gcse-getting-started-hw-10",
+      "lesson": 3,
+      "tier": 1,
+      "difficulty": 1,
+      "xp": 10,
       "title": "A pet's name",
       "brief": "Input the name of a pet and store it under the name pet. Print pet.",
-      "starter": "", "hints": ["Store the answer under a name, then print that name.", "pet = input(), then print(pet)."],
-      "tests": [{ "stdin": "Rex", "expect": "Rex" }, { "stdin": "Milo", "expect": "Milo" }] },
-    { "slug": "gcse-getting-started-hw-11", "lesson": 3, "tier": 1, "difficulty": 2, "xp": 15,
+      "starter": "",
+      "hints": [
+        "Store the answer under a name, then print that name.",
+        "pet = input(), then print(pet)."
+      ],
+      "tests": [
+        {
+          "stdin": "Rex",
+          "expect": "Rex"
+        },
+        {
+          "stdin": "Milo",
+          "expect": "Milo"
+        }
+      ]
+    },
+    {
+      "slug": "gcse-getting-started-hw-11",
+      "lesson": 3,
+      "tier": 1,
+      "difficulty": 2,
+      "xp": 15,
       "title": "Film and song",
       "brief": "Input a favourite film and store it under the name film. Input a favourite song and store it under the name song. Print film, then print song, each on its own line.",
-      "starter": "", "hints": ["Two separate input() calls, each stored in its own name.", "Two variables, two print() calls, same order as they were read in."],
-      "tests": [{ "stdin": "Up\nHere Comes the Sun", "expect": "Up\nHere Comes the Sun" }, { "stdin": "Cars\nBohemian Rhapsody", "expect": "Cars\nBohemian Rhapsody" }] },
-    { "slug": "gcse-getting-started-hw-12", "lesson": 3, "tier": 2, "difficulty": 2, "xp": 15,
+      "starter": "",
+      "hints": [
+        "Two separate input() calls, each stored in its own name.",
+        "Two variables, two print() calls, same order as they were read in."
+      ],
+      "tests": [
+        {
+          "stdin": "Up\nHere Comes the Sun",
+          "expect": "Up\nHere Comes the Sun"
+        },
+        {
+          "stdin": "Cars\nBohemian Rhapsody",
+          "expect": "Cars\nBohemian Rhapsody"
+        }
+      ]
+    },
+    {
+      "slug": "gcse-getting-started-hw-12",
+      "lesson": 3,
+      "tier": 2,
+      "difficulty": 2,
+      "xp": 15,
       "title": "Say it three times",
       "brief": "Input a word from the user. Print it three times, each on its own line.",
-      "starter": "", "hints": ["Store the word once, then print that name more than once.", "Store the input under a name, then print that same name three times."],
-      "tests": [{ "stdin": "go", "expect": "go\ngo\ngo" }, { "stdin": "yes", "expect": "yes\nyes\nyes" }] },
-    { "slug": "gcse-getting-started-hw-13", "lesson": 3, "tier": 2, "difficulty": 3, "xp": 25,
+      "starter": "",
+      "hints": [
+        "Store the word once, then print that name more than once.",
+        "Store the input under a name, then print that same name three times."
+      ],
+      "tests": [
+        {
+          "stdin": "go",
+          "expect": "go\ngo\ngo"
+        },
+        {
+          "stdin": "yes",
+          "expect": "yes\nyes\nyes"
+        }
+      ]
+    },
+    {
+      "slug": "gcse-getting-started-hw-13",
+      "lesson": 3,
+      "tier": 2,
+      "difficulty": 3,
+      "xp": 25,
       "title": "Reverse three words",
       "brief": "Input three words, one at a time. Print them in reverse order: the third word first, then the second, then the first.",
-      "starter": "", "hints": ["Store all three under different names before printing anything.", "Three separate variables, then three print() calls in the opposite order to how they were read."],
-      "tests": [{ "stdin": "red\ngreen\nblue", "expect": "blue\ngreen\nred" }, { "stdin": "one\ntwo\nthree", "expect": "three\ntwo\none" }] },
-    { "slug": "gcse-getting-started-hw-14", "lesson": 4, "tier": 1, "difficulty": 1, "xp": 10,
+      "starter": "",
+      "hints": [
+        "Store all three under different names before printing anything.",
+        "Three separate variables, then three print() calls in the opposite order to how they were read."
+      ],
+      "tests": [
+        {
+          "stdin": "red\ngreen\nblue",
+          "expect": "blue\ngreen\nred"
+        },
+        {
+          "stdin": "one\ntwo\nthree",
+          "expect": "three\ntwo\none"
+        }
+      ]
+    },
+    {
+      "slug": "gcse-getting-started-hw-14",
+      "lesson": 4,
+      "tier": 1,
+      "difficulty": 1,
+      "xp": 10,
       "title": "Join two words together",
       "brief": "Print the result of joining the text Sun and the text set together with +, so it reads Sunset.",
-      "starter": "", "hints": ["+ glues two strings together with nothing extra added.", "print(\"a\" + \"b\") glues the two pieces with nothing in between."],
-      "tests": [{ "expect": "Sunset" }] },
-    { "slug": "gcse-getting-started-hw-15", "lesson": 4, "tier": 1, "difficulty": 1, "xp": 10,
+      "starter": "",
+      "hints": [
+        "+ glues two strings together with nothing extra added.",
+        "print(\"a\" + \"b\") glues the two pieces with nothing in between."
+      ],
+      "tests": [
+        {
+          "expect": "Sunset"
+        }
+      ]
+    },
+    {
+      "slug": "gcse-getting-started-hw-15",
+      "lesson": 4,
+      "tier": 1,
+      "difficulty": 1,
+      "xp": 10,
       "title": "Two spaced-out words",
       "brief": "Print the text Ice and the text cream joined with +, with a space between them, so it reads Ice cream.",
-      "starter": "", "hints": ["+ doesn't add spaces on its own — join in a separate \" \" piece.", "Three pieces joined with +: the first word, a space in its own quotes, and the second word."],
-      "tests": [{ "expect": "Ice cream" }] },
-    { "slug": "gcse-getting-started-hw-16", "lesson": 4, "tier": 2, "difficulty": 2, "xp": 15,
+      "starter": "",
+      "hints": [
+        "+ doesn't add spaces on its own — join in a separate \" \" piece.",
+        "Three pieces joined with +: the first word, a space in its own quotes, and the second word."
+      ],
+      "tests": [
+        {
+          "expect": "Ice cream"
+        }
+      ]
+    },
+    {
+      "slug": "gcse-getting-started-hw-16",
+      "lesson": 4,
+      "tier": 2,
+      "difficulty": 2,
+      "xp": 15,
       "title": "Welcome by name",
       "brief": "Input the user's name. Print `Welcome`, followed by their name and an exclamation mark, joined with +, so entering Ada prints Welcome, Ada!",
-      "starter": "", "hints": ["Build the fixed text so it already includes the comma and space.", "Store the input first, then join fixed text pieces to it with +, in the right order."],
-      "tests": [{ "stdin": "Ada", "expect": "Welcome, Ada!" }, { "stdin": "Sam", "expect": "Welcome, Sam!" }] },
-    { "slug": "gcse-getting-started-hw-17", "lesson": 4, "tier": 2, "difficulty": 2, "xp": 20,
+      "starter": "",
+      "hints": [
+        "Build the fixed text so it already includes the comma and space.",
+        "Store the input first, then join fixed text pieces to it with +, in the right order."
+      ],
+      "tests": [
+        {
+          "stdin": "Ada",
+          "expect": "Welcome, Ada!"
+        },
+        {
+          "stdin": "Sam",
+          "expect": "Welcome, Sam!"
+        }
+      ]
+    },
+    {
+      "slug": "gcse-getting-started-hw-17",
+      "lesson": 4,
+      "tier": 2,
+      "difficulty": 2,
+      "xp": 20,
       "title": "Full name announcement",
       "brief": "Input a first name. Input a surname. Print a sentence in the format `<first> <surname> is here`, built using +. For example, entering Ada then Lovelace prints Ada Lovelace is here.",
-      "starter": "", "hints": ["Break the sentence into pieces: first name, a space, surname, then the fixed ending.", "Store both inputs first, then join variable + fixed text + variable + fixed text with +."],
-      "tests": [{ "stdin": "Ada\nLovelace", "expect": "Ada Lovelace is here" }, { "stdin": "Alan\nTuring", "expect": "Alan Turing is here" }] },
-    { "slug": "gcse-getting-started-hw-18", "lesson": 4, "tier": 2, "difficulty": 3, "xp": 25,
+      "starter": "",
+      "hints": [
+        "Break the sentence into pieces: first name, a space, surname, then the fixed ending.",
+        "Store both inputs first, then join variable + fixed text + variable + fixed text with +."
+      ],
+      "tests": [
+        {
+          "stdin": "Ada\nLovelace",
+          "expect": "Ada Lovelace is here"
+        },
+        {
+          "stdin": "Alan\nTuring",
+          "expect": "Alan Turing is here"
+        }
+      ]
+    },
+    {
+      "slug": "gcse-getting-started-hw-18",
+      "lesson": 4,
+      "tier": 2,
+      "difficulty": 3,
+      "xp": 25,
       "title": "Silly sentence builder",
       "brief": "Input an adjective, a noun, and a place, one at a time. Print a sentence in the format `<adjective> <noun> found in <place>`, built using +. For example, entering Purple, dragon, then the garden prints Purple dragon found in the garden.",
-      "starter": "", "hints": ["Break it into pieces: adjective, a space, noun, the fixed middle text, then place.", "Store all three inputs first, then chain them together with +, including the fixed words and spaces as their own quoted pieces."],
-      "tests": [{ "stdin": "Purple\ndragon\nthe garden", "expect": "Purple dragon found in the garden" }, { "stdin": "Sleepy\ncat\nthe kitchen", "expect": "Sleepy cat found in the kitchen" }] },
-    { "slug": "gcse-getting-started-hw-19", "lesson": 1, "tier": 1, "difficulty": 2, "xp": 15,
+      "starter": "",
+      "hints": [
+        "Break it into pieces: adjective, a space, noun, the fixed middle text, then place.",
+        "Store all three inputs first, then chain them together with +, including the fixed words and spaces as their own quoted pieces."
+      ],
+      "tests": [
+        {
+          "stdin": "Purple\ndragon\nthe garden",
+          "expect": "Purple dragon found in the garden"
+        },
+        {
+          "stdin": "Sleepy\ncat\nthe kitchen",
+          "expect": "Sleepy cat found in the kitchen"
+        }
+      ]
+    },
+    {
+      "slug": "gcse-getting-started-hw-19",
+      "lesson": 1,
+      "tier": 1,
+      "difficulty": 2,
+      "xp": 15,
       "title": "A four-line rhyme",
       "brief": "Print exactly these four lines, using four separate print() calls:\n\n`Roses are red`\n`Violets are blue`\n`Python is fun`\n`And so are you`",
-      "starter": "", "hints": ["Four print() calls, one per line, in the exact order and spelling given.", "Each required line of output is its own print(\"...\") call, in order."],
-      "tests": [{ "expect": "Roses are red\nViolets are blue\nPython is fun\nAnd so are you" }] },
-    { "slug": "gcse-getting-started-hw-20", "lesson": 4, "tier": 2, "difficulty": 2, "xp": 15,
+      "starter": "",
+      "hints": [
+        "Four print() calls, one per line, in the exact order and spelling given.",
+        "Each required line of output is its own print(\"...\") call, in order."
+      ],
+      "tests": [
+        {
+          "expect": "Roses are red\nViolets are blue\nPython is fun\nAnd so are you"
+        }
+      ]
+    },
+    {
+      "slug": "gcse-getting-started-hw-20",
+      "lesson": 4,
+      "tier": 2,
+      "difficulty": 2,
+      "xp": 15,
       "title": "Book and author",
       "brief": "Create a variable called `title` with the value `\"Matilda\"`. Create a variable called `author` with the value `\"Roald Dahl\"`. Print a sentence in the format `<title> by <author>`, built using +.",
-      "starter": "", "hints": ["Build the fixed middle text (\" by \") as its own quoted piece.", "Join variable + fixed text + variable with + to build the sentence."],
-      "tests": [{ "expect": "Matilda by Roald Dahl" }] },
-    { "slug": "gcse-getting-started-hw-21", "lesson": 4, "tier": 2, "difficulty": 3, "xp": 25,
+      "starter": "",
+      "hints": [
+        "Build the fixed middle text (\" by \") as its own quoted piece.",
+        "Join variable + fixed text + variable with + to build the sentence."
+      ],
+      "tests": [
+        {
+          "expect": "Matilda by Roald Dahl"
+        }
+      ]
+    },
+    {
+      "slug": "gcse-getting-started-hw-21",
+      "lesson": 4,
+      "tier": 2,
+      "difficulty": 3,
+      "xp": 25,
       "title": "A date, joined together",
       "brief": "Input a day. Input a month. Print them joined together in the format `<day>/<month>`, using +. For example, entering 25 then 12 prints 25/12.",
-      "starter": "", "hints": ["The input is already text, so it can be joined directly with + — no casting needed here.", "Store both inputs first, then join them with a \"/\" piece in between."],
-      "tests": [{ "stdin": "25\n12", "expect": "25/12" }, { "stdin": "1\n6", "expect": "1/6" }] },
-    { "slug": "gcse-getting-started-hw-22", "lesson": 2, "tier": 1, "difficulty": 1, "xp": 10,
+      "starter": "",
+      "hints": [
+        "The input is already text, so it can be joined directly with + — no casting needed here.",
+        "Store both inputs first, then join them with a \"/\" piece in between."
+      ],
+      "tests": [
+        {
+          "stdin": "25\n12",
+          "expect": "25/12"
+        },
+        {
+          "stdin": "1\n6",
+          "expect": "1/6"
+        }
+      ]
+    },
+    {
+      "slug": "gcse-getting-started-hw-22",
+      "lesson": 2,
+      "tier": 1,
+      "difficulty": 1,
+      "xp": 10,
       "title": "Name and colour",
       "brief": "Create a variable called `name` with the value `\"Ada\"`. Create a variable called `colour` with the value `\"purple\"`. Print name, then print colour, each on its own line.",
-      "starter": "", "hints": ["Create both variables first, then print each one on its own line.", "Two variables, two print() calls, in the order given."],
-      "tests": [{ "expect": "Ada\npurple" }] },
-    { "slug": "gcse-getting-started-hw-23", "lesson": 4, "tier": 2, "difficulty": 3, "xp": 25,
+      "starter": "",
+      "hints": [
+        "Create both variables first, then print each one on its own line.",
+        "Two variables, two print() calls, in the order given."
+      ],
+      "tests": [
+        {
+          "expect": "Ada\npurple"
+        }
+      ]
+    },
+    {
+      "slug": "gcse-getting-started-hw-23",
+      "lesson": 4,
+      "tier": 2,
+      "difficulty": 3,
+      "xp": 25,
       "title": "Four-word sentence",
       "brief": "Input four separate words, one at a time. Print them all on one line, joined together with + and single spaces between them, in the order they were entered.",
-      "starter": "", "hints": ["Store all four inputs first, then join them with \" \" pieces in between each pair.", "Chain variable + \" \" + variable + \" \" + variable + \" \" + variable with +."],
-      "tests": [{ "stdin": "The\nquick\nbrown\nfox", "expect": "The quick brown fox" }, { "stdin": "Python\nis\nreally\nfun", "expect": "Python is really fun" }] },
-    { "slug": "gcse-getting-started-hw-24", "lesson": 2, "tier": 1, "difficulty": 2, "xp": 15,
+      "starter": "",
+      "hints": [
+        "Store all four inputs first, then join them with \" \" pieces in between each pair.",
+        "Chain variable + \" \" + variable + \" \" + variable + \" \" + variable with +."
+      ],
+      "tests": [
+        {
+          "stdin": "The\nquick\nbrown\nfox",
+          "expect": "The quick brown fox"
+        },
+        {
+          "stdin": "Python\nis\nreally\nfun",
+          "expect": "Python is really fun"
+        }
+      ]
+    },
+    {
+      "slug": "gcse-getting-started-hw-24",
+      "lesson": 2,
+      "tier": 1,
+      "difficulty": 2,
+      "xp": 15,
       "title": "A whole sentence, twice",
       "brief": "Create a variable called `message` with the value `\"Hello there!\"`. Print message. Then change message to \"Goodbye for now!\". Print message again.",
-      "starter": "", "hints": ["A variable can hold a whole sentence as one piece of text, the same as a single word.", "Print between the two assignments, so both versions get shown."],
-      "tests": [{ "expect": "Hello there!\nGoodbye for now!" }] },
-    { "slug": "gcse-getting-started-hw-25", "lesson": 4, "tier": 2, "difficulty": 3, "xp": 25,
+      "starter": "",
+      "hints": [
+        "A variable can hold a whole sentence as one piece of text, the same as a single word.",
+        "Print between the two assignments, so both versions get shown."
+      ],
+      "tests": [
+        {
+          "expect": "Hello there!\nGoodbye for now!"
+        }
+      ]
+    },
+    {
+      "slug": "gcse-getting-started-hw-25",
+      "lesson": 4,
+      "tier": 2,
+      "difficulty": 3,
+      "xp": 25,
       "title": "Nickname announcement",
       "brief": "Input a first name. Input a last name. Input a nickname. Print a sentence in the format `<nickname> (<first> <last>)`, built using +. For example, entering Robert, Smith, then Bob prints Bob (Robert Smith).",
-      "starter": "", "hints": ["Notice the printed order isn't the same as the input order — plan which variable goes where before joining them.", "Join nickname + fixed text \" (\" + first + \" \" + last + \")\" with +, in that order."],
-      "tests": [{ "stdin": "Robert\nSmith\nBob", "expect": "Bob (Robert Smith)" }, { "stdin": "Elizabeth\nJones\nLiz", "expect": "Liz (Elizabeth Jones)" }] }
+      "starter": "",
+      "hints": [
+        "Notice the printed order isn't the same as the input order — plan which variable goes where before joining them.",
+        "Join nickname + fixed text \" (\" + first + \" \" + last + \")\" with +, in that order."
+      ],
+      "tests": [
+        {
+          "stdin": "Robert\nSmith\nBob",
+          "expect": "Bob (Robert Smith)"
+        },
+        {
+          "stdin": "Elizabeth\nJones\nLiz",
+          "expect": "Liz (Elizabeth Jones)"
+        }
+      ]
+    }
   ],
   "practiceTasks": [
-    { "slug": "gcse-getting-started-p-01", "tier": 1, "difficulty": 1, "xp": 10, "title": "Print your name twice",
+    {
+      "slug": "gcse-getting-started-p-01",
+      "tier": 1,
+      "difficulty": 1,
+      "xp": 10,
+      "title": "Print your name twice",
       "brief": "Input your name. Print it twice, once per line.",
-      "starter": "", "hints": ["Store the name in a variable first, then print that variable twice.", "print(name) called twice, on two separate lines, after storing the input in a variable called name."],
-      "tests": [{ "stdin": "Ada", "expect": "Ada\nAda" }, { "stdin": "Sam", "expect": "Sam\nSam" }] },
-    { "slug": "gcse-getting-started-p-02", "tier": 1, "difficulty": 1, "xp": 10, "title": "Echo a number",
+      "starter": "",
+      "hints": [
+        "Store the name in a variable first, then print that variable twice.",
+        "print(name) called twice, on two separate lines, after storing the input in a variable called name."
+      ],
+      "tests": [
+        {
+          "stdin": "Ada",
+          "expect": "Ada\nAda"
+        },
+        {
+          "stdin": "Sam",
+          "expect": "Sam\nSam"
+        },
+        {
+          "stdin": "Mia Rose",
+          "expect": "Mia Rose\nMia Rose"
+        }
+      ]
+    },
+    {
+      "slug": "gcse-getting-started-p-02",
+      "tier": 1,
+      "difficulty": 1,
+      "xp": 10,
+      "title": "Echo a number",
       "brief": "Input a number (you don't need to convert it to a whole number for this). Print it with \"Number: \" in front, using +.",
-      "starter": "", "hints": ["input() already gives you text, so you can join it straight onto another piece of text with +.", "print(\"Number: \" + number), where number is whatever input() gave you, with no casting needed."],
-      "tests": [{ "stdin": "42", "expect": "Number: 42" }, { "stdin": "7", "expect": "Number: 7" }] },
-    { "slug": "gcse-getting-started-p-03", "tier": 2, "difficulty": 2, "xp": 15, "title": "Greeting card",
+      "starter": "",
+      "hints": [
+        "input() already gives you text, so you can join it straight onto another piece of text with +.",
+        "print(\"Number: \" + number), where number is whatever input() gave you, with no casting needed."
+      ],
+      "tests": [
+        {
+          "stdin": "42",
+          "expect": "Number: 42"
+        },
+        {
+          "stdin": "7",
+          "expect": "Number: 7"
+        },
+        {
+          "stdin": "-12",
+          "expect": "Number: -12"
+        },
+        {
+          "stdin": "3.5",
+          "expect": "Number: 3.5"
+        }
+      ]
+    },
+    {
+      "slug": "gcse-getting-started-p-03",
+      "tier": 2,
+      "difficulty": 2,
+      "xp": 15,
+      "title": "Greeting card",
       "brief": "Input a name, then an occasion. Print a greeting in the format `Happy <occasion>, <name>!`, joining the pieces together with +.",
-      "starter": "", "hints": ["Read the name first, then the occasion, storing each in its own variable.", "Build the message with + : \"Happy \" + occasion + \", \" + name + \"!\"."],
-      "tests": [{ "stdin": "Ada\nBirthday", "expect": "Happy Birthday, Ada!" }, { "stdin": "Sam\nGraduation", "expect": "Happy Graduation, Sam!" }] },
-    { "slug": "gcse-getting-started-p-04", "tier": 2, "difficulty": 2, "xp": 15, "title": "Two-line label",
+      "starter": "",
+      "hints": [
+        "Read the name first, then the occasion, storing each in its own variable.",
+        "Build the message with + : \"Happy \" + occasion + \", \" + name + \"!\"."
+      ],
+      "tests": [
+        {
+          "stdin": "Ada\nBirthday",
+          "expect": "Happy Birthday, Ada!"
+        },
+        {
+          "stdin": "Sam\nGraduation",
+          "expect": "Happy Graduation, Sam!"
+        },
+        {
+          "stdin": "Sam\nBirthday",
+          "expect": "Happy Birthday, Sam!"
+        },
+        {
+          "stdin": "Mia\nNew Year",
+          "expect": "Happy New Year, Mia!"
+        }
+      ]
+    },
+    {
+      "slug": "gcse-getting-started-p-04",
+      "tier": 2,
+      "difficulty": 2,
+      "xp": 15,
+      "title": "Two-line label",
       "brief": "Input an item's name, then its shelf location. Print the item name on its own line, then the location in the format `Located at: <location>`.",
-      "starter": "", "hints": ["Two separate print() calls, one for each line.", "print(item), then print(\"Located at: \" + location) on the next line."],
-      "tests": [{ "stdin": "Milk\nAisle 3", "expect": "Milk\nLocated at: Aisle 3" }, { "stdin": "Bread\nAisle 1", "expect": "Bread\nLocated at: Aisle 1" }] },
-    { "slug": "gcse-getting-started-p-05", "tier": 3, "difficulty": 2, "xp": 20, "title": "Introduce yourself",
+      "starter": "",
+      "hints": [
+        "Two separate print() calls, one for each line.",
+        "print(item), then print(\"Located at: \" + location) on the next line."
+      ],
+      "tests": [
+        {
+          "stdin": "Milk\nAisle 3",
+          "expect": "Milk\nLocated at: Aisle 3"
+        },
+        {
+          "stdin": "Bread\nAisle 1",
+          "expect": "Bread\nLocated at: Aisle 1"
+        },
+        {
+          "stdin": "Pens\nAisle 4",
+          "expect": "Pens\nLocated at: Aisle 4"
+        },
+        {
+          "stdin": "Milk\nFridge 2",
+          "expect": "Milk\nLocated at: Fridge 2"
+        }
+      ]
+    },
+    {
+      "slug": "gcse-getting-started-p-05",
+      "tier": 3,
+      "difficulty": 2,
+      "xp": 20,
+      "title": "Introduce yourself",
       "brief": "Ada is filling in a profile. Input a name, then a hobby. Print a sentence introducing them, in the format `<name> enjoys <hobby>.`, built with +.",
-      "starter": "", "hints": ["Read both pieces first, then build the full sentence with + before printing it.", "print(name + \" enjoys \" + hobby + \".\")."],
-      "tests": [{ "stdin": "Ada\npainting", "expect": "Ada enjoys painting." }, { "stdin": "Sam\nfootball", "expect": "Sam enjoys football." }] },
-    { "slug": "gcse-getting-started-p-06", "tier": 2, "difficulty": 3, "xp": 20, "title": "Full address label",
+      "starter": "",
+      "hints": [
+        "Read both pieces first, then build the full sentence with + before printing it.",
+        "print(name + \" enjoys \" + hobby + \".\")."
+      ],
+      "tests": [
+        {
+          "stdin": "Ada\npainting",
+          "expect": "Ada enjoys painting."
+        },
+        {
+          "stdin": "Sam\nfootball",
+          "expect": "Sam enjoys football."
+        },
+        {
+          "stdin": "Sam\nchess",
+          "expect": "Sam enjoys chess."
+        },
+        {
+          "stdin": "Mia\nswimming",
+          "expect": "Mia enjoys swimming."
+        }
+      ]
+    },
+    {
+      "slug": "gcse-getting-started-p-06",
+      "tier": 2,
+      "difficulty": 3,
+      "xp": 20,
+      "title": "Full address label",
       "brief": "Input a house number, then a street name, then a city — three separate inputs. Print them as one address line, in the format `<number> <street>, <city>`, built entirely with +.",
-      "starter": "", "hints": ["Three input() calls, then one print() that joins all three with + and the right spaces/comma.", "print(number + \" \" + street + \", \" + city)."],
-      "tests": [{ "stdin": "12\nElm Street\nLondon", "expect": "12 Elm Street, London" }, { "stdin": "45\nHigh Road\nLeeds", "expect": "45 High Road, Leeds" }] },
-    { "slug": "gcse-getting-started-p-07", "tier": 3, "difficulty": 3, "xp": 20, "title": "Two-part story",
+      "starter": "",
+      "hints": [
+        "Three input() calls, then one print() that joins all three with + and the right spaces/comma.",
+        "print(number + \" \" + street + \", \" + city)."
+      ],
+      "tests": [
+        {
+          "stdin": "12\nElm Street\nLondon",
+          "expect": "12 Elm Street, London"
+        },
+        {
+          "stdin": "45\nHigh Road\nLeeds",
+          "expect": "45 High Road, Leeds"
+        },
+        {
+          "stdin": "12\nHigh Street\nLeeds",
+          "expect": "12 High Street, Leeds"
+        },
+        {
+          "stdin": "7\nPark Road\nYork",
+          "expect": "7 Park Road, York"
+        }
+      ]
+    },
+    {
+      "slug": "gcse-getting-started-p-07",
+      "tier": 3,
+      "difficulty": 3,
+      "xp": 20,
+      "title": "Two-part story",
       "brief": "Input a name, then a place. Print two sentences, each built with +, reusing both pieces of information in each line: `<name> travelled to <place>.` then `<place> welcomed <name> warmly.`",
-      "starter": "", "hints": ["Read both values once, then reuse the same two variables in both print() calls — no need to read anything twice.", "print(name + \" travelled to \" + place + \".\") then print(place + \" welcomed \" + name + \" warmly.\")."],
-      "tests": [{ "stdin": "Ada\nParis", "expect": "Ada travelled to Paris.\nParis welcomed Ada warmly." }, { "stdin": "Sam\nRome", "expect": "Sam travelled to Rome.\nRome welcomed Sam warmly." }] },
-    { "slug": "gcse-getting-started-p-08", "tier": 3, "difficulty": 4, "xp": 25, "title": "Business card",
+      "starter": "",
+      "hints": [
+        "Read both values once, then reuse the same two variables in both print() calls — no need to read anything twice.",
+        "print(name + \" travelled to \" + place + \".\") then print(place + \" welcomed \" + name + \" warmly.\")."
+      ],
+      "tests": [
+        {
+          "stdin": "Ada\nParis",
+          "expect": "Ada travelled to Paris.\nParis welcomed Ada warmly."
+        },
+        {
+          "stdin": "Sam\nRome",
+          "expect": "Sam travelled to Rome.\nRome welcomed Sam warmly."
+        },
+        {
+          "stdin": "Sam\nParis",
+          "expect": "Sam travelled to Paris.\nParis welcomed Sam warmly."
+        },
+        {
+          "stdin": "Mia\nOslo",
+          "expect": "Mia travelled to Oslo.\nOslo welcomed Mia warmly."
+        }
+      ]
+    },
+    {
+      "slug": "gcse-getting-started-p-08",
+      "tier": 3,
+      "difficulty": 4,
+      "xp": 25,
+      "title": "Business card",
       "brief": "Input a name, a job title, and a phone number — three separate inputs. Print a 3-line business card: the name, then the job title, then the phone number in the format `Call: <phone>`.",
-      "starter": "", "hints": ["Three input() calls, then three separate print() calls — one line doesn't need +, the other does.", "print(name); print(title); print(\"Call: \" + phone)."],
-      "tests": [{ "stdin": "Ada Lovelace\nSoftware Engineer\n07123456789", "expect": "Ada Lovelace\nSoftware Engineer\nCall: 07123456789" }, { "stdin": "Sam Lee\nShop Manager\n07999999999", "expect": "Sam Lee\nShop Manager\nCall: 07999999999" }] },
-    { "slug": "gcse-getting-started-p-09", "tier": 3, "difficulty": 4, "xp": 25, "title": "Movie ticket",
+      "starter": "",
+      "hints": [
+        "Three input() calls, then three separate print() calls — one line doesn't need +, the other does.",
+        "print(name); print(title); print(\"Call: \" + phone)."
+      ],
+      "tests": [
+        {
+          "stdin": "Ada Lovelace\nSoftware Engineer\n07123456789",
+          "expect": "Ada Lovelace\nSoftware Engineer\nCall: 07123456789"
+        },
+        {
+          "stdin": "Sam Lee\nShop Manager\n07999999999",
+          "expect": "Sam Lee\nShop Manager\nCall: 07999999999"
+        },
+        {
+          "stdin": "Sam Lee\nChef\n07700 900111",
+          "expect": "Sam Lee\nChef\nCall: 07700 900111"
+        },
+        {
+          "stdin": "Mia\nPilot\n01632 960000",
+          "expect": "Mia\nPilot\nCall: 01632 960000"
+        }
+      ]
+    },
+    {
+      "slug": "gcse-getting-started-p-09",
+      "tier": 3,
+      "difficulty": 4,
+      "xp": 25,
+      "title": "Movie ticket",
       "brief": "Input a film name, a showtime, and a seat number — three separate inputs. Print them all on one line, in the format `<film> — <showtime> — Seat <seat>`, built entirely with +.",
-      "starter": "", "hints": ["One long + chain, joining all three pieces with \" — \" and \" — Seat \" in between.", "print(film + \" — \" + showtime + \" — Seat \" + seat)."],
-      "tests": [{ "stdin": "Inception\n7:30pm\nA12", "expect": "Inception — 7:30pm — Seat A12" }, { "stdin": "Dune\n9:00pm\nC5", "expect": "Dune — 9:00pm — Seat C5" }] },
-    { "slug": "gcse-getting-started-p-10", "tier": 4, "difficulty": 5, "xp": 30, "title": "Package receipt",
+      "starter": "",
+      "hints": [
+        "One long + chain, joining all three pieces with \" — \" and \" — Seat \" in between.",
+        "print(film + \" — \" + showtime + \" — Seat \" + seat)."
+      ],
+      "tests": [
+        {
+          "stdin": "Inception\n7:30pm\nA12",
+          "expect": "Inception — 7:30pm — Seat A12"
+        },
+        {
+          "stdin": "Dune\n9:00pm\nC5",
+          "expect": "Dune — 9:00pm — Seat C5"
+        },
+        {
+          "stdin": "Up\n18:30\nB4",
+          "expect": "Up — 18:30 — Seat B4"
+        },
+        {
+          "stdin": "Cars\n14:00\nC12",
+          "expect": "Cars — 14:00 — Seat C12"
+        }
+      ]
+    },
+    {
+      "slug": "gcse-getting-started-p-10",
+      "tier": 4,
+      "difficulty": 5,
+      "xp": 30,
+      "title": "Package receipt",
       "brief": "Input a sender, a receiver, an item name, a quantity, and a price — five separate inputs. Print a 3-line receipt, all built with +: `From: <sender> To: <receiver>`, then `Item: <item> x<quantity>`, then `Total due: £<price>`.",
-      "starter": "", "hints": ["Five input() calls, then three print() calls — some lines need more than one + join.", "print(\"From: \" + sender + \" To: \" + receiver); print(\"Item: \" + item + \" x\" + quantity); print(\"Total due: £\" + price)."],
-      "tests": [{ "stdin": "Ada\nSam\nBook\n2\n9.99", "expect": "From: Ada To: Sam\nItem: Book x2\nTotal due: £9.99" }, { "stdin": "Mia\nBob\nMug\n1\n5.50", "expect": "From: Mia To: Bob\nItem: Mug x1\nTotal due: £5.50" }] },
-    { "slug": "gcse-getting-started-p-s1", "tier": 4, "difficulty": 5, "xp": 35, "stretch": true, "title": "🌟 Full shipping label",
+      "starter": "",
+      "hints": [
+        "Five input() calls, then three print() calls — some lines need more than one + join.",
+        "print(\"From: \" + sender + \" To: \" + receiver); print(\"Item: \" + item + \" x\" + quantity); print(\"Total due: £\" + price)."
+      ],
+      "tests": [
+        {
+          "stdin": "Ada\nSam\nBook\n2\n9.99",
+          "expect": "From: Ada To: Sam\nItem: Book x2\nTotal due: £9.99"
+        },
+        {
+          "stdin": "Mia\nBob\nMug\n1\n5.50",
+          "expect": "From: Mia To: Bob\nItem: Mug x1\nTotal due: £5.50"
+        },
+        {
+          "stdin": "Sam\nMia\nlamp\n2\n19.99",
+          "expect": "From: Sam To: Mia\nItem: lamp x2\nTotal due: £19.99"
+        },
+        {
+          "stdin": "Ann\nBo\nbook\n1\n5",
+          "expect": "From: Ann To: Bo\nItem: book x1\nTotal due: £5"
+        }
+      ]
+    },
+    {
+      "slug": "gcse-getting-started-p-s1",
+      "tier": 4,
+      "difficulty": 5,
+      "xp": 35,
+      "stretch": true,
+      "title": "🌟 Full shipping label",
       "brief": "Input a name, two address lines, a city, a postcode, and a country — six separate inputs. Print a 5-line shipping label, built entirely with +: the name, then each address line, then the city and postcode combined on one line (`<city>, <postcode>`), then the country.",
-      "starter": "", "hints": ["Six input() calls, then five print() calls — only the city/postcode line needs a + join.", "print(name); print(a1); print(a2); print(city + \", \" + postcode); print(country)."],
-      "tests": [{ "stdin": "Ada Lovelace\n221B Byte Street\nFlat 4\nLondon\nEC1A 1AA\nUK", "expect": "Ada Lovelace\n221B Byte Street\nFlat 4\nLondon, EC1A 1AA\nUK" }, { "stdin": "Sam Lee\n12 Loop Road\nUnit 2\nLeeds\nLS1 2AB\nUK", "expect": "Sam Lee\n12 Loop Road\nUnit 2\nLeeds, LS1 2AB\nUK" }] },
-    { "slug": "gcse-getting-started-p-s2", "tier": 4, "difficulty": 5, "xp": 35, "stretch": true, "title": "🌟 Event invitation",
+      "starter": "",
+      "hints": [
+        "Six input() calls, then five print() calls — only the city/postcode line needs a + join.",
+        "print(name); print(a1); print(a2); print(city + \", \" + postcode); print(country)."
+      ],
+      "tests": [
+        {
+          "stdin": "Ada Lovelace\n221B Byte Street\nFlat 4\nLondon\nEC1A 1AA\nUK",
+          "expect": "Ada Lovelace\n221B Byte Street\nFlat 4\nLondon, EC1A 1AA\nUK"
+        },
+        {
+          "stdin": "Sam Lee\n12 Loop Road\nUnit 2\nLeeds\nLS1 2AB\nUK",
+          "expect": "Sam Lee\n12 Loop Road\nUnit 2\nLeeds, LS1 2AB\nUK"
+        },
+        {
+          "stdin": "Sam Lee\n4 Oak Lane\nFlat 2\nBath\nBA1 1AA\nUK",
+          "expect": "Sam Lee\n4 Oak Lane\nFlat 2\nBath, BA1 1AA\nUK"
+        }
+      ]
+    },
+    {
+      "slug": "gcse-getting-started-p-s2",
+      "tier": 4,
+      "difficulty": 5,
+      "xp": 35,
+      "stretch": true,
+      "title": "🌟 Event invitation",
       "brief": "Input a host's name, a guest's name, an event name, a date, a time, and a venue — six separate inputs. Print a 3-line invitation, all built with +: `<guest>, you're invited to <event>!`, then `Hosted by <host> at <venue>.`, then `<date> at <time>.`",
-      "starter": "", "hints": ["Each line mixes several of the six variables together with + — plan which pieces go on which line before you start.", "print(guest + \", you're invited to \" + event + \"!\"); print(\"Hosted by \" + host + \" at \" + venue + \".\"); print(date + \" at \" + time + \".\")."],
-      "tests": [{ "stdin": "Ada\nSam\nCode Night\nFriday\n6pm\nRoom 12", "expect": "Sam, you're invited to Code Night!\nHosted by Ada at Room 12.\nFriday at 6pm." }, { "stdin": "Mia\nBob\nQuiz Night\nMonday\n7pm\nHall A", "expect": "Bob, you're invited to Quiz Night!\nHosted by Mia at Hall A.\nMonday at 7pm." }] }
+      "starter": "",
+      "hints": [
+        "Each line mixes several of the six variables together with + — plan which pieces go on which line before you start.",
+        "print(guest + \", you're invited to \" + event + \"!\"); print(\"Hosted by \" + host + \" at \" + venue + \".\"); print(date + \" at \" + time + \".\")."
+      ],
+      "tests": [
+        {
+          "stdin": "Ada\nSam\nCode Night\nFriday\n6pm\nRoom 12",
+          "expect": "Sam, you're invited to Code Night!\nHosted by Ada at Room 12.\nFriday at 6pm."
+        },
+        {
+          "stdin": "Mia\nBob\nQuiz Night\nMonday\n7pm\nHall A",
+          "expect": "Bob, you're invited to Quiz Night!\nHosted by Mia at Hall A.\nMonday at 7pm."
+        },
+        {
+          "stdin": "Ann\nBo\nQuiz Night\n5 May\n7pm\nThe Hall",
+          "expect": "Bo, you're invited to Quiz Night!\nHosted by Ann at The Hall.\n5 May at 7pm."
+        }
+      ]
+    }
   ]
 }
