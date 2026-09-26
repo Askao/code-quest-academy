@@ -214,25 +214,25 @@
     "ability": 2,
     "marks": 4,
     "format": "code",
-    "question": "A cinema sells tickets.\n\n- Children (under 16) pay £10.\n- Adults pay £15.\n- Adults who show a student card pay £12.\n\nWrite a program that asks the user for their age and, if they are 16 or over, asks whether they have a student card (\"yes\" or \"no\"). The program then outputs the ticket price. [4]\n\nYou may use pseudocode or a high-level programming language.",
+    "question": "A cinema sells tickets. The price depends on the customer's age and whether they have a student card.\n\n| Customer | Ticket price |\n|---|---|\n| Aged 15 or under | £10 |\n| Aged 16 or over, with a student card | £12 |\n| Aged 16 or over, without a student card | £15 |\n\nWrite a program that:\n\n- asks the user to enter their age\n- only if they are aged 16 or over, asks whether they have a student card (the user types \"yes\" or \"no\")\n- outputs the ticket price. [4]\n\nYou may use pseudocode or a high-level programming language.",
     "markScheme": [
       {
-        "text": "Takes the age (and the student card answer) as input and stores them in variables",
+        "text": "Takes the age as input and stores it in a variable",
         "marks": 1,
         "guidance": ""
       },
       {
-        "text": "Uses selection to test the age; outputs / sets a price of £10 for under 16",
+        "text": "Tests the age with the correct boundary: aged 15 or under gives £10 (and 16 does not)",
         "marks": 1,
-        "guidance": ""
+        "guidance": "Accept age < 16 or age <= 15. Do not award if 16 is treated as a child."
       },
       {
-        "text": "Adult with a student card costs £12 (student card answer compared correctly)",
+        "text": "For aged 16 or over, takes the student card answer as input AND gives £12 when it is \"yes\"",
         "marks": 1,
-        "guidance": ""
+        "guidance": "Accept the student card question being asked of every customer, as long as the answer only affects those aged 16 or over."
       },
       {
-        "text": "Adult without a student card costs £15 AND the price is output in every case",
+        "text": "Gives £15 for aged 16 or over without a student card AND outputs the price in every case",
         "marks": 1,
         "guidance": ""
       }

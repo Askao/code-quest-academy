@@ -168,29 +168,35 @@ VALUES ($aq$ocr-selection-03$aq$, 3, $aq$(c) Fail$aq$, 1, $aq$$aq$)
 ON CONFLICT (question_id, position) DO UPDATE SET text = EXCLUDED.text, marks = EXCLUDED.marks, guidance = EXCLUDED.guidance;
 
 INSERT INTO public.assessment_questions (id, track, board, topic, marks, ability, answer_format, question)
-VALUES ($aq$ocr-selection-04$aq$, 'gcse', $aq$ocr$aq$, $aq$selection$aq$, 4, 2, $aq$code$aq$, $aq$A cinema sells tickets.
+VALUES ($aq$ocr-selection-04$aq$, 'gcse', $aq$ocr$aq$, $aq$selection$aq$, 4, 2, $aq$code$aq$, $aq$A cinema sells tickets. The price depends on the customer's age and whether they have a student card.
 
-- Children (under 16) pay £10.
-- Adults pay £15.
-- Adults who show a student card pay £12.
+| Customer | Ticket price |
+|---|---|
+| Aged 15 or under | £10 |
+| Aged 16 or over, with a student card | £12 |
+| Aged 16 or over, without a student card | £15 |
 
-Write a program that asks the user for their age and, if they are 16 or over, asks whether they have a student card ("yes" or "no"). The program then outputs the ticket price. [4]
+Write a program that:
+
+- asks the user to enter their age
+- only if they are aged 16 or over, asks whether they have a student card (the user types "yes" or "no")
+- outputs the ticket price. [4]
 
 You may use pseudocode or a high-level programming language.$aq$)
 ON CONFLICT (id) DO UPDATE SET board = EXCLUDED.board, topic = EXCLUDED.topic, marks = EXCLUDED.marks,
   ability = EXCLUDED.ability, answer_format = EXCLUDED.answer_format, question = EXCLUDED.question;
 DELETE FROM public.assessment_mark_points WHERE question_id = $aq$ocr-selection-04$aq$ AND position > 4;
 INSERT INTO public.assessment_mark_points (question_id, position, text, marks, guidance)
-VALUES ($aq$ocr-selection-04$aq$, 1, $aq$Takes the age (and the student card answer) as input and stores them in variables$aq$, 1, $aq$$aq$)
+VALUES ($aq$ocr-selection-04$aq$, 1, $aq$Takes the age as input and stores it in a variable$aq$, 1, $aq$$aq$)
 ON CONFLICT (question_id, position) DO UPDATE SET text = EXCLUDED.text, marks = EXCLUDED.marks, guidance = EXCLUDED.guidance;
 INSERT INTO public.assessment_mark_points (question_id, position, text, marks, guidance)
-VALUES ($aq$ocr-selection-04$aq$, 2, $aq$Uses selection to test the age; outputs / sets a price of £10 for under 16$aq$, 1, $aq$$aq$)
+VALUES ($aq$ocr-selection-04$aq$, 2, $aq$Tests the age with the correct boundary: aged 15 or under gives £10 (and 16 does not)$aq$, 1, $aq$Accept age < 16 or age <= 15. Do not award if 16 is treated as a child.$aq$)
 ON CONFLICT (question_id, position) DO UPDATE SET text = EXCLUDED.text, marks = EXCLUDED.marks, guidance = EXCLUDED.guidance;
 INSERT INTO public.assessment_mark_points (question_id, position, text, marks, guidance)
-VALUES ($aq$ocr-selection-04$aq$, 3, $aq$Adult with a student card costs £12 (student card answer compared correctly)$aq$, 1, $aq$$aq$)
+VALUES ($aq$ocr-selection-04$aq$, 3, $aq$For aged 16 or over, takes the student card answer as input AND gives £12 when it is "yes"$aq$, 1, $aq$Accept the student card question being asked of every customer, as long as the answer only affects those aged 16 or over.$aq$)
 ON CONFLICT (question_id, position) DO UPDATE SET text = EXCLUDED.text, marks = EXCLUDED.marks, guidance = EXCLUDED.guidance;
 INSERT INTO public.assessment_mark_points (question_id, position, text, marks, guidance)
-VALUES ($aq$ocr-selection-04$aq$, 4, $aq$Adult without a student card costs £15 AND the price is output in every case$aq$, 1, $aq$$aq$)
+VALUES ($aq$ocr-selection-04$aq$, 4, $aq$Gives £15 for aged 16 or over without a student card AND outputs the price in every case$aq$, 1, $aq$$aq$)
 ON CONFLICT (question_id, position) DO UPDATE SET text = EXCLUDED.text, marks = EXCLUDED.marks, guidance = EXCLUDED.guidance;
 
 INSERT INTO public.assessment_questions (id, track, board, topic, marks, ability, answer_format, question)
