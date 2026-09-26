@@ -1,3 +1,4 @@
+import { StudentAssessments } from "@/components/StudentAssessments";
 import { createFileRoute, Link } from "@tanstack/react-router";
 import { useQuery, useQueryClient } from "@tanstack/react-query";
 import { supabase } from "@/integrations/supabase/client";
@@ -358,6 +359,8 @@ function Dashboard() {
           </div>
         </div>
       </section>
+
+      <StudentAssessments />
 
       {currentHomework.length > 0 ? (
         <section>

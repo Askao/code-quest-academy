@@ -1,0 +1,437 @@
+[
+  {
+    "id": "ocr-iteration-01",
+    "board": "ocr",
+    "topic": "iteration",
+    "ability": 1,
+    "marks": 2,
+    "format": "text",
+    "question": "Identify **two** types of loop (iteration) used in programming. [2]",
+    "markScheme": [
+      {
+        "text": "Count-controlled loop (accept: FOR loop)",
+        "marks": 1,
+        "guidance": "Accept a correct example of the loop written in code."
+      },
+      {
+        "text": "Condition-controlled loop (accept: WHILE loop / DO UNTIL loop / REPEAT UNTIL loop)",
+        "marks": 1,
+        "guidance": ""
+      }
+    ]
+  },
+  {
+    "id": "ocr-iteration-02",
+    "board": "ocr",
+    "topic": "iteration",
+    "ability": 1,
+    "marks": 2,
+    "format": "text",
+    "question": "A program asks a user to enter a password. It keeps asking until the password is correct.\n\nExplain why a condition-controlled loop is more suitable for this program than a count-controlled loop. [2]",
+    "markScheme": [
+      {
+        "text": "The number of attempts the user will need is not known in advance / could be any number",
+        "marks": 1,
+        "guidance": ""
+      },
+      {
+        "text": "A condition-controlled loop repeats until a condition is met / until the password is correct",
+        "marks": 1,
+        "guidance": ""
+      },
+      {
+        "text": "A count-controlled loop repeats a fixed / set number of times",
+        "marks": 1,
+        "guidance": ""
+      }
+    ]
+  },
+  {
+    "id": "ocr-iteration-03",
+    "board": "ocr",
+    "topic": "iteration",
+    "ability": 2,
+    "marks": 3,
+    "format": "text",
+    "question": "The following program is written in OCR Exam Reference Language.\n\n```\ntotal = 0\nfor i = 1 to 4\n    total = total + i\nnext i\nprint(total)\n```\n\n(a) State the value that is output when the program is run. [1]\n\n(b) State the number of times the line `total = total + i` is executed. [1]\n\n(c) State the purpose of the variable `total`. [1]",
+    "markScheme": [
+      {
+        "text": "(a) 10",
+        "marks": 1,
+        "guidance": ""
+      },
+      {
+        "text": "(b) 4 (times)",
+        "marks": 1,
+        "guidance": ""
+      },
+      {
+        "text": "(c) It stores / holds the running total (sum) of the values of i",
+        "marks": 1,
+        "guidance": "Accept: it adds up the numbers."
+      }
+    ]
+  },
+  {
+    "id": "ocr-iteration-04",
+    "board": "ocr",
+    "topic": "iteration",
+    "ability": 2,
+    "marks": 4,
+    "format": "code",
+    "question": "Write a program that asks the user to enter a number between 1 and 10. The program must keep asking until a valid number is entered. When a valid number is entered, the program outputs \"Thank you\". [4]\n\nYou may use pseudocode or a high-level programming language.",
+    "markScheme": [
+      {
+        "text": "Takes a number as input from the user and stores it in a variable",
+        "marks": 1,
+        "guidance": ""
+      },
+      {
+        "text": "Uses a condition-controlled loop (WHILE / DO UNTIL / REPEAT UNTIL)",
+        "marks": 1,
+        "guidance": ""
+      },
+      {
+        "text": "Loop condition is correct: repeats while the number is less than 1 OR greater than 10",
+        "marks": 1,
+        "guidance": "Accept the equivalent condition for a loop that stops when the number is between 1 and 10 (inclusive)."
+      },
+      {
+        "text": "Asks for the number again inside the loop AND outputs \"Thank you\" after the loop (once, when valid)",
+        "marks": 1,
+        "guidance": ""
+      }
+    ]
+  },
+  {
+    "id": "ocr-iteration-05",
+    "board": "ocr",
+    "topic": "iteration",
+    "ability": 3,
+    "marks": 6,
+    "format": "code",
+    "question": "A teacher wants a program to help with marking. The program must:\n\n- ask the user to enter five test marks, one at a time\n- calculate and output the average (mean) mark\n- output the highest mark entered. [6]\n\nWrite the program. You may use pseudocode or a high-level programming language.",
+    "markScheme": [
+      {
+        "text": "Uses a count-controlled loop that repeats five times",
+        "marks": 1,
+        "guidance": ""
+      },
+      {
+        "text": "Takes each mark as an input inside the loop",
+        "marks": 1,
+        "guidance": ""
+      },
+      {
+        "text": "Adds each mark to a running total (total initialised to 0 before the loop)",
+        "marks": 1,
+        "guidance": ""
+      },
+      {
+        "text": "Compares each mark with the highest so far and updates the highest when a larger mark is found",
+        "marks": 1,
+        "guidance": ""
+      },
+      {
+        "text": "Calculates the average after the loop (total divided by 5)",
+        "marks": 1,
+        "guidance": ""
+      },
+      {
+        "text": "Outputs both the average and the highest mark (after the loop)",
+        "marks": 1,
+        "guidance": ""
+      }
+    ]
+  },
+  {
+    "id": "ocr-selection-01",
+    "board": "ocr",
+    "topic": "selection",
+    "ability": 1,
+    "marks": 1,
+    "format": "text",
+    "question": "State what is meant by selection in a program. [1]",
+    "markScheme": [
+      {
+        "text": "A decision is made in the program / different code runs depending on whether a condition is true or false",
+        "marks": 1,
+        "guidance": "Accept: an example using IF."
+      }
+    ]
+  },
+  {
+    "id": "ocr-selection-02",
+    "board": "ocr",
+    "topic": "selection",
+    "ability": 1,
+    "marks": 2,
+    "format": "text",
+    "question": "In the OCR Exam Reference Language, the symbols `=` and `==` are used in programs.\n\nState the purpose of each symbol. [2]",
+    "markScheme": [
+      {
+        "text": "`=` assigns a value to a variable (assignment)",
+        "marks": 1,
+        "guidance": ""
+      },
+      {
+        "text": "`==` compares two values to check whether they are equal (comparison)",
+        "marks": 1,
+        "guidance": ""
+      }
+    ]
+  },
+  {
+    "id": "ocr-selection-03",
+    "board": "ocr",
+    "topic": "selection",
+    "ability": 2,
+    "marks": 3,
+    "format": "text",
+    "question": "The following program is written in OCR Exam Reference Language.\n\n```\nmark = int(input(\"Enter mark\"))\nif mark >= 70 then\n    print(\"Distinction\")\nelseif mark >= 50 then\n    print(\"Pass\")\nelse\n    print(\"Fail\")\nendif\n```\n\nState the output when the user enters:\n\n(a) 72 [1]\n\n(b) 50 [1]\n\n(c) 49 [1]",
+    "markScheme": [
+      {
+        "text": "(a) Distinction",
+        "marks": 1,
+        "guidance": ""
+      },
+      {
+        "text": "(b) Pass",
+        "marks": 1,
+        "guidance": ""
+      },
+      {
+        "text": "(c) Fail",
+        "marks": 1,
+        "guidance": ""
+      }
+    ]
+  },
+  {
+    "id": "ocr-selection-04",
+    "board": "ocr",
+    "topic": "selection",
+    "ability": 2,
+    "marks": 4,
+    "format": "code",
+    "question": "A cinema sells tickets.\n\n- Children (under 16) pay £10.\n- Adults pay £15.\n- Adults who show a student card pay £12.\n\nWrite a program that asks the user for their age and, if they are 16 or over, asks whether they have a student card (\"yes\" or \"no\"). The program then outputs the ticket price. [4]\n\nYou may use pseudocode or a high-level programming language.",
+    "markScheme": [
+      {
+        "text": "Takes the age (and the student card answer) as input and stores them in variables",
+        "marks": 1,
+        "guidance": ""
+      },
+      {
+        "text": "Uses selection to test the age; outputs / sets a price of £10 for under 16",
+        "marks": 1,
+        "guidance": ""
+      },
+      {
+        "text": "Adult with a student card costs £12 (student card answer compared correctly)",
+        "marks": 1,
+        "guidance": ""
+      },
+      {
+        "text": "Adult without a student card costs £15 AND the price is output in every case",
+        "marks": 1,
+        "guidance": ""
+      }
+    ]
+  },
+  {
+    "id": "ocr-selection-05",
+    "board": "ocr",
+    "topic": "selection",
+    "ability": 3,
+    "marks": 6,
+    "format": "code",
+    "question": "A game gives players a star rating from their score. The score must be a whole number from 0 to 100.\n\n| Score | Output |\n|---|---|\n| 90 to 100 | 3 stars |\n| 60 to 89 | 2 stars |\n| 30 to 59 | 1 star |\n| 0 to 29 | No stars |\n\nWrite a program that asks the user to enter a score. If the score is outside the range 0 to 100 the program outputs \"Invalid\". Otherwise it outputs the correct rating. [6]\n\nYou may use pseudocode or a high-level programming language.",
+    "markScheme": [
+      {
+        "text": "Takes the score as input and stores it in a variable",
+        "marks": 1,
+        "guidance": ""
+      },
+      {
+        "text": "Tests whether the score is invalid (below 0 OR above 100) and outputs \"Invalid\"",
+        "marks": 1,
+        "guidance": "Both limits must be checked. Accept a range check written the other way round."
+      },
+      {
+        "text": "Ratings are only output when the score is valid (correct use of ELSE / nested selection)",
+        "marks": 1,
+        "guidance": ""
+      },
+      {
+        "text": "Outputs \"3 stars\" for 90 to 100 (boundary correct)",
+        "marks": 1,
+        "guidance": ""
+      },
+      {
+        "text": "Outputs \"2 stars\" for 60 to 89 (boundaries correct)",
+        "marks": 1,
+        "guidance": ""
+      },
+      {
+        "text": "Outputs \"1 star\" for 30 to 59 AND \"No stars\" for 0 to 29 (boundaries correct)",
+        "marks": 1,
+        "guidance": ""
+      }
+    ]
+  },
+  {
+    "id": "ocr-functions-01",
+    "board": "ocr",
+    "topic": "functions",
+    "ability": 1,
+    "marks": 2,
+    "format": "text",
+    "question": "State **two** benefits of using subprograms in a program. [2]",
+    "markScheme": [
+      {
+        "text": "Code can be reused / written once and called many times",
+        "marks": 1,
+        "guidance": "Do not accept \"easier\" without a reason."
+      },
+      {
+        "text": "Reduces repetition / makes the program shorter",
+        "marks": 1,
+        "guidance": ""
+      },
+      {
+        "text": "Easier to test / debug (each subprogram can be tested separately)",
+        "marks": 1,
+        "guidance": ""
+      },
+      {
+        "text": "Makes the program easier to read / maintain / understand",
+        "marks": 1,
+        "guidance": ""
+      },
+      {
+        "text": "Different programmers can work on different subprograms at the same time",
+        "marks": 1,
+        "guidance": ""
+      }
+    ]
+  },
+  {
+    "id": "ocr-functions-02",
+    "board": "ocr",
+    "topic": "functions",
+    "ability": 1,
+    "marks": 2,
+    "format": "text",
+    "question": "State the difference between a function and a procedure. [2]",
+    "markScheme": [
+      {
+        "text": "A function returns a value (to the part of the program that called it)",
+        "marks": 1,
+        "guidance": ""
+      },
+      {
+        "text": "A procedure does not return a value",
+        "marks": 1,
+        "guidance": ""
+      }
+    ]
+  },
+  {
+    "id": "ocr-functions-03",
+    "board": "ocr",
+    "topic": "functions",
+    "ability": 2,
+    "marks": 3,
+    "format": "text",
+    "question": "The following program is written in OCR Exam Reference Language.\n\n```\nfunction double(n)\n    return n * 2\nendfunction\n\nresult = double(7)\nprint(result)\n```\n\n(a) Identify the parameter of the function. [1]\n\n(b) State the value that is output. [1]\n\n(c) Identify the line of code that calls the function. [1]",
+    "markScheme": [
+      {
+        "text": "(a) n",
+        "marks": 1,
+        "guidance": ""
+      },
+      {
+        "text": "(b) 14",
+        "marks": 1,
+        "guidance": ""
+      },
+      {
+        "text": "(c) result = double(7)",
+        "marks": 1,
+        "guidance": "Accept the function call double(7)."
+      }
+    ]
+  },
+  {
+    "id": "ocr-functions-04",
+    "board": "ocr",
+    "topic": "functions",
+    "ability": 2,
+    "marks": 4,
+    "format": "code",
+    "question": "Write a function called `areaRect` that takes the width and the length of a rectangle as parameters and returns its area.\n\nThen write a line of code that calls the function with the values 4 and 6 and outputs the result. [4]\n\nYou may use pseudocode or a high-level programming language.",
+    "markScheme": [
+      {
+        "text": "Function is defined with the name areaRect and two parameters",
+        "marks": 1,
+        "guidance": ""
+      },
+      {
+        "text": "Calculates the area by multiplying width by length",
+        "marks": 1,
+        "guidance": ""
+      },
+      {
+        "text": "Returns the area from the function (uses return)",
+        "marks": 1,
+        "guidance": ""
+      },
+      {
+        "text": "Calls the function with the arguments 4 and 6 AND outputs the returned value",
+        "marks": 1,
+        "guidance": ""
+      }
+    ]
+  },
+  {
+    "id": "ocr-functions-05",
+    "board": "ocr",
+    "topic": "functions",
+    "ability": 3,
+    "marks": 6,
+    "format": "code",
+    "question": "A website only accepts a password that is at least 8 characters long and contains at least one digit (0 to 9).\n\n(a) Write a function called `isValid` that takes a password as a parameter. It returns `True` if the password meets both rules and `False` if it does not. [4]\n\n(b) Write the program that keeps asking the user to enter a password until `isValid` returns `True`, then outputs \"Password accepted\". [2]\n\nYou may use pseudocode or a high-level programming language.",
+    "markScheme": [
+      {
+        "text": "(a) Function defined with one parameter",
+        "marks": 1,
+        "guidance": ""
+      },
+      {
+        "text": "(a) Checks that the length of the password is at least 8",
+        "marks": 1,
+        "guidance": ""
+      },
+      {
+        "text": "(a) Loops through the characters AND checks whether a character is a digit",
+        "marks": 1,
+        "guidance": ""
+      },
+      {
+        "text": "(a) Returns True only when both rules are met, otherwise False",
+        "marks": 1,
+        "guidance": ""
+      },
+      {
+        "text": "(b) Uses a loop that asks for the password again until isValid returns True",
+        "marks": 1,
+        "guidance": ""
+      },
+      {
+        "text": "(b) Calls isValid with the entered password AND outputs \"Password accepted\" after the loop",
+        "marks": 1,
+        "guidance": ""
+      }
+    ]
+  }
+]

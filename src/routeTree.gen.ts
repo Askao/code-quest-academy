@@ -24,7 +24,9 @@ import { Route as JoinCodeRouteImport } from './routes/join.$code'
 import { Route as AuthenticatedHomeworkHomeworkIdRouteImport } from './routes/_authenticated/homework.$homeworkId'
 import { Route as AuthenticatedLearnIndexRouteImport } from './routes/_authenticated/learn.index'
 import { Route as AuthenticatedLearnLessonSlugRouteImport } from './routes/_authenticated/learn.$lessonSlug'
+import { Route as AuthenticatedMarkAssessmentIdRouteImport } from './routes/_authenticated/mark.$assessmentId'
 import { Route as AuthenticatedPlaySlugRouteImport } from './routes/_authenticated/play.$slug'
+import { Route as AuthenticatedSitAssessmentIdRouteImport } from './routes/_authenticated/sit.$assessmentId'
 import { Route as AuthenticatedTeacherIndexRouteImport } from './routes/_authenticated/teacher.index'
 import { Route as AuthenticatedTeacherClassIdRouteImport } from './routes/_authenticated/teacher.$classId'
 
@@ -105,11 +107,23 @@ const AuthenticatedLearnLessonSlugRoute =
     path: '/learn/$lessonSlug',
     getParentRoute: () => AuthenticatedRouteRoute,
   } as any)
+const AuthenticatedMarkAssessmentIdRoute =
+  AuthenticatedMarkAssessmentIdRouteImport.update({
+    id: '/mark/$assessmentId',
+    path: '/mark/$assessmentId',
+    getParentRoute: () => AuthenticatedRouteRoute,
+  } as any)
 const AuthenticatedPlaySlugRoute = AuthenticatedPlaySlugRouteImport.update({
   id: '/play/$slug',
   path: '/play/$slug',
   getParentRoute: () => AuthenticatedRouteRoute,
 } as any)
+const AuthenticatedSitAssessmentIdRoute =
+  AuthenticatedSitAssessmentIdRouteImport.update({
+    id: '/sit/$assessmentId',
+    path: '/sit/$assessmentId',
+    getParentRoute: () => AuthenticatedRouteRoute,
+  } as any)
 const AuthenticatedTeacherIndexRoute =
   AuthenticatedTeacherIndexRouteImport.update({
     id: '/teacher/',
@@ -137,7 +151,9 @@ export interface FileRoutesByFullPath {
   '/join/$code': typeof JoinCodeRoute
   '/homework/$homeworkId': typeof AuthenticatedHomeworkHomeworkIdRoute
   '/learn/$lessonSlug': typeof AuthenticatedLearnLessonSlugRoute
+  '/mark/$assessmentId': typeof AuthenticatedMarkAssessmentIdRoute
   '/play/$slug': typeof AuthenticatedPlaySlugRoute
+  '/sit/$assessmentId': typeof AuthenticatedSitAssessmentIdRoute
   '/teacher/$classId': typeof AuthenticatedTeacherClassIdRoute
   '/learn/': typeof AuthenticatedLearnIndexRoute
   '/teacher/': typeof AuthenticatedTeacherIndexRoute
@@ -156,7 +172,9 @@ export interface FileRoutesByTo {
   '/join/$code': typeof JoinCodeRoute
   '/homework/$homeworkId': typeof AuthenticatedHomeworkHomeworkIdRoute
   '/learn/$lessonSlug': typeof AuthenticatedLearnLessonSlugRoute
+  '/mark/$assessmentId': typeof AuthenticatedMarkAssessmentIdRoute
   '/play/$slug': typeof AuthenticatedPlaySlugRoute
+  '/sit/$assessmentId': typeof AuthenticatedSitAssessmentIdRoute
   '/teacher/$classId': typeof AuthenticatedTeacherClassIdRoute
   '/learn': typeof AuthenticatedLearnIndexRoute
   '/teacher': typeof AuthenticatedTeacherIndexRoute
@@ -177,7 +195,9 @@ export interface FileRoutesById {
   '/join/$code': typeof JoinCodeRoute
   '/_authenticated/homework/$homeworkId': typeof AuthenticatedHomeworkHomeworkIdRoute
   '/_authenticated/learn/$lessonSlug': typeof AuthenticatedLearnLessonSlugRoute
+  '/_authenticated/mark/$assessmentId': typeof AuthenticatedMarkAssessmentIdRoute
   '/_authenticated/play/$slug': typeof AuthenticatedPlaySlugRoute
+  '/_authenticated/sit/$assessmentId': typeof AuthenticatedSitAssessmentIdRoute
   '/_authenticated/teacher/$classId': typeof AuthenticatedTeacherClassIdRoute
   '/_authenticated/learn/': typeof AuthenticatedLearnIndexRoute
   '/_authenticated/teacher/': typeof AuthenticatedTeacherIndexRoute
@@ -198,7 +218,9 @@ export interface FileRouteTypes {
     | '/join/$code'
     | '/homework/$homeworkId'
     | '/learn/$lessonSlug'
+    | '/mark/$assessmentId'
     | '/play/$slug'
+    | '/sit/$assessmentId'
     | '/teacher/$classId'
     | '/learn/'
     | '/teacher/'
@@ -217,7 +239,9 @@ export interface FileRouteTypes {
     | '/join/$code'
     | '/homework/$homeworkId'
     | '/learn/$lessonSlug'
+    | '/mark/$assessmentId'
     | '/play/$slug'
+    | '/sit/$assessmentId'
     | '/teacher/$classId'
     | '/learn'
     | '/teacher'
@@ -237,7 +261,9 @@ export interface FileRouteTypes {
     | '/join/$code'
     | '/_authenticated/homework/$homeworkId'
     | '/_authenticated/learn/$lessonSlug'
+    | '/_authenticated/mark/$assessmentId'
     | '/_authenticated/play/$slug'
+    | '/_authenticated/sit/$assessmentId'
     | '/_authenticated/teacher/$classId'
     | '/_authenticated/learn/'
     | '/_authenticated/teacher/'
@@ -359,11 +385,25 @@ declare module '@tanstack/react-router' {
       preLoaderRoute: typeof AuthenticatedLearnLessonSlugRouteImport
       parentRoute: typeof AuthenticatedRouteRoute
     }
+    '/_authenticated/mark/$assessmentId': {
+      id: '/_authenticated/mark/$assessmentId'
+      path: '/mark/$assessmentId'
+      fullPath: '/mark/$assessmentId'
+      preLoaderRoute: typeof AuthenticatedMarkAssessmentIdRouteImport
+      parentRoute: typeof AuthenticatedRouteRoute
+    }
     '/_authenticated/play/$slug': {
       id: '/_authenticated/play/$slug'
       path: '/play/$slug'
       fullPath: '/play/$slug'
       preLoaderRoute: typeof AuthenticatedPlaySlugRouteImport
+      parentRoute: typeof AuthenticatedRouteRoute
+    }
+    '/_authenticated/sit/$assessmentId': {
+      id: '/_authenticated/sit/$assessmentId'
+      path: '/sit/$assessmentId'
+      fullPath: '/sit/$assessmentId'
+      preLoaderRoute: typeof AuthenticatedSitAssessmentIdRouteImport
       parentRoute: typeof AuthenticatedRouteRoute
     }
     '/_authenticated/teacher/': {
@@ -392,7 +432,9 @@ interface AuthenticatedRouteRouteChildren {
   AuthenticatedPracticeRoute: typeof AuthenticatedPracticeRoute
   AuthenticatedHomeworkHomeworkIdRoute: typeof AuthenticatedHomeworkHomeworkIdRoute
   AuthenticatedLearnLessonSlugRoute: typeof AuthenticatedLearnLessonSlugRoute
+  AuthenticatedMarkAssessmentIdRoute: typeof AuthenticatedMarkAssessmentIdRoute
   AuthenticatedPlaySlugRoute: typeof AuthenticatedPlaySlugRoute
+  AuthenticatedSitAssessmentIdRoute: typeof AuthenticatedSitAssessmentIdRoute
   AuthenticatedTeacherClassIdRoute: typeof AuthenticatedTeacherClassIdRoute
   AuthenticatedLearnIndexRoute: typeof AuthenticatedLearnIndexRoute
   AuthenticatedTeacherIndexRoute: typeof AuthenticatedTeacherIndexRoute
@@ -407,7 +449,9 @@ const AuthenticatedRouteRouteChildren: AuthenticatedRouteRouteChildren = {
   AuthenticatedPracticeRoute: AuthenticatedPracticeRoute,
   AuthenticatedHomeworkHomeworkIdRoute: AuthenticatedHomeworkHomeworkIdRoute,
   AuthenticatedLearnLessonSlugRoute: AuthenticatedLearnLessonSlugRoute,
+  AuthenticatedMarkAssessmentIdRoute: AuthenticatedMarkAssessmentIdRoute,
   AuthenticatedPlaySlugRoute: AuthenticatedPlaySlugRoute,
+  AuthenticatedSitAssessmentIdRoute: AuthenticatedSitAssessmentIdRoute,
   AuthenticatedTeacherClassIdRoute: AuthenticatedTeacherClassIdRoute,
   AuthenticatedLearnIndexRoute: AuthenticatedLearnIndexRoute,
   AuthenticatedTeacherIndexRoute: AuthenticatedTeacherIndexRoute,

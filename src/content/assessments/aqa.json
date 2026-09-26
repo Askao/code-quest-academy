@@ -1,0 +1,412 @@
+[
+  {
+    "id": "aqa-iteration-01",
+    "board": "aqa",
+    "topic": "iteration",
+    "ability": 1,
+    "marks": 1,
+    "format": "text",
+    "question": "State what is meant by iteration. [1]",
+    "markScheme": [
+      {
+        "text": "Repeating a set of instructions / a section of code (a number of times or until a condition is met)",
+        "marks": 1,
+        "guidance": "Allow: looping."
+      }
+    ]
+  },
+  {
+    "id": "aqa-iteration-02",
+    "board": "aqa",
+    "topic": "iteration",
+    "ability": 1,
+    "marks": 2,
+    "format": "text",
+    "question": "Describe the difference between count-controlled iteration and condition-controlled iteration. [2]",
+    "markScheme": [
+      {
+        "text": "Count-controlled iteration repeats a fixed / set number of times (the number of repeats is known)",
+        "marks": 1,
+        "guidance": ""
+      },
+      {
+        "text": "Condition-controlled iteration repeats until / while a condition is met (the number of repeats may not be known)",
+        "marks": 1,
+        "guidance": ""
+      }
+    ]
+  },
+  {
+    "id": "aqa-iteration-03",
+    "board": "aqa",
+    "topic": "iteration",
+    "ability": 2,
+    "marks": 3,
+    "format": "text",
+    "question": "The following algorithm is written in pseudo-code.\n\n```\ntotal ← 0\nFOR i ← 1 TO 5\n  total ← total + i * 2\nENDFOR\nOUTPUT total\n```\n\n(a) State the value that is output by the algorithm. [1]\n\n(b) State the number of times the statement `total ← total + i * 2` is executed. [1]\n\n(c) Name the type of iteration used in the algorithm. [1]",
+    "markScheme": [
+      {
+        "text": "(a) 30",
+        "marks": 1,
+        "guidance": ""
+      },
+      {
+        "text": "(b) 5 (times)",
+        "marks": 1,
+        "guidance": ""
+      },
+      {
+        "text": "(c) Count-controlled (iteration)",
+        "marks": 1,
+        "guidance": "Allow: definite iteration."
+      }
+    ]
+  },
+  {
+    "id": "aqa-iteration-04",
+    "board": "aqa",
+    "topic": "iteration",
+    "ability": 2,
+    "marks": 4,
+    "format": "code",
+    "question": "Write an algorithm that asks the user to enter a positive number. The algorithm must keep asking until a positive number is entered. It then outputs the square of the number (the number multiplied by itself). [4]\n\nYou may use pseudo-code or a high-level programming language.",
+    "markScheme": [
+      {
+        "text": "Takes a number as input from the user and stores it",
+        "marks": 1,
+        "guidance": ""
+      },
+      {
+        "text": "Uses condition-controlled iteration (WHILE / REPEAT UNTIL)",
+        "marks": 1,
+        "guidance": ""
+      },
+      {
+        "text": "Condition is correct: repeats while the number is not greater than 0",
+        "marks": 1,
+        "guidance": "Allow the equivalent condition for a loop that stops when the number is greater than 0."
+      },
+      {
+        "text": "Outputs the number multiplied by itself after the iteration (once)",
+        "marks": 1,
+        "guidance": ""
+      }
+    ]
+  },
+  {
+    "id": "aqa-iteration-05",
+    "board": "aqa",
+    "topic": "iteration",
+    "ability": 3,
+    "marks": 6,
+    "format": "code",
+    "question": "A shop till program is being written. The user enters the price of each item, one at a time. The user enters -1 when there are no more items.\n\nWrite an algorithm that:\n\n- repeatedly asks the user to enter a price until -1 is entered\n- calculates the total cost of all the items\n- counts the number of items entered\n- outputs the total cost and the number of items. [6]\n\nThe value -1 must not be included in the total or the count. You may use pseudo-code or a high-level programming language.",
+    "markScheme": [
+      {
+        "text": "Total and count are initialised to 0 before the iteration",
+        "marks": 1,
+        "guidance": ""
+      },
+      {
+        "text": "Uses iteration that repeatedly takes a price as input",
+        "marks": 1,
+        "guidance": ""
+      },
+      {
+        "text": "Iteration stops when -1 is entered (condition correct)",
+        "marks": 1,
+        "guidance": ""
+      },
+      {
+        "text": "The value -1 is not added to the total and not counted (e.g. test before adding)",
+        "marks": 1,
+        "guidance": ""
+      },
+      {
+        "text": "Adds each price to the total AND adds 1 to the count for each item",
+        "marks": 1,
+        "guidance": ""
+      },
+      {
+        "text": "Outputs the total AND the count after the iteration",
+        "marks": 1,
+        "guidance": ""
+      }
+    ]
+  },
+  {
+    "id": "aqa-selection-01",
+    "board": "aqa",
+    "topic": "selection",
+    "ability": 1,
+    "marks": 1,
+    "format": "text",
+    "question": "Give **one** example of a relational (comparison) operator. [1]",
+    "markScheme": [
+      {
+        "text": "Any one of: =, ≠ (allow: !=, <>), <, >, ≤ (allow: <=), ≥ (allow: >=)",
+        "marks": 1,
+        "guidance": "Do not allow AND / OR / NOT (these are Boolean operators)."
+      }
+    ]
+  },
+  {
+    "id": "aqa-selection-02",
+    "board": "aqa",
+    "topic": "selection",
+    "ability": 1,
+    "marks": 2,
+    "format": "text",
+    "question": "Explain why an ELSE clause is used in an IF statement. [2]",
+    "markScheme": [
+      {
+        "text": "To run (an alternative set of) code / instructions",
+        "marks": 1,
+        "guidance": ""
+      },
+      {
+        "text": "When the condition is false / when none of the conditions are met",
+        "marks": 1,
+        "guidance": ""
+      }
+    ]
+  },
+  {
+    "id": "aqa-selection-03",
+    "board": "aqa",
+    "topic": "selection",
+    "ability": 2,
+    "marks": 3,
+    "format": "text",
+    "question": "The following algorithm is written in pseudo-code.\n\n```\ntemp ← USERINPUT\nIF temp > 30 THEN\n  OUTPUT 'Hot'\nELSE IF temp >= 15 THEN\n  OUTPUT 'Warm'\nELSE\n  OUTPUT 'Cold'\nENDIF\n```\n\nState the output when the user enters:\n\n(a) 30 [1]\n\n(b) 31 [1]\n\n(c) 14 [1]",
+    "markScheme": [
+      {
+        "text": "(a) Warm",
+        "marks": 1,
+        "guidance": ""
+      },
+      {
+        "text": "(b) Hot",
+        "marks": 1,
+        "guidance": ""
+      },
+      {
+        "text": "(c) Cold",
+        "marks": 1,
+        "guidance": ""
+      }
+    ]
+  },
+  {
+    "id": "aqa-selection-04",
+    "board": "aqa",
+    "topic": "selection",
+    "ability": 2,
+    "marks": 4,
+    "format": "code",
+    "question": "A quiz program asks the question \"What is 7 × 8?\".\n\nWrite an algorithm that takes the user's answer as input. The algorithm outputs \"Correct\" if the answer is 56, \"Too high\" if the answer is greater than 56 and \"Too low\" otherwise. [4]\n\nYou may use pseudo-code or a high-level programming language.",
+    "markScheme": [
+      {
+        "text": "Takes the answer as input and stores it in a variable",
+        "marks": 1,
+        "guidance": ""
+      },
+      {
+        "text": "Outputs \"Correct\" when the answer is 56",
+        "marks": 1,
+        "guidance": ""
+      },
+      {
+        "text": "Outputs \"Too high\" when the answer is greater than 56",
+        "marks": 1,
+        "guidance": ""
+      },
+      {
+        "text": "Outputs \"Too low\" otherwise AND uses a valid selection structure (each message output only in its own case)",
+        "marks": 1,
+        "guidance": ""
+      }
+    ]
+  },
+  {
+    "id": "aqa-selection-05",
+    "board": "aqa",
+    "topic": "selection",
+    "ability": 3,
+    "marks": 6,
+    "format": "code",
+    "question": "A leisure centre charges for entry as shown.\n\n| Age | Peak time | Off-peak |\n|---|---|---|\n| Under 5 | Free | Free |\n| 5 to 17 | £4 | £3 |\n| 18 or over | £8 | £6 |\n\nWrite an algorithm that asks the user for their age and whether they are visiting at peak time (\"Y\" or \"N\"). The algorithm outputs the price. [6]\n\nYou may use pseudo-code or a high-level programming language.",
+    "markScheme": [
+      {
+        "text": "Takes the age AND the peak time answer as input",
+        "marks": 1,
+        "guidance": ""
+      },
+      {
+        "text": "Outputs / sets a price of 0 for an age under 5",
+        "marks": 1,
+        "guidance": ""
+      },
+      {
+        "text": "Condition for the 5 to 17 age group is correct (both limits)",
+        "marks": 1,
+        "guidance": ""
+      },
+      {
+        "text": "Prices for 5 to 17 are correct for both peak (£4) and off-peak (£3)",
+        "marks": 1,
+        "guidance": ""
+      },
+      {
+        "text": "Prices for 18 or over are correct for both peak (£8) and off-peak (£6)",
+        "marks": 1,
+        "guidance": ""
+      },
+      {
+        "text": "The price is output in every case (using a variable or an output in each branch)",
+        "marks": 1,
+        "guidance": ""
+      }
+    ]
+  },
+  {
+    "id": "aqa-functions-01",
+    "board": "aqa",
+    "topic": "functions",
+    "ability": 1,
+    "marks": 2,
+    "format": "text",
+    "question": "Describe what is meant by a parameter of a subroutine. [2]",
+    "markScheme": [
+      {
+        "text": "A value (variable) that is passed into a subroutine / a piece of data given to the subroutine when it is called",
+        "marks": 1,
+        "guidance": ""
+      },
+      {
+        "text": "It is named in the subroutine definition and is used within the subroutine (behaves like a local variable)",
+        "marks": 1,
+        "guidance": ""
+      }
+    ]
+  },
+  {
+    "id": "aqa-functions-02",
+    "board": "aqa",
+    "topic": "functions",
+    "ability": 1,
+    "marks": 2,
+    "format": "text",
+    "question": "State **one** difference between a local variable and a global variable. [2]",
+    "markScheme": [
+      {
+        "text": "A local variable can only be used / accessed within the subroutine where it is declared",
+        "marks": 1,
+        "guidance": ""
+      },
+      {
+        "text": "A global variable can be used / accessed throughout the whole program (in any subroutine)",
+        "marks": 1,
+        "guidance": "Award both marks for a clear statement of the difference."
+      }
+    ]
+  },
+  {
+    "id": "aqa-functions-03",
+    "board": "aqa",
+    "topic": "functions",
+    "ability": 2,
+    "marks": 3,
+    "format": "text",
+    "question": "The following algorithm is written in pseudo-code.\n\n```\nSUBROUTINE triple(n)\n  RETURN n * 3\nENDSUBROUTINE\n\na ← triple(4)\nOUTPUT a + 1\n```\n\n(a) State the value that is output. [1]\n\n(b) State the name of the parameter of the subroutine. [1]\n\n(c) State what the RETURN statement does. [1]",
+    "markScheme": [
+      {
+        "text": "(a) 13",
+        "marks": 1,
+        "guidance": ""
+      },
+      {
+        "text": "(b) n",
+        "marks": 1,
+        "guidance": ""
+      },
+      {
+        "text": "(c) It sends a value back to the place where the subroutine was called",
+        "marks": 1,
+        "guidance": "Allow: ends the subroutine and gives back a value."
+      }
+    ]
+  },
+  {
+    "id": "aqa-functions-04",
+    "board": "aqa",
+    "topic": "functions",
+    "ability": 2,
+    "marks": 4,
+    "format": "code",
+    "question": "Write a subroutine called `average` that takes three numbers as parameters and returns their mean.\n\nThen write a line of code that calls the subroutine with the values 4, 7 and 10 and outputs the result. [4]\n\nYou may use pseudo-code or a high-level programming language.",
+    "markScheme": [
+      {
+        "text": "Subroutine is defined with the name average and three parameters",
+        "marks": 1,
+        "guidance": ""
+      },
+      {
+        "text": "Calculates the mean by adding the three numbers and dividing by 3 (correct order of operations)",
+        "marks": 1,
+        "guidance": ""
+      },
+      {
+        "text": "Returns the mean from the subroutine",
+        "marks": 1,
+        "guidance": ""
+      },
+      {
+        "text": "Calls the subroutine with 4, 7 and 10 AND outputs the returned value",
+        "marks": 1,
+        "guidance": ""
+      }
+    ]
+  },
+  {
+    "id": "aqa-functions-05",
+    "board": "aqa",
+    "topic": "functions",
+    "ability": 3,
+    "marks": 6,
+    "format": "code",
+    "question": "Write a subroutine called `countVowels` that takes a string as a parameter and returns the number of vowels (a, e, i, o, u) in the string.\n\nThen write the code that asks the user to enter a word, calls `countVowels` and outputs the number of vowels. [6]\n\nYou may use pseudo-code or a high-level programming language.",
+    "markScheme": [
+      {
+        "text": "Subroutine defined with the name countVowels and one parameter",
+        "marks": 1,
+        "guidance": ""
+      },
+      {
+        "text": "Count is initialised to 0",
+        "marks": 1,
+        "guidance": ""
+      },
+      {
+        "text": "Iterates through every character of the string",
+        "marks": 1,
+        "guidance": ""
+      },
+      {
+        "text": "Checks whether each character is a vowel",
+        "marks": 1,
+        "guidance": "Allow a solution that checks upper case and lower case; do not penalise if only one case is handled."
+      },
+      {
+        "text": "Adds 1 to the count for each vowel AND returns the count",
+        "marks": 1,
+        "guidance": ""
+      },
+      {
+        "text": "Takes a word as input, calls the subroutine with it AND outputs the returned value",
+        "marks": 1,
+        "guidance": ""
+      }
+    ]
+  }
+]

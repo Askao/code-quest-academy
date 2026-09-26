@@ -9,6 +9,7 @@ import { Input } from "@/components/ui/input";
 import { Label } from "@/components/ui/label";
 import { Progress } from "@/components/ui/progress";
 import { Tabs, TabsContent, TabsList, TabsTrigger } from "@/components/ui/tabs";
+import { AssessmentsPanel } from "@/components/AssessmentsPanel";
 import { ResetProgressControl } from "@/components/ResetProgressControl";
 import {
   levelFromXp,
@@ -826,6 +827,7 @@ function ClassDetail() {
           <TabsTrigger value="overview">Overview</TabsTrigger>
           <TabsTrigger value="lessons">Lessons</TabsTrigger>
           <TabsTrigger value="homework">Homework</TabsTrigger>
+          <TabsTrigger value="assessments">Assessments</TabsTrigger>
         </TabsList>
 
         <TabsContent value="overview" className="space-y-4 pt-4">
@@ -1409,6 +1411,13 @@ function ClassDetail() {
               ) : null}
             </div>
           </section>
+        </TabsContent>
+        <TabsContent value="assessments" className="pt-4">
+          <AssessmentsPanel
+            classId={classId}
+            classBoard={board}
+            studentCount={(data?.students ?? []).length}
+          />
         </TabsContent>
       </Tabs>
 
