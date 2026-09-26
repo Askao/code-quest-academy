@@ -10,6 +10,7 @@ import { Label } from "@/components/ui/label";
 import { Progress } from "@/components/ui/progress";
 import { Tabs, TabsContent, TabsList, TabsTrigger } from "@/components/ui/tabs";
 import { AssessmentsPanel } from "@/components/AssessmentsPanel";
+import { ClassReport } from "@/components/ClassReport";
 import { teacherHomeworkArchiveReason } from "@/lib/archive";
 import { ResetProgressControl } from "@/components/ResetProgressControl";
 import {
@@ -825,42 +826,13 @@ function ClassDetail() {
 
       <Tabs value={activeTab} onValueChange={setActiveTab}>
         <TabsList>
-          <TabsTrigger value="overview">Overview</TabsTrigger>
+          <TabsTrigger value="overview">Students & report</TabsTrigger>
           <TabsTrigger value="lessons">Lessons</TabsTrigger>
           <TabsTrigger value="homework">Homework</TabsTrigger>
           <TabsTrigger value="assessments">Assessments</TabsTrigger>
         </TabsList>
 
         <TabsContent value="overview" className="space-y-4 pt-4">
-          {topicSummary.some((t) => t.avgPercent !== null) ? (
-            <div>
-              <h2 className="text-xl font-semibold">Class strength by topic</h2>
-              <p className="mt-1 text-sm text-muted-foreground">
-                Where the class as a whole stands — useful for deciding what to re-teach next.
-              </p>
-              <div className="mt-3 grid gap-3 sm:grid-cols-2 lg:grid-cols-3">
-                {topicSummary
-                  .filter((t) => t.avgPercent !== null)
-                  .map((t) => (
-                    <div key={t.key} className="panel p-4">
-                      <div className="flex items-center justify-between">
-                        <p className="font-medium">{t.label}</p>
-                        <span className="font-mono text-xs text-muted-foreground">
-                          {t.avgPercent}%
-                        </span>
-                      </div>
-                      <Progress value={t.avgPercent ?? 0} className="mt-2" />
-                      {t.strugglingCount > 0 ? (
-                        <p className="mt-2 font-mono text-xs text-destructive">
-                          🔴 {t.strugglingCount} struggling here
-                        </p>
-                      ) : null}
-                    </div>
-                  ))}
-              </div>
-            </div>
-          ) : null}
-
           <div className="flex items-center justify-between">
             <h2 className="text-xl font-semibold">Students</h2>
             {(data?.students.length ?? 0) > 0 ? (
@@ -984,6 +956,15 @@ function ClassDetail() {
               </p>
             ) : null}
           </div>
+
+          <ClassReport
+            classId={classId}
+            className={data?.cls?.name ?? "Class"}
+            track={track}
+            students={data?.students ?? []}
+            homework={data?.homework ?? []}
+            practiceByTopic={topicSummary}
+          />
         </TabsContent>
 
         <TabsContent value="lessons" className="space-y-6 pt-4">
