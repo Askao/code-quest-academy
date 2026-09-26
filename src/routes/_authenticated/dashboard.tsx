@@ -4,6 +4,7 @@ import {
   type ArchivedHomework,
 } from "@/components/StudentAssessments";
 import { studentHomeworkArchiveReason } from "@/lib/archive";
+import { ResultsAnalysis } from "@/components/ResultsAnalysis";
 import { createFileRoute, Link } from "@tanstack/react-router";
 import { useQuery, useQueryClient } from "@tanstack/react-query";
 import { supabase } from "@/integrations/supabase/client";
@@ -415,6 +416,8 @@ function Dashboard() {
       ) : null}
 
       <StudentArchive homework={archivedHomework} />
+
+      <ResultsAnalysis />
 
       <section>
         <h2 className="mb-3 text-xl font-semibold">Your skill levels</h2>

@@ -63,6 +63,7 @@ const ok = (name, cond, extra = "") => {
 // Migration + seed (as the superuser, like applying them in the SQL editor).
 await db.exec(fs.readFileSync(root + "20260926120000_assessments.sql", "utf8"));
 await db.exec(fs.readFileSync(root + "20260926130000_seed_assessment_questions.sql", "utf8"));
+await db.exec(fs.readFileSync(root + "20260928120000_my_assessment_analysis.sql", "utf8"));
 const count = async (t) =>
   Number((await db.query(`SELECT count(*)::int AS n FROM public.${t}`)).rows[0].n);
 const content = ["ocr", "aqa"].flatMap((b) =>
@@ -441,6 +442,34 @@ ok(
   !JSON.stringify(res).match(/guidance|mark_points|Accept/i) &&
     res.questions.some((q) => q.comment === "Partly there"),
 );
+
+// ---- my_assessment_analysis(): the dashboard's "My results" data
+{
+  const mine = (await fn("S1", "public.my_assessment_analysis()")).rows[0].r;
+  ok("analysis: one marked, released assessment comes back", mine.length === 1 && mine[0].assessment_id === A);
+  const item = mine[0];
+  ok("analysis: marks add up (2+2+3+1 = 8)", item.marks_awarded === 8, JSON.stringify(item.marks_awarded));
+  ok(
+    "analysis: total marks is the sum of the paper's question marks",
+    item.total_marks === qids.reduce((n, id) => n + marksOf[id], 0),
+  );
+  ok(
+    "analysis: every question carries its topic, marks and score",
+    item.questions.length === qids.length &&
+      item.questions.every((x) => x.topic === "iteration" && typeof x.marks === "number" && typeof x.marks_awarded === "number"),
+  );
+  ok("analysis: the teacher's comment is included", item.questions.some((x) => x.comment === "Partly there"));
+  ok("analysis: no mark scheme leaks", !JSON.stringify(mine).match(/guidance|mark_points|Accept/i));
+  ok("analysis: another student in the class sees nothing of S1's work", (await fn("S2", "public.my_assessment_analysis()")).rows[0].r.length === 0);
+  ok("analysis: a student in another class sees nothing", (await fn("S3", "public.my_assessment_analysis()")).rows[0].r.length === 0);
+  await admin(`UPDATE public.assessments SET results_released = false WHERE id='${A}'`);
+  ok("analysis: withdrawing the results hides them from the analysis too", (await fn("S1", "public.my_assessment_analysis()")).rows[0].r.length === 0);
+  await admin(`UPDATE public.assessments SET results_released = true WHERE id='${A}'`);
+  await admin(`UPDATE public.assessment_attempts SET marked_at = NULL WHERE id='${t1.attempt_id}'`);
+  ok("analysis: unmarked work is not analysed", (await fn("S1", "public.my_assessment_analysis()")).rows[0].r.length === 0);
+  await admin(`UPDATE public.assessment_attempts SET marked_at = now() WHERE id='${t1.attempt_id}'`);
+  ok("analysis: restored once marked and released again", (await fn("S1", "public.my_assessment_analysis()")).rows[0].r.length === 1);
+}
 
 // ---- window rules (B is created here)
 const B = "d0000000-0000-0000-0000-00000000000b";
