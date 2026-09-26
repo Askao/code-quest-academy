@@ -259,6 +259,12 @@ function ClassDetail() {
           projectTotals,
         };
       });
+      // Alphabetical by name (case-insensitive, "en-GB" so accented letters
+      // sort with their base letter), so the roster, CSV export and every
+      // per-student breakdown below read in the same predictable order
+      // instead of whatever order the database returned them in.
+      const byName = new Intl.Collator("en-GB", { sensitivity: "base", numeric: true });
+      students.sort((a, b) => byName.compare(a.name, b.name));
 
       // Personalized assignments: each student can have their own list of
       // challenges for a given homework (see setHomework below). Legacy
