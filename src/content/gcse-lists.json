@@ -1531,6 +1531,332 @@
       ]
     },
     {
+      "slug": "gcse-lists-p-11",
+      "tier": 1,
+      "difficulty": 1,
+      "xp": 10,
+      "title": "Build and print a list",
+      "brief": "Input a whole number N (at least 1). Then input N words, one per line, and add each one to a list. When you have them all, print the words from the list, one per line, in the order they were entered.",
+      "starter": "",
+      "hints": [
+        "Start with an empty list, `words = []`. Add each word with `words.append(...)` inside a loop.",
+        "After the first loop, use a second `for word in words:` loop to print them."
+      ],
+      "tests": [
+        {
+          "stdin": "3\ncat\ndog\nfish",
+          "expect": "cat\ndog\nfish"
+        },
+        {
+          "stdin": "1\nhello",
+          "expect": "hello"
+        },
+        {
+          "stdin": "4\na\nb\nc\nd",
+          "expect": "a\nb\nc\nd"
+        }
+      ]
+    },
+    {
+      "slug": "gcse-lists-p-12",
+      "tier": 1,
+      "difficulty": 1,
+      "xp": 10,
+      "title": "How many items?",
+      "brief": "Input a whole number N (at least 1). Then input N words, one per line, and store them in a list. Print `The list has ` followed by the number of items in the list, then ` items`.\n\nFor example, three words prints `The list has 3 items`. Always write the word `items` like this, even when the list has just 1.",
+      "starter": "",
+      "hints": [
+        "`len(words)` gives the number of items in a list called `words`.",
+        "Join the parts: `\"The list has \" + str(len(words)) + \" items\"`."
+      ],
+      "tests": [
+        {
+          "stdin": "3\ncat\ndog\nfish",
+          "expect": "The list has 3 items"
+        },
+        {
+          "stdin": "1\nx",
+          "expect": "The list has 1 items"
+        },
+        {
+          "stdin": "5\na\nb\nc\nd\ne",
+          "expect": "The list has 5 items"
+        }
+      ]
+    },
+    {
+      "slug": "gcse-lists-p-13",
+      "tier": 2,
+      "difficulty": 2,
+      "xp": 15,
+      "title": "Biggest in the list",
+      "brief": "Input a whole number N (at least 1). Then input N whole numbers, one per line, and store them in a list. Print the biggest number in the list.\n\nYou may use `max()` or work it out with a loop.",
+      "starter": "",
+      "hints": [
+        "Store the numbers as whole numbers: `numbers.append(int(input()))`.",
+        "`max(numbers)` gives the biggest item in a list of numbers."
+      ],
+      "tests": [
+        {
+          "stdin": "3\n4\n9\n2",
+          "expect": "9"
+        },
+        {
+          "stdin": "1\n5",
+          "expect": "5"
+        },
+        {
+          "stdin": "4\n-3\n-1\n-8\n-2",
+          "expect": "-1"
+        },
+        {
+          "stdin": "5\n7\n7\n1\n7\n3",
+          "expect": "7"
+        }
+      ]
+    },
+    {
+      "slug": "gcse-lists-p-14",
+      "tier": 2,
+      "difficulty": 2,
+      "xp": 15,
+      "title": "Last one first",
+      "brief": "Input a whole number N (at least 1). Then input N words, one per line, and store them in a list. Print the words one per line, but in the reverse order to how they were entered (the last word entered comes first).",
+      "starter": "",
+      "hints": [
+        "You can reach the last item of a list with index `-1`, or you can count down with a loop.",
+        "One way: `for word in reversed(words):` or `for i in range(len(words) - 1, -1, -1): print(words[i])`."
+      ],
+      "tests": [
+        {
+          "stdin": "3\ncat\ndog\nfish",
+          "expect": "fish\ndog\ncat"
+        },
+        {
+          "stdin": "1\nhello",
+          "expect": "hello"
+        },
+        {
+          "stdin": "4\na\nb\nc\nd",
+          "expect": "d\nc\nb\na"
+        }
+      ]
+    },
+    {
+      "slug": "gcse-lists-p-15",
+      "tier": 2,
+      "difficulty": 2,
+      "xp": 15,
+      "title": "Is it in the list?",
+      "brief": "The list is: `[\"red\", \"green\", \"blue\", \"yellow\"]`. Input a colour and print `Found` if it is in the list or `Not found` if it is not.\n\nThe comparison is exact, so `Red` with a capital letter is not in the list.",
+      "starter": "",
+      "hints": [
+        "Put the four colours in a list at the top of your program.",
+        "The keyword `in` tests a list: `if colour in colours:`."
+      ],
+      "tests": [
+        {
+          "stdin": "red",
+          "expect": "Found"
+        },
+        {
+          "stdin": "blue",
+          "expect": "Found"
+        },
+        {
+          "stdin": "purple",
+          "expect": "Not found"
+        },
+        {
+          "stdin": "Red",
+          "expect": "Not found"
+        },
+        {
+          "stdin": "yellow",
+          "expect": "Found"
+        },
+        {
+          "stdin": "orange",
+          "expect": "Not found"
+        }
+      ]
+    },
+    {
+      "slug": "gcse-lists-p-16",
+      "tier": 3,
+      "difficulty": 3,
+      "xp": 20,
+      "title": "Above average",
+      "brief": "Input a whole number N (at least 1). Then input N whole numbers, one per line. Work out the mean (the total divided by N). Print how many of the numbers are strictly bigger than the mean.\n\nFor example, `2`, `4`, `6` has a mean of 4, so only one number (6) is above it and the program prints `1`.",
+      "starter": "",
+      "hints": [
+        "You need to go through the list twice: once to find the mean, then once to count the numbers above it.",
+        "`mean = sum(numbers) / len(numbers)`, then a loop with `if number > mean:` and a counter."
+      ],
+      "tests": [
+        {
+          "stdin": "3\n2\n4\n6",
+          "expect": "1"
+        },
+        {
+          "stdin": "1\n5",
+          "expect": "0"
+        },
+        {
+          "stdin": "4\n1\n1\n1\n1",
+          "expect": "0"
+        },
+        {
+          "stdin": "5\n10\n20\n30\n40\n50",
+          "expect": "2"
+        },
+        {
+          "stdin": "4\n1\n2\n3\n10",
+          "expect": "1"
+        }
+      ]
+    },
+    {
+      "slug": "gcse-lists-p-17",
+      "tier": 3,
+      "difficulty": 3,
+      "xp": 20,
+      "title": "Where is it?",
+      "brief": "Input a whole number N (at least 1). Then input N words, one per line, into a list. Then input one more word to look for.\n\nPrint the position (index) of the first place that word appears in the list, counting from 0. If the word is not in the list, print `-1`.\n\nFor example, the list `cat`, `dog`, `fish` and the word `dog` prints `1`.",
+      "starter": "",
+      "hints": [
+        "Loop through the positions with `for i in range(len(words)):` so that you know the index.",
+        "Print `i` and stop as soon as `words[i] == target`. If the loop finishes without finding it, print -1."
+      ],
+      "tests": [
+        {
+          "stdin": "3\ncat\ndog\nfish\ndog",
+          "expect": "1"
+        },
+        {
+          "stdin": "3\ncat\ndog\nfish\ncat",
+          "expect": "0"
+        },
+        {
+          "stdin": "3\ncat\ndog\nfish\nfish",
+          "expect": "2"
+        },
+        {
+          "stdin": "3\ncat\ndog\nfish\nbird",
+          "expect": "-1"
+        },
+        {
+          "stdin": "4\na\nb\na\nb\nb",
+          "expect": "1"
+        },
+        {
+          "stdin": "1\nx\nx",
+          "expect": "0"
+        }
+      ]
+    },
+    {
+      "slug": "gcse-lists-p-18",
+      "tier": 3,
+      "difficulty": 3,
+      "xp": 20,
+      "title": "Change every score",
+      "brief": "Input a whole number N (at least 1). Then input N whole number scores, one per line, into a list. Every score gets 5 bonus points, but no score can go above 100.\n\nPrint the new scores one per line, in the same order.\n\nFor example, `60`, `98` and `100` prints `65`, `100` and `100`.",
+      "starter": "",
+      "hints": [
+        "Work through the list by index so you can replace each item: `scores[i] = ...`.",
+        "For each score, add 5. If the result is over 100, set it back to 100."
+      ],
+      "tests": [
+        {
+          "stdin": "3\n60\n98\n100",
+          "expect": "65\n100\n100"
+        },
+        {
+          "stdin": "1\n0",
+          "expect": "5"
+        },
+        {
+          "stdin": "4\n95\n96\n94\n50",
+          "expect": "100\n100\n99\n55"
+        },
+        {
+          "stdin": "2\n100\n1",
+          "expect": "100\n6"
+        }
+      ]
+    },
+    {
+      "slug": "gcse-lists-p-19",
+      "tier": 4,
+      "difficulty": 4,
+      "xp": 30,
+      "title": "Numbers in order?",
+      "brief": "Input a whole number N (at least 1). Then input N whole numbers, one per line, into a list. Print `Sorted` if each number is bigger than or equal to the one before it (the list goes upwards, ties allowed). Otherwise print `Not sorted`.\n\nA list with just one number counts as `Sorted`.",
+      "starter": "",
+      "hints": [
+        "Compare each number with the one before it. If any number is smaller than the one before it, the list is not sorted.",
+        "Loop with `for i in range(1, len(numbers)):` and compare `numbers[i]` with `numbers[i - 1]`. Use a variable like `in_order = True` and set it to `False` if you find a problem."
+      ],
+      "tests": [
+        {
+          "stdin": "3\n1\n2\n3",
+          "expect": "Sorted"
+        },
+        {
+          "stdin": "3\n3\n2\n1",
+          "expect": "Not sorted"
+        },
+        {
+          "stdin": "4\n1\n2\n2\n5",
+          "expect": "Sorted"
+        },
+        {
+          "stdin": "1\n9",
+          "expect": "Sorted"
+        },
+        {
+          "stdin": "4\n1\n3\n2\n4",
+          "expect": "Not sorted"
+        },
+        {
+          "stdin": "2\n5\n4",
+          "expect": "Not sorted"
+        }
+      ]
+    },
+    {
+      "slug": "gcse-lists-p-20",
+      "tier": 4,
+      "difficulty": 4,
+      "xp": 30,
+      "title": "Best and worst",
+      "brief": "Input a whole number N (at least 1). Then input N pairs of lines: a student's name, then their test mark (a whole number). Print two lines:\n- `Highest: <name> with <mark>`\n- `Lowest: <name> with <mark>`\n\nIf two students tie for highest or lowest, choose the one who was entered first.",
+      "starter": "",
+      "hints": [
+        "Keep two lists, one of names and one of marks, and add to both inside the loop. The item at each index goes together.",
+        "Find the position of the biggest mark, then use it to read the matching name: `best = 0`, and replace it with `i` whenever `marks[i] > marks[best]`. Use `>` (not `>=`) so ties keep the first."
+      ],
+      "tests": [
+        {
+          "stdin": "3\nAda\n72\nBo\n90\nCal\n55",
+          "expect": "Highest: Bo with 90\nLowest: Cal with 55"
+        },
+        {
+          "stdin": "1\nSam\n40",
+          "expect": "Highest: Sam with 40\nLowest: Sam with 40"
+        },
+        {
+          "stdin": "3\nA\n50\nB\n50\nC\n50",
+          "expect": "Highest: A with 50\nLowest: A with 50"
+        },
+        {
+          "stdin": "4\nAda\n60\nBo\n80\nCal\n80\nDee\n20",
+          "expect": "Highest: Bo with 80\nLowest: Dee with 20"
+        }
+      ]
+    },
+    {
       "slug": "gcse-lists-p-s1",
       "tier": 4,
       "difficulty": 5,
@@ -1603,6 +1929,78 @@
         {
           "stdin": "1\n5\n1",
           "expect": "5"
+        }
+      ]
+    },
+    {
+      "slug": "gcse-lists-p-s3",
+      "tier": 4,
+      "difficulty": 5,
+      "xp": 40,
+      "stretch": true,
+      "title": "🌟 Two lists, one total",
+      "brief": "A shop keeps two lists side by side: the price of each item and how many of it were sold. The first price goes with the first quantity, and so on.\n\nInput a whole number N (at least 1). Then input N prices (whole pounds), one per line. Then input N quantities, one per line.\n\nPrint `Total takings: £` followed by the total, where each item earns its price times its quantity.\n\nFor example, prices `2`, `5` and quantities `10`, `3` prints `Total takings: £35`.",
+      "starter": "",
+      "hints": [
+        "Read the prices into one list first, then the quantities into a second list.",
+        "Loop with `for i in range(n):` and add `prices[i] * quantities[i]` to a running total."
+      ],
+      "tests": [
+        {
+          "stdin": "2\n2\n5\n10\n3",
+          "expect": "Total takings: £35"
+        },
+        {
+          "stdin": "1\n7\n3",
+          "expect": "Total takings: £21"
+        },
+        {
+          "stdin": "3\n1\n1\n1\n5\n5\n5",
+          "expect": "Total takings: £15"
+        },
+        {
+          "stdin": "3\n10\n20\n30\n0\n1\n2",
+          "expect": "Total takings: £80"
+        },
+        {
+          "stdin": "4\n3\n4\n5\n6\n1\n2\n3\n4",
+          "expect": "Total takings: £50"
+        }
+      ]
+    },
+    {
+      "slug": "gcse-lists-p-s4",
+      "tier": 4,
+      "difficulty": 5,
+      "xp": 40,
+      "stretch": true,
+      "title": "🌟 Second smallest",
+      "brief": "Input a whole number N (at least 2). Then input N whole numbers, one per line, into a list. Print the second smallest DIFFERENT value in the list.\n\nFor example, `4`, `1`, `1`, `3` has the different values 1, 3 and 4, so it prints `3`. You can assume there are at least two different values in the list.",
+      "starter": "",
+      "hints": [
+        "Duplicates must not count twice. One way is to build a new list that only adds a number if it is not already in it.",
+        "Then sort the new list with `.sort()` (smallest first), and the answer is the item at index 1."
+      ],
+      "tests": [
+        {
+          "stdin": "4\n4\n1\n1\n3",
+          "expect": "3"
+        },
+        {
+          "stdin": "2\n5\n2",
+          "expect": "5"
+        },
+        {
+          "stdin": "5\n9\n9\n8\n8\n7",
+          "expect": "8"
+        },
+        {
+          "stdin": "3\n-1\n-1\n0",
+          "expect": "0"
+        },
+        {
+          "stdin": "6\n10\n3\n3\n3\n2\n2",
+          "expect": "3"
         }
       ]
     }

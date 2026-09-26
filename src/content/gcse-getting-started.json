@@ -1455,6 +1455,276 @@
       ]
     },
     {
+      "slug": "gcse-getting-started-p-11",
+      "tier": 1,
+      "difficulty": 1,
+      "xp": 10,
+      "title": "Say hello",
+      "brief": "Input a name. Print `Hello, ` followed by the name.\n\nFor example, the name `Sam` prints `Hello, Sam`.",
+      "starter": "",
+      "hints": [
+        "Store the name in a variable first: `name = input()`.",
+        "Join the pieces with `+`: `print(\"Hello, \" + name)`. Remember the space after the comma."
+      ],
+      "tests": [
+        {
+          "stdin": "Sam",
+          "expect": "Hello, Sam"
+        },
+        {
+          "stdin": "Mia Rose",
+          "expect": "Hello, Mia Rose"
+        },
+        {
+          "stdin": "A",
+          "expect": "Hello, A"
+        }
+      ]
+    },
+    {
+      "slug": "gcse-getting-started-p-12",
+      "tier": 1,
+      "difficulty": 1,
+      "xp": 10,
+      "title": "Two names",
+      "brief": "Input a first name, then a second name. Print them on one line with ` and ` between them.\n\nFor example, `Sam` and `Mia` prints `Sam and Mia`.",
+      "starter": "",
+      "hints": [
+        "Use two `input()` lines, one for each name.",
+        "Join with `+`: the first name, then the text `\" and \"` (with spaces), then the second name."
+      ],
+      "tests": [
+        {
+          "stdin": "Sam\nMia",
+          "expect": "Sam and Mia"
+        },
+        {
+          "stdin": "Ann\nBo",
+          "expect": "Ann and Bo"
+        },
+        {
+          "stdin": "Zoe\nLeo",
+          "expect": "Zoe and Leo"
+        }
+      ]
+    },
+    {
+      "slug": "gcse-getting-started-p-13",
+      "tier": 1,
+      "difficulty": 1,
+      "xp": 10,
+      "title": "My favourite colour",
+      "brief": "Input a colour. Print `My favourite colour is ` followed by the colour and then a full stop.\n\nFor example, `blue` prints `My favourite colour is blue.`",
+      "starter": "",
+      "hints": [
+        "There are three pieces to join: the start of the sentence, the colour, and the full stop.",
+        "`print(\"My favourite colour is \" + colour + \".\")`"
+      ],
+      "tests": [
+        {
+          "stdin": "blue",
+          "expect": "My favourite colour is blue."
+        },
+        {
+          "stdin": "dark green",
+          "expect": "My favourite colour is dark green."
+        },
+        {
+          "stdin": "red",
+          "expect": "My favourite colour is red."
+        }
+      ]
+    },
+    {
+      "slug": "gcse-getting-started-p-14",
+      "tier": 2,
+      "difficulty": 2,
+      "xp": 15,
+      "title": "Name badge",
+      "brief": "Input a first name, then a last name. Print the last name, then a comma and a space, then the first name.\n\nFor example, `Ada` and `Lovelace` prints `Lovelace, Ada`.",
+      "starter": "",
+      "hints": [
+        "The names come in one order but are printed in the other order.",
+        "Store them as `first` and `last`, then `print(last + \", \" + first)`."
+      ],
+      "tests": [
+        {
+          "stdin": "Ada\nLovelace",
+          "expect": "Lovelace, Ada"
+        },
+        {
+          "stdin": "Sam\nLee",
+          "expect": "Lee, Sam"
+        },
+        {
+          "stdin": "Mia\nKhan",
+          "expect": "Khan, Mia"
+        }
+      ]
+    },
+    {
+      "slug": "gcse-getting-started-p-15",
+      "tier": 2,
+      "difficulty": 2,
+      "xp": 15,
+      "title": "School email address",
+      "brief": "Input a student's first name, then the name of their school (with no spaces). Print an email address made of the first name, then `@`, then the school name, then `.sch.uk`.\n\nFor example, `ada` and `oakfield` prints `ada@oakfield.sch.uk`.",
+      "starter": "",
+      "hints": [
+        "Four pieces are joined: the name, `@`, the school, and `.sch.uk`.",
+        "`print(name + \"@\" + school + \".sch.uk\")`"
+      ],
+      "tests": [
+        {
+          "stdin": "ada\noakfield",
+          "expect": "ada@oakfield.sch.uk"
+        },
+        {
+          "stdin": "sam\nhillcrest",
+          "expect": "sam@hillcrest.sch.uk"
+        },
+        {
+          "stdin": "mia\nriverside",
+          "expect": "mia@riverside.sch.uk"
+        }
+      ]
+    },
+    {
+      "slug": "gcse-getting-started-p-16",
+      "tier": 2,
+      "difficulty": 2,
+      "xp": 15,
+      "title": "Shout it",
+      "brief": "Input a word. Print the word, then three exclamation marks straight after it (no spaces).\n\nFor example, `goal` prints `goal!!!`.",
+      "starter": "",
+      "hints": [
+        "Join the word and the text `\"!!!\"`.",
+        "`print(word + \"!!!\")`"
+      ],
+      "tests": [
+        {
+          "stdin": "goal",
+          "expect": "goal!!!"
+        },
+        {
+          "stdin": "help",
+          "expect": "help!!!"
+        },
+        {
+          "stdin": "yes",
+          "expect": "yes!!!"
+        }
+      ]
+    },
+    {
+      "slug": "gcse-getting-started-p-17",
+      "tier": 2,
+      "difficulty": 2,
+      "xp": 15,
+      "title": "Score line",
+      "brief": "Input a player's name, then their score (type it in as normal - treat it as text). Print the name, then ` scored `, then the score, then ` points`.\n\nFor example, `Ada` and `95` prints `Ada scored 95 points`.",
+      "starter": "",
+      "hints": [
+        "The score is just text here, so there is no need to change it into a number.",
+        "`print(player + \" scored \" + score + \" points\")`"
+      ],
+      "tests": [
+        {
+          "stdin": "Ada\n95",
+          "expect": "Ada scored 95 points"
+        },
+        {
+          "stdin": "Sam\n7",
+          "expect": "Sam scored 7 points"
+        },
+        {
+          "stdin": "Mia\n120",
+          "expect": "Mia scored 120 points"
+        }
+      ]
+    },
+    {
+      "slug": "gcse-getting-started-p-18",
+      "tier": 3,
+      "difficulty": 3,
+      "xp": 20,
+      "title": "Weather report",
+      "brief": "Input a city, then the weather (one word), then the temperature (as text, for example `18`).\n\nPrint a report in exactly this form: `In <city> it is <weather> and <temperature> degrees.`\n\nFor example, `Leeds`, `rainy`, `12` prints `In Leeds it is rainy and 12 degrees.`",
+      "starter": "",
+      "hints": [
+        "Read three inputs, one for each piece of information.",
+        "Break the sentence at each gap: `\"In \" + city + \" it is \" + weather + \" and \" + temp + \" degrees.\"`"
+      ],
+      "tests": [
+        {
+          "stdin": "Leeds\nrainy\n12",
+          "expect": "In Leeds it is rainy and 12 degrees."
+        },
+        {
+          "stdin": "Cairo\nsunny\n35",
+          "expect": "In Cairo it is sunny and 35 degrees."
+        },
+        {
+          "stdin": "Oslo\nsnowy\n-3",
+          "expect": "In Oslo it is snowy and -3 degrees."
+        }
+      ]
+    },
+    {
+      "slug": "gcse-getting-started-p-19",
+      "tier": 3,
+      "difficulty": 3,
+      "xp": 20,
+      "title": "Pet card",
+      "brief": "Input a pet's name, then its kind of animal, then its owner's name. Print a three-line card:\n```\nName: <pet name>\nAnimal: <animal>\nOwner: <owner>\n```\nFor example, `Rex`, `dog`, `Sam` prints `Name: Rex`, `Animal: dog` and `Owner: Sam` on three lines.",
+      "starter": "",
+      "hints": [
+        "You need three `print` statements, one for each line.",
+        "Each line joins a label such as `\"Name: \"` with one of the variables."
+      ],
+      "tests": [
+        {
+          "stdin": "Rex\ndog\nSam",
+          "expect": "Name: Rex\nAnimal: dog\nOwner: Sam"
+        },
+        {
+          "stdin": "Tilly\nrabbit\nMia",
+          "expect": "Name: Tilly\nAnimal: rabbit\nOwner: Mia"
+        },
+        {
+          "stdin": "Goldie\nfish\nBo Lee",
+          "expect": "Name: Goldie\nAnimal: fish\nOwner: Bo Lee"
+        }
+      ]
+    },
+    {
+      "slug": "gcse-getting-started-p-20",
+      "tier": 3,
+      "difficulty": 3,
+      "xp": 20,
+      "title": "Story starter",
+      "brief": "Input a hero's name, then a place, then an object. Print one sentence: `<hero> found a <object> in <place>.`\n\nFor example, `Ana`, `Paris` and `lamp` (in the order hero, place, object) prints `Ana found a lamp in Paris.` Notice the order of the inputs is different from the order in the sentence.",
+      "starter": "",
+      "hints": [
+        "The inputs are in the order hero, place, object, but the sentence uses them as hero, object, place.",
+        "`print(hero + \" found a \" + thing + \" in \" + place + \".\")`"
+      ],
+      "tests": [
+        {
+          "stdin": "Ana\nParis\nlamp",
+          "expect": "Ana found a lamp in Paris."
+        },
+        {
+          "stdin": "Sam\nRome\nmap",
+          "expect": "Sam found a map in Rome."
+        },
+        {
+          "stdin": "Mia\nOslo\nshell",
+          "expect": "Mia found a shell in Oslo."
+        }
+      ]
+    },
+    {
       "slug": "gcse-getting-started-p-s1",
       "tier": 4,
       "difficulty": 5,
@@ -1507,6 +1777,62 @@
         {
           "stdin": "Ann\nBo\nQuiz Night\n5 May\n7pm\nThe Hall",
           "expect": "Bo, you're invited to Quiz Night!\nHosted by Ann at The Hall.\n5 May at 7pm."
+        }
+      ]
+    },
+    {
+      "slug": "gcse-getting-started-p-s3",
+      "tier": 4,
+      "difficulty": 5,
+      "xp": 40,
+      "stretch": true,
+      "title": "🌟 Certificate",
+      "brief": "Input a student's name, a course name, a date and the name of the person signing. Print a four-line certificate:\n```\nCertificate of Achievement\n<student> completed <course>\nDate: <date>\nSigned: <signer>\n```\nFor example, `Ada`, `Python`, `5 May` and `Mr Shah` prints `Certificate of Achievement`, `Ada completed Python`, `Date: 5 May` and `Signed: Mr Shah` on four lines.",
+      "starter": "",
+      "hints": [
+        "The first line never changes - it needs no variable. The other three each use one or two of the inputs.",
+        "Four `print` statements: one plain line, then `student + \" completed \" + course`, then `\"Date: \" + date`, then `\"Signed: \" + signer`."
+      ],
+      "tests": [
+        {
+          "stdin": "Ada\nPython\n5 May\nMr Shah",
+          "expect": "Certificate of Achievement\nAda completed Python\nDate: 5 May\nSigned: Mr Shah"
+        },
+        {
+          "stdin": "Sam\nChess Club\n1 June\nMs Ford",
+          "expect": "Certificate of Achievement\nSam completed Chess Club\nDate: 1 June\nSigned: Ms Ford"
+        },
+        {
+          "stdin": "Mia Rose\nArt\n12 July\nMrs Lee",
+          "expect": "Certificate of Achievement\nMia Rose completed Art\nDate: 12 July\nSigned: Mrs Lee"
+        }
+      ]
+    },
+    {
+      "slug": "gcse-getting-started-p-s4",
+      "tier": 4,
+      "difficulty": 5,
+      "xp": 40,
+      "stretch": true,
+      "title": "🌟 Address book entry",
+      "brief": "Input a person's first name, last name, house number, street, town and postcode (six inputs, one per line). Print a three-line address book entry:\n```\n<last name>, <first name>\n<house number> <street>\n<town> <postcode>\n```\nFor example, `Ada`, `Lovelace`, `12`, `High Street`, `Bath` and `BA1 1AA` prints `Lovelace, Ada`, `12 High Street` and `Bath BA1 1AA` on three lines.",
+      "starter": "",
+      "hints": [
+        "Read all six inputs first, giving each a clear variable name, then print the three lines.",
+        "Line 1: `last + \", \" + first`. Line 2: `number + \" \" + street`. Line 3: `town + \" \" + postcode`."
+      ],
+      "tests": [
+        {
+          "stdin": "Ada\nLovelace\n12\nHigh Street\nBath\nBA1 1AA",
+          "expect": "Lovelace, Ada\n12 High Street\nBath BA1 1AA"
+        },
+        {
+          "stdin": "Sam\nLee\n7\nPark Road\nYork\nYO1 2AB",
+          "expect": "Lee, Sam\n7 Park Road\nYork YO1 2AB"
+        },
+        {
+          "stdin": "Mia\nKhan\n104\nMill Lane\nLeeds\nLS1 4CD",
+          "expect": "Khan, Mia\n104 Mill Lane\nLeeds LS1 4CD"
         }
       ]
     }

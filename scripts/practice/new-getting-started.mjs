@@ -1,0 +1,88 @@
+// More practice for "Getting started": print(), input() and joining text with +.
+// Everything here is text - no numbers - because that is all this unit covers.
+export const tasks = [
+  {
+    key: "11", tier: 1, difficulty: 1, xp: 10, title: "Say hello",
+    brief: "Input a name. Print `Hello, ` followed by the name.\n\nFor example, the name `Sam` prints `Hello, Sam`.",
+    hints: ["Store the name in a variable first: `name = input()`.", "Join the pieces with `+`: `print(\"Hello, \" + name)`. Remember the space after the comma."],
+    inputs: ["Sam", "Mia Rose", "A"],
+    solution: `name = input()\nprint("Hello, " + name)`,
+  },
+  {
+    key: "12", tier: 1, difficulty: 1, xp: 10, title: "Two names",
+    brief: "Input a first name, then a second name. Print them on one line with ` and ` between them.\n\nFor example, `Sam` and `Mia` prints `Sam and Mia`.",
+    hints: ["Use two `input()` lines, one for each name.", "Join with `+`: the first name, then the text `\" and \"` (with spaces), then the second name."],
+    inputs: ["Sam\nMia", "Ann\nBo", "Zoe\nLeo"],
+    solution: `first = input()\nsecond = input()\nprint(first + " and " + second)`,
+  },
+  {
+    key: "13", tier: 1, difficulty: 1, xp: 10, title: "My favourite colour",
+    brief: "Input a colour. Print `My favourite colour is ` followed by the colour and then a full stop.\n\nFor example, `blue` prints `My favourite colour is blue.`",
+    hints: ["There are three pieces to join: the start of the sentence, the colour, and the full stop.", "`print(\"My favourite colour is \" + colour + \".\")`"],
+    inputs: ["blue", "dark green", "red"],
+    solution: `colour = input()\nprint("My favourite colour is " + colour + ".")`,
+  },
+  {
+    key: "14", tier: 2, difficulty: 2, xp: 15, title: "Name badge",
+    brief: "Input a first name, then a last name. Print the last name, then a comma and a space, then the first name.\n\nFor example, `Ada` and `Lovelace` prints `Lovelace, Ada`.",
+    hints: ["The names come in one order but are printed in the other order.", "Store them as `first` and `last`, then `print(last + \", \" + first)`."],
+    inputs: ["Ada\nLovelace", "Sam\nLee", "Mia\nKhan"],
+    solution: `first = input()\nlast = input()\nprint(last + ", " + first)`,
+  },
+  {
+    key: "15", tier: 2, difficulty: 2, xp: 15, title: "School email address",
+    brief: "Input a student's first name, then the name of their school (with no spaces). Print an email address made of the first name, then `@`, then the school name, then `.sch.uk`.\n\nFor example, `ada` and `oakfield` prints `ada@oakfield.sch.uk`.",
+    hints: ["Four pieces are joined: the name, `@`, the school, and `.sch.uk`.", "`print(name + \"@\" + school + \".sch.uk\")`"],
+    inputs: ["ada\noakfield", "sam\nhillcrest", "mia\nriverside"],
+    solution: `name = input()\nschool = input()\nprint(name + "@" + school + ".sch.uk")`,
+  },
+  {
+    key: "16", tier: 2, difficulty: 2, xp: 15, title: "Shout it",
+    brief: "Input a word. Print the word, then three exclamation marks straight after it (no spaces).\n\nFor example, `goal` prints `goal!!!`.",
+    hints: ["Join the word and the text `\"!!!\"`.", "`print(word + \"!!!\")`"],
+    inputs: ["goal", "help", "yes"],
+    solution: `word = input()\nprint(word + "!!!")`,
+  },
+  {
+    key: "17", tier: 2, difficulty: 2, xp: 15, title: "Score line",
+    brief: "Input a player's name, then their score (type it in as normal - treat it as text). Print the name, then ` scored `, then the score, then ` points`.\n\nFor example, `Ada` and `95` prints `Ada scored 95 points`.",
+    hints: ["The score is just text here, so there is no need to change it into a number.", "`print(player + \" scored \" + score + \" points\")`"],
+    inputs: ["Ada\n95", "Sam\n7", "Mia\n120"],
+    solution: `player = input()\nscore = input()\nprint(player + " scored " + score + " points")`,
+  },
+  {
+    key: "18", tier: 3, difficulty: 3, xp: 20, title: "Weather report",
+    brief: "Input a city, then the weather (one word), then the temperature (as text, for example `18`).\n\nPrint a report in exactly this form: `In <city> it is <weather> and <temperature> degrees.`\n\nFor example, `Leeds`, `rainy`, `12` prints `In Leeds it is rainy and 12 degrees.`",
+    hints: ["Read three inputs, one for each piece of information.", "Break the sentence at each gap: `\"In \" + city + \" it is \" + weather + \" and \" + temp + \" degrees.\"`"],
+    inputs: ["Leeds\nrainy\n12", "Cairo\nsunny\n35", "Oslo\nsnowy\n-3"],
+    solution: `city = input()\nweather = input()\ntemp = input()\nprint("In " + city + " it is " + weather + " and " + temp + " degrees.")`,
+  },
+  {
+    key: "19", tier: 3, difficulty: 3, xp: 20, title: "Pet card",
+    brief: "Input a pet's name, then its kind of animal, then its owner's name. Print a three-line card:\n```\nName: <pet name>\nAnimal: <animal>\nOwner: <owner>\n```\nFor example, `Rex`, `dog`, `Sam` prints `Name: Rex`, `Animal: dog` and `Owner: Sam` on three lines.",
+    hints: ["You need three `print` statements, one for each line.", "Each line joins a label such as `\"Name: \"` with one of the variables."],
+    inputs: ["Rex\ndog\nSam", "Tilly\nrabbit\nMia", "Goldie\nfish\nBo Lee"],
+    solution: `pet = input()\nanimal = input()\nowner = input()\nprint("Name: " + pet)\nprint("Animal: " + animal)\nprint("Owner: " + owner)`,
+  },
+  {
+    key: "20", tier: 3, difficulty: 3, xp: 20, title: "Story starter",
+    brief: "Input a hero's name, then a place, then an object. Print one sentence: `<hero> found a <object> in <place>.`\n\nFor example, `Ana`, `Paris` and `lamp` (in the order hero, place, object) prints `Ana found a lamp in Paris.` Notice the order of the inputs is different from the order in the sentence.",
+    hints: ["The inputs are in the order hero, place, object, but the sentence uses them as hero, object, place.", "`print(hero + \" found a \" + thing + \" in \" + place + \".\")`"],
+    inputs: ["Ana\nParis\nlamp", "Sam\nRome\nmap", "Mia\nOslo\nshell"],
+    solution: `hero = input()\nplace = input()\nthing = input()\nprint(hero + " found a " + thing + " in " + place + ".")`,
+  },
+  {
+    key: "s3", tier: 4, difficulty: 5, xp: 40, stretch: true, title: "🌟 Certificate",
+    brief: "Input a student's name, a course name, a date and the name of the person signing. Print a four-line certificate:\n```\nCertificate of Achievement\n<student> completed <course>\nDate: <date>\nSigned: <signer>\n```\nFor example, `Ada`, `Python`, `5 May` and `Mr Shah` prints `Certificate of Achievement`, `Ada completed Python`, `Date: 5 May` and `Signed: Mr Shah` on four lines.",
+    hints: ["The first line never changes - it needs no variable. The other three each use one or two of the inputs.", "Four `print` statements: one plain line, then `student + \" completed \" + course`, then `\"Date: \" + date`, then `\"Signed: \" + signer`."],
+    inputs: ["Ada\nPython\n5 May\nMr Shah", "Sam\nChess Club\n1 June\nMs Ford", "Mia Rose\nArt\n12 July\nMrs Lee"],
+    solution: `student = input()\ncourse = input()\ndate = input()\nsigner = input()\nprint("Certificate of Achievement")\nprint(student + " completed " + course)\nprint("Date: " + date)\nprint("Signed: " + signer)`,
+  },
+  {
+    key: "s4", tier: 4, difficulty: 5, xp: 40, stretch: true, title: "🌟 Address book entry",
+    brief: "Input a person's first name, last name, house number, street, town and postcode (six inputs, one per line). Print a three-line address book entry:\n```\n<last name>, <first name>\n<house number> <street>\n<town> <postcode>\n```\nFor example, `Ada`, `Lovelace`, `12`, `High Street`, `Bath` and `BA1 1AA` prints `Lovelace, Ada`, `12 High Street` and `Bath BA1 1AA` on three lines.",
+    hints: ["Read all six inputs first, giving each a clear variable name, then print the three lines.", "Line 1: `last + \", \" + first`. Line 2: `number + \" \" + street`. Line 3: `town + \" \" + postcode`."],
+    inputs: ["Ada\nLovelace\n12\nHigh Street\nBath\nBA1 1AA", "Sam\nLee\n7\nPark Road\nYork\nYO1 2AB", "Mia\nKhan\n104\nMill Lane\nLeeds\nLS1 4CD"],
+    solution: `first = input()\nlast = input()\nnumber = input()\nstreet = input()\ntown = input()\npostcode = input()\nprint(last + ", " + first)\nprint(number + " " + street)\nprint(town + " " + postcode)`,
+  },
+];

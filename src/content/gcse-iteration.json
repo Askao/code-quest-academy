@@ -1898,6 +1898,336 @@
       ]
     },
     {
+      "slug": "gcse-iteration-p-11",
+      "tier": 1,
+      "difficulty": 1,
+      "xp": 10,
+      "title": "Count up",
+      "brief": "Input a whole number N (at least 1). Print every whole number from 1 up to N, one per line.\n\nFor example, `4` prints `1`, `2`, `3`, `4` on four lines.",
+      "starter": "",
+      "hints": [
+        "A `for` loop with `range()` counts for you. `range(1, 5)` gives 1, 2, 3, 4 - it stops before the last number.",
+        "So to include N you need `range(1, n + 1)`."
+      ],
+      "tests": [
+        {
+          "stdin": "4",
+          "expect": "1\n2\n3\n4"
+        },
+        {
+          "stdin": "1",
+          "expect": "1"
+        },
+        {
+          "stdin": "7",
+          "expect": "1\n2\n3\n4\n5\n6\n7"
+        },
+        {
+          "stdin": "10",
+          "expect": "1\n2\n3\n4\n5\n6\n7\n8\n9\n10"
+        }
+      ]
+    },
+    {
+      "slug": "gcse-iteration-p-12",
+      "tier": 1,
+      "difficulty": 1,
+      "xp": 10,
+      "title": "A row of stars",
+      "brief": "Input a whole number N (at least 1). Print N asterisks (`*`) in a row on one line, with nothing between them.\n\nFor example, `5` prints `*****`.",
+      "starter": "",
+      "hints": [
+        "Build the line one star at a time in a loop, or print each star without starting a new line.",
+        "Start with `line = \"\"`, then in a loop `line = line + \"*\"`, and print `line` once at the end."
+      ],
+      "tests": [
+        {
+          "stdin": "5",
+          "expect": "*****"
+        },
+        {
+          "stdin": "1",
+          "expect": "*"
+        },
+        {
+          "stdin": "8",
+          "expect": "********"
+        },
+        {
+          "stdin": "3",
+          "expect": "***"
+        }
+      ]
+    },
+    {
+      "slug": "gcse-iteration-p-13",
+      "tier": 2,
+      "difficulty": 2,
+      "xp": 15,
+      "title": "Total of the numbers",
+      "brief": "Input a whole number N (at least 1). Then input N whole numbers, one per line. Print the total of those N numbers.\n\nFor example, `3` followed by `4`, `5`, `6` prints `15`.",
+      "starter": "",
+      "hints": [
+        "Keep a running total that starts at 0 before the loop.",
+        "Inside the loop, read one number and add it to the total. Print the total after the loop."
+      ],
+      "tests": [
+        {
+          "stdin": "3\n4\n5\n6",
+          "expect": "15"
+        },
+        {
+          "stdin": "1\n9",
+          "expect": "9"
+        },
+        {
+          "stdin": "4\n-1\n1\n-1\n1",
+          "expect": "0"
+        },
+        {
+          "stdin": "2\n100\n200",
+          "expect": "300"
+        }
+      ]
+    },
+    {
+      "slug": "gcse-iteration-p-14",
+      "tier": 2,
+      "difficulty": 2,
+      "xp": 15,
+      "title": "Countdown in fives",
+      "brief": "Input a whole number N (at least 5). Print N, then N minus 5, then N minus 10, and so on, one number per line. Stop before the number would be 0 or less.\n\nFor example, `20` prints `20`, `15`, `10`, `5`.",
+      "starter": "",
+      "hints": [
+        "A `while` loop keeps going as long as its condition is True: here, while the number is more than 0.",
+        "Print the number, then take 5 off it, inside the loop: `n = n - 5`."
+      ],
+      "tests": [
+        {
+          "stdin": "20",
+          "expect": "20\n15\n10\n5"
+        },
+        {
+          "stdin": "5",
+          "expect": "5"
+        },
+        {
+          "stdin": "12",
+          "expect": "12\n7\n2"
+        },
+        {
+          "stdin": "31",
+          "expect": "31\n26\n21\n16\n11\n6\n1"
+        }
+      ]
+    },
+    {
+      "slug": "gcse-iteration-p-15",
+      "tier": 2,
+      "difficulty": 2,
+      "xp": 15,
+      "title": "Guess the word",
+      "brief": "The secret word is `open`. Input guesses, one per line. Each time a guess is wrong, print `Wrong` and read another guess. When a guess is right, print `Welcome` and stop.\n\nFor example, the guesses `hello`, `shut`, `open` print `Wrong`, `Wrong` and `Welcome` on three lines.",
+      "starter": "",
+      "hints": [
+        "You do not know how many guesses there will be, so a `while` loop is better than a `for` loop.",
+        "Read a guess before the loop, then `while guess != \"open\":` print `Wrong` and read the next guess."
+      ],
+      "tests": [
+        {
+          "stdin": "open",
+          "expect": "Welcome"
+        },
+        {
+          "stdin": "shut\nopen",
+          "expect": "Wrong\nWelcome"
+        },
+        {
+          "stdin": "hello\nshut\nopen",
+          "expect": "Wrong\nWrong\nWelcome"
+        },
+        {
+          "stdin": "a\nb\nc\nd\nopen",
+          "expect": "Wrong\nWrong\nWrong\nWrong\nWelcome"
+        }
+      ]
+    },
+    {
+      "slug": "gcse-iteration-p-16",
+      "tier": 3,
+      "difficulty": 3,
+      "xp": 20,
+      "title": "Average until zero",
+      "brief": "Input whole numbers, one per line, until the number 0 is entered. The 0 is not one of the numbers to average. Print the mean (average) of the numbers entered before the 0, rounded to 2 decimal places.\n\nIf 0 is the very first number, print `No numbers` instead.\n\nFor example, `4`, `6`, `0` prints `5.0`.",
+      "starter": "",
+      "hints": [
+        "Keep a running total and a count of numbers. Add to both each time round the loop, but not for the 0.",
+        "After the loop, if the count is still 0, print `No numbers`. Otherwise print `round(total / count, 2)`."
+      ],
+      "tests": [
+        {
+          "stdin": "4\n6\n0",
+          "expect": "5.0"
+        },
+        {
+          "stdin": "0",
+          "expect": "No numbers"
+        },
+        {
+          "stdin": "10\n0",
+          "expect": "10.0"
+        },
+        {
+          "stdin": "1\n2\n2\n0",
+          "expect": "1.67"
+        },
+        {
+          "stdin": "7\n8\n8\n0",
+          "expect": "7.67"
+        }
+      ]
+    },
+    {
+      "slug": "gcse-iteration-p-17",
+      "tier": 3,
+      "difficulty": 3,
+      "xp": 20,
+      "title": "Squares list",
+      "brief": "Input a whole number N (at least 1). For every whole number from 1 to N, print a line in the form `<number> squared is <answer>`.\n\nFor example, `3` prints:\n```\n1 squared is 1\n2 squared is 4\n3 squared is 9\n```",
+      "starter": "",
+      "hints": [
+        "Use a `for` loop from 1 to N (remember `range` stops one early).",
+        "Inside the loop join: the number, the text ` squared is `, and the number times itself. Use `str()` on numbers you join to text."
+      ],
+      "tests": [
+        {
+          "stdin": "3",
+          "expect": "1 squared is 1\n2 squared is 4\n3 squared is 9"
+        },
+        {
+          "stdin": "1",
+          "expect": "1 squared is 1"
+        },
+        {
+          "stdin": "5",
+          "expect": "1 squared is 1\n2 squared is 4\n3 squared is 9\n4 squared is 16\n5 squared is 25"
+        },
+        {
+          "stdin": "8",
+          "expect": "1 squared is 1\n2 squared is 4\n3 squared is 9\n4 squared is 16\n5 squared is 25\n6 squared is 36\n7 squared is 49\n8 squared is 64"
+        }
+      ]
+    },
+    {
+      "slug": "gcse-iteration-p-18",
+      "tier": 3,
+      "difficulty": 3,
+      "xp": 20,
+      "title": "Sum of the digits",
+      "brief": "Input a whole number (0 or more). Print the sum of its digits.\n\nFor example, `472` prints `13` (4 + 7 + 2).\n\nTip: `n % 10` gives the last digit of a number and `n // 10` removes the last digit.",
+      "starter": "",
+      "hints": [
+        "Repeat while the number is more than 0: take off the last digit and add it to a total.",
+        "`total = total + n % 10` then `n = n // 10`, inside `while n > 0:`."
+      ],
+      "tests": [
+        {
+          "stdin": "472",
+          "expect": "13"
+        },
+        {
+          "stdin": "5",
+          "expect": "5"
+        },
+        {
+          "stdin": "0",
+          "expect": "0"
+        },
+        {
+          "stdin": "1000",
+          "expect": "1"
+        },
+        {
+          "stdin": "99999",
+          "expect": "45"
+        },
+        {
+          "stdin": "1234",
+          "expect": "10"
+        }
+      ]
+    },
+    {
+      "slug": "gcse-iteration-p-19",
+      "tier": 4,
+      "difficulty": 4,
+      "xp": 30,
+      "title": "Powers of two",
+      "brief": "Input a whole number LIMIT (at least 2). Print every power of two that is smaller than LIMIT, one per line, starting from 1 and doubling each time.\n\nFor example, `20` prints `1`, `2`, `4`, `8`, `16`.",
+      "starter": "",
+      "hints": [
+        "Start with a variable `value = 1`. Repeat while it is less than LIMIT.",
+        "Inside the loop print `value`, then double it: `value = value * 2`."
+      ],
+      "tests": [
+        {
+          "stdin": "20",
+          "expect": "1\n2\n4\n8\n16"
+        },
+        {
+          "stdin": "2",
+          "expect": "1"
+        },
+        {
+          "stdin": "3",
+          "expect": "1\n2"
+        },
+        {
+          "stdin": "65",
+          "expect": "1\n2\n4\n8\n16\n32\n64"
+        },
+        {
+          "stdin": "100",
+          "expect": "1\n2\n4\n8\n16\n32\n64"
+        },
+        {
+          "stdin": "1000",
+          "expect": "1\n2\n4\n8\n16\n32\n64\n128\n256\n512"
+        }
+      ]
+    },
+    {
+      "slug": "gcse-iteration-p-20",
+      "tier": 4,
+      "difficulty": 4,
+      "xp": 30,
+      "title": "Running total",
+      "brief": "Input a whole number N (at least 1). Then input N whole numbers, one per line. After each number is entered, print the total of all the numbers entered so far.\n\nFor example, `3` followed by `4`, `5`, `6` prints `4`, `9` and `15` on three lines.",
+      "starter": "",
+      "hints": [
+        "This is like adding up a list of numbers, but you print inside the loop instead of after it.",
+        "Add the number to `total`, then `print(total)`, every time round the loop."
+      ],
+      "tests": [
+        {
+          "stdin": "3\n4\n5\n6",
+          "expect": "4\n9\n15"
+        },
+        {
+          "stdin": "1\n7",
+          "expect": "7"
+        },
+        {
+          "stdin": "4\n1\n1\n1\n1",
+          "expect": "1\n2\n3\n4"
+        },
+        {
+          "stdin": "3\n-2\n5\n-3",
+          "expect": "-2\n3\n0"
+        }
+      ]
+    },
+    {
       "slug": "gcse-iteration-p-s1",
       "tier": 4,
       "difficulty": 5,
@@ -1978,6 +2308,86 @@
         {
           "stdin": "2",
           "expect": "**\n*"
+        }
+      ]
+    },
+    {
+      "slug": "gcse-iteration-p-s3",
+      "tier": 4,
+      "difficulty": 5,
+      "xp": 40,
+      "stretch": true,
+      "title": "🌟 Steps to reach 1",
+      "brief": "Start with a whole number that is at least 1. Repeat these rules until the number becomes 1:\n- if the number is even, divide it by 2\n- if the number is odd, multiply it by 3 and add 1\n\nInput the starting number. Print how many steps it takes to reach 1.\n\nFor example, `6` takes 8 steps: 6 → 3 → 10 → 5 → 16 → 8 → 4 → 2 → 1. If the starting number is already 1, print `0`.",
+      "starter": "",
+      "hints": [
+        "Use a `while` loop that keeps going while the number is not 1, and a counter for the steps.",
+        "Inside the loop use `if n % 2 == 0:` to decide which rule to apply (use `//` so the number stays whole), and add 1 to the counter."
+      ],
+      "tests": [
+        {
+          "stdin": "6",
+          "expect": "8"
+        },
+        {
+          "stdin": "1",
+          "expect": "0"
+        },
+        {
+          "stdin": "2",
+          "expect": "1"
+        },
+        {
+          "stdin": "7",
+          "expect": "16"
+        },
+        {
+          "stdin": "27",
+          "expect": "111"
+        },
+        {
+          "stdin": "16",
+          "expect": "4"
+        }
+      ]
+    },
+    {
+      "slug": "gcse-iteration-p-s4",
+      "tier": 4,
+      "difficulty": 5,
+      "xp": 40,
+      "stretch": true,
+      "title": "🌟 Reverse the digits",
+      "brief": "Input a whole number (0 or more). Print the number with its digits in reverse order, as a whole number.\n\nFor example, `472` prints `274`. Leading zeros are dropped, so `1200` prints `21`.",
+      "starter": "",
+      "hints": [
+        "Build the answer one digit at a time. Take the last digit of the number and add it onto the end of the answer.",
+        "`answer = answer * 10 + n % 10`, then `n = n // 10`, repeated while `n > 0`. Start with `answer = 0`."
+      ],
+      "tests": [
+        {
+          "stdin": "472",
+          "expect": "274"
+        },
+        {
+          "stdin": "5",
+          "expect": "5"
+        },
+        {
+          "stdin": "0",
+          "expect": "0"
+        },
+        {
+          "stdin": "1200",
+          "expect": "21"
+        },
+        {
+          "stdin": "1001",
+          "expect": "1001"
+        },
+        {
+          "stdin": "98765",
+          "expect": "56789"
         }
       ]
     }

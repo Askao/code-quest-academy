@@ -1,0 +1,88 @@
+// More practice for "File handling". Each task first WRITES the file it needs from the input, so it
+// works from a clean start every time, then reads it back. Files are plain text in the working folder.
+export const tasks = [
+  {
+    key: "11", tier: 1, difficulty: 1, xp: 10, title: "Write a message",
+    brief: "Input a message. Write it to a file called `message.txt`. Then open `message.txt` again, read it, and print what is in it.",
+    hints: ["Open the file with `open(\"message.txt\", \"w\")` to write. Remember to close it when you are done writing.", "Then open it again with mode `\"r\"` and use `.read()` to get the text back."],
+    inputs: ["Hello there", "Python is fun", "x"],
+    solution: `message = input()\nfile = open("message.txt", "w")\nfile.write(message)\nfile.close()\nfile = open("message.txt", "r")\nprint(file.read())\nfile.close()`,
+  },
+  {
+    key: "12", tier: 1, difficulty: 1, xp: 10, title: "Save a name",
+    brief: "Input a name. Write it to a file called `name.txt`. Then reopen the file, read the name, and print `Saved name: ` followed by the name.\n\nFor example, `Sam` prints `Saved name: Sam`.",
+    hints: ["Write the name to `name.txt` using mode `\"w\"`, then close the file.", "Reopen with mode `\"r\"`, use `.read()`, and join it to the text: `\"Saved name: \" + saved`."],
+    inputs: ["Sam", "Mia Rose", "A"],
+    solution: `name = input()\nfile = open("name.txt", "w")\nfile.write(name)\nfile.close()\nfile = open("name.txt", "r")\nsaved = file.read()\nfile.close()\nprint("Saved name: " + saved)`,
+  },
+  {
+    key: "13", tier: 2, difficulty: 2, xp: 15, title: "Write three lines",
+    brief: "Input three words, one per line. Write them to a file called `words.txt`, one word per line. Reopen the file and print its lines, one per line, exactly as they were written.",
+    hints: ["Each line in a text file ends with a newline character, `\"\\n\"`. Add one after every word you write.", "Read the file back with a loop: `for line in file:` then `print(line.strip())`. `.strip()` removes the newline from the end of each line so there are no blank lines."],
+    inputs: ["cat\ndog\nfish", "a\nb\nc", "one\ntwo\nthree"],
+    solution: `a = input()\nb = input()\nc = input()\nfile = open("words.txt", "w")\nfile.write(a + "\\n")\nfile.write(b + "\\n")\nfile.write(c + "\\n")\nfile.close()\nfile = open("words.txt", "r")\nfor line in file:\n    print(line.strip())\nfile.close()`,
+  },
+  {
+    key: "14", tier: 2, difficulty: 2, xp: 15, title: "Add to a diary",
+    brief: "A diary file called `diary.txt` starts with one line: `Day 1`.\n\nInput a second entry and ADD it to the end of the file on a new line (do not wipe out the first line). Then reopen the file and print all of its lines, one per line.\n\nFor example, the entry `Went swimming` prints `Day 1` then `Went swimming`.",
+    hints: ["First create the file with `Day 1` in it. Then open it again in append mode, `\"a\"`, which adds to the end instead of overwriting.", "Write `\"\\n\"` before the new entry (or after `Day 1`) so that they end up on separate lines."],
+    inputs: ["Went swimming", "Rainy day", "Nothing"],
+    solution: `entry = input()\nfile = open("diary.txt", "w")\nfile.write("Day 1\\n")\nfile.close()\nfile = open("diary.txt", "a")\nfile.write(entry + "\\n")\nfile.close()\nfile = open("diary.txt", "r")\nfor line in file:\n    print(line.strip())\nfile.close()`,
+  },
+  {
+    key: "15", tier: 2, difficulty: 2, xp: 15, title: "Number of scores",
+    brief: "Input a whole number N (at least 1), then N scores (whole numbers, one per line). Write the scores to `scores.txt`, one per line. Then reopen the file and print `Scores saved: ` followed by how many lines the file has.\n\nFor example, `3` scores prints `Scores saved: 3`.",
+    hints: ["Write one score per line, each followed by `\"\\n\"`.", "When you read the file back, count the lines with a loop and a counter (or use `len(file.readlines())`)."],
+    inputs: ["3\n10\n20\n30", "1\n5", "5\n1\n2\n3\n4\n5"],
+    solution: `n = int(input())\nfile = open("scores.txt", "w")\nfor i in range(n):\n    file.write(input() + "\\n")\nfile.close()\nfile = open("scores.txt", "r")\ncount = 0\nfor line in file:\n    count = count + 1\nfile.close()\nprint("Scores saved: " + str(count))`,
+  },
+  {
+    key: "16", tier: 3, difficulty: 3, xp: 20, title: "Total of the file",
+    brief: "Input a whole number N (at least 1), then N whole numbers (one per line). Write them to a file called `numbers.txt`, one per line. Reopen the file and print the total of all the numbers in it.",
+    hints: ["Everything read from a file is text, so you must change each line back into a number with `int()` before adding.", "`for line in file:` then `total = total + int(line.strip())`."],
+    inputs: ["3\n4\n5\n6", "1\n9", "4\n-1\n1\n10\n-10", "2\n100\n200"],
+    solution: `n = int(input())\nfile = open("numbers.txt", "w")\nfor i in range(n):\n    file.write(input() + "\\n")\nfile.close()\nfile = open("numbers.txt", "r")\ntotal = 0\nfor line in file:\n    total = total + int(line.strip())\nfile.close()\nprint(total)`,
+  },
+  {
+    key: "17", tier: 3, difficulty: 3, xp: 20, title: "Numbered lines",
+    brief: "Input a whole number N (at least 1), then N lines of text. Write them to `notes.txt`, one per line. Reopen the file and print each line with its line number (starting at 1), a full stop and a space in front of it.\n\nFor example, the lines `milk` and `eggs` print `1. milk` and `2. eggs`.",
+    hints: ["Keep a counter that starts at 1 and goes up by 1 for every line you read back.", "`print(str(number) + \". \" + line.strip())`, then `number = number + 1`."],
+    inputs: ["2\nmilk\neggs", "1\nbread", "4\na\nb\nc\nd", "3\nred apples\ngreen pears\nblue plums"],
+    solution: `n = int(input())\nfile = open("notes.txt", "w")\nfor i in range(n):\n    file.write(input() + "\\n")\nfile.close()\nfile = open("notes.txt", "r")\nnumber = 1\nfor line in file:\n    print(str(number) + ". " + line.strip())\n    number = number + 1\nfile.close()`,
+  },
+  {
+    key: "18", tier: 3, difficulty: 3, xp: 20, title: "Is the name on the list?",
+    brief: "Input a whole number N (at least 1), then N names (one per line). Write the names to `names.txt`, one per line. Then input one more name to look for. Reopen the file and print `Found` if that name is on one of the lines, otherwise `Not found`.\n\nThe comparison is exact, so `sam` and `Sam` are different.",
+    hints: ["Read each line back and remove the newline with `.strip()` before comparing it to the name you are looking for.", "Set `found = False` before the loop, change it to `True` if a line matches, and print the answer after the loop."],
+    inputs: ["3\nAda\nBo\nCal\nBo", "3\nAda\nBo\nCal\nDee", "1\nSam\nsam", "2\nA\nB\nA", "4\nx\ny\nz\nw\nw"],
+    solution: `n = int(input())\nfile = open("names.txt", "w")\nfor i in range(n):\n    file.write(input() + "\\n")\nfile.close()\nsearch = input()\nfile = open("names.txt", "r")\nfound = False\nfor line in file:\n    if line.strip() == search:\n        found = True\nfile.close()\nif found:\n    print("Found")\nelse:\n    print("Not found")`,
+  },
+  {
+    key: "19", tier: 4, difficulty: 4, xp: 30, title: "High scores table",
+    brief: "Input a whole number N (at least 1). Then input N pairs of lines: a player's name, then their score (a whole number). Write each pair to `scores.txt` on ONE line, in the form `name,score` (for example `Ada,72`).\n\nReopen the file and print the name of the player with the highest score followed by their score, in the form `<name> won with <score>`. If two players tie for the highest, print the one who was entered first.",
+    hints: ["Each line of the file has a comma in it. Split it into the two parts with `line.strip().split(\",\")`.", "Remember to change the score part to a number with `int()`. Keep the best score and best name so far, and replace them only when a score is strictly bigger."],
+    inputs: ["3\nAda\n72\nBo\n90\nCal\n55", "1\nSam\n40", "3\nA\n50\nB\n50\nC\n50", "4\nAda\n60\nBo\n80\nCal\n80\nDee\n20"],
+    solution: `n = int(input())\nfile = open("scores.txt", "w")\nfor i in range(n):\n    name = input()\n    score = input()\n    file.write(name + "," + score + "\\n")\nfile.close()\nfile = open("scores.txt", "r")\nbest_name = ""\nbest_score = -1\nfor line in file:\n    parts = line.strip().split(",")\n    if int(parts[1]) > best_score:\n        best_score = int(parts[1])\n        best_name = parts[0]\nfile.close()\nprint(best_name + " won with " + str(best_score))`,
+  },
+  {
+    key: "20", tier: 4, difficulty: 4, xp: 30, title: "Copy without blanks",
+    brief: "Input a whole number N (at least 1), then N lines of text (some of which may be completely empty). Write all N lines to `original.txt`, one per line.\n\nThen read `original.txt` and write only the lines that are NOT empty to a second file, `clean.txt`. Finally, open `clean.txt` and print each of its lines, and after them print `Lines kept: ` followed by how many lines it has.",
+    hints: ["An empty line is one where `line.strip() == \"\"`. Skip those when copying.", "Keep a counter for the lines you write to `clean.txt`, then read that file back and print each line, and finally the count."],
+    inputs: ["3\na\n\nb", "2\nhello\nworld", "4\n\nx\n\ny", "1\nonly", "5\nred\n\ngreen\n\nblue"],
+    solution: `n = int(input())\nfile = open("original.txt", "w")\nfor i in range(n):\n    file.write(input() + "\\n")\nfile.close()\nsource = open("original.txt", "r")\nclean = open("clean.txt", "w")\nkept = 0\nfor line in source:\n    if line.strip() != "":\n        clean.write(line.strip() + "\\n")\n        kept = kept + 1\nsource.close()\nclean.close()\nfile = open("clean.txt", "r")\nfor line in file:\n    print(line.strip())\nfile.close()\nprint("Lines kept: " + str(kept))`,
+  },
+  {
+    key: "s3", tier: 4, difficulty: 5, xp: 40, stretch: true, title: "🌟 Read a shopping file",
+    brief: "Each line of a shopping file has an item and its price in pence, separated by a comma, like `bread,120`.\n\nInput a whole number N (at least 1), then N lines in that form. Write them to `shopping.txt`, one per line. Reopen the file and print:\n- `Items: ` followed by how many items there are\n- `Total: ` followed by the total price in pence\n- `Dearest: ` followed by the name of the item with the highest price (if there is a tie, the first of them)\n\nFor example, `bread,120` and `milk,85` prints `Items: 2`, `Total: 205`, `Dearest: bread`.",
+    hints: ["Split each line at the comma to separate the name from the price, and use `int()` on the price.", "Keep three variables while looping through the file: a count, a total, and the name and price of the dearest item so far."],
+    inputs: ["2\nbread,120\nmilk,85", "1\napples,300", "3\ntea,200\ncoffee,350\nsugar,150", "3\na,100\nb,100\nc,50", "4\nx,10\ny,20\nz,30\nw,5"],
+    solution: `n = int(input())\nfile = open("shopping.txt", "w")\nfor i in range(n):\n    file.write(input() + "\\n")\nfile.close()\nfile = open("shopping.txt", "r")\ncount = 0\ntotal = 0\ndearest_name = ""\ndearest_price = -1\nfor line in file:\n    parts = line.strip().split(",")\n    price = int(parts[1])\n    count = count + 1\n    total = total + price\n    if price > dearest_price:\n        dearest_price = price\n        dearest_name = parts[0]\nfile.close()\nprint("Items: " + str(count))\nprint("Total: " + str(total))\nprint("Dearest: " + dearest_name)`,
+  },
+  {
+    key: "s4", tier: 4, difficulty: 5, xp: 40, stretch: true, title: "🌟 Update a counter file",
+    brief: "A game keeps its play count in a file called `plays.txt`. The file starts out holding the number 0 on one line.\n\nInput a whole number N (at least 1) for how many games are played. Repeat N times: open `plays.txt`, read the number in it, add 1, and write the new number back to the file (replacing the old one). After all N games, open the file one last time and print `Total plays: ` followed by the number in the file.\n\nFor example, `3` prints `Total plays: 3`.",
+    hints: ["Create the file with `0` in it before the loop. In each round you need to read it, change it to a number with `int()`, add 1, and write it back with mode `\"w\"`.", "Close the file after reading and after writing each time, so that the next round starts from the saved value."],
+    inputs: ["3", "1", "5", "10"],
+    solution: `n = int(input())\nfile = open("plays.txt", "w")\nfile.write("0\\n")\nfile.close()\nfor i in range(n):\n    file = open("plays.txt", "r")\n    plays = int(file.read().strip())\n    file.close()\n    plays = plays + 1\n    file = open("plays.txt", "w")\n    file.write(str(plays) + "\\n")\n    file.close()\nfile = open("plays.txt", "r")\nprint("Total plays: " + str(int(file.read().strip())))\nfile.close()`,
+  },
+];

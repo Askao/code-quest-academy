@@ -1,0 +1,88 @@
+// More practice for "Lists": building lists, indexing, looping through them, searching, totals.
+// Numbers are input one per line after a count N, so every task has clear, fixed input.
+export const tasks = [
+  {
+    key: "11", tier: 1, difficulty: 1, xp: 10, title: "Build and print a list",
+    brief: "Input a whole number N (at least 1). Then input N words, one per line, and add each one to a list. When you have them all, print the words from the list, one per line, in the order they were entered.",
+    hints: ["Start with an empty list, `words = []`. Add each word with `words.append(...)` inside a loop.", "After the first loop, use a second `for word in words:` loop to print them."],
+    inputs: ["3\ncat\ndog\nfish", "1\nhello", "4\na\nb\nc\nd"],
+    solution: `n = int(input())\nwords = []\nfor i in range(n):\n    words.append(input())\nfor word in words:\n    print(word)`,
+  },
+  {
+    key: "12", tier: 1, difficulty: 1, xp: 10, title: "How many items?",
+    brief: "Input a whole number N (at least 1). Then input N words, one per line, and store them in a list. Print `The list has ` followed by the number of items in the list, then ` items`.\n\nFor example, three words prints `The list has 3 items`. Always write the word `items` like this, even when the list has just 1.",
+    hints: ["`len(words)` gives the number of items in a list called `words`.", "Join the parts: `\"The list has \" + str(len(words)) + \" items\"`."],
+    inputs: ["3\ncat\ndog\nfish", "1\nx", "5\na\nb\nc\nd\ne"],
+    solution: `n = int(input())\nwords = []\nfor i in range(n):\n    words.append(input())\nprint("The list has " + str(len(words)) + " items")`,
+  },
+  {
+    key: "13", tier: 2, difficulty: 2, xp: 15, title: "Biggest in the list",
+    brief: "Input a whole number N (at least 1). Then input N whole numbers, one per line, and store them in a list. Print the biggest number in the list.\n\nYou may use `max()` or work it out with a loop.",
+    hints: ["Store the numbers as whole numbers: `numbers.append(int(input()))`.", "`max(numbers)` gives the biggest item in a list of numbers."],
+    inputs: ["3\n4\n9\n2", "1\n5", "4\n-3\n-1\n-8\n-2", "5\n7\n7\n1\n7\n3"],
+    solution: `n = int(input())\nnumbers = []\nfor i in range(n):\n    numbers.append(int(input()))\nprint(max(numbers))`,
+  },
+  {
+    key: "14", tier: 2, difficulty: 2, xp: 15, title: "Last one first",
+    brief: "Input a whole number N (at least 1). Then input N words, one per line, and store them in a list. Print the words one per line, but in the reverse order to how they were entered (the last word entered comes first).",
+    hints: ["You can reach the last item of a list with index `-1`, or you can count down with a loop.", "One way: `for word in reversed(words):` or `for i in range(len(words) - 1, -1, -1): print(words[i])`."],
+    inputs: ["3\ncat\ndog\nfish", "1\nhello", "4\na\nb\nc\nd"],
+    solution: `n = int(input())\nwords = []\nfor i in range(n):\n    words.append(input())\nfor i in range(len(words) - 1, -1, -1):\n    print(words[i])`,
+  },
+  {
+    key: "15", tier: 2, difficulty: 2, xp: 15, title: "Is it in the list?",
+    brief: "The list is: `[\"red\", \"green\", \"blue\", \"yellow\"]`. Input a colour and print `Found` if it is in the list or `Not found` if it is not.\n\nThe comparison is exact, so `Red` with a capital letter is not in the list.",
+    hints: ["Put the four colours in a list at the top of your program.", "The keyword `in` tests a list: `if colour in colours:`."],
+    inputs: ["red", "blue", "purple", "Red", "yellow", "orange"],
+    solution: `colours = ["red", "green", "blue", "yellow"]\ncolour = input()\nif colour in colours:\n    print("Found")\nelse:\n    print("Not found")`,
+  },
+  {
+    key: "16", tier: 3, difficulty: 3, xp: 20, title: "Above average",
+    brief: "Input a whole number N (at least 1). Then input N whole numbers, one per line. Work out the mean (the total divided by N). Print how many of the numbers are strictly bigger than the mean.\n\nFor example, `2`, `4`, `6` has a mean of 4, so only one number (6) is above it and the program prints `1`.",
+    hints: ["You need to go through the list twice: once to find the mean, then once to count the numbers above it.", "`mean = sum(numbers) / len(numbers)`, then a loop with `if number > mean:` and a counter."],
+    inputs: ["3\n2\n4\n6", "1\n5", "4\n1\n1\n1\n1", "5\n10\n20\n30\n40\n50", "4\n1\n2\n3\n10"],
+    solution: `n = int(input())\nnumbers = []\nfor i in range(n):\n    numbers.append(int(input()))\nmean = sum(numbers) / len(numbers)\ncount = 0\nfor number in numbers:\n    if number > mean:\n        count = count + 1\nprint(count)`,
+  },
+  {
+    key: "17", tier: 3, difficulty: 3, xp: 20, title: "Where is it?",
+    brief: "Input a whole number N (at least 1). Then input N words, one per line, into a list. Then input one more word to look for.\n\nPrint the position (index) of the first place that word appears in the list, counting from 0. If the word is not in the list, print `-1`.\n\nFor example, the list `cat`, `dog`, `fish` and the word `dog` prints `1`.",
+    hints: ["Loop through the positions with `for i in range(len(words)):` so that you know the index.", "Print `i` and stop as soon as `words[i] == target`. If the loop finishes without finding it, print -1."],
+    inputs: ["3\ncat\ndog\nfish\ndog", "3\ncat\ndog\nfish\ncat", "3\ncat\ndog\nfish\nfish", "3\ncat\ndog\nfish\nbird", "4\na\nb\na\nb\nb", "1\nx\nx"],
+    solution: `n = int(input())\nwords = []\nfor i in range(n):\n    words.append(input())\ntarget = input()\nposition = -1\nfor i in range(len(words)):\n    if words[i] == target and position == -1:\n        position = i\nprint(position)`,
+  },
+  {
+    key: "18", tier: 3, difficulty: 3, xp: 20, title: "Change every score",
+    brief: "Input a whole number N (at least 1). Then input N whole number scores, one per line, into a list. Every score gets 5 bonus points, but no score can go above 100.\n\nPrint the new scores one per line, in the same order.\n\nFor example, `60`, `98` and `100` prints `65`, `100` and `100`.",
+    hints: ["Work through the list by index so you can replace each item: `scores[i] = ...`.", "For each score, add 5. If the result is over 100, set it back to 100."],
+    inputs: ["3\n60\n98\n100", "1\n0", "4\n95\n96\n94\n50", "2\n100\n1"],
+    solution: `n = int(input())\nscores = []\nfor i in range(n):\n    scores.append(int(input()))\nfor i in range(len(scores)):\n    scores[i] = scores[i] + 5\n    if scores[i] > 100:\n        scores[i] = 100\nfor score in scores:\n    print(score)`,
+  },
+  {
+    key: "19", tier: 4, difficulty: 4, xp: 30, title: "Numbers in order?",
+    brief: "Input a whole number N (at least 1). Then input N whole numbers, one per line, into a list. Print `Sorted` if each number is bigger than or equal to the one before it (the list goes upwards, ties allowed). Otherwise print `Not sorted`.\n\nA list with just one number counts as `Sorted`.",
+    hints: ["Compare each number with the one before it. If any number is smaller than the one before it, the list is not sorted.", "Loop with `for i in range(1, len(numbers)):` and compare `numbers[i]` with `numbers[i - 1]`. Use a variable like `in_order = True` and set it to `False` if you find a problem."],
+    inputs: ["3\n1\n2\n3", "3\n3\n2\n1", "4\n1\n2\n2\n5", "1\n9", "4\n1\n3\n2\n4", "2\n5\n4"],
+    solution: `n = int(input())\nnumbers = []\nfor i in range(n):\n    numbers.append(int(input()))\nin_order = True\nfor i in range(1, len(numbers)):\n    if numbers[i] < numbers[i - 1]:\n        in_order = False\nif in_order:\n    print("Sorted")\nelse:\n    print("Not sorted")`,
+  },
+  {
+    key: "20", tier: 4, difficulty: 4, xp: 30, title: "Best and worst",
+    brief: "Input a whole number N (at least 1). Then input N pairs of lines: a student's name, then their test mark (a whole number). Print two lines:\n- `Highest: <name> with <mark>`\n- `Lowest: <name> with <mark>`\n\nIf two students tie for highest or lowest, choose the one who was entered first.",
+    hints: ["Keep two lists, one of names and one of marks, and add to both inside the loop. The item at each index goes together.", "Find the position of the biggest mark, then use it to read the matching name: `best = 0`, and replace it with `i` whenever `marks[i] > marks[best]`. Use `>` (not `>=`) so ties keep the first."],
+    inputs: ["3\nAda\n72\nBo\n90\nCal\n55", "1\nSam\n40", "3\nA\n50\nB\n50\nC\n50", "4\nAda\n60\nBo\n80\nCal\n80\nDee\n20"],
+    solution: `n = int(input())\nnames = []\nmarks = []\nfor i in range(n):\n    names.append(input())\n    marks.append(int(input()))\nbest = 0\nworst = 0\nfor i in range(len(marks)):\n    if marks[i] > marks[best]:\n        best = i\n    if marks[i] < marks[worst]:\n        worst = i\nprint("Highest: " + names[best] + " with " + str(marks[best]))\nprint("Lowest: " + names[worst] + " with " + str(marks[worst]))`,
+  },
+  {
+    key: "s3", tier: 4, difficulty: 5, xp: 40, stretch: true, title: "🌟 Two lists, one total",
+    brief: "A shop keeps two lists side by side: the price of each item and how many of it were sold. The first price goes with the first quantity, and so on.\n\nInput a whole number N (at least 1). Then input N prices (whole pounds), one per line. Then input N quantities, one per line.\n\nPrint `Total takings: £` followed by the total, where each item earns its price times its quantity.\n\nFor example, prices `2`, `5` and quantities `10`, `3` prints `Total takings: £35`.",
+    hints: ["Read the prices into one list first, then the quantities into a second list.", "Loop with `for i in range(n):` and add `prices[i] * quantities[i]` to a running total."],
+    inputs: ["2\n2\n5\n10\n3", "1\n7\n3", "3\n1\n1\n1\n5\n5\n5", "3\n10\n20\n30\n0\n1\n2", "4\n3\n4\n5\n6\n1\n2\n3\n4"],
+    solution: `n = int(input())\nprices = []\nquantities = []\nfor i in range(n):\n    prices.append(int(input()))\nfor i in range(n):\n    quantities.append(int(input()))\ntotal = 0\nfor i in range(n):\n    total = total + prices[i] * quantities[i]\nprint("Total takings: £" + str(total))`,
+  },
+  {
+    key: "s4", tier: 4, difficulty: 5, xp: 40, stretch: true, title: "🌟 Second smallest",
+    brief: "Input a whole number N (at least 2). Then input N whole numbers, one per line, into a list. Print the second smallest DIFFERENT value in the list.\n\nFor example, `4`, `1`, `1`, `3` has the different values 1, 3 and 4, so it prints `3`. You can assume there are at least two different values in the list.",
+    hints: ["Duplicates must not count twice. One way is to build a new list that only adds a number if it is not already in it.", "Then sort the new list with `.sort()` (smallest first), and the answer is the item at index 1."],
+    inputs: ["4\n4\n1\n1\n3", "2\n5\n2", "5\n9\n9\n8\n8\n7", "3\n-1\n-1\n0", "6\n10\n3\n3\n3\n2\n2"],
+    solution: `n = int(input())\nnumbers = []\nfor i in range(n):\n    numbers.append(int(input()))\nunique = []\nfor number in numbers:\n    if number not in unique:\n        unique.append(number)\nunique.sort()\nprint(unique[1])`,
+  },
+];

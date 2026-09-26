@@ -1562,6 +1562,352 @@
       ]
     },
     {
+      "slug": "gcse-strings-p-11",
+      "tier": 1,
+      "difficulty": 1,
+      "xp": 10,
+      "title": "How long is the word?",
+      "brief": "Input a word. Print `It has ` followed by the number of characters in the word, then ` letters`.\n\nFor example, `apple` prints `It has 5 letters`. Always write the word `letters` like this, even when the word has just 1.",
+      "starter": "",
+      "hints": [
+        "`len()` gives the number of characters in a piece of text.",
+        "`print(\"It has \" + str(len(word)) + \" letters\")`"
+      ],
+      "tests": [
+        {
+          "stdin": "apple",
+          "expect": "It has 5 letters"
+        },
+        {
+          "stdin": "a",
+          "expect": "It has 1 letters"
+        },
+        {
+          "stdin": "encyclopedia",
+          "expect": "It has 12 letters"
+        },
+        {
+          "stdin": "hi there",
+          "expect": "It has 8 letters"
+        }
+      ]
+    },
+    {
+      "slug": "gcse-strings-p-12",
+      "tier": 1,
+      "difficulty": 1,
+      "xp": 10,
+      "title": "Capital letters",
+      "brief": "Input some text. Print it in capital letters (upper case).\n\nFor example, `hello there` prints `HELLO THERE`.",
+      "starter": "",
+      "hints": [
+        "Text has built-in methods. One of them turns every letter into a capital.",
+        "`text.upper()` gives the capital-letter version of `text`."
+      ],
+      "tests": [
+        {
+          "stdin": "hello there",
+          "expect": "HELLO THERE"
+        },
+        {
+          "stdin": "Python",
+          "expect": "PYTHON"
+        },
+        {
+          "stdin": "abc123",
+          "expect": "ABC123"
+        },
+        {
+          "stdin": "ALREADY LOUD",
+          "expect": "ALREADY LOUD"
+        }
+      ]
+    },
+    {
+      "slug": "gcse-strings-p-13",
+      "tier": 2,
+      "difficulty": 2,
+      "xp": 15,
+      "title": "First three letters",
+      "brief": "Input a word that has at least 3 letters. Print just its first three letters.\n\nFor example, `computer` prints `com`.",
+      "starter": "",
+      "hints": [
+        "You can take part of a piece of text with a slice, written with square brackets and a colon.",
+        "`word[0:3]` gives the characters at positions 0, 1 and 2 (the end position is not included)."
+      ],
+      "tests": [
+        {
+          "stdin": "computer",
+          "expect": "com"
+        },
+        {
+          "stdin": "cat",
+          "expect": "cat"
+        },
+        {
+          "stdin": "python",
+          "expect": "pyt"
+        },
+        {
+          "stdin": "abcdef",
+          "expect": "abc"
+        }
+      ]
+    },
+    {
+      "slug": "gcse-strings-p-14",
+      "tier": 2,
+      "difficulty": 2,
+      "xp": 15,
+      "title": "Which letter?",
+      "brief": "Input a word, then a whole number N. Print the letter at position N in the word, counting from 0 for the first letter.\n\nFor example, `python` and `2` prints `t`. You can assume N is a valid position in the word.",
+      "starter": "",
+      "hints": [
+        "The first letter of a word is at position 0, not 1.",
+        "Square brackets pick one character: `word[n]` (remember to convert the input N with `int()`)."
+      ],
+      "tests": [
+        {
+          "stdin": "python\n2",
+          "expect": "t"
+        },
+        {
+          "stdin": "python\n0",
+          "expect": "p"
+        },
+        {
+          "stdin": "hello\n4",
+          "expect": "o"
+        },
+        {
+          "stdin": "a\n0",
+          "expect": "a"
+        },
+        {
+          "stdin": "computer\n5",
+          "expect": "t"
+        }
+      ]
+    },
+    {
+      "slug": "gcse-strings-p-15",
+      "tier": 2,
+      "difficulty": 2,
+      "xp": 15,
+      "title": "Starts with a vowel?",
+      "brief": "Input a word in lower case. Print `Vowel` if it starts with a, e, i, o or u. Otherwise print `Consonant`.\n\nFor example, `orange` prints `Vowel` and `banana` prints `Consonant`.",
+      "starter": "",
+      "hints": [
+        "Look at just the first letter, `word[0]`.",
+        "Test it with `in`: `if word[0] in \"aeiou\":`."
+      ],
+      "tests": [
+        {
+          "stdin": "orange",
+          "expect": "Vowel"
+        },
+        {
+          "stdin": "banana",
+          "expect": "Consonant"
+        },
+        {
+          "stdin": "egg",
+          "expect": "Vowel"
+        },
+        {
+          "stdin": "sky",
+          "expect": "Consonant"
+        },
+        {
+          "stdin": "umbrella",
+          "expect": "Vowel"
+        },
+        {
+          "stdin": "a",
+          "expect": "Vowel"
+        }
+      ]
+    },
+    {
+      "slug": "gcse-strings-p-16",
+      "tier": 3,
+      "difficulty": 3,
+      "xp": 20,
+      "title": "Count the words with a letter",
+      "brief": "Input a whole number N (at least 1). Then input N words, one per line, followed by a single letter. Print how many of the N words contain that letter (anywhere in the word).\n\nFor example, the words `apple`, `banana`, `cherry` and the letter `a` prints `2`. The comparison is exact, so `A` and `a` are different.",
+      "starter": "",
+      "hints": [
+        "Read the N words first, then the letter (or read the words into a list as you go).",
+        "`if letter in word:` tells you whether a word contains the letter. Keep a counter."
+      ],
+      "tests": [
+        {
+          "stdin": "3\napple\nbanana\ncherry\na",
+          "expect": "2"
+        },
+        {
+          "stdin": "3\napple\nbanana\ncherry\nz",
+          "expect": "0"
+        },
+        {
+          "stdin": "2\nsee\nbee\ne",
+          "expect": "2"
+        },
+        {
+          "stdin": "1\nSam\ns",
+          "expect": "0"
+        },
+        {
+          "stdin": "4\ndog\ncat\nbat\nfish\nt",
+          "expect": "2"
+        }
+      ]
+    },
+    {
+      "slug": "gcse-strings-p-17",
+      "tier": 3,
+      "difficulty": 3,
+      "xp": 20,
+      "title": "Initials",
+      "brief": "Input a first name, then a last name. Print their initials in capital letters, each followed by a full stop, like `A.L.`\n\nFor example, `ada` and `lovelace` prints `A.L.`",
+      "starter": "",
+      "hints": [
+        "The initial is the first character of each name, `name[0]`, made into a capital with `.upper()`.",
+        "Join: first initial, `\".\"`, last initial, `\".\"`."
+      ],
+      "tests": [
+        {
+          "stdin": "ada\nlovelace",
+          "expect": "A.L."
+        },
+        {
+          "stdin": "Sam\nlee",
+          "expect": "S.L."
+        },
+        {
+          "stdin": "mia\nKHAN",
+          "expect": "M.K."
+        },
+        {
+          "stdin": "z\ny",
+          "expect": "Z.Y."
+        }
+      ]
+    },
+    {
+      "slug": "gcse-strings-p-18",
+      "tier": 3,
+      "difficulty": 3,
+      "xp": 20,
+      "title": "Password strength",
+      "brief": "Input a password. Print `Strong` if it has all three of these:\n- at least 8 characters\n- at least one digit (0 to 9)\n- at least one capital letter (A to Z)\n\nOtherwise print `Weak`.",
+      "starter": "",
+      "hints": [
+        "Check the length first with `len()`. Then use a loop through the characters to look for a digit and a capital.",
+        "`for ch in password:` then `if ch in \"0123456789\":` sets a variable such as `has_digit = True`. Capitals: `if ch in \"ABCDEFGHIJKLMNOPQRSTUVWXYZ\":`."
+      ],
+      "tests": [
+        {
+          "stdin": "Password1",
+          "expect": "Strong"
+        },
+        {
+          "stdin": "password1",
+          "expect": "Weak"
+        },
+        {
+          "stdin": "PASSWORD1",
+          "expect": "Strong"
+        },
+        {
+          "stdin": "Password",
+          "expect": "Weak"
+        },
+        {
+          "stdin": "Pass1",
+          "expect": "Weak"
+        },
+        {
+          "stdin": "Abcdefg1",
+          "expect": "Strong"
+        },
+        {
+          "stdin": "12345678",
+          "expect": "Weak"
+        }
+      ]
+    },
+    {
+      "slug": "gcse-strings-p-19",
+      "tier": 4,
+      "difficulty": 4,
+      "xp": 30,
+      "title": "Swap the case",
+      "brief": "Input some text. Print it with every capital letter changed to lower case and every lower case letter changed to a capital. Characters that are not letters (spaces, digits, punctuation) stay the same.\n\nFor example, `Hello World 1!` prints `hELLO wORLD 1!`.",
+      "starter": "",
+      "hints": [
+        "Go through the text one character at a time and build up a new piece of text.",
+        "For each character, `ch.isupper()` is True for capitals and `ch.islower()` for lower case. Use `.lower()` or `.upper()` to change it, otherwise keep it as it is."
+      ],
+      "tests": [
+        {
+          "stdin": "Hello World 1!",
+          "expect": "hELLO wORLD 1!"
+        },
+        {
+          "stdin": "abc",
+          "expect": "ABC"
+        },
+        {
+          "stdin": "ABC",
+          "expect": "abc"
+        },
+        {
+          "stdin": "Python 3",
+          "expect": "pYTHON 3"
+        },
+        {
+          "stdin": "mIxEd CaSe",
+          "expect": "MiXeD cAsE"
+        }
+      ]
+    },
+    {
+      "slug": "gcse-strings-p-20",
+      "tier": 4,
+      "difficulty": 4,
+      "xp": 30,
+      "title": "Longest word",
+      "brief": "Input a sentence made of words separated by single spaces. Print the longest word. If two or more words are tied for longest, print the first of them.\n\nFor example, `the quick brown fox` prints `quick`.",
+      "starter": "",
+      "hints": [
+        "`sentence.split()` breaks the text into a list of words.",
+        "Keep a variable `longest = \"\"`. For each word, if `len(word) > len(longest)`, replace it. Using `>` (not `>=`) keeps the first of any tie."
+      ],
+      "tests": [
+        {
+          "stdin": "the quick brown fox",
+          "expect": "quick"
+        },
+        {
+          "stdin": "hello",
+          "expect": "hello"
+        },
+        {
+          "stdin": "a bb cc d",
+          "expect": "bb"
+        },
+        {
+          "stdin": "one two six",
+          "expect": "one"
+        },
+        {
+          "stdin": "python is great fun",
+          "expect": "python"
+        }
+      ]
+    },
+    {
       "slug": "gcse-strings-p-s1",
       "tier": 4,
       "difficulty": 5,
@@ -1638,6 +1984,82 @@
         {
           "stdin": "x",
           "expect": "Palindrome"
+        }
+      ]
+    },
+    {
+      "slug": "gcse-strings-p-s3",
+      "tier": 4,
+      "difficulty": 5,
+      "xp": 40,
+      "stretch": true,
+      "title": "🌟 Anagram check",
+      "brief": "Two words are anagrams if they use exactly the same letters the same number of times, just in a different order (for example `listen` and `silent`).\n\nInput two words in lower case, one per line. Print `Anagrams` if they are anagrams, otherwise print `Not anagrams`. A word is not counted as an anagram of itself in this task - if both words are exactly the same, print `Not anagrams`.",
+      "starter": "",
+      "hints": [
+        "Two words with the same letters will look identical if you sort their letters into alphabetical order.",
+        "`sorted(word)` gives a list of a word's letters in order. Compare `sorted(a) == sorted(b)`, and also check that `a != b`."
+      ],
+      "tests": [
+        {
+          "stdin": "listen\nsilent",
+          "expect": "Anagrams"
+        },
+        {
+          "stdin": "cat\nact",
+          "expect": "Anagrams"
+        },
+        {
+          "stdin": "cat\ncar",
+          "expect": "Not anagrams"
+        },
+        {
+          "stdin": "hello\nhello",
+          "expect": "Not anagrams"
+        },
+        {
+          "stdin": "abc\nabcd",
+          "expect": "Not anagrams"
+        },
+        {
+          "stdin": "dusty\nstudy",
+          "expect": "Anagrams"
+        }
+      ]
+    },
+    {
+      "slug": "gcse-strings-p-s4",
+      "tier": 4,
+      "difficulty": 5,
+      "xp": 40,
+      "stretch": true,
+      "title": "🌟 Compress the spaces",
+      "brief": "Input some text that may contain extra spaces (several spaces in a row, or spaces at the start or end). Print the text with every group of spaces replaced by a single space, and no spaces at the very start or end.\n\nFor example, `  a   b  c ` prints `a b c`.",
+      "starter": "",
+      "hints": [
+        "`text.split()` with nothing inside the brackets splits on any amount of spaces and ignores the ones at the ends.",
+        "Join the pieces back together with single spaces: `\" \".join(words)`."
+      ],
+      "tests": [
+        {
+          "stdin": "  a   b  c ",
+          "expect": "a b c"
+        },
+        {
+          "stdin": "hello world",
+          "expect": "hello world"
+        },
+        {
+          "stdin": "one",
+          "expect": "one"
+        },
+        {
+          "stdin": "   lots    of   space   ",
+          "expect": "lots of space"
+        },
+        {
+          "stdin": "a  b",
+          "expect": "a b"
         }
       ]
     }

@@ -1,0 +1,88 @@
+// More practice for "Functions/subprograms": def, parameters, return, calling one function from another.
+// Every brief names the function and its parameters, then says how to test it (input, call, print).
+export const tasks = [
+  {
+    key: "11", tier: 1, difficulty: 1, xp: 10, title: "Say goodbye",
+    brief: "Write a function `goodbye(name)` that returns the text `Goodbye, ` followed by the name. Input a name, call your function with it, then print what it returns.\n\nFor example, `Sam` prints `Goodbye, Sam`.",
+    hints: ["A function is defined with `def`. Give it one parameter, `name`, and use `return` to hand the answer back.", "`def goodbye(name):` then, indented, `return \"Goodbye, \" + name`. Outside the function, call it and print the result."],
+    inputs: ["Sam", "Mia Rose", "A"],
+    solution: `def goodbye(name):\n    return "Goodbye, " + name\n\nname = input()\nprint(goodbye(name))`,
+  },
+  {
+    key: "12", tier: 1, difficulty: 1, xp: 10, title: "Add two numbers",
+    brief: "Write a function `add(a, b)` that returns the two numbers added together. Input two whole numbers (one per line), call your function, then print the result.",
+    hints: ["The function needs two parameters, separated by a comma.", "`def add(a, b):` then `return a + b`. Remember to convert the inputs with `int()` before calling it."],
+    inputs: ["3\n4", "0\n0", "-5\n2", "100\n250"],
+    solution: `def add(a, b):\n    return a + b\n\nx = int(input())\ny = int(input())\nprint(add(x, y))`,
+  },
+  {
+    key: "13", tier: 2, difficulty: 2, xp: 15, title: "Is it positive?",
+    brief: "Write a function `is_positive(n)` that returns `True` if the number is more than 0, and `False` otherwise (0 is not positive). Input a whole number, call your function, then print the result.\n\nFor example, `5` prints `True` and `0` prints `False`.",
+    hints: ["A comparison such as `n > 0` already gives you `True` or `False`.", "`return n > 0` is a complete function body."],
+    inputs: ["5", "0", "-3", "1", "-1"],
+    solution: `def is_positive(n):\n    return n > 0\n\nn = int(input())\nprint(is_positive(n))`,
+  },
+  {
+    key: "14", tier: 2, difficulty: 2, xp: 15, title: "Rectangle area function",
+    brief: "Write a function `area(width, height)` that returns the area of a rectangle (width times height). Input the width and then the height (whole numbers, one per line), call your function, then print `Area: ` followed by the value it returns.\n\nFor example, `4` and `3` prints `Area: 12`.",
+    hints: ["The function does the maths and returns it. The printing happens outside, where you call it.", "`return width * height`, and then `print(\"Area: \" + str(area(w, h)))`."],
+    inputs: ["4\n3", "1\n1", "10\n7", "0\n5"],
+    solution: `def area(width, height):\n    return width * height\n\nw = int(input())\nh = int(input())\nprint("Area: " + str(area(w, h)))`,
+  },
+  {
+    key: "15", tier: 2, difficulty: 2, xp: 15, title: "Print a row of stars",
+    brief: "Write a procedure `stars(n)` that PRINTS a row of `n` asterisks (`*`) on one line. It does not need to return anything. Input a whole number, then call your procedure with it.\n\nFor example, `4` prints `****`.",
+    hints: ["A procedure does its job with `print` inside it, instead of using `return`.", "Inside the procedure, build the row with a loop, or repeat the star: `\"*\" * n`. Then call `stars(n)` on its own line."],
+    inputs: ["4", "1", "7", "10"],
+    solution: `def stars(n):\n    print("*" * n)\n\nn = int(input())\nstars(n)`,
+  },
+  {
+    key: "16", tier: 3, difficulty: 3, xp: 20, title: "Grade from a mark",
+    brief: "Write a function `grade(mark)` that returns a letter for a mark out of 100: `A` for 70 or more, `B` for 60 to 69, `C` for 50 to 59, and `F` for below 50. Input a mark, call your function, then print the letter it returns.",
+    hints: ["Use `if`, `elif` and `else` inside the function, with a `return` for each case.", "Start at the top: `if mark >= 70: return \"A\"`, then `elif mark >= 60:` and so on. Finish with `else: return \"F\"`."],
+    inputs: ["95", "70", "69", "60", "59", "50", "49", "0"],
+    solution: `def grade(mark):\n    if mark >= 70:\n        return "A"\n    elif mark >= 60:\n        return "B"\n    elif mark >= 50:\n        return "C"\n    else:\n        return "F"\n\nmark = int(input())\nprint(grade(mark))`,
+  },
+  {
+    key: "17", tier: 3, difficulty: 3, xp: 20, title: "Count the vowels",
+    brief: "Write a function `count_vowels(text)` that returns how many vowels (a, e, i, o, u, in lower case) there are in the text. Input some text, call your function, then print the number.\n\nFor example, `education` prints `5`. You can assume the text is all in lower case.",
+    hints: ["Loop through every character of `text` and keep a counter.", "`for ch in text:` then `if ch in \"aeiou\":` add 1 to the counter. Return the counter at the end, after the loop."],
+    inputs: ["education", "sky", "aeiou", "hello world", "a"],
+    solution: `def count_vowels(text):\n    count = 0\n    for ch in text:\n        if ch in "aeiou":\n            count = count + 1\n    return count\n\ntext = input()\nprint(count_vowels(text))`,
+  },
+  {
+    key: "18", tier: 3, difficulty: 3, xp: 20, title: "Average of a list",
+    brief: "Write a function `average(numbers)` that takes a list of numbers and returns their mean. Input a whole number N (at least 1), then N whole numbers (one per line) into a list. Call your function with the list and print the result, rounded to 2 decimal places.\n\nFor example, `3` followed by `1`, `2`, `4` prints `2.33`.",
+    hints: ["The parameter is a whole list. Inside the function you can use `sum(numbers)` and `len(numbers)`.", "`return sum(numbers) / len(numbers)`. Round it when you print: `print(round(average(numbers), 2))`."],
+    inputs: ["3\n1\n2\n4", "1\n9", "2\n5\n6", "4\n10\n10\n10\n10", "3\n-1\n0\n1"],
+    solution: `def average(numbers):\n    return sum(numbers) / len(numbers)\n\nn = int(input())\nnumbers = []\nfor i in range(n):\n    numbers.append(int(input()))\nprint(round(average(numbers), 2))`,
+  },
+  {
+    key: "19", tier: 4, difficulty: 4, xp: 30, title: "Is it prime?",
+    brief: "A prime number is a whole number bigger than 1 that can only be divided exactly by 1 and itself.\n\nWrite a function `is_prime(n)` that returns `True` if `n` is prime and `False` if it is not. Input a whole number (at least 1), call your function, then print `Prime` or `Not prime`.\n\nFor example, `7` prints `Prime`, and `9` and `1` print `Not prime`.",
+    hints: ["Any number smaller than 2 is not prime. For others, try dividing by every number from 2 up to just below `n`.", "If `n % i == 0` for any `i`, `n` is not prime, so `return False`. If the loop finishes without finding one, `return True`."],
+    inputs: ["7", "9", "1", "2", "15", "13", "20", "97"],
+    solution: `def is_prime(n):\n    if n < 2:\n        return False\n    for i in range(2, n):\n        if n % i == 0:\n            return False\n    return True\n\nn = int(input())\nif is_prime(n):\n    print("Prime")\nelse:\n    print("Not prime")`,
+  },
+  {
+    key: "20", tier: 4, difficulty: 4, xp: 30, title: "Two functions together",
+    brief: "Write two functions:\n- `square(n)` returns `n` multiplied by itself\n- `sum_of_squares(a, b)` returns the square of `a` plus the square of `b`, and it must use your `square` function to do it\n\nInput two whole numbers (one per line), call `sum_of_squares`, and print the result.\n\nFor example, `3` and `4` prints `25`.",
+    hints: ["Write `square` first, on its own. Then `sum_of_squares` can call it, just like you call other functions.", "`return square(a) + square(b)`"],
+    inputs: ["3\n4", "0\n0", "5\n1", "-2\n2", "10\n10"],
+    solution: `def square(n):\n    return n * n\n\ndef sum_of_squares(a, b):\n    return square(a) + square(b)\n\na = int(input())\nb = int(input())\nprint(sum_of_squares(a, b))`,
+  },
+  {
+    key: "s3", tier: 4, difficulty: 5, xp: 40, stretch: true, title: "🌟 Ticket price calculator",
+    brief: "A cinema sells tickets with these rules:\n- adult ticket: £10, child ticket (under 16): £6\n- if the person is 65 or over, they pay £7\n- on Tuesdays every ticket is £2 cheaper\n\nWrite a function `ticket_price(age, day)` that returns the price as a whole number. Input an age (whole number), then the day as a lower case word (for example `tuesday`), call your function, and print `Price: £` followed by the price.\n\nFor example, `30` and `monday` prints `Price: £10`, and `10` and `tuesday` prints `Price: £4`.",
+    hints: ["Work out the base price from the age first (three cases), then take off 2 if the day is `tuesday`.", "Inside the function: set `price` in an `if / elif / else` on `age`, then `if day == \"tuesday\": price = price - 2`, then `return price`."],
+    inputs: ["30\nmonday", "10\nmonday", "15\nmonday", "16\nmonday", "65\nmonday", "80\ntuesday", "30\ntuesday", "10\ntuesday"],
+    solution: `def ticket_price(age, day):\n    if age < 16:\n        price = 6\n    elif age >= 65:\n        price = 7\n    else:\n        price = 10\n    if day == "tuesday":\n        price = price - 2\n    return price\n\nage = int(input())\nday = input()\nprint("Price: £" + str(ticket_price(age, day)))`,
+  },
+  {
+    key: "s4", tier: 4, difficulty: 5, xp: 40, stretch: true, title: "🌟 Digit sum function",
+    brief: "Write a function `digit_sum(n)` that returns the sum of the digits of a whole number, and a second function `is_lucky(n)` that returns `True` if the digit sum of `n` is exactly 10 and `False` otherwise. `is_lucky` must use `digit_sum`.\n\nInput a whole number (0 or more), then print `Lucky` or `Unlucky`.\n\nFor example, `82` (8 + 2 = 10) prints `Lucky`, and `83` prints `Unlucky`.",
+    hints: ["To add up the digits, keep taking off the last digit with `n % 10` and removing it with `n // 10`, while `n > 0`.", "`is_lucky` is short: `return digit_sum(n) == 10`."],
+    inputs: ["82", "83", "19", "5", "0", "424", "1234"],
+    solution: `def digit_sum(n):\n    total = 0\n    while n > 0:\n        total = total + n % 10\n        n = n // 10\n    return total\n\ndef is_lucky(n):\n    return digit_sum(n) == 10\n\nn = int(input())\nif is_lucky(n):\n    print("Lucky")\nelse:\n    print("Unlucky")`,
+  },
+];

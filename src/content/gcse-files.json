@@ -1454,6 +1454,304 @@
       ]
     },
     {
+      "slug": "gcse-files-p-11",
+      "tier": 1,
+      "difficulty": 1,
+      "xp": 10,
+      "title": "Write a message",
+      "brief": "Input a message. Write it to a file called `message.txt`. Then open `message.txt` again, read it, and print what is in it.",
+      "starter": "",
+      "hints": [
+        "Open the file with `open(\"message.txt\", \"w\")` to write. Remember to close it when you are done writing.",
+        "Then open it again with mode `\"r\"` and use `.read()` to get the text back."
+      ],
+      "tests": [
+        {
+          "stdin": "Hello there",
+          "expect": "Hello there"
+        },
+        {
+          "stdin": "Python is fun",
+          "expect": "Python is fun"
+        },
+        {
+          "stdin": "x",
+          "expect": "x"
+        }
+      ]
+    },
+    {
+      "slug": "gcse-files-p-12",
+      "tier": 1,
+      "difficulty": 1,
+      "xp": 10,
+      "title": "Save a name",
+      "brief": "Input a name. Write it to a file called `name.txt`. Then reopen the file, read the name, and print `Saved name: ` followed by the name.\n\nFor example, `Sam` prints `Saved name: Sam`.",
+      "starter": "",
+      "hints": [
+        "Write the name to `name.txt` using mode `\"w\"`, then close the file.",
+        "Reopen with mode `\"r\"`, use `.read()`, and join it to the text: `\"Saved name: \" + saved`."
+      ],
+      "tests": [
+        {
+          "stdin": "Sam",
+          "expect": "Saved name: Sam"
+        },
+        {
+          "stdin": "Mia Rose",
+          "expect": "Saved name: Mia Rose"
+        },
+        {
+          "stdin": "A",
+          "expect": "Saved name: A"
+        }
+      ]
+    },
+    {
+      "slug": "gcse-files-p-13",
+      "tier": 2,
+      "difficulty": 2,
+      "xp": 15,
+      "title": "Write three lines",
+      "brief": "Input three words, one per line. Write them to a file called `words.txt`, one word per line. Reopen the file and print its lines, one per line, exactly as they were written.",
+      "starter": "",
+      "hints": [
+        "Each line in a text file ends with a newline character, `\"\\n\"`. Add one after every word you write.",
+        "Read the file back with a loop: `for line in file:` then `print(line.strip())`. `.strip()` removes the newline from the end of each line so there are no blank lines."
+      ],
+      "tests": [
+        {
+          "stdin": "cat\ndog\nfish",
+          "expect": "cat\ndog\nfish"
+        },
+        {
+          "stdin": "a\nb\nc",
+          "expect": "a\nb\nc"
+        },
+        {
+          "stdin": "one\ntwo\nthree",
+          "expect": "one\ntwo\nthree"
+        }
+      ]
+    },
+    {
+      "slug": "gcse-files-p-14",
+      "tier": 2,
+      "difficulty": 2,
+      "xp": 15,
+      "title": "Add to a diary",
+      "brief": "A diary file called `diary.txt` starts with one line: `Day 1`.\n\nInput a second entry and ADD it to the end of the file on a new line (do not wipe out the first line). Then reopen the file and print all of its lines, one per line.\n\nFor example, the entry `Went swimming` prints `Day 1` then `Went swimming`.",
+      "starter": "",
+      "hints": [
+        "First create the file with `Day 1` in it. Then open it again in append mode, `\"a\"`, which adds to the end instead of overwriting.",
+        "Write `\"\\n\"` before the new entry (or after `Day 1`) so that they end up on separate lines."
+      ],
+      "tests": [
+        {
+          "stdin": "Went swimming",
+          "expect": "Day 1\nWent swimming"
+        },
+        {
+          "stdin": "Rainy day",
+          "expect": "Day 1\nRainy day"
+        },
+        {
+          "stdin": "Nothing",
+          "expect": "Day 1\nNothing"
+        }
+      ]
+    },
+    {
+      "slug": "gcse-files-p-15",
+      "tier": 2,
+      "difficulty": 2,
+      "xp": 15,
+      "title": "Number of scores",
+      "brief": "Input a whole number N (at least 1), then N scores (whole numbers, one per line). Write the scores to `scores.txt`, one per line. Then reopen the file and print `Scores saved: ` followed by how many lines the file has.\n\nFor example, `3` scores prints `Scores saved: 3`.",
+      "starter": "",
+      "hints": [
+        "Write one score per line, each followed by `\"\\n\"`.",
+        "When you read the file back, count the lines with a loop and a counter (or use `len(file.readlines())`)."
+      ],
+      "tests": [
+        {
+          "stdin": "3\n10\n20\n30",
+          "expect": "Scores saved: 3"
+        },
+        {
+          "stdin": "1\n5",
+          "expect": "Scores saved: 1"
+        },
+        {
+          "stdin": "5\n1\n2\n3\n4\n5",
+          "expect": "Scores saved: 5"
+        }
+      ]
+    },
+    {
+      "slug": "gcse-files-p-16",
+      "tier": 3,
+      "difficulty": 3,
+      "xp": 20,
+      "title": "Total of the file",
+      "brief": "Input a whole number N (at least 1), then N whole numbers (one per line). Write them to a file called `numbers.txt`, one per line. Reopen the file and print the total of all the numbers in it.",
+      "starter": "",
+      "hints": [
+        "Everything read from a file is text, so you must change each line back into a number with `int()` before adding.",
+        "`for line in file:` then `total = total + int(line.strip())`."
+      ],
+      "tests": [
+        {
+          "stdin": "3\n4\n5\n6",
+          "expect": "15"
+        },
+        {
+          "stdin": "1\n9",
+          "expect": "9"
+        },
+        {
+          "stdin": "4\n-1\n1\n10\n-10",
+          "expect": "0"
+        },
+        {
+          "stdin": "2\n100\n200",
+          "expect": "300"
+        }
+      ]
+    },
+    {
+      "slug": "gcse-files-p-17",
+      "tier": 3,
+      "difficulty": 3,
+      "xp": 20,
+      "title": "Numbered lines",
+      "brief": "Input a whole number N (at least 1), then N lines of text. Write them to `notes.txt`, one per line. Reopen the file and print each line with its line number (starting at 1), a full stop and a space in front of it.\n\nFor example, the lines `milk` and `eggs` print `1. milk` and `2. eggs`.",
+      "starter": "",
+      "hints": [
+        "Keep a counter that starts at 1 and goes up by 1 for every line you read back.",
+        "`print(str(number) + \". \" + line.strip())`, then `number = number + 1`."
+      ],
+      "tests": [
+        {
+          "stdin": "2\nmilk\neggs",
+          "expect": "1. milk\n2. eggs"
+        },
+        {
+          "stdin": "1\nbread",
+          "expect": "1. bread"
+        },
+        {
+          "stdin": "4\na\nb\nc\nd",
+          "expect": "1. a\n2. b\n3. c\n4. d"
+        },
+        {
+          "stdin": "3\nred apples\ngreen pears\nblue plums",
+          "expect": "1. red apples\n2. green pears\n3. blue plums"
+        }
+      ]
+    },
+    {
+      "slug": "gcse-files-p-18",
+      "tier": 3,
+      "difficulty": 3,
+      "xp": 20,
+      "title": "Is the name on the list?",
+      "brief": "Input a whole number N (at least 1), then N names (one per line). Write the names to `names.txt`, one per line. Then input one more name to look for. Reopen the file and print `Found` if that name is on one of the lines, otherwise `Not found`.\n\nThe comparison is exact, so `sam` and `Sam` are different.",
+      "starter": "",
+      "hints": [
+        "Read each line back and remove the newline with `.strip()` before comparing it to the name you are looking for.",
+        "Set `found = False` before the loop, change it to `True` if a line matches, and print the answer after the loop."
+      ],
+      "tests": [
+        {
+          "stdin": "3\nAda\nBo\nCal\nBo",
+          "expect": "Found"
+        },
+        {
+          "stdin": "3\nAda\nBo\nCal\nDee",
+          "expect": "Not found"
+        },
+        {
+          "stdin": "1\nSam\nsam",
+          "expect": "Not found"
+        },
+        {
+          "stdin": "2\nA\nB\nA",
+          "expect": "Found"
+        },
+        {
+          "stdin": "4\nx\ny\nz\nw\nw",
+          "expect": "Found"
+        }
+      ]
+    },
+    {
+      "slug": "gcse-files-p-19",
+      "tier": 4,
+      "difficulty": 4,
+      "xp": 30,
+      "title": "High scores table",
+      "brief": "Input a whole number N (at least 1). Then input N pairs of lines: a player's name, then their score (a whole number). Write each pair to `scores.txt` on ONE line, in the form `name,score` (for example `Ada,72`).\n\nReopen the file and print the name of the player with the highest score followed by their score, in the form `<name> won with <score>`. If two players tie for the highest, print the one who was entered first.",
+      "starter": "",
+      "hints": [
+        "Each line of the file has a comma in it. Split it into the two parts with `line.strip().split(\",\")`.",
+        "Remember to change the score part to a number with `int()`. Keep the best score and best name so far, and replace them only when a score is strictly bigger."
+      ],
+      "tests": [
+        {
+          "stdin": "3\nAda\n72\nBo\n90\nCal\n55",
+          "expect": "Bo won with 90"
+        },
+        {
+          "stdin": "1\nSam\n40",
+          "expect": "Sam won with 40"
+        },
+        {
+          "stdin": "3\nA\n50\nB\n50\nC\n50",
+          "expect": "A won with 50"
+        },
+        {
+          "stdin": "4\nAda\n60\nBo\n80\nCal\n80\nDee\n20",
+          "expect": "Bo won with 80"
+        }
+      ]
+    },
+    {
+      "slug": "gcse-files-p-20",
+      "tier": 4,
+      "difficulty": 4,
+      "xp": 30,
+      "title": "Copy without blanks",
+      "brief": "Input a whole number N (at least 1), then N lines of text (some of which may be completely empty). Write all N lines to `original.txt`, one per line.\n\nThen read `original.txt` and write only the lines that are NOT empty to a second file, `clean.txt`. Finally, open `clean.txt` and print each of its lines, and after them print `Lines kept: ` followed by how many lines it has.",
+      "starter": "",
+      "hints": [
+        "An empty line is one where `line.strip() == \"\"`. Skip those when copying.",
+        "Keep a counter for the lines you write to `clean.txt`, then read that file back and print each line, and finally the count."
+      ],
+      "tests": [
+        {
+          "stdin": "3\na\n\nb",
+          "expect": "a\nb\nLines kept: 2"
+        },
+        {
+          "stdin": "2\nhello\nworld",
+          "expect": "hello\nworld\nLines kept: 2"
+        },
+        {
+          "stdin": "4\n\nx\n\ny",
+          "expect": "x\ny\nLines kept: 2"
+        },
+        {
+          "stdin": "1\nonly",
+          "expect": "only\nLines kept: 1"
+        },
+        {
+          "stdin": "5\nred\n\ngreen\n\nblue",
+          "expect": "red\ngreen\nblue\nLines kept: 3"
+        }
+      ]
+    },
+    {
       "slug": "gcse-files-p-s1",
       "tier": 4,
       "difficulty": 5,
@@ -1518,6 +1816,74 @@
         {
           "stdin": "3\nA\n10\nB\n20\nC\n25",
           "expect": "A,10\nB,20\nC,25\nAverage,18.33"
+        }
+      ]
+    },
+    {
+      "slug": "gcse-files-p-s3",
+      "tier": 4,
+      "difficulty": 5,
+      "xp": 40,
+      "stretch": true,
+      "title": "🌟 Read a shopping file",
+      "brief": "Each line of a shopping file has an item and its price in pence, separated by a comma, like `bread,120`.\n\nInput a whole number N (at least 1), then N lines in that form. Write them to `shopping.txt`, one per line. Reopen the file and print:\n- `Items: ` followed by how many items there are\n- `Total: ` followed by the total price in pence\n- `Dearest: ` followed by the name of the item with the highest price (if there is a tie, the first of them)\n\nFor example, `bread,120` and `milk,85` prints `Items: 2`, `Total: 205`, `Dearest: bread`.",
+      "starter": "",
+      "hints": [
+        "Split each line at the comma to separate the name from the price, and use `int()` on the price.",
+        "Keep three variables while looping through the file: a count, a total, and the name and price of the dearest item so far."
+      ],
+      "tests": [
+        {
+          "stdin": "2\nbread,120\nmilk,85",
+          "expect": "Items: 2\nTotal: 205\nDearest: bread"
+        },
+        {
+          "stdin": "1\napples,300",
+          "expect": "Items: 1\nTotal: 300\nDearest: apples"
+        },
+        {
+          "stdin": "3\ntea,200\ncoffee,350\nsugar,150",
+          "expect": "Items: 3\nTotal: 700\nDearest: coffee"
+        },
+        {
+          "stdin": "3\na,100\nb,100\nc,50",
+          "expect": "Items: 3\nTotal: 250\nDearest: a"
+        },
+        {
+          "stdin": "4\nx,10\ny,20\nz,30\nw,5",
+          "expect": "Items: 4\nTotal: 65\nDearest: z"
+        }
+      ]
+    },
+    {
+      "slug": "gcse-files-p-s4",
+      "tier": 4,
+      "difficulty": 5,
+      "xp": 40,
+      "stretch": true,
+      "title": "🌟 Update a counter file",
+      "brief": "A game keeps its play count in a file called `plays.txt`. The file starts out holding the number 0 on one line.\n\nInput a whole number N (at least 1) for how many games are played. Repeat N times: open `plays.txt`, read the number in it, add 1, and write the new number back to the file (replacing the old one). After all N games, open the file one last time and print `Total plays: ` followed by the number in the file.\n\nFor example, `3` prints `Total plays: 3`.",
+      "starter": "",
+      "hints": [
+        "Create the file with `0` in it before the loop. In each round you need to read it, change it to a number with `int()`, add 1, and write it back with mode `\"w\"`.",
+        "Close the file after reading and after writing each time, so that the next round starts from the saved value."
+      ],
+      "tests": [
+        {
+          "stdin": "3",
+          "expect": "Total plays: 3"
+        },
+        {
+          "stdin": "1",
+          "expect": "Total plays: 1"
+        },
+        {
+          "stdin": "5",
+          "expect": "Total plays: 5"
+        },
+        {
+          "stdin": "10",
+          "expect": "Total plays: 10"
         }
       ]
     }
