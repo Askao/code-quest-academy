@@ -219,6 +219,25 @@
     font-family: var(--font-mono);
   }
 
+  /* JetBrains Mono fuses character pairs into single glyphs by default, so
+   * "==" shows as one long bar and "!=", ">=" and "<=" as merged symbols.
+   * For a learner that's actively misleading - "=" (assign) and "==" (compare)
+   * have to look like one equals sign and two equals signs - so code is set
+   * with ligatures off everywhere it appears: inline code, code blocks,
+   * anything using font-mono, and the CodeMirror editor. */
+  code,
+  pre,
+  kbd,
+  samp,
+  textarea.code,
+  .font-mono,
+  .cm-editor {
+    font-variant-ligatures: none;
+    font-feature-settings:
+      "liga" 0,
+      "calt" 0;
+  }
+
   /* Sitewide scrollbar skin so scroll areas (task lists, the IDE console,
    * teacher tables) don't fall back to a stock OS scrollbar that clashes
    * with the dark glass-panel aesthetic. scrollbar-color/-width are
