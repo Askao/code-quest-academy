@@ -11,6 +11,7 @@ import { Progress } from "@/components/ui/progress";
 import { Tabs, TabsContent, TabsList, TabsTrigger } from "@/components/ui/tabs";
 import { AssessmentsPanel } from "@/components/AssessmentsPanel";
 import { ClassReport } from "@/components/ClassReport";
+import { RevisionSummaryPanel } from "@/components/RevisionSummaryPanel";
 import { notifyHomeworkSet, notifyMessage } from "@/lib/homework-notify";
 import { fillMissingHomeworkForClass } from "@/lib/homework-late-join";
 import { FlagsGuide } from "@/components/FlagsGuide";
@@ -1111,6 +1112,8 @@ function ClassDetail() {
               </p>
             ) : null}
           </div>
+          <RevisionSummaryPanel classId={classId} students={data?.students ?? []} />
+
 
           <ClassReport
             classId={classId}
