@@ -4,15 +4,9 @@ import { useCallback, useEffect, useRef, useState } from "react";
 import { toast } from "sonner";
 import { useAuth } from "@/hooks/useAuth";
 import { Button } from "@/components/ui/button";
-import { Textarea } from "@/components/ui/textarea";
 import { QuestionText } from "@/components/QuestionText";
-import {
-  formatClock,
-  GRACE_MS,
-  joinPartAnswers,
-  splitPartAnswers,
-  splitQuestionParts,
-} from "@/lib/assessments";
+import { QuestionAnswer, type SaveState } from "@/components/QuestionAnswer";
+import { formatClock, GRACE_MS } from "@/lib/assessments";
 import { topicLabel } from "@/lib/game";
 import {
   sb,
@@ -179,8 +173,6 @@ function SitPage() {
   );
 }
 
-type SaveState = "saved" | "saving" | "error";
-
 function PaperView({ attemptId, assessment }: { attemptId: string; assessment: AssessmentRow }) {
   const qc = useQueryClient();
   const { data: paper, error: paperError } = useQuery({
@@ -213,46 +205,6 @@ function PaperView({ attemptId, assessment }: { attemptId: string; assessment: A
         void qc.invalidateQueries({ queryKey: ["student-assessments"] });
         void qc.invalidateQueries({ queryKey: ["paper", attemptId] });
       }}
-    />
-  );
-}
-
-/** One answer box. Code answers are monospace and Tab indents instead of jumping to the next box. */
-function AnswerBox({
-  label,
-  value,
-  code,
-  rows,
-  onChange,
-  onBlur,
-}: {
-  label: string;
-  value: string;
-  code: boolean;
-  rows: number;
-  onChange: (value: string) => void;
-  onBlur: () => void;
-}) {
-  return (
-    <Textarea
-      aria-label={label}
-      value={value}
-      onChange={(e) => onChange(e.target.value)}
-      onBlur={onBlur}
-      onKeyDown={(e) => {
-        if (!code || e.key !== "Tab") return;
-        e.preventDefault();
-        const el = e.currentTarget;
-        const { selectionStart: from, selectionEnd: to } = el;
-        onChange(el.value.slice(0, from) + "    " + el.value.slice(to));
-        requestAnimationFrame(() => el.setSelectionRange(from + 4, from + 4));
-      }}
-      rows={rows}
-      spellCheck={!code}
-      autoCapitalize="off"
-      autoCorrect="off"
-      className={code ? "font-mono text-sm" : ""}
-      placeholder={code ? "Write your program here…" : "Write your answer here…"}
     />
   );
 }
@@ -416,76 +368,16 @@ function Sitting({
                   {q.marks} mark{q.marks === 1 ? "" : "s"}
                 </span>
               </div>
-              {(() => {
-                const split = splitQuestionParts(q.question);
-                const code = q.answer_format === "code";
-                const status = (
-                  <p
-                    className={`mt-1.5 h-4 font-mono text-xs ${
-                      state === "error" ? "text-destructive" : "text-muted-foreground"
-                    }`}
-                    aria-live="polite"
-                  >
-                    {state === "saving"
-                      ? "Saving…"
-                      : state === "saved"
-                        ? "✓ Saved"
-                        : state === "error"
-                          ? "Couldn't save - check your connection; it will try again"
-                          : ""}
-                  </p>
-                );
-                if (!split) {
-                  return (
-                    <>
-                      <QuestionText text={q.question} />
-                      <div>
-                        <AnswerBox
-                          label={`Answer to question ${i + 1}`}
-                          value={answers[q.question_id] ?? ""}
-                          code={code}
-                          rows={code ? Math.max(8, q.marks + 4) : Math.max(3, q.marks + 1)}
-                          onChange={(v) => change(q.question_id, v)}
-                          onBlur={() => void saveOne(q.question_id)}
-                        />
-                        {status}
-                      </div>
-                    </>
-                  );
-                }
-                // A question with parts (a), (b), (c) gets a box per part, so
-                // the answers can't run together. They're stored in the one
-                // answer field, joined under their labels.
-                const labels = split.parts.map((p) => p.label);
-                const values = splitPartAnswers(answers[q.question_id] ?? "", labels);
-                return (
-                  <>
-                    {split.stem ? <QuestionText text={split.stem} /> : null}
-                    {split.parts.map((part, pi) => (
-                      <div key={part.label} className="space-y-2 border-t border-border pt-4">
-                        <QuestionText text={part.text} />
-                        <AnswerBox
-                          label={`Answer to question ${i + 1}, part (${part.label})`}
-                          value={values[pi] ?? ""}
-                          code={code}
-                          rows={code ? 8 : 2}
-                          onChange={(v) =>
-                            change(
-                              q.question_id,
-                              joinPartAnswers(
-                                labels,
-                                values.map((old, k) => (k === pi ? v : old)),
-                              ),
-                            )
-                          }
-                          onBlur={() => void saveOne(q.question_id)}
-                        />
-                      </div>
-                    ))}
-                    {status}
-                  </>
-                );
-              })()}
+              <QuestionAnswer
+                index={i}
+                question={q.question}
+                answerFormat={q.answer_format}
+                marks={q.marks}
+                value={answers[q.question_id] ?? ""}
+                state={state}
+                onChange={(v) => change(q.question_id, v)}
+                onSave={() => void saveOne(q.question_id)}
+              />
             </section>
           );
         })}

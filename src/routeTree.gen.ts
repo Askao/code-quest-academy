@@ -26,6 +26,8 @@ import { Route as AuthenticatedLearnIndexRouteImport } from './routes/_authentic
 import { Route as AuthenticatedLearnLessonSlugRouteImport } from './routes/_authenticated/learn.$lessonSlug'
 import { Route as AuthenticatedMarkAssessmentIdRouteImport } from './routes/_authenticated/mark.$assessmentId'
 import { Route as AuthenticatedPlaySlugRouteImport } from './routes/_authenticated/play.$slug'
+import { Route as AuthenticatedReviseIndexRouteImport } from './routes/_authenticated/revise.index'
+import { Route as AuthenticatedRevisePaperIdRouteImport } from './routes/_authenticated/revise.$paperId'
 import { Route as AuthenticatedSitAssessmentIdRouteImport } from './routes/_authenticated/sit.$assessmentId'
 import { Route as AuthenticatedTeacherIndexRouteImport } from './routes/_authenticated/teacher.index'
 import { Route as AuthenticatedTeacherClassIdRouteImport } from './routes/_authenticated/teacher.$classId'
@@ -118,6 +120,18 @@ const AuthenticatedPlaySlugRoute = AuthenticatedPlaySlugRouteImport.update({
   path: '/play/$slug',
   getParentRoute: () => AuthenticatedRouteRoute,
 } as any)
+const AuthenticatedReviseIndexRoute =
+  AuthenticatedReviseIndexRouteImport.update({
+    id: '/revise/',
+    path: '/revise/',
+    getParentRoute: () => AuthenticatedRouteRoute,
+  } as any)
+const AuthenticatedRevisePaperIdRoute =
+  AuthenticatedRevisePaperIdRouteImport.update({
+    id: '/revise/$paperId',
+    path: '/revise/$paperId',
+    getParentRoute: () => AuthenticatedRouteRoute,
+  } as any)
 const AuthenticatedSitAssessmentIdRoute =
   AuthenticatedSitAssessmentIdRouteImport.update({
     id: '/sit/$assessmentId',
@@ -153,9 +167,11 @@ export interface FileRoutesByFullPath {
   '/learn/$lessonSlug': typeof AuthenticatedLearnLessonSlugRoute
   '/mark/$assessmentId': typeof AuthenticatedMarkAssessmentIdRoute
   '/play/$slug': typeof AuthenticatedPlaySlugRoute
+  '/revise/$paperId': typeof AuthenticatedRevisePaperIdRoute
   '/sit/$assessmentId': typeof AuthenticatedSitAssessmentIdRoute
   '/teacher/$classId': typeof AuthenticatedTeacherClassIdRoute
   '/learn/': typeof AuthenticatedLearnIndexRoute
+  '/revise/': typeof AuthenticatedReviseIndexRoute
   '/teacher/': typeof AuthenticatedTeacherIndexRoute
 }
 export interface FileRoutesByTo {
@@ -174,9 +190,11 @@ export interface FileRoutesByTo {
   '/learn/$lessonSlug': typeof AuthenticatedLearnLessonSlugRoute
   '/mark/$assessmentId': typeof AuthenticatedMarkAssessmentIdRoute
   '/play/$slug': typeof AuthenticatedPlaySlugRoute
+  '/revise/$paperId': typeof AuthenticatedRevisePaperIdRoute
   '/sit/$assessmentId': typeof AuthenticatedSitAssessmentIdRoute
   '/teacher/$classId': typeof AuthenticatedTeacherClassIdRoute
   '/learn': typeof AuthenticatedLearnIndexRoute
+  '/revise': typeof AuthenticatedReviseIndexRoute
   '/teacher': typeof AuthenticatedTeacherIndexRoute
 }
 export interface FileRoutesById {
@@ -197,9 +215,11 @@ export interface FileRoutesById {
   '/_authenticated/learn/$lessonSlug': typeof AuthenticatedLearnLessonSlugRoute
   '/_authenticated/mark/$assessmentId': typeof AuthenticatedMarkAssessmentIdRoute
   '/_authenticated/play/$slug': typeof AuthenticatedPlaySlugRoute
+  '/_authenticated/revise/$paperId': typeof AuthenticatedRevisePaperIdRoute
   '/_authenticated/sit/$assessmentId': typeof AuthenticatedSitAssessmentIdRoute
   '/_authenticated/teacher/$classId': typeof AuthenticatedTeacherClassIdRoute
   '/_authenticated/learn/': typeof AuthenticatedLearnIndexRoute
+  '/_authenticated/revise/': typeof AuthenticatedReviseIndexRoute
   '/_authenticated/teacher/': typeof AuthenticatedTeacherIndexRoute
 }
 export interface FileRouteTypes {
@@ -220,9 +240,11 @@ export interface FileRouteTypes {
     | '/learn/$lessonSlug'
     | '/mark/$assessmentId'
     | '/play/$slug'
+    | '/revise/$paperId'
     | '/sit/$assessmentId'
     | '/teacher/$classId'
     | '/learn/'
+    | '/revise/'
     | '/teacher/'
   fileRoutesByTo: FileRoutesByTo
   to:
@@ -241,9 +263,11 @@ export interface FileRouteTypes {
     | '/learn/$lessonSlug'
     | '/mark/$assessmentId'
     | '/play/$slug'
+    | '/revise/$paperId'
     | '/sit/$assessmentId'
     | '/teacher/$classId'
     | '/learn'
+    | '/revise'
     | '/teacher'
   id:
     | '__root__'
@@ -263,9 +287,11 @@ export interface FileRouteTypes {
     | '/_authenticated/learn/$lessonSlug'
     | '/_authenticated/mark/$assessmentId'
     | '/_authenticated/play/$slug'
+    | '/_authenticated/revise/$paperId'
     | '/_authenticated/sit/$assessmentId'
     | '/_authenticated/teacher/$classId'
     | '/_authenticated/learn/'
+    | '/_authenticated/revise/'
     | '/_authenticated/teacher/'
   fileRoutesById: FileRoutesById
 }
@@ -399,6 +425,20 @@ declare module '@tanstack/react-router' {
       preLoaderRoute: typeof AuthenticatedPlaySlugRouteImport
       parentRoute: typeof AuthenticatedRouteRoute
     }
+    '/_authenticated/revise/': {
+      id: '/_authenticated/revise/'
+      path: '/revise'
+      fullPath: '/revise/'
+      preLoaderRoute: typeof AuthenticatedReviseIndexRouteImport
+      parentRoute: typeof AuthenticatedRouteRoute
+    }
+    '/_authenticated/revise/$paperId': {
+      id: '/_authenticated/revise/$paperId'
+      path: '/revise/$paperId'
+      fullPath: '/revise/$paperId'
+      preLoaderRoute: typeof AuthenticatedRevisePaperIdRouteImport
+      parentRoute: typeof AuthenticatedRouteRoute
+    }
     '/_authenticated/sit/$assessmentId': {
       id: '/_authenticated/sit/$assessmentId'
       path: '/sit/$assessmentId'
@@ -434,9 +474,11 @@ interface AuthenticatedRouteRouteChildren {
   AuthenticatedLearnLessonSlugRoute: typeof AuthenticatedLearnLessonSlugRoute
   AuthenticatedMarkAssessmentIdRoute: typeof AuthenticatedMarkAssessmentIdRoute
   AuthenticatedPlaySlugRoute: typeof AuthenticatedPlaySlugRoute
+  AuthenticatedRevisePaperIdRoute: typeof AuthenticatedRevisePaperIdRoute
   AuthenticatedSitAssessmentIdRoute: typeof AuthenticatedSitAssessmentIdRoute
   AuthenticatedTeacherClassIdRoute: typeof AuthenticatedTeacherClassIdRoute
   AuthenticatedLearnIndexRoute: typeof AuthenticatedLearnIndexRoute
+  AuthenticatedReviseIndexRoute: typeof AuthenticatedReviseIndexRoute
   AuthenticatedTeacherIndexRoute: typeof AuthenticatedTeacherIndexRoute
 }
 
@@ -451,9 +493,11 @@ const AuthenticatedRouteRouteChildren: AuthenticatedRouteRouteChildren = {
   AuthenticatedLearnLessonSlugRoute: AuthenticatedLearnLessonSlugRoute,
   AuthenticatedMarkAssessmentIdRoute: AuthenticatedMarkAssessmentIdRoute,
   AuthenticatedPlaySlugRoute: AuthenticatedPlaySlugRoute,
+  AuthenticatedRevisePaperIdRoute: AuthenticatedRevisePaperIdRoute,
   AuthenticatedSitAssessmentIdRoute: AuthenticatedSitAssessmentIdRoute,
   AuthenticatedTeacherClassIdRoute: AuthenticatedTeacherClassIdRoute,
   AuthenticatedLearnIndexRoute: AuthenticatedLearnIndexRoute,
+  AuthenticatedReviseIndexRoute: AuthenticatedReviseIndexRoute,
   AuthenticatedTeacherIndexRoute: AuthenticatedTeacherIndexRoute,
 }
 

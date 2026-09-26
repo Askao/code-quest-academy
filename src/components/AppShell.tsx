@@ -44,6 +44,9 @@ export function AppShell({ children }: { children: ReactNode }) {
       <NavLink to="/practice" onClick={closeMenu}>
         Practise
       </NavLink>
+      <NavLink to="/revise" onClick={closeMenu}>
+        Revise
+      </NavLink>
       <NavLink to="/ide" onClick={closeMenu}>
         IDE
       </NavLink>

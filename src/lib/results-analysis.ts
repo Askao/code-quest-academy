@@ -116,7 +116,16 @@ export function questionLabel(question: string, maxLength = 120): string {
       .replace(/You may use [^.]*\./gi, "")
       .replace(/\s*\[\d+\]\s*$/, "")
       .trim();
-  const chosen = tidy(paragraphs.find((p) => COMMAND_WORD.test(p)) ?? paragraphs[0] ?? "");
+  const at = paragraphs.findIndex((p) => COMMAND_WORD.test(p));
+  const start = at >= 0 ? at : 0;
+  let chosen = tidy(paragraphs[start] ?? "");
+  // "Write a program that:" alone says nothing - the bullet list after it
+  // does, so carry on into its first bullet.
+  const nextParagraph = paragraphs[start + 1];
+  if (chosen.endsWith(":") && nextParagraph) {
+    const firstBullet = nextParagraph.replace(/^[-*]\s*/, "").split(/\s+[-*]\s+/)[0] ?? "";
+    chosen = `${chosen} ${firstBullet}`.trim();
+  }
   // A bare "Write the program." is no help either - the scenario before it is.
   const cleaned = chosen.length < 30 && paragraphs[0] ? tidy(paragraphs[0]) : chosen;
   return cleaned.length > maxLength ? `${cleaned.slice(0, maxLength - 1).trimEnd()}…` : cleaned;

@@ -1,134 +1,346 @@
 [
   {
-    "id": "aqa-iteration-01",
+    "id": "aqa-fundamentals-01",
     "board": "aqa",
-    "topic": "iteration",
-    "ability": 1,
-    "marks": 1,
-    "format": "text",
-    "question": "State what is meant by iteration. [1]",
-    "markScheme": [
-      {
-        "text": "Repeating a set of instructions / a section of code (a number of times or until a condition is met)",
-        "marks": 1,
-        "guidance": "Allow: looping."
-      }
-    ]
-  },
-  {
-    "id": "aqa-iteration-02",
-    "board": "aqa",
-    "topic": "iteration",
+    "topic": "fundamentals",
     "ability": 1,
     "marks": 2,
     "format": "text",
-    "question": "Describe the difference between count-controlled iteration and condition-controlled iteration. [2]",
+    "question": "A program stores data about a cake shop.\n\nState the most appropriate data type for each of the following.\n\n(a) The price of a cake, for example 2.50 [1]\n\n(b) Whether a customer is a member of the loyalty scheme (yes or no) [1]",
     "markScheme": [
       {
-        "text": "Count-controlled iteration repeats a fixed / set number of times (the number of repeats is known)",
+        "text": "(a) Real / float",
         "marks": 1,
-        "guidance": ""
+        "guidance": "Do not allow: number, decimal, integer."
       },
       {
-        "text": "Condition-controlled iteration repeats until / while a condition is met (the number of repeats may not be known)",
+        "text": "(b) Boolean",
         "marks": 1,
-        "guidance": ""
+        "guidance": "Allow: Bool."
       }
     ]
   },
   {
-    "id": "aqa-iteration-03",
+    "id": "aqa-fundamentals-02",
     "board": "aqa",
-    "topic": "iteration",
+    "topic": "fundamentals",
+    "ability": 1,
+    "marks": 2,
+    "format": "text",
+    "question": "State what is meant by **casting** and give one example. [2]",
+    "markScheme": [
+      {
+        "text": "Converting a value from one data type to another",
+        "marks": 1,
+        "guidance": ""
+      },
+      {
+        "text": "A correct example, such as converting a string to an integer with STRING_TO_INT",
+        "marks": 1,
+        "guidance": "Allow any correct example, in words or code."
+      }
+    ]
+  },
+  {
+    "id": "aqa-fundamentals-03",
+    "board": "aqa",
+    "topic": "fundamentals",
     "ability": 2,
     "marks": 3,
     "format": "text",
-    "question": "The following algorithm is written in pseudo-code.\n\n```\ntotal ← 0\nFOR i ← 1 TO 5\n  total ← total + i * 2\nENDFOR\nOUTPUT total\n```\n\n(a) State the value that is output by the algorithm. [1]\n\n(b) State the number of times the statement `total ← total + i * 2` is executed. [1]\n\n(c) Name the type of iteration used in the algorithm. [1]",
+    "question": "The following algorithm is written in pseudo-code. The function `USERINPUT` returns whatever the user types as a string.\n\n```\na ← USERINPUT\nb ← USERINPUT\nOUTPUT a + b\n```\n\nThe user types 10 and then 4.\n\n(a) State the output of the algorithm. [1]\n\n(b) Explain why the output is not 14. [2]",
     "markScheme": [
       {
-        "text": "(a) 30",
+        "text": "(a) 104",
         "marks": 1,
         "guidance": ""
       },
       {
-        "text": "(b) 5 (times)",
+        "text": "(b) The values from USERINPUT are strings (not numbers)",
         "marks": 1,
         "guidance": ""
       },
       {
-        "text": "(c) Count-controlled (iteration)",
+        "text": "(b) + joins (concatenates) strings rather than adding them",
         "marks": 1,
-        "guidance": "Allow: definite iteration."
+        "guidance": "Allow: they should be converted to integers first (STRING_TO_INT)."
       }
     ]
   },
   {
-    "id": "aqa-iteration-04",
+    "id": "aqa-fundamentals-04",
     "board": "aqa",
-    "topic": "iteration",
+    "topic": "fundamentals",
     "ability": 2,
     "marks": 4,
-    "format": "code",
-    "question": "Write an algorithm that asks the user to enter a positive number. The algorithm must keep asking until a positive number is entered. It then outputs the square of the number (the number multiplied by itself). [4]\n\nYou may use pseudo-code or a high-level programming language.",
+    "format": "text",
+    "question": "A library system stores data about each member.\n\nState the most appropriate data type for each of the following items of data.\n\n(a) The number of books the member has borrowed [1]\n\n(b) The fine the member owes, for example 1.25 [1]\n\n(c) The member's surname [1]\n\n(d) Whether the member has any overdue books (yes or no) [1]",
     "markScheme": [
       {
-        "text": "Takes a number as input from the user and stores it",
+        "text": "(a) Integer",
+        "marks": 1,
+        "guidance": "Do not allow: number."
+      },
+      {
+        "text": "(b) Real / float",
         "marks": 1,
         "guidance": ""
       },
       {
-        "text": "Uses condition-controlled iteration (WHILE / REPEAT UNTIL)",
+        "text": "(c) String",
         "marks": 1,
         "guidance": ""
       },
       {
-        "text": "Condition is correct: repeats while the number is not greater than 0",
-        "marks": 1,
-        "guidance": "Allow the equivalent condition for a loop that stops when the number is greater than 0."
-      },
-      {
-        "text": "Outputs the number multiplied by itself after the iteration (once)",
+        "text": "(d) Boolean",
         "marks": 1,
         "guidance": ""
       }
     ]
   },
   {
-    "id": "aqa-iteration-05",
+    "id": "aqa-fundamentals-05",
     "board": "aqa",
-    "topic": "iteration",
+    "topic": "fundamentals",
+    "ability": 3,
+    "marks": 5,
+    "format": "code",
+    "question": "Write an algorithm that:\n\n- asks the user to enter the length of a rectangle in centimetres\n- asks the user to enter the width of the rectangle in centimetres\n- calculates the area of the rectangle\n- outputs the area with a suitable message.\n\nThe length and width may include decimal places. [5]\n\nYou may use pseudo-code or a high-level programming language.",
+    "markScheme": [
+      {
+        "text": "Takes the length as input and stores it in a variable",
+        "marks": 1,
+        "guidance": ""
+      },
+      {
+        "text": "Takes the width as input and stores it in a variable",
+        "marks": 1,
+        "guidance": ""
+      },
+      {
+        "text": "Converts both inputs to real / float",
+        "marks": 1,
+        "guidance": "Do not allow conversion to integer."
+      },
+      {
+        "text": "Calculates length multiplied by width",
+        "marks": 1,
+        "guidance": ""
+      },
+      {
+        "text": "Outputs the area with a message",
+        "marks": 1,
+        "guidance": "Allow the area being converted to a string if it is joined to the message."
+      }
+    ]
+  },
+  {
+    "id": "aqa-fundamentals-06",
+    "board": "aqa",
+    "topic": "fundamentals",
     "ability": 3,
     "marks": 6,
     "format": "code",
-    "question": "A shop till program is being written. The user enters the price of each item, one at a time. The user enters -1 when there are no more items.\n\nWrite an algorithm that:\n\n- repeatedly asks the user to enter a price until -1 is entered\n- calculates the total cost of all the items\n- counts the number of items entered\n- outputs the total cost and the number of items. [6]\n\nThe value -1 must not be included in the total or the count. You may use pseudo-code or a high-level programming language.",
+    "question": "Temperature in Fahrenheit can be worked out from a temperature in Celsius using: F = C × 9 / 5 + 32\n\nWrite an algorithm that asks the user to enter a temperature in Celsius (which may include decimal places), converts it to Fahrenheit, and outputs the answer rounded to 1 decimal place. [6]\n\nYou may use pseudo-code or a high-level programming language.",
     "markScheme": [
       {
-        "text": "Total and count are initialised to 0 before the iteration",
+        "text": "Takes the temperature as input",
         "marks": 1,
         "guidance": ""
       },
       {
-        "text": "Uses iteration that repeatedly takes a price as input",
+        "text": "Converts the input to real / float",
         "marks": 1,
         "guidance": ""
       },
       {
-        "text": "Iteration stops when -1 is entered (condition correct)",
+        "text": "Multiplies by 9 and divides by 5 (or multiplies by 1.8)",
+        "marks": 1,
+        "guidance": "Allow the calculation to be done in a different but correct order."
+      },
+      {
+        "text": "Adds 32",
         "marks": 1,
         "guidance": ""
       },
       {
-        "text": "The value -1 is not added to the total and not counted (e.g. test before adding)",
+        "text": "Rounds the answer to 1 decimal place",
         "marks": 1,
         "guidance": ""
       },
       {
-        "text": "Adds each price to the total AND adds 1 to the count for each item",
+        "text": "Outputs the answer",
+        "marks": 1,
+        "guidance": ""
+      }
+    ]
+  },
+  {
+    "id": "aqa-sequencing-01",
+    "board": "aqa",
+    "topic": "sequencing",
+    "ability": 1,
+    "marks": 2,
+    "format": "text",
+    "question": "State the result of each of the following calculations.\n\n(a) 20 DIV 6 [1]\n\n(b) 20 MOD 6 [1]",
+    "markScheme": [
+      {
+        "text": "(a) 3",
         "marks": 1,
         "guidance": ""
       },
       {
-        "text": "Outputs the total AND the count after the iteration",
+        "text": "(b) 2",
+        "marks": 1,
+        "guidance": ""
+      }
+    ]
+  },
+  {
+    "id": "aqa-sequencing-02",
+    "board": "aqa",
+    "topic": "sequencing",
+    "ability": 1,
+    "marks": 1,
+    "format": "text",
+    "question": "State the name of the arithmetic operator that gives the **remainder** when one whole number is divided by another. [1]",
+    "markScheme": [
+      {
+        "text": "MOD (modulus)",
+        "marks": 1,
+        "guidance": "Allow: modulo."
+      }
+    ]
+  },
+  {
+    "id": "aqa-sequencing-03",
+    "board": "aqa",
+    "topic": "sequencing",
+    "ability": 2,
+    "marks": 4,
+    "format": "text",
+    "question": "The following algorithm is written in pseudo-code.\n\n```\na ← 17\nb ← 5\nc ← a DIV b\nd ← a MOD b\ne ← c * d\nOUTPUT e\n```\n\n(a) State the value of `c`. [1]\n\n(b) State the value of `d`. [1]\n\n(c) State the value of `e`. [1]\n\n(d) State the output of the algorithm. [1]",
+    "markScheme": [
+      {
+        "text": "(a) 3",
+        "marks": 1,
+        "guidance": ""
+      },
+      {
+        "text": "(b) 2",
+        "marks": 1,
+        "guidance": ""
+      },
+      {
+        "text": "(c) 6",
+        "marks": 1,
+        "guidance": ""
+      },
+      {
+        "text": "(d) 6",
+        "marks": 1,
+        "guidance": "Allow follow through from (c)."
+      }
+    ]
+  },
+  {
+    "id": "aqa-sequencing-04",
+    "board": "aqa",
+    "topic": "sequencing",
+    "ability": 2,
+    "marks": 3,
+    "format": "text",
+    "question": "(a) Describe what is meant by **sequence** in an algorithm. [1]\n\nThe following algorithm is written in pseudo-code.\n\n```\nx ← 4\nx ← x + 1\nx ← x * 2\nOUTPUT x\n```\n\n(b) State the output of the algorithm. [1]\n\n(c) The last two assignment lines are swapped over. State the new output. [1]",
+    "markScheme": [
+      {
+        "text": "(a) Instructions are carried out one after another, in the order they are written",
+        "marks": 1,
+        "guidance": ""
+      },
+      {
+        "text": "(b) 10",
+        "marks": 1,
+        "guidance": ""
+      },
+      {
+        "text": "(c) 9",
+        "marks": 1,
+        "guidance": ""
+      }
+    ]
+  },
+  {
+    "id": "aqa-sequencing-05",
+    "board": "aqa",
+    "topic": "sequencing",
+    "ability": 3,
+    "marks": 5,
+    "format": "code",
+    "question": "Write an algorithm that asks the user to enter a number of seconds (a whole number) and outputs the equivalent whole number of minutes and the number of seconds left over.\n\nFor example, 200 seconds would output 3 minutes and 20 seconds. [5]\n\nYou may use pseudo-code or a high-level programming language.",
+    "markScheme": [
+      {
+        "text": "Takes the number of seconds as input and converts it to an integer",
+        "marks": 1,
+        "guidance": ""
+      },
+      {
+        "text": "Calculates the whole minutes using DIV 60",
+        "marks": 1,
+        "guidance": ""
+      },
+      {
+        "text": "Calculates the seconds left over using MOD 60",
+        "marks": 1,
+        "guidance": ""
+      },
+      {
+        "text": "Outputs the number of minutes",
+        "marks": 1,
+        "guidance": ""
+      },
+      {
+        "text": "Outputs the number of seconds left over",
+        "marks": 1,
+        "guidance": "Allow both to be output in one message."
+      }
+    ]
+  },
+  {
+    "id": "aqa-sequencing-06",
+    "board": "aqa",
+    "topic": "sequencing",
+    "ability": 3,
+    "marks": 6,
+    "format": "code",
+    "question": "A taxi costs £3.00 plus £1.50 for each mile travelled.\n\nWrite an algorithm that:\n\n- asks the user to enter the number of miles travelled (which may include decimal places)\n- calculates the cost of the journey\n- adds a tip of 10% of the cost\n- outputs the total to 2 decimal places. [6]\n\nYou may use pseudo-code or a high-level programming language.",
+    "markScheme": [
+      {
+        "text": "Takes the miles as input and converts them to real / float",
+        "marks": 1,
+        "guidance": ""
+      },
+      {
+        "text": "Calculates the cost as 3 + 1.5 × miles",
+        "marks": 1,
+        "guidance": ""
+      },
+      {
+        "text": "Calculates the tip as 10% of the cost (cost × 0.1)",
+        "marks": 1,
+        "guidance": ""
+      },
+      {
+        "text": "Adds the tip to the cost to give the total",
+        "marks": 1,
+        "guidance": ""
+      },
+      {
+        "text": "Rounds the total to 2 decimal places",
+        "marks": 1,
+        "guidance": ""
+      },
+      {
+        "text": "Outputs the total",
         "marks": 1,
         "guidance": ""
       }
@@ -270,6 +482,664 @@
     ]
   },
   {
+    "id": "aqa-selection-06",
+    "board": "aqa",
+    "topic": "selection",
+    "ability": 1,
+    "marks": 2,
+    "format": "text",
+    "question": "The following algorithm is written in pseudo-code.\n\n```\nIF score >= 70 THEN\n  OUTPUT \"Distinction\"\nELSE IF score >= 50 THEN\n  OUTPUT \"Pass\"\nELSE\n  OUTPUT \"Fail\"\nENDIF\n```\n\n(a) State the output when `score` is 75. [1]\n\n(b) State the output when `score` is 50. [1]",
+    "markScheme": [
+      {
+        "text": "(a) Distinction",
+        "marks": 1,
+        "guidance": ""
+      },
+      {
+        "text": "(b) Pass",
+        "marks": 1,
+        "guidance": ""
+      }
+    ]
+  },
+  {
+    "id": "aqa-selection-07",
+    "board": "aqa",
+    "topic": "selection",
+    "ability": 2,
+    "marks": 3,
+    "format": "text",
+    "question": "State whether each of the following expressions is True or False.\n\n(a) (6 > 2) OR (1 > 5) [1]\n\n(b) NOT (4 = 4) [1]\n\n(c) (3 < 5) AND (10 MOD 4 = 1) [1]",
+    "markScheme": [
+      {
+        "text": "(a) True",
+        "marks": 1,
+        "guidance": ""
+      },
+      {
+        "text": "(b) False",
+        "marks": 1,
+        "guidance": ""
+      },
+      {
+        "text": "(c) False",
+        "marks": 1,
+        "guidance": "10 MOD 4 is 2, so the second part is False."
+      }
+    ]
+  },
+  {
+    "id": "aqa-selection-08",
+    "board": "aqa",
+    "topic": "selection",
+    "ability": 3,
+    "marks": 5,
+    "format": "code",
+    "question": "A parcel company charges for delivery.\n\n| Weight of parcel | Delivery cost |\n|---|---|\n| 1 kg or less | £4 |\n| More than 1 kg and up to 5 kg | £7 |\n| More than 5 kg | £12 |\n\nDelivery is free for any order with a value of more than £100, whatever the weight.\n\nWrite an algorithm that asks the user to enter the weight of the parcel and the value of the order, and outputs the delivery cost. [5]\n\nYou may use pseudo-code or a high-level programming language.",
+    "markScheme": [
+      {
+        "text": "Takes the weight and the order value as input and converts them to numbers",
+        "marks": 1,
+        "guidance": ""
+      },
+      {
+        "text": "Outputs free delivery (£0) when the order value is more than £100, whatever the weight",
+        "marks": 1,
+        "guidance": "Do not allow 100 or more."
+      },
+      {
+        "text": "1 kg or less outputs £4, with the correct boundary (1 kg included)",
+        "marks": 1,
+        "guidance": ""
+      },
+      {
+        "text": "More than 1 kg and up to 5 kg outputs £7, with the correct boundary (5 kg included)",
+        "marks": 1,
+        "guidance": ""
+      },
+      {
+        "text": "More than 5 kg outputs £12, and a cost is output in every case",
+        "marks": 1,
+        "guidance": ""
+      }
+    ]
+  },
+  {
+    "id": "aqa-iteration-01",
+    "board": "aqa",
+    "topic": "iteration",
+    "ability": 1,
+    "marks": 1,
+    "format": "text",
+    "question": "State what is meant by iteration. [1]",
+    "markScheme": [
+      {
+        "text": "Repeating a set of instructions / a section of code (a number of times or until a condition is met)",
+        "marks": 1,
+        "guidance": "Allow: looping."
+      }
+    ]
+  },
+  {
+    "id": "aqa-iteration-02",
+    "board": "aqa",
+    "topic": "iteration",
+    "ability": 1,
+    "marks": 2,
+    "format": "text",
+    "question": "Describe the difference between count-controlled iteration and condition-controlled iteration. [2]",
+    "markScheme": [
+      {
+        "text": "Count-controlled iteration repeats a fixed / set number of times (the number of repeats is known)",
+        "marks": 1,
+        "guidance": ""
+      },
+      {
+        "text": "Condition-controlled iteration repeats until / while a condition is met (the number of repeats may not be known)",
+        "marks": 1,
+        "guidance": ""
+      }
+    ]
+  },
+  {
+    "id": "aqa-iteration-03",
+    "board": "aqa",
+    "topic": "iteration",
+    "ability": 2,
+    "marks": 3,
+    "format": "text",
+    "question": "The following algorithm is written in pseudo-code.\n\n```\ntotal ← 0\nFOR i ← 1 TO 5\n  total ← total + i * 2\nENDFOR\nOUTPUT total\n```\n\n(a) State the value that is output by the algorithm. [1]\n\n(b) State the number of times the statement `total ← total + i * 2` is executed. [1]\n\n(c) Name the type of iteration used in the algorithm. [1]",
+    "markScheme": [
+      {
+        "text": "(a) 30",
+        "marks": 1,
+        "guidance": ""
+      },
+      {
+        "text": "(b) 5 (times)",
+        "marks": 1,
+        "guidance": ""
+      },
+      {
+        "text": "(c) Count-controlled (iteration)",
+        "marks": 1,
+        "guidance": "Allow: definite iteration."
+      }
+    ]
+  },
+  {
+    "id": "aqa-iteration-04",
+    "board": "aqa",
+    "topic": "iteration",
+    "ability": 2,
+    "marks": 4,
+    "format": "code",
+    "question": "Write an algorithm that asks the user to enter a positive number. The algorithm must keep asking until a positive number is entered. It then outputs the square of the number (the number multiplied by itself). [4]\n\nYou may use pseudo-code or a high-level programming language.",
+    "markScheme": [
+      {
+        "text": "Takes a number as input from the user and stores it",
+        "marks": 1,
+        "guidance": ""
+      },
+      {
+        "text": "Uses condition-controlled iteration (WHILE / REPEAT UNTIL)",
+        "marks": 1,
+        "guidance": ""
+      },
+      {
+        "text": "Condition is correct: repeats while the number is not greater than 0",
+        "marks": 1,
+        "guidance": "Allow the equivalent condition for a loop that stops when the number is greater than 0."
+      },
+      {
+        "text": "Outputs the number multiplied by itself after the iteration (once)",
+        "marks": 1,
+        "guidance": ""
+      }
+    ]
+  },
+  {
+    "id": "aqa-iteration-05",
+    "board": "aqa",
+    "topic": "iteration",
+    "ability": 3,
+    "marks": 6,
+    "format": "code",
+    "question": "A shop till program is being written. The user enters the price of each item, one at a time. The user enters -1 when there are no more items.\n\nWrite an algorithm that:\n\n- repeatedly asks the user to enter a price until -1 is entered\n- calculates the total cost of all the items\n- counts the number of items entered\n- outputs the total cost and the number of items. [6]\n\nThe value -1 must not be included in the total or the count. You may use pseudo-code or a high-level programming language.",
+    "markScheme": [
+      {
+        "text": "Total and count are initialised to 0 before the iteration",
+        "marks": 1,
+        "guidance": ""
+      },
+      {
+        "text": "Uses iteration that repeatedly takes a price as input",
+        "marks": 1,
+        "guidance": ""
+      },
+      {
+        "text": "Iteration stops when -1 is entered (condition correct)",
+        "marks": 1,
+        "guidance": ""
+      },
+      {
+        "text": "The value -1 is not added to the total and not counted (e.g. test before adding)",
+        "marks": 1,
+        "guidance": ""
+      },
+      {
+        "text": "Adds each price to the total AND adds 1 to the count for each item",
+        "marks": 1,
+        "guidance": ""
+      },
+      {
+        "text": "Outputs the total AND the count after the iteration",
+        "marks": 1,
+        "guidance": ""
+      }
+    ]
+  },
+  {
+    "id": "aqa-iteration-06",
+    "board": "aqa",
+    "topic": "iteration",
+    "ability": 1,
+    "marks": 2,
+    "format": "text",
+    "question": "The following algorithm is written in pseudo-code.\n\n```\nFOR i ← 1 TO 3\n  OUTPUT i * 5\nENDFOR\n```\n\nState the values that are output. [2]",
+    "markScheme": [
+      {
+        "text": "The first two values are 5 and 10",
+        "marks": 1,
+        "guidance": ""
+      },
+      {
+        "text": "All three values are output: 5, 10, 15",
+        "marks": 1,
+        "guidance": "Allow the values on one line or separate lines."
+      }
+    ]
+  },
+  {
+    "id": "aqa-iteration-07",
+    "board": "aqa",
+    "topic": "iteration",
+    "ability": 2,
+    "marks": 3,
+    "format": "text",
+    "question": "The following algorithm is written in pseudo-code.\n\n```\nn ← 1\ncount ← 0\nWHILE n < 50\n  n ← n * 3\n  count ← count + 1\nENDWHILE\nOUTPUT count\nOUTPUT n\n```\n\n(a) State the first value that is output. [1]\n\n(b) State the second value that is output. [1]\n\n(c) State the name of the type of iteration used in this algorithm. [1]",
+    "markScheme": [
+      {
+        "text": "(a) 4",
+        "marks": 1,
+        "guidance": "n becomes 3, 9, 27 and 81."
+      },
+      {
+        "text": "(b) 81",
+        "marks": 1,
+        "guidance": ""
+      },
+      {
+        "text": "(c) Condition-controlled iteration",
+        "marks": 1,
+        "guidance": "Allow: WHILE loop."
+      }
+    ]
+  },
+  {
+    "id": "aqa-iteration-08",
+    "board": "aqa",
+    "topic": "iteration",
+    "ability": 3,
+    "marks": 5,
+    "format": "code",
+    "question": "Write an algorithm that keeps asking the user to enter a password until they enter `letmein`. It then outputs `Welcome` followed by the number of attempts it took. [5]\n\nYou may use pseudo-code or a high-level programming language.",
+    "markScheme": [
+      {
+        "text": "Takes a password as input and stores it",
+        "marks": 1,
+        "guidance": ""
+      },
+      {
+        "text": "Uses condition-controlled iteration (WHILE / REPEAT UNTIL)",
+        "marks": 1,
+        "guidance": ""
+      },
+      {
+        "text": "Condition is correct: repeats while the password is not letmein (or stops when it is)",
+        "marks": 1,
+        "guidance": ""
+      },
+      {
+        "text": "Adds 1 to a counter (that started at the correct value) for each attempt",
+        "marks": 1,
+        "guidance": ""
+      },
+      {
+        "text": "Outputs Welcome and the number of attempts after the iteration has finished",
+        "marks": 1,
+        "guidance": ""
+      }
+    ]
+  },
+  {
+    "id": "aqa-lists-01",
+    "board": "aqa",
+    "topic": "lists",
+    "ability": 1,
+    "marks": 2,
+    "format": "text",
+    "question": "State **two** features of an array. [2]",
+    "markScheme": [
+      {
+        "text": "It has one name (identifier) for the whole collection of items",
+        "marks": 1,
+        "guidance": ""
+      },
+      {
+        "text": "Each item is accessed using an index (position)",
+        "marks": 1,
+        "guidance": ""
+      },
+      {
+        "text": "All the items are of the same data type",
+        "marks": 1,
+        "guidance": ""
+      },
+      {
+        "text": "It stores multiple items / a collection of items",
+        "marks": 1,
+        "guidance": ""
+      }
+    ]
+  },
+  {
+    "id": "aqa-lists-02",
+    "board": "aqa",
+    "topic": "lists",
+    "ability": 1,
+    "marks": 1,
+    "format": "text",
+    "question": "An array has 8 items. The first item is at index 0. State the index of the last item. [1]",
+    "markScheme": [
+      {
+        "text": "7",
+        "marks": 1,
+        "guidance": "Do not allow 8."
+      }
+    ]
+  },
+  {
+    "id": "aqa-lists-03",
+    "board": "aqa",
+    "topic": "lists",
+    "ability": 2,
+    "marks": 3,
+    "format": "text",
+    "question": "The following algorithm is written in pseudo-code.\n\n```\nprices ← [3, 8, 5, 10]\nOUTPUT prices[1] + prices[3]\nprices[2] ← prices[2] + 4\nOUTPUT prices[2]\nOUTPUT LEN(prices)\n```\n\n(a) State the output of line 2. [1]\n\n(b) State the output of line 4. [1]\n\n(c) State the output of line 5. [1]",
+    "markScheme": [
+      {
+        "text": "(a) 18",
+        "marks": 1,
+        "guidance": ""
+      },
+      {
+        "text": "(b) 9",
+        "marks": 1,
+        "guidance": ""
+      },
+      {
+        "text": "(c) 4",
+        "marks": 1,
+        "guidance": ""
+      }
+    ]
+  },
+  {
+    "id": "aqa-lists-04",
+    "board": "aqa",
+    "topic": "lists",
+    "ability": 2,
+    "marks": 4,
+    "format": "code",
+    "question": "Write an algorithm that creates an array called `colours` containing five colours and then uses iteration to output every colour in the array. [4]\n\nYou may use pseudo-code or a high-level programming language.",
+    "markScheme": [
+      {
+        "text": "Creates an array called colours containing five colours",
+        "marks": 1,
+        "guidance": ""
+      },
+      {
+        "text": "Uses iteration (a loop)",
+        "marks": 1,
+        "guidance": "Allow FOR, WHILE or REPEAT."
+      },
+      {
+        "text": "Repeats the correct number of times (5, or once for each item)",
+        "marks": 1,
+        "guidance": ""
+      },
+      {
+        "text": "Outputs each item using the loop variable as the index",
+        "marks": 1,
+        "guidance": ""
+      }
+    ]
+  },
+  {
+    "id": "aqa-lists-05",
+    "board": "aqa",
+    "topic": "lists",
+    "ability": 3,
+    "marks": 5,
+    "format": "text",
+    "question": "A two-dimensional array called `grid` stores whole numbers. An item is accessed as `grid[row][column]`. Both indexes start at 0.\n\n| | Column 0 | Column 1 | Column 2 |\n|---|---|---|---|\n| **Row 0** | 2 | 9 | 4 |\n| **Row 1** | 7 | 1 | 6 |\n| **Row 2** | 8 | 3 | 5 |\n\n(a) State the value of `grid[2][1]`. [1]\n\n(b) State the position of the value 6, written in the form `grid[row][column]`. [1]\n\n(c) Describe how **nested iteration** can be used to output every value in the array. [3]",
+    "markScheme": [
+      {
+        "text": "(a) 3",
+        "marks": 1,
+        "guidance": ""
+      },
+      {
+        "text": "(b) grid[1][2]",
+        "marks": 1,
+        "guidance": ""
+      },
+      {
+        "text": "(c) An outer loop repeats once for each row",
+        "marks": 1,
+        "guidance": ""
+      },
+      {
+        "text": "(c) An inner loop, inside the outer loop, repeats once for each column",
+        "marks": 1,
+        "guidance": ""
+      },
+      {
+        "text": "(c) Each value is output using both loop variables as the indexes, grid[row][column]",
+        "marks": 1,
+        "guidance": ""
+      }
+    ]
+  },
+  {
+    "id": "aqa-lists-06",
+    "board": "aqa",
+    "topic": "lists",
+    "ability": 3,
+    "marks": 6,
+    "format": "code",
+    "question": "Write an algorithm that:\n\n- uses iteration to take 8 test scores from the user and stores them in an array\n- counts how many of the scores are 50 or more\n- outputs the count. [6]\n\nYou may use pseudo-code or a high-level programming language.",
+    "markScheme": [
+      {
+        "text": "Creates an array that can hold 8 scores",
+        "marks": 1,
+        "guidance": ""
+      },
+      {
+        "text": "Uses iteration that repeats 8 times to take the scores as input",
+        "marks": 1,
+        "guidance": ""
+      },
+      {
+        "text": "Stores each score (converted to an integer) in the array at the correct index",
+        "marks": 1,
+        "guidance": ""
+      },
+      {
+        "text": "Sets a counter to 0 before counting",
+        "marks": 1,
+        "guidance": ""
+      },
+      {
+        "text": "Uses selection to test whether each score is 50 or more (not just more than 50)",
+        "marks": 1,
+        "guidance": ""
+      },
+      {
+        "text": "Adds 1 to the counter for each score that passes the test and outputs the count after the iteration",
+        "marks": 1,
+        "guidance": ""
+      }
+    ]
+  },
+  {
+    "id": "aqa-strings-01",
+    "board": "aqa",
+    "topic": "strings",
+    "ability": 1,
+    "marks": 2,
+    "format": "text",
+    "question": "In AQA pseudo-code, `LEN(s)` returns the number of characters in the string `s` and `SUBSTRING(start, end, s)` returns the characters from position `start` to position `end` inclusive. The first character is at position 0.\n\nState the value of each of the following.\n\n(a) `LEN(\"robot\")` [1]\n\n(b) `SUBSTRING(1, 3, \"robot\")` [1]",
+    "markScheme": [
+      {
+        "text": "(a) 5",
+        "marks": 1,
+        "guidance": ""
+      },
+      {
+        "text": "(b) obo",
+        "marks": 1,
+        "guidance": ""
+      }
+    ]
+  },
+  {
+    "id": "aqa-strings-02",
+    "board": "aqa",
+    "topic": "strings",
+    "ability": 1,
+    "marks": 2,
+    "format": "text",
+    "question": "(a) State what is meant by **concatenation**. [1]\n\n(b) In a character set the code for \"A\" is 65. State the output of `OUTPUT CODE_TO_CHAR(CHAR_TO_CODE(\"A\") + 1)`. [1]",
+    "markScheme": [
+      {
+        "text": "(a) Joining two (or more) strings together to make one string",
+        "marks": 1,
+        "guidance": ""
+      },
+      {
+        "text": "(b) B",
+        "marks": 1,
+        "guidance": ""
+      }
+    ]
+  },
+  {
+    "id": "aqa-strings-03",
+    "board": "aqa",
+    "topic": "strings",
+    "ability": 2,
+    "marks": 3,
+    "format": "text",
+    "question": "The following algorithm is written in pseudo-code. The first character of a string is at position 0.\n\n```\nword ← \"programming\"\nOUTPUT LEN(word)\nOUTPUT SUBSTRING(0, 3, word)\nOUTPUT SUBSTRING(3, 4, word) + \"!\"\n```\n\n(a) State the output of line 2. [1]\n\n(b) State the output of line 3. [1]\n\n(c) State the output of line 4. [1]",
+    "markScheme": [
+      {
+        "text": "(a) 11",
+        "marks": 1,
+        "guidance": ""
+      },
+      {
+        "text": "(b) prog",
+        "marks": 1,
+        "guidance": ""
+      },
+      {
+        "text": "(c) gr!",
+        "marks": 1,
+        "guidance": ""
+      }
+    ]
+  },
+  {
+    "id": "aqa-strings-04",
+    "board": "aqa",
+    "topic": "strings",
+    "ability": 2,
+    "marks": 4,
+    "format": "code",
+    "question": "Write an algorithm that asks the user to enter a name and outputs the name followed by how many letters it has.\n\nFor example, if the user enters `Alice` the output is `Alice has 5 letters`. [4]\n\nYou may use pseudo-code or a high-level programming language.",
+    "markScheme": [
+      {
+        "text": "Takes the name as input and stores it",
+        "marks": 1,
+        "guidance": ""
+      },
+      {
+        "text": "Finds the length of the name using LEN (or counting the characters)",
+        "marks": 1,
+        "guidance": ""
+      },
+      {
+        "text": "Outputs the name and the words \"has\" and \"letters\" in the correct order",
+        "marks": 1,
+        "guidance": ""
+      },
+      {
+        "text": "The number of letters is output with the name (converted to a string if it is joined to the text)",
+        "marks": 1,
+        "guidance": "Allow separate output statements."
+      }
+    ]
+  },
+  {
+    "id": "aqa-strings-05",
+    "board": "aqa",
+    "topic": "strings",
+    "ability": 3,
+    "marks": 5,
+    "format": "code",
+    "question": "A palindrome is a word that reads the same forwards and backwards, for example `level`.\n\nWrite an algorithm that asks the user to enter a word and outputs `Palindrome` if it is a palindrome, or `Not a palindrome` if it is not. [5]\n\nYou may use pseudo-code or a high-level programming language.",
+    "markScheme": [
+      {
+        "text": "Takes the word as input",
+        "marks": 1,
+        "guidance": ""
+      },
+      {
+        "text": "Uses iteration that covers every character in the word",
+        "marks": 1,
+        "guidance": ""
+      },
+      {
+        "text": "Builds a reversed version of the word one character at a time, using the position of each character",
+        "marks": 1,
+        "guidance": ""
+      },
+      {
+        "text": "Compares the reversed word with the original word",
+        "marks": 1,
+        "guidance": ""
+      },
+      {
+        "text": "Outputs the correct message in both cases",
+        "marks": 1,
+        "guidance": ""
+      }
+    ]
+  },
+  {
+    "id": "aqa-strings-06",
+    "board": "aqa",
+    "topic": "strings",
+    "ability": 3,
+    "marks": 6,
+    "format": "code",
+    "question": "Write an algorithm that asks the user to enter a sentence and outputs the number of words in it.\n\nYou can assume that the words are separated by exactly one space and that the sentence does not start or end with a space. [6]\n\nYou may use pseudo-code or a high-level programming language.",
+    "markScheme": [
+      {
+        "text": "Takes the sentence as input",
+        "marks": 1,
+        "guidance": ""
+      },
+      {
+        "text": "Sets a counter (for spaces or words) before the iteration",
+        "marks": 1,
+        "guidance": ""
+      },
+      {
+        "text": "Uses iteration that covers every character in the sentence (using LEN)",
+        "marks": 1,
+        "guidance": ""
+      },
+      {
+        "text": "Compares each character with a space",
+        "marks": 1,
+        "guidance": ""
+      },
+      {
+        "text": "Adds 1 to the counter each time a space is found",
+        "marks": 1,
+        "guidance": ""
+      },
+      {
+        "text": "Outputs the number of words (the number of spaces plus 1)",
+        "marks": 1,
+        "guidance": "Allow a counter that starts at 1 and adds 1 for each space."
+      }
+    ]
+  },
+  {
     "id": "aqa-functions-01",
     "board": "aqa",
     "topic": "functions",
@@ -404,6 +1274,798 @@
       },
       {
         "text": "Takes a word as input, calls the subroutine with it AND outputs the returned value",
+        "marks": 1,
+        "guidance": ""
+      }
+    ]
+  },
+  {
+    "id": "aqa-functions-06",
+    "board": "aqa",
+    "topic": "functions",
+    "ability": 1,
+    "marks": 2,
+    "format": "text",
+    "question": "(a) State what is meant by a **parameter** of a subroutine. [1]\n\n(b) State what is meant by a **return value**. [1]",
+    "markScheme": [
+      {
+        "text": "(a) A value (variable) that is passed into a subroutine when it is called / the name for data a subroutine receives",
+        "marks": 1,
+        "guidance": ""
+      },
+      {
+        "text": "(b) A value that is sent back from a subroutine to the place it was called from",
+        "marks": 1,
+        "guidance": ""
+      }
+    ]
+  },
+  {
+    "id": "aqa-functions-07",
+    "board": "aqa",
+    "topic": "functions",
+    "ability": 2,
+    "marks": 3,
+    "format": "text",
+    "question": "The following algorithm is written in pseudo-code.\n\n```\nSUBROUTINE cube(n)\n  RETURN n * n * n\nENDSUBROUTINE\n\nSUBROUTINE showTotal(a, b)\n  OUTPUT a + b\nENDSUBROUTINE\n\nshowTotal(cube(2), 1)\n```\n\n(a) State the output of the algorithm. [1]\n\n(b) State the name of the subroutine that returns a value. [1]\n\n(c) State the names of the parameters of `showTotal`. [1]",
+    "markScheme": [
+      {
+        "text": "(a) 9",
+        "marks": 1,
+        "guidance": "cube(2) is 8, then 8 + 1."
+      },
+      {
+        "text": "(b) cube",
+        "marks": 1,
+        "guidance": ""
+      },
+      {
+        "text": "(c) a and b",
+        "marks": 1,
+        "guidance": "Both are needed."
+      }
+    ]
+  },
+  {
+    "id": "aqa-functions-08",
+    "board": "aqa",
+    "topic": "functions",
+    "ability": 3,
+    "marks": 5,
+    "format": "code",
+    "question": "Write a subroutine called `average` that takes three numbers as parameters and returns their mean.\n\nThen write a main program that asks the user to enter three numbers, uses the subroutine, and outputs the result. [5]\n\nYou may use pseudo-code or a high-level programming language.",
+    "markScheme": [
+      {
+        "text": "Defines a subroutine called average with three parameters",
+        "marks": 1,
+        "guidance": ""
+      },
+      {
+        "text": "Calculates the sum of the three numbers divided by 3, with correct use of brackets",
+        "marks": 1,
+        "guidance": ""
+      },
+      {
+        "text": "Returns the result from the subroutine",
+        "marks": 1,
+        "guidance": ""
+      },
+      {
+        "text": "The main program takes three numbers as input and converts them to numbers",
+        "marks": 1,
+        "guidance": ""
+      },
+      {
+        "text": "The main program calls the subroutine with the three numbers and outputs the returned value",
+        "marks": 1,
+        "guidance": ""
+      }
+    ]
+  },
+  {
+    "id": "aqa-files-01",
+    "board": "aqa",
+    "topic": "files",
+    "ability": 1,
+    "marks": 2,
+    "format": "text",
+    "question": "Describe **one** difference between data stored in a variable and data stored in a text file. [2]",
+    "markScheme": [
+      {
+        "text": "Data in a variable is lost when the program ends / the computer is switched off",
+        "marks": 1,
+        "guidance": ""
+      },
+      {
+        "text": "Data in a file is kept (persistent) after the program ends",
+        "marks": 1,
+        "guidance": "Allow: files can be used again by the program or by other programs."
+      }
+    ]
+  },
+  {
+    "id": "aqa-files-02",
+    "board": "aqa",
+    "topic": "files",
+    "ability": 1,
+    "marks": 1,
+    "format": "text",
+    "question": "State **one** thing that could go wrong if a program writes data to a file but does not close the file. [1]",
+    "markScheme": [
+      {
+        "text": "Some of the data may not be saved to the file",
+        "marks": 1,
+        "guidance": "Allow: the file could be corrupted / the file may stay locked so other programs cannot use it."
+      }
+    ]
+  },
+  {
+    "id": "aqa-files-03",
+    "board": "aqa",
+    "topic": "files",
+    "ability": 2,
+    "marks": 3,
+    "format": "text",
+    "question": "A program reads a text file called `scores.txt` one line at a time and outputs each line. It stops when it reaches the end of the file.\n\n(a) State **two** operations the program must carry out on the file itself, one before and one after the lines are read. [2]\n\n(b) State how the program knows when to stop reading. [1]",
+    "markScheme": [
+      {
+        "text": "(a) Open the file (for reading)",
+        "marks": 1,
+        "guidance": ""
+      },
+      {
+        "text": "(a) Close the file",
+        "marks": 1,
+        "guidance": ""
+      },
+      {
+        "text": "(b) It checks whether the end of the file has been reached (there are no more lines to read)",
+        "marks": 1,
+        "guidance": ""
+      }
+    ]
+  },
+  {
+    "id": "aqa-files-04",
+    "board": "aqa",
+    "topic": "files",
+    "ability": 2,
+    "marks": 4,
+    "format": "code",
+    "question": "Write an algorithm that asks the user to enter the name of a pet and stores it in a file called `pets.txt`. [4]\n\nYou may use pseudo-code or a high-level programming language.",
+    "markScheme": [
+      {
+        "text": "Takes the name of the pet as input",
+        "marks": 1,
+        "guidance": ""
+      },
+      {
+        "text": "Opens (or creates) the file pets.txt for writing",
+        "marks": 1,
+        "guidance": ""
+      },
+      {
+        "text": "Writes the name to the file",
+        "marks": 1,
+        "guidance": ""
+      },
+      {
+        "text": "Closes the file",
+        "marks": 1,
+        "guidance": ""
+      }
+    ]
+  },
+  {
+    "id": "aqa-files-05",
+    "board": "aqa",
+    "topic": "files",
+    "ability": 3,
+    "marks": 5,
+    "format": "code",
+    "question": "A text file called `prices.txt` contains one price on each line. A price may include pence, for example 2.75.\n\nWrite an algorithm that reads every price in the file and outputs the total of all the prices. [5]\n\nYou may use pseudo-code or a high-level programming language.",
+    "markScheme": [
+      {
+        "text": "Opens prices.txt for reading",
+        "marks": 1,
+        "guidance": ""
+      },
+      {
+        "text": "Uses iteration that repeats until the end of the file is reached",
+        "marks": 1,
+        "guidance": ""
+      },
+      {
+        "text": "Reads one line from the file each time round the iteration",
+        "marks": 1,
+        "guidance": ""
+      },
+      {
+        "text": "Converts each line to real / float and adds it to a total that was set to 0 before the iteration",
+        "marks": 1,
+        "guidance": ""
+      },
+      {
+        "text": "Closes the file and outputs the total after the iteration",
+        "marks": 1,
+        "guidance": ""
+      }
+    ]
+  },
+  {
+    "id": "aqa-files-06",
+    "board": "aqa",
+    "topic": "files",
+    "ability": 3,
+    "marks": 6,
+    "format": "code",
+    "question": "A text file called `names.txt` contains one name on each line.\n\nWrite an algorithm that reads the file, outputs every name that has **more than 5 characters**, and then outputs how many names were output. [6]\n\nYou may use pseudo-code or a high-level programming language.",
+    "markScheme": [
+      {
+        "text": "Opens names.txt for reading",
+        "marks": 1,
+        "guidance": ""
+      },
+      {
+        "text": "Uses iteration that repeats until the end of the file is reached",
+        "marks": 1,
+        "guidance": ""
+      },
+      {
+        "text": "Reads one line (name) from the file each time round the iteration",
+        "marks": 1,
+        "guidance": ""
+      },
+      {
+        "text": "Uses selection to test whether the length of the name is greater than 5",
+        "marks": 1,
+        "guidance": "Do not allow 5 or more."
+      },
+      {
+        "text": "Outputs the name and adds 1 to a counter that was set to 0 before the iteration, when the test is true",
+        "marks": 1,
+        "guidance": ""
+      },
+      {
+        "text": "Closes the file and outputs the count after the iteration",
+        "marks": 1,
+        "guidance": ""
+      }
+    ]
+  },
+  {
+    "id": "aqa-searching-sorting-01",
+    "board": "aqa",
+    "topic": "searching-sorting",
+    "ability": 1,
+    "marks": 2,
+    "format": "text",
+    "question": "State the names of **two** sorting algorithms. [2]",
+    "markScheme": [
+      {
+        "text": "Bubble sort",
+        "marks": 1,
+        "guidance": ""
+      },
+      {
+        "text": "Merge sort",
+        "marks": 1,
+        "guidance": ""
+      },
+      {
+        "text": "Insertion sort",
+        "marks": 1,
+        "guidance": ""
+      }
+    ]
+  },
+  {
+    "id": "aqa-searching-sorting-02",
+    "board": "aqa",
+    "topic": "searching-sorting",
+    "ability": 1,
+    "marks": 1,
+    "format": "text",
+    "question": "State the name of the searching algorithm that checks each item in a list in turn, starting from the first item. [1]",
+    "markScheme": [
+      {
+        "text": "Linear search",
+        "marks": 1,
+        "guidance": ""
+      }
+    ]
+  },
+  {
+    "id": "aqa-searching-sorting-03",
+    "board": "aqa",
+    "topic": "searching-sorting",
+    "ability": 2,
+    "marks": 3,
+    "format": "text",
+    "question": "A list of numbers is stored in order:\n\n[2, 6, 11, 15, 19, 24, 30, 35, 41]\n\nA binary search is used to find the value 35. The first item is at position 0.\n\n(a) State the first item that is checked. [1]\n\n(b) State the total number of items that are checked (including 35) before it is found. [1]\n\n(c) Explain why a binary search cannot be used on a list that is not in order. [1]",
+    "markScheme": [
+      {
+        "text": "(a) 19",
+        "marks": 1,
+        "guidance": ""
+      },
+      {
+        "text": "(b) 3",
+        "marks": 1,
+        "guidance": "The items checked are 19, 30 and 35."
+      },
+      {
+        "text": "(c) It relies on knowing whether the target is higher or lower than the middle item so that half of the list can be ignored",
+        "marks": 1,
+        "guidance": "Allow: it would ignore the half of the list that contains the item."
+      }
+    ]
+  },
+  {
+    "id": "aqa-searching-sorting-04",
+    "board": "aqa",
+    "topic": "searching-sorting",
+    "ability": 2,
+    "marks": 4,
+    "format": "text",
+    "question": "An insertion sort is used to sort this list into ascending order:\n\n[4, 9, 2, 6]\n\nThe sort takes each item in turn, starting with the second, and inserts it into the correct place among the items to its left.\n\n(a) Show the list after the item 2 has been inserted into the correct place. [1]\n\n(b) Show the final sorted list. [1]\n\n(c) Describe how an insertion sort works. [2]",
+    "markScheme": [
+      {
+        "text": "(a) [2, 4, 9, 6]",
+        "marks": 1,
+        "guidance": ""
+      },
+      {
+        "text": "(b) [2, 4, 6, 9]",
+        "marks": 1,
+        "guidance": ""
+      },
+      {
+        "text": "(c) Each item in turn is taken from the unsorted part of the list",
+        "marks": 1,
+        "guidance": ""
+      },
+      {
+        "text": "(c) It is inserted into the correct position in the sorted part of the list (by moving larger items along)",
+        "marks": 1,
+        "guidance": ""
+      }
+    ]
+  },
+  {
+    "id": "aqa-searching-sorting-05",
+    "board": "aqa",
+    "topic": "searching-sorting",
+    "ability": 3,
+    "marks": 5,
+    "format": "code",
+    "question": "An array called `names` stores a list of names.\n\nWrite an algorithm that uses a **linear search** to look for a name entered by the user. The algorithm must output `Found` if the name is in the array or `Not found` if it is not, followed by how many items in the array were checked. [5]\n\nYou may use pseudo-code or a high-level programming language.",
+    "markScheme": [
+      {
+        "text": "Takes the name to search for as input",
+        "marks": 1,
+        "guidance": ""
+      },
+      {
+        "text": "Uses iteration to go through the items in the array, comparing each item with the name",
+        "marks": 1,
+        "guidance": ""
+      },
+      {
+        "text": "Adds 1 to a counter for each item checked",
+        "marks": 1,
+        "guidance": ""
+      },
+      {
+        "text": "Stops checking as soon as the name is found",
+        "marks": 1,
+        "guidance": "Allow a flag variable, exit or break."
+      },
+      {
+        "text": "Outputs Found or Not found (Not found only after all items are checked) and the number checked",
+        "marks": 1,
+        "guidance": ""
+      }
+    ]
+  },
+  {
+    "id": "aqa-searching-sorting-06",
+    "board": "aqa",
+    "topic": "searching-sorting",
+    "ability": 3,
+    "marks": 6,
+    "format": "text",
+    "question": "Describe how a **bubble sort** works. [6]",
+    "markScheme": [
+      {
+        "text": "Compares the first two (adjacent) items in the list",
+        "marks": 1,
+        "guidance": ""
+      },
+      {
+        "text": "Swaps them if they are in the wrong order",
+        "marks": 1,
+        "guidance": ""
+      },
+      {
+        "text": "Moves on to the next pair of adjacent items and repeats to the end of the list (one pass)",
+        "marks": 1,
+        "guidance": ""
+      },
+      {
+        "text": "After the first pass the largest item is at the end of the list",
+        "marks": 1,
+        "guidance": "Allow: the items 'bubble' towards their correct positions."
+      },
+      {
+        "text": "Repeats passes through the list (ignoring the items already in place)",
+        "marks": 1,
+        "guidance": ""
+      },
+      {
+        "text": "Stops when a complete pass is made with no swaps",
+        "marks": 1,
+        "guidance": ""
+      }
+    ]
+  },
+  {
+    "id": "aqa-robust-programs-01",
+    "board": "aqa",
+    "topic": "robust-programs",
+    "ability": 1,
+    "marks": 2,
+    "format": "text",
+    "question": "State what is meant by **input validation**. [2]",
+    "markScheme": [
+      {
+        "text": "An automatic check on the data entered by the user",
+        "marks": 1,
+        "guidance": ""
+      },
+      {
+        "text": "...to make sure it is reasonable / acceptable before the program uses it",
+        "marks": 1,
+        "guidance": "Do not allow: checks the data is correct / true."
+      }
+    ]
+  },
+  {
+    "id": "aqa-robust-programs-02",
+    "board": "aqa",
+    "topic": "robust-programs",
+    "ability": 1,
+    "marks": 2,
+    "format": "text",
+    "question": "State **two** ways a programmer can make their code easier to read and understand. [2]",
+    "markScheme": [
+      {
+        "text": "Add comments to explain the code",
+        "marks": 1,
+        "guidance": ""
+      },
+      {
+        "text": "Use meaningful variable / subroutine names",
+        "marks": 1,
+        "guidance": ""
+      },
+      {
+        "text": "Use indentation to show the structure of the code",
+        "marks": 1,
+        "guidance": ""
+      },
+      {
+        "text": "Use white space / blank lines to separate sections",
+        "marks": 1,
+        "guidance": "Allow: use subroutines to break the code into smaller parts."
+      }
+    ]
+  },
+  {
+    "id": "aqa-robust-programs-03",
+    "board": "aqa",
+    "topic": "robust-programs",
+    "ability": 2,
+    "marks": 3,
+    "format": "text",
+    "question": "A program accepts a test mark. The mark must be a whole number from 0 to 50 inclusive.\n\n(a) State **one** example of normal test data. [1]\n\n(b) State **one** example of boundary test data. [1]\n\n(c) State **one** example of erroneous test data. [1]",
+    "markScheme": [
+      {
+        "text": "(a) Any whole number from 1 to 49",
+        "marks": 1,
+        "guidance": ""
+      },
+      {
+        "text": "(b) 0 or 50",
+        "marks": 1,
+        "guidance": "Allow -1 or 51 as boundary values just outside the range."
+      },
+      {
+        "text": "(c) A value of the wrong data type, such as a word (e.g. \"abc\") or a decimal (e.g. 12.5)",
+        "marks": 1,
+        "guidance": "Do not allow a whole number outside the range."
+      }
+    ]
+  },
+  {
+    "id": "aqa-robust-programs-04",
+    "board": "aqa",
+    "topic": "robust-programs",
+    "ability": 2,
+    "marks": 4,
+    "format": "text",
+    "question": "(a) Explain why a login system limits the number of password attempts a user is allowed. [2]\n\n(b) Describe what is meant by **two-factor authentication**. [2]",
+    "markScheme": [
+      {
+        "text": "(a) So that someone cannot keep guessing passwords",
+        "marks": 1,
+        "guidance": ""
+      },
+      {
+        "text": "(a) ...until they get into the account (brute force)",
+        "marks": 1,
+        "guidance": "Allow: the account is locked after too many attempts."
+      },
+      {
+        "text": "(b) The user must provide two different types of proof of identity",
+        "marks": 1,
+        "guidance": ""
+      },
+      {
+        "text": "(b) An example, such as a password and a code sent to their phone",
+        "marks": 1,
+        "guidance": "Allow any correct example of two different factors."
+      }
+    ]
+  },
+  {
+    "id": "aqa-robust-programs-05",
+    "board": "aqa",
+    "topic": "robust-programs",
+    "ability": 3,
+    "marks": 5,
+    "format": "code",
+    "question": "A survey asks users to give a rating from 1 to 5.\n\nWrite an algorithm that asks the user to enter a rating and keeps asking until a whole number from 1 to 5 is entered. When a valid rating has been entered the algorithm outputs `Thank you`. [5]\n\nYou may use pseudo-code or a high-level programming language.",
+    "markScheme": [
+      {
+        "text": "Takes the rating as input and stores it",
+        "marks": 1,
+        "guidance": ""
+      },
+      {
+        "text": "Uses condition-controlled iteration (WHILE / REPEAT UNTIL)",
+        "marks": 1,
+        "guidance": ""
+      },
+      {
+        "text": "Condition is correct: repeats while the rating is less than 1 or greater than 5",
+        "marks": 1,
+        "guidance": ""
+      },
+      {
+        "text": "Asks for the rating again inside the iteration",
+        "marks": 1,
+        "guidance": ""
+      },
+      {
+        "text": "Outputs Thank you once, after a valid rating has been entered",
+        "marks": 1,
+        "guidance": ""
+      }
+    ]
+  },
+  {
+    "id": "aqa-robust-programs-06",
+    "board": "aqa",
+    "topic": "robust-programs",
+    "ability": 3,
+    "marks": 6,
+    "format": "text",
+    "question": "(a) State the difference between a **syntax error** and a **logic error**. [2]\n\n(b) A programmer writes this line to work out the average of three marks:\n\n```\naverage ← a + b + c / 3\n```\n\nDescribe the error in this line and how to correct it. [2]\n\n(c) Explain what is meant by **final (terminal) testing**. [2]",
+    "markScheme": [
+      {
+        "text": "(a) A syntax error breaks the rules of the language so the program will not run",
+        "marks": 1,
+        "guidance": ""
+      },
+      {
+        "text": "(a) A logic error lets the program run but it gives an incorrect result",
+        "marks": 1,
+        "guidance": ""
+      },
+      {
+        "text": "(b) It is a logic error: c is divided by 3 before the marks are added together",
+        "marks": 1,
+        "guidance": ""
+      },
+      {
+        "text": "(b) Brackets are needed: (a + b + c) / 3",
+        "marks": 1,
+        "guidance": ""
+      },
+      {
+        "text": "(c) Testing the whole (finished) program at the end of development",
+        "marks": 1,
+        "guidance": ""
+      },
+      {
+        "text": "(c) ...to check it works as intended / meets the requirements before it is used",
+        "marks": 1,
+        "guidance": "Allow: carried out before it is released."
+      }
+    ]
+  },
+  {
+    "id": "aqa-databases-01",
+    "board": "aqa",
+    "topic": "databases",
+    "ability": 1,
+    "marks": 2,
+    "format": "text",
+    "question": "A database table stores data about students.\n\n(a) State the name given to a **column** in a database table. [1]\n\n(b) State the name given to a **row** in a database table. [1]",
+    "markScheme": [
+      {
+        "text": "(a) Field",
+        "marks": 1,
+        "guidance": "Allow: attribute."
+      },
+      {
+        "text": "(b) Record",
+        "marks": 1,
+        "guidance": "Allow: tuple / entry."
+      }
+    ]
+  },
+  {
+    "id": "aqa-databases-02",
+    "board": "aqa",
+    "topic": "databases",
+    "ability": 1,
+    "marks": 1,
+    "format": "text",
+    "question": "State the purpose of a **primary key** in a database table. [1]",
+    "markScheme": [
+      {
+        "text": "It uniquely identifies each record in the table",
+        "marks": 1,
+        "guidance": "Allow: no two records have the same primary key."
+      }
+    ]
+  },
+  {
+    "id": "aqa-databases-03",
+    "board": "aqa",
+    "topic": "databases",
+    "ability": 2,
+    "marks": 3,
+    "format": "text",
+    "question": "A table called `Students` is shown.\n\n| StudentID | Name | Year | Score |\n|---|---|---|---|\n| 1 | Ada | 10 | 72 |\n| 2 | Ben | 11 | 65 |\n| 3 | Cara | 10 | 88 |\n| 4 | Dev | 9 | 54 |\n\n(a) State the data output by this SQL statement. [1]\n\n```\nSELECT Name FROM Students WHERE Year = 10\n```\n\n(b) State the order in which the names are output by this SQL statement. [1]\n\n```\nSELECT Name FROM Students WHERE Score > 60 ORDER BY Score DESC\n```\n\n(c) State the number of fields in the table. [1]",
+    "markScheme": [
+      {
+        "text": "(a) Ada and Cara",
+        "marks": 1,
+        "guidance": "Both names are needed."
+      },
+      {
+        "text": "(b) Cara, Ada, Ben",
+        "marks": 1,
+        "guidance": "Dev is not output because 54 is not more than 60."
+      },
+      {
+        "text": "(c) 4",
+        "marks": 1,
+        "guidance": ""
+      }
+    ]
+  },
+  {
+    "id": "aqa-databases-04",
+    "board": "aqa",
+    "topic": "databases",
+    "ability": 2,
+    "marks": 4,
+    "format": "code",
+    "question": "Use the `Students` table below to answer this question.\n\n| StudentID | Name | Year | Score |\n|---|---|---|---|\n| 1 | Ada | 10 | 72 |\n| 2 | Ben | 11 | 65 |\n| 3 | Cara | 10 | 88 |\n| 4 | Dev | 9 | 54 |\n\n(a) Write an SQL statement to display all the fields of every student who scored 80 or more. [1]\n\n(b) Write an SQL statement to display only the names of all the students, in alphabetical order. [2]\n\n(c) State the SQL keyword that is used to remove a record from a table. [1]",
+    "markScheme": [
+      {
+        "text": "(a) SELECT * FROM Students WHERE Score >= 80",
+        "marks": 1,
+        "guidance": "Allow SELECT with all four field names. Do not allow > 80."
+      },
+      {
+        "text": "(b) SELECT Name FROM Students",
+        "marks": 1,
+        "guidance": ""
+      },
+      {
+        "text": "(b) ORDER BY Name",
+        "marks": 1,
+        "guidance": "Allow ORDER BY Name ASC."
+      },
+      {
+        "text": "(c) DELETE",
+        "marks": 1,
+        "guidance": ""
+      }
+    ]
+  },
+  {
+    "id": "aqa-databases-05",
+    "board": "aqa",
+    "topic": "databases",
+    "ability": 3,
+    "marks": 5,
+    "format": "code",
+    "question": "The `Students` table has the fields `StudentID`, `Name`, `Year` and `Score`.\n\n(a) Write an SQL statement to add a new student with the values 5, Ella, 9 and 71. [2]\n\n(b) Write an SQL statement to change the score of the student with a `StudentID` of 4 to 60. [3]",
+    "markScheme": [
+      {
+        "text": "(a) INSERT INTO Students",
+        "marks": 1,
+        "guidance": ""
+      },
+      {
+        "text": "(a) VALUES (5, 'Ella', 9, 71) with the values in the correct order and text in quotes",
+        "marks": 1,
+        "guidance": "Allow single or double quotes."
+      },
+      {
+        "text": "(b) UPDATE Students",
+        "marks": 1,
+        "guidance": ""
+      },
+      {
+        "text": "(b) SET Score = 60",
+        "marks": 1,
+        "guidance": ""
+      },
+      {
+        "text": "(b) WHERE StudentID = 4",
+        "marks": 1,
+        "guidance": "Do not award if the WHERE clause is missing (it would change every record)."
+      }
+    ]
+  },
+  {
+    "id": "aqa-databases-06",
+    "board": "aqa",
+    "topic": "databases",
+    "ability": 3,
+    "marks": 6,
+    "format": "text",
+    "question": "A school database has two tables.\n\n**Students**\n\n| StudentID | Name | FormID |\n|---|---|---|\n| 1 | Ada | 10A |\n| 2 | Ben | 10B |\n| 3 | Cara | 10A |\n\n**Forms**\n\n| FormID | FormName | Tutor |\n|---|---|---|\n| 10A | Ten A | Mr Shah |\n| 10B | Ten B | Ms Ford |\n\n(a) State the field that links the two tables. [1]\n\n(b) Explain the purpose of a **foreign key**. [2]\n\n(c) Give **three** advantages of storing the data in two linked tables instead of one table with the tutor's name repeated for every student. [3]",
+    "markScheme": [
+      {
+        "text": "(a) FormID",
+        "marks": 1,
+        "guidance": ""
+      },
+      {
+        "text": "(b) A foreign key is a field in one table that is the primary key of another table",
+        "marks": 1,
+        "guidance": ""
+      },
+      {
+        "text": "(b) It is used to link records in the two tables together",
+        "marks": 1,
+        "guidance": "Allow: so that data can be looked up in the other table."
+      },
+      {
+        "text": "(c) The tutor's details are stored once, so less data is duplicated (less redundancy)",
+        "marks": 1,
+        "guidance": ""
+      },
+      {
+        "text": "(c) A change (such as a new tutor) only has to be made in one place",
+        "marks": 1,
+        "guidance": ""
+      },
+      {
+        "text": "(c) The data is more consistent / there is less chance of different versions of the same data",
+        "marks": 1,
+        "guidance": ""
+      },
+      {
+        "text": "(c) Less storage space is needed",
         "marks": 1,
         "guidance": ""
       }

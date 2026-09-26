@@ -1,5 +1,580 @@
 [
   {
+    "id": "ocr-fundamentals-01",
+    "board": "ocr",
+    "topic": "fundamentals",
+    "ability": 1,
+    "marks": 2,
+    "format": "text",
+    "question": "Give the data type of each of the following values.\n\n(a) 7.5 [1]\n\n(b) \"7\" [1]",
+    "markScheme": [
+      {
+        "text": "(a) Real / float / decimal",
+        "marks": 1,
+        "guidance": "Do not accept: number, numeric."
+      },
+      {
+        "text": "(b) String / text",
+        "marks": 1,
+        "guidance": "Accept: string of characters. Do not accept: character, integer."
+      }
+    ]
+  },
+  {
+    "id": "ocr-fundamentals-02",
+    "board": "ocr",
+    "topic": "fundamentals",
+    "ability": 1,
+    "marks": 2,
+    "format": "text",
+    "question": "Explain what is meant by a **variable**. [2]",
+    "markScheme": [
+      {
+        "text": "A named location in memory / a named storage location that stores a value (data)",
+        "marks": 1,
+        "guidance": ""
+      },
+      {
+        "text": "The value can change (be overwritten) while the program is running",
+        "marks": 1,
+        "guidance": "Do not accept: 'a value that varies' on its own."
+      }
+    ]
+  },
+  {
+    "id": "ocr-fundamentals-03",
+    "board": "ocr",
+    "topic": "fundamentals",
+    "ability": 2,
+    "marks": 3,
+    "format": "text",
+    "question": "A program is written in pseudocode.\n\n```\na = input(\"Enter the first number\")\nb = input(\"Enter the second number\")\nprint(a + b)\n```\n\nThe user enters 4 for the first number and 5 for the second number.\n\n(a) State the output of the program. [1]\n\n(b) Explain why the output is not 9. [2]",
+    "markScheme": [
+      {
+        "text": "(a) 45",
+        "marks": 1,
+        "guidance": ""
+      },
+      {
+        "text": "(b) The values from input are stored as strings (text)",
+        "marks": 1,
+        "guidance": ""
+      },
+      {
+        "text": "(b) The + operator joins (concatenates) two strings together instead of adding them",
+        "marks": 1,
+        "guidance": "Accept: they need to be cast to integers with int()."
+      }
+    ]
+  },
+  {
+    "id": "ocr-fundamentals-04",
+    "board": "ocr",
+    "topic": "fundamentals",
+    "ability": 2,
+    "marks": 4,
+    "format": "text",
+    "question": "A program calculates the VAT on a price. The VAT rate, 0.2, is stored as a **constant**.\n\n(a) Explain what is meant by a constant. [2]\n\n(b) Give **two** benefits of using a constant instead of typing 0.2 in each place it is needed. [2]",
+    "markScheme": [
+      {
+        "text": "(a) A named value / storage location",
+        "marks": 1,
+        "guidance": ""
+      },
+      {
+        "text": "(a) Whose value cannot be changed while the program is running",
+        "marks": 1,
+        "guidance": "Accept: fixed / stays the same."
+      },
+      {
+        "text": "(b) If the value changes it only needs to be updated in one place",
+        "marks": 1,
+        "guidance": ""
+      },
+      {
+        "text": "(b) The name makes the code easier to read / understand",
+        "marks": 1,
+        "guidance": ""
+      },
+      {
+        "text": "(b) Reduces the chance of a typing mistake / inconsistent values",
+        "marks": 1,
+        "guidance": ""
+      },
+      {
+        "text": "(b) Stops the value being changed by accident",
+        "marks": 1,
+        "guidance": ""
+      }
+    ]
+  },
+  {
+    "id": "ocr-fundamentals-05",
+    "board": "ocr",
+    "topic": "fundamentals",
+    "ability": 3,
+    "marks": 5,
+    "format": "code",
+    "question": "Write a program that:\n\n- asks the user to enter the price of one item (which may include pence)\n- asks the user to enter how many of the item they want (a whole number)\n- calculates the total cost\n- outputs the message `The total is` followed by the total cost. [5]\n\nYou may use pseudocode or a high-level programming language.",
+    "markScheme": [
+      {
+        "text": "Takes the price as input and stores it in a variable",
+        "marks": 1,
+        "guidance": ""
+      },
+      {
+        "text": "Takes the quantity as input and stores it in a variable",
+        "marks": 1,
+        "guidance": ""
+      },
+      {
+        "text": "Casts the price to real / float AND the quantity to integer",
+        "marks": 1,
+        "guidance": "Do not award if both are cast to integer."
+      },
+      {
+        "text": "Calculates price multiplied by quantity and stores / uses the result",
+        "marks": 1,
+        "guidance": ""
+      },
+      {
+        "text": "Outputs the message with the total",
+        "marks": 1,
+        "guidance": "Accept the total being cast to a string when it is joined to the message."
+      }
+    ]
+  },
+  {
+    "id": "ocr-fundamentals-06",
+    "board": "ocr",
+    "topic": "fundamentals",
+    "ability": 3,
+    "marks": 6,
+    "format": "code",
+    "question": "A teacher marks a test out of 40.\n\n(a) Explain what is meant by **casting**. [2]\n\n(b) Write a program that asks the user to enter a mark out of 40, calculates the percentage, and outputs the percentage. [4]\n\nYou may use pseudocode or a high-level programming language.",
+    "markScheme": [
+      {
+        "text": "(a) Changing (converting) a value from one data type to another",
+        "marks": 1,
+        "guidance": ""
+      },
+      {
+        "text": "(a) Example, such as converting a string from input into an integer / real",
+        "marks": 1,
+        "guidance": "Accept any correct example."
+      },
+      {
+        "text": "(b) Takes the mark as input and casts it to a number (integer or real)",
+        "marks": 1,
+        "guidance": ""
+      },
+      {
+        "text": "(b) Calculates mark divided by 40 multiplied by 100 (or equivalent)",
+        "marks": 1,
+        "guidance": ""
+      },
+      {
+        "text": "(b) Stores the percentage in a variable",
+        "marks": 1,
+        "guidance": ""
+      },
+      {
+        "text": "(b) Outputs the percentage",
+        "marks": 1,
+        "guidance": ""
+      }
+    ]
+  },
+  {
+    "id": "ocr-sequencing-01",
+    "board": "ocr",
+    "topic": "sequencing",
+    "ability": 1,
+    "marks": 2,
+    "format": "text",
+    "question": "State the result of each of the following calculations.\n\n(a) 17 MOD 5 [1]\n\n(b) 17 DIV 5 [1]",
+    "markScheme": [
+      {
+        "text": "(a) 2",
+        "marks": 1,
+        "guidance": ""
+      },
+      {
+        "text": "(b) 3",
+        "marks": 1,
+        "guidance": ""
+      }
+    ]
+  },
+  {
+    "id": "ocr-sequencing-02",
+    "board": "ocr",
+    "topic": "sequencing",
+    "ability": 1,
+    "marks": 1,
+    "format": "text",
+    "question": "State what the operator `^` does in a calculation such as `3 ^ 2`. [1]",
+    "markScheme": [
+      {
+        "text": "Raises the first number to the power of the second (exponent), so 3 ^ 2 is 9",
+        "marks": 1,
+        "guidance": "Accept: squares the number when used with 2."
+      }
+    ]
+  },
+  {
+    "id": "ocr-sequencing-03",
+    "board": "ocr",
+    "topic": "sequencing",
+    "ability": 2,
+    "marks": 4,
+    "format": "text",
+    "question": "A program is written in pseudocode.\n\n```\na = 8\nb = 3\nc = a MOD b\nd = a DIV b\ne = a ^ 2\nprint(c + d + e)\n```\n\n(a) State the value stored in each of the variables `c`, `d` and `e`. [3]\n\n(b) State the output of the program. [1]",
+    "markScheme": [
+      {
+        "text": "(a) c is 2",
+        "marks": 1,
+        "guidance": ""
+      },
+      {
+        "text": "(a) d is 2",
+        "marks": 1,
+        "guidance": ""
+      },
+      {
+        "text": "(a) e is 64",
+        "marks": 1,
+        "guidance": ""
+      },
+      {
+        "text": "(b) 68",
+        "marks": 1,
+        "guidance": "Follow through from the values given in (a) if the addition is correct."
+      }
+    ]
+  },
+  {
+    "id": "ocr-sequencing-04",
+    "board": "ocr",
+    "topic": "sequencing",
+    "ability": 2,
+    "marks": 3,
+    "format": "text",
+    "question": "(a) State what is meant by **sequence** in programming. [1]\n\n(b) The lines of this program are in the wrong order.\n\n```\nprint(total)\ntotal = a + b\na = 5\nb = 6\n```\n\nExplain why the program will not work as intended. [2]",
+    "markScheme": [
+      {
+        "text": "(a) Instructions are executed one after another in the order they are written",
+        "marks": 1,
+        "guidance": ""
+      },
+      {
+        "text": "(b) §print(total)§ is run before §total§ has been given a value",
+        "marks": 1,
+        "guidance": ""
+      },
+      {
+        "text": "(b) §a§ and §b§ are used before they have been assigned values / the instructions are run in order from the top",
+        "marks": 1,
+        "guidance": "Accept: total has no value / would cause an error."
+      }
+    ]
+  },
+  {
+    "id": "ocr-sequencing-05",
+    "board": "ocr",
+    "topic": "sequencing",
+    "ability": 3,
+    "marks": 5,
+    "format": "code",
+    "question": "Write a program that asks the user to enter a number of minutes and outputs the equivalent number of whole hours and the number of minutes left over.\n\nFor example, 135 minutes would output 2 hours and 15 minutes. [5]\n\nYou may use pseudocode or a high-level programming language.",
+    "markScheme": [
+      {
+        "text": "Takes the number of minutes as input and casts it to an integer",
+        "marks": 1,
+        "guidance": ""
+      },
+      {
+        "text": "Calculates the whole hours using DIV 60 (or integer division)",
+        "marks": 1,
+        "guidance": ""
+      },
+      {
+        "text": "Calculates the minutes left over using MOD 60",
+        "marks": 1,
+        "guidance": ""
+      },
+      {
+        "text": "Outputs the hours",
+        "marks": 1,
+        "guidance": ""
+      },
+      {
+        "text": "Outputs the minutes left over",
+        "marks": 1,
+        "guidance": "Accept both being output in one message."
+      }
+    ]
+  },
+  {
+    "id": "ocr-sequencing-06",
+    "board": "ocr",
+    "topic": "sequencing",
+    "ability": 3,
+    "marks": 6,
+    "format": "code",
+    "question": "A café splits a bill equally between the people at a table.\n\nWrite a program that:\n\n- asks the user to enter the total bill (which may include pence)\n- asks the user to enter the number of people (a whole number)\n- calculates how much each person pays\n- outputs the amount rounded to 2 decimal places. [6]\n\nYou may use pseudocode or a high-level programming language.",
+    "markScheme": [
+      {
+        "text": "Takes the total bill as input",
+        "marks": 1,
+        "guidance": ""
+      },
+      {
+        "text": "Takes the number of people as input",
+        "marks": 1,
+        "guidance": ""
+      },
+      {
+        "text": "Casts the bill to real / float AND the number of people to integer",
+        "marks": 1,
+        "guidance": ""
+      },
+      {
+        "text": "Divides the bill by the number of people",
+        "marks": 1,
+        "guidance": ""
+      },
+      {
+        "text": "Rounds the answer to 2 decimal places",
+        "marks": 1,
+        "guidance": ""
+      },
+      {
+        "text": "Outputs the amount each person pays",
+        "marks": 1,
+        "guidance": ""
+      }
+    ]
+  },
+  {
+    "id": "ocr-selection-01",
+    "board": "ocr",
+    "topic": "selection",
+    "ability": 1,
+    "marks": 1,
+    "format": "text",
+    "question": "State what is meant by selection in a program. [1]",
+    "markScheme": [
+      {
+        "text": "A decision is made in the program / different code runs depending on whether a condition is true or false",
+        "marks": 1,
+        "guidance": "Accept: an example using IF."
+      }
+    ]
+  },
+  {
+    "id": "ocr-selection-02",
+    "board": "ocr",
+    "topic": "selection",
+    "ability": 1,
+    "marks": 2,
+    "format": "text",
+    "question": "In the OCR Exam Reference Language, the symbols `=` and `==` are used in programs.\n\nState the purpose of each symbol. [2]",
+    "markScheme": [
+      {
+        "text": "`=` assigns a value to a variable (assignment)",
+        "marks": 1,
+        "guidance": ""
+      },
+      {
+        "text": "`==` compares two values to check whether they are equal (comparison)",
+        "marks": 1,
+        "guidance": ""
+      }
+    ]
+  },
+  {
+    "id": "ocr-selection-03",
+    "board": "ocr",
+    "topic": "selection",
+    "ability": 2,
+    "marks": 3,
+    "format": "text",
+    "question": "The following program is written in OCR Exam Reference Language.\n\n```\nmark = int(input(\"Enter mark\"))\nif mark >= 70 then\n    print(\"Distinction\")\nelseif mark >= 50 then\n    print(\"Pass\")\nelse\n    print(\"Fail\")\nendif\n```\n\nState the output when the user enters:\n\n(a) 72 [1]\n\n(b) 50 [1]\n\n(c) 49 [1]",
+    "markScheme": [
+      {
+        "text": "(a) Distinction",
+        "marks": 1,
+        "guidance": ""
+      },
+      {
+        "text": "(b) Pass",
+        "marks": 1,
+        "guidance": ""
+      },
+      {
+        "text": "(c) Fail",
+        "marks": 1,
+        "guidance": ""
+      }
+    ]
+  },
+  {
+    "id": "ocr-selection-04",
+    "board": "ocr",
+    "topic": "selection",
+    "ability": 2,
+    "marks": 4,
+    "format": "code",
+    "question": "A cinema sells tickets. The price depends on the customer's age and whether they have a student card.\n\n| Customer | Ticket price |\n|---|---|\n| Aged 15 or under | £10 |\n| Aged 16 or over, with a student card | £12 |\n| Aged 16 or over, without a student card | £15 |\n\nWrite a program that:\n\n- asks the user to enter their age\n- only if they are aged 16 or over, asks whether they have a student card (the user types \"yes\" or \"no\")\n- outputs the ticket price. [4]\n\nYou may use pseudocode or a high-level programming language.",
+    "markScheme": [
+      {
+        "text": "Takes the age as input and stores it in a variable",
+        "marks": 1,
+        "guidance": ""
+      },
+      {
+        "text": "Tests the age with the correct boundary: aged 15 or under gives £10 (and 16 does not)",
+        "marks": 1,
+        "guidance": "Accept age < 16 or age <= 15. Do not award if 16 is treated as a child."
+      },
+      {
+        "text": "For aged 16 or over, takes the student card answer as input AND gives £12 when it is \"yes\"",
+        "marks": 1,
+        "guidance": "Accept the student card question being asked of every customer, as long as the answer only affects those aged 16 or over."
+      },
+      {
+        "text": "Gives £15 for aged 16 or over without a student card AND outputs the price in every case",
+        "marks": 1,
+        "guidance": ""
+      }
+    ]
+  },
+  {
+    "id": "ocr-selection-05",
+    "board": "ocr",
+    "topic": "selection",
+    "ability": 3,
+    "marks": 6,
+    "format": "code",
+    "question": "A game gives players a star rating from their score. The score must be a whole number from 0 to 100.\n\n| Score | Output |\n|---|---|\n| 90 to 100 | 3 stars |\n| 60 to 89 | 2 stars |\n| 30 to 59 | 1 star |\n| 0 to 29 | No stars |\n\nWrite a program that asks the user to enter a score. If the score is outside the range 0 to 100 the program outputs \"Invalid\". Otherwise it outputs the correct rating. [6]\n\nYou may use pseudocode or a high-level programming language.",
+    "markScheme": [
+      {
+        "text": "Takes the score as input and stores it in a variable",
+        "marks": 1,
+        "guidance": ""
+      },
+      {
+        "text": "Tests whether the score is invalid (below 0 OR above 100) and outputs \"Invalid\"",
+        "marks": 1,
+        "guidance": "Both limits must be checked. Accept a range check written the other way round."
+      },
+      {
+        "text": "Ratings are only output when the score is valid (correct use of ELSE / nested selection)",
+        "marks": 1,
+        "guidance": ""
+      },
+      {
+        "text": "Outputs \"3 stars\" for 90 to 100 (boundary correct)",
+        "marks": 1,
+        "guidance": ""
+      },
+      {
+        "text": "Outputs \"2 stars\" for 60 to 89 (boundaries correct)",
+        "marks": 1,
+        "guidance": ""
+      },
+      {
+        "text": "Outputs \"1 star\" for 30 to 59 AND \"No stars\" for 0 to 29 (boundaries correct)",
+        "marks": 1,
+        "guidance": ""
+      }
+    ]
+  },
+  {
+    "id": "ocr-selection-06",
+    "board": "ocr",
+    "topic": "selection",
+    "ability": 1,
+    "marks": 2,
+    "format": "text",
+    "question": "A program is written in pseudocode.\n\n```\nif x > 5 then\n    print(\"A\")\nelseif x > 3 then\n    print(\"B\")\nelse\n    print(\"C\")\nendif\n```\n\n(a) State the output when x is 7. [1]\n\n(b) State the output when x is 4. [1]",
+    "markScheme": [
+      {
+        "text": "(a) A",
+        "marks": 1,
+        "guidance": ""
+      },
+      {
+        "text": "(b) B",
+        "marks": 1,
+        "guidance": ""
+      }
+    ]
+  },
+  {
+    "id": "ocr-selection-07",
+    "board": "ocr",
+    "topic": "selection",
+    "ability": 2,
+    "marks": 3,
+    "format": "text",
+    "question": "State whether each of the following expressions is True or False.\n\n(a) (5 > 3) AND (2 > 4) [1]\n\n(b) NOT (7 == 7) [1]\n\n(c) (4 < 2) OR (9 MOD 3 == 0) [1]",
+    "markScheme": [
+      {
+        "text": "(a) False",
+        "marks": 1,
+        "guidance": ""
+      },
+      {
+        "text": "(b) False",
+        "marks": 1,
+        "guidance": ""
+      },
+      {
+        "text": "(c) True",
+        "marks": 1,
+        "guidance": ""
+      }
+    ]
+  },
+  {
+    "id": "ocr-selection-08",
+    "board": "ocr",
+    "topic": "selection",
+    "ability": 3,
+    "marks": 5,
+    "format": "code",
+    "question": "A leisure centre charges for entry by age.\n\n| Age | Charge |\n|---|---|\n| Under 5 | Free |\n| 5 to 17 | £3 |\n| 18 to 64 | £6 |\n| 65 or over | £4 |\n\nWrite a program that asks the user to enter their age and outputs the charge. [5]\n\nYou may use pseudocode or a high-level programming language.",
+    "markScheme": [
+      {
+        "text": "Takes the age as input and casts it to an integer",
+        "marks": 1,
+        "guidance": ""
+      },
+      {
+        "text": "Under 5 outputs free (or 0)",
+        "marks": 1,
+        "guidance": ""
+      },
+      {
+        "text": "5 to 17 outputs £3, with the correct boundaries (5 and 17 included)",
+        "marks": 1,
+        "guidance": ""
+      },
+      {
+        "text": "18 to 64 outputs £6, with the correct boundaries (18 and 64 included)",
+        "marks": 1,
+        "guidance": ""
+      },
+      {
+        "text": "65 or over outputs £4, and a charge is output in every case",
+        "marks": 1,
+        "guidance": ""
+      }
+    ]
+  },
+  {
     "id": "ocr-iteration-01",
     "board": "ocr",
     "topic": "iteration",
@@ -145,135 +720,430 @@
     ]
   },
   {
-    "id": "ocr-selection-01",
+    "id": "ocr-iteration-06",
     "board": "ocr",
-    "topic": "selection",
-    "ability": 1,
-    "marks": 1,
-    "format": "text",
-    "question": "State what is meant by selection in a program. [1]",
-    "markScheme": [
-      {
-        "text": "A decision is made in the program / different code runs depending on whether a condition is true or false",
-        "marks": 1,
-        "guidance": "Accept: an example using IF."
-      }
-    ]
-  },
-  {
-    "id": "ocr-selection-02",
-    "board": "ocr",
-    "topic": "selection",
+    "topic": "iteration",
     "ability": 1,
     "marks": 2,
     "format": "text",
-    "question": "In the OCR Exam Reference Language, the symbols `=` and `==` are used in programs.\n\nState the purpose of each symbol. [2]",
+    "question": "A program is written in pseudocode.\n\n```\nfor i = 1 to 4\n    print(i * 2)\nnext i\n```\n\nState the values that are output. [2]",
     "markScheme": [
       {
-        "text": "`=` assigns a value to a variable (assignment)",
+        "text": "The first two values are 2 and 4",
         "marks": 1,
         "guidance": ""
       },
       {
-        "text": "`==` compares two values to check whether they are equal (comparison)",
+        "text": "All four values are output: 2, 4, 6, 8",
         "marks": 1,
-        "guidance": ""
+        "guidance": "Accept the values on one line or separate lines."
       }
     ]
   },
   {
-    "id": "ocr-selection-03",
+    "id": "ocr-iteration-07",
     "board": "ocr",
-    "topic": "selection",
+    "topic": "iteration",
     "ability": 2,
     "marks": 3,
     "format": "text",
-    "question": "The following program is written in OCR Exam Reference Language.\n\n```\nmark = int(input(\"Enter mark\"))\nif mark >= 70 then\n    print(\"Distinction\")\nelseif mark >= 50 then\n    print(\"Pass\")\nelse\n    print(\"Fail\")\nendif\n```\n\nState the output when the user enters:\n\n(a) 72 [1]\n\n(b) 50 [1]\n\n(c) 49 [1]",
+    "question": "A program is written in pseudocode.\n\n```\ntotal = 0\nx = 1\nwhile x < 20\n    total = total + x\n    x = x * 2\nendwhile\nprint(total)\n```\n\n(a) State how many times the loop is repeated. [1]\n\n(b) State the value of `x` when the loop ends. [1]\n\n(c) State the output of the program. [1]",
     "markScheme": [
       {
-        "text": "(a) Distinction",
+        "text": "(a) 5",
+        "marks": 1,
+        "guidance": "x takes the values 1, 2, 4, 8 and 16 inside the loop."
+      },
+      {
+        "text": "(b) 32",
         "marks": 1,
         "guidance": ""
       },
       {
-        "text": "(b) Pass",
+        "text": "(c) 31",
+        "marks": 1,
+        "guidance": "1 + 2 + 4 + 8 + 16."
+      }
+    ]
+  },
+  {
+    "id": "ocr-iteration-08",
+    "board": "ocr",
+    "topic": "iteration",
+    "ability": 3,
+    "marks": 5,
+    "format": "code",
+    "question": "Write a program that asks the user to enter positive whole numbers, one at a time. The user enters 0 to show they have finished (the 0 is not one of the numbers).\n\nThe program must output how many numbers were entered and the average of those numbers. [5]\n\nYou may use pseudocode or a high-level programming language.",
+    "markScheme": [
+      {
+        "text": "Takes a number as input and casts it to an integer",
         "marks": 1,
         "guidance": ""
       },
       {
-        "text": "(c) Fail",
+        "text": "Uses a condition-controlled loop that stops when 0 is entered",
+        "marks": 1,
+        "guidance": ""
+      },
+      {
+        "text": "Adds 1 to a counter for each number entered (not counting the 0)",
+        "marks": 1,
+        "guidance": ""
+      },
+      {
+        "text": "Adds each number to a running total",
+        "marks": 1,
+        "guidance": ""
+      },
+      {
+        "text": "After the loop, outputs the count and the average (total divided by count)",
+        "marks": 1,
+        "guidance": "Accept a check that stops division by zero when no numbers are entered."
+      }
+    ]
+  },
+  {
+    "id": "ocr-lists-01",
+    "board": "ocr",
+    "topic": "lists",
+    "ability": 1,
+    "marks": 2,
+    "format": "text",
+    "question": "Explain what is meant by an **array**. [2]",
+    "markScheme": [
+      {
+        "text": "A data structure that stores a collection of items (several values) under one name / identifier",
+        "marks": 1,
+        "guidance": ""
+      },
+      {
+        "text": "Each item is accessed using an index / position number",
+        "marks": 1,
+        "guidance": "Accept: the items are usually the same data type."
+      }
+    ]
+  },
+  {
+    "id": "ocr-lists-02",
+    "board": "ocr",
+    "topic": "lists",
+    "ability": 1,
+    "marks": 1,
+    "format": "text",
+    "question": "In OCR Exam Reference Language, the first item in an array is stored at an index. State the index of the first item. [1]",
+    "markScheme": [
+      {
+        "text": "0",
+        "marks": 1,
+        "guidance": "Do not accept 1."
+      }
+    ]
+  },
+  {
+    "id": "ocr-lists-03",
+    "board": "ocr",
+    "topic": "lists",
+    "ability": 2,
+    "marks": 3,
+    "format": "text",
+    "question": "An array is created and filled.\n\n```\narray scores[5]\nscores[0] = 12\nscores[1] = 7\nscores[2] = 20\nscores[3] = 3\nscores[4] = 9\nprint(scores[2] + scores[4])\nscores[1] = scores[1] * 2\nprint(scores[1])\n```\n\n(a) State the output of the first `print` statement. [1]\n\n(b) State the output of the second `print` statement. [1]\n\n(c) State the number of items in the array `scores`. [1]",
+    "markScheme": [
+      {
+        "text": "(a) 29",
+        "marks": 1,
+        "guidance": ""
+      },
+      {
+        "text": "(b) 14",
+        "marks": 1,
+        "guidance": ""
+      },
+      {
+        "text": "(c) 5",
         "marks": 1,
         "guidance": ""
       }
     ]
   },
   {
-    "id": "ocr-selection-04",
+    "id": "ocr-lists-04",
     "board": "ocr",
-    "topic": "selection",
+    "topic": "lists",
     "ability": 2,
     "marks": 4,
     "format": "code",
-    "question": "A cinema sells tickets. The price depends on the customer's age and whether they have a student card.\n\n| Customer | Ticket price |\n|---|---|\n| Aged 15 or under | £10 |\n| Aged 16 or over, with a student card | £12 |\n| Aged 16 or over, without a student card | £15 |\n\nWrite a program that:\n\n- asks the user to enter their age\n- only if they are aged 16 or over, asks whether they have a student card (the user types \"yes\" or \"no\")\n- outputs the ticket price. [4]\n\nYou may use pseudocode or a high-level programming language.",
+    "question": "Write a program that stores five names in an array called `names` and then uses a loop to output each name. [4]\n\nYou may use pseudocode or a high-level programming language.",
     "markScheme": [
       {
-        "text": "Takes the age as input and stores it in a variable",
+        "text": "Creates an array (called names) with 5 elements",
         "marks": 1,
         "guidance": ""
       },
       {
-        "text": "Tests the age with the correct boundary: aged 15 or under gives £10 (and 16 does not)",
+        "text": "Stores five names in the array using the correct indexes",
         "marks": 1,
-        "guidance": "Accept age < 16 or age <= 15. Do not award if 16 is treated as a child."
+        "guidance": "Accept the names being entered by the user."
       },
       {
-        "text": "For aged 16 or over, takes the student card answer as input AND gives £12 when it is \"yes\"",
+        "text": "Uses a count-controlled loop with correct start and end (0 to 4, or all five items)",
         "marks": 1,
-        "guidance": "Accept the student card question being asked of every customer, as long as the answer only affects those aged 16 or over."
+        "guidance": ""
       },
       {
-        "text": "Gives £15 for aged 16 or over without a student card AND outputs the price in every case",
+        "text": "Outputs each item using the loop variable as the index",
+        "marks": 1,
+        "guidance": "Accept a FOR EACH style loop in a high-level language."
+      }
+    ]
+  },
+  {
+    "id": "ocr-lists-05",
+    "board": "ocr",
+    "topic": "lists",
+    "ability": 3,
+    "marks": 5,
+    "format": "text",
+    "question": "A two-dimensional array called `grid` stores whole numbers. It is accessed as `grid[row, column]` and both indexes start at 0.\n\n| | Column 0 | Column 1 | Column 2 |\n|---|---|---|---|\n| **Row 0** | 4 | 8 | 1 |\n| **Row 1** | 6 | 2 | 9 |\n| **Row 2** | 3 | 7 | 5 |\n\n(a) State the value of `grid[1,2]`. [1]\n\n(b) State the position of the value 7, written in the form `grid[row, column]`. [1]\n\n(c) Write code that uses **nested loops** to output every value in the array. [3]\n\nYou may use pseudocode or a high-level programming language.",
+    "markScheme": [
+      {
+        "text": "(a) 9",
+        "marks": 1,
+        "guidance": ""
+      },
+      {
+        "text": "(b) grid[2,1]",
+        "marks": 1,
+        "guidance": ""
+      },
+      {
+        "text": "(c) An outer count-controlled loop that covers all three rows (0 to 2)",
+        "marks": 1,
+        "guidance": ""
+      },
+      {
+        "text": "(c) An inner count-controlled loop, inside the outer loop, that covers all three columns (0 to 2)",
+        "marks": 1,
+        "guidance": ""
+      },
+      {
+        "text": "(c) Outputs grid[row, column] using both loop variables",
+        "marks": 1,
+        "guidance": "Accept the loop variables being any valid names."
+      }
+    ]
+  },
+  {
+    "id": "ocr-lists-06",
+    "board": "ocr",
+    "topic": "lists",
+    "ability": 3,
+    "marks": 6,
+    "format": "code",
+    "question": "Write a program that:\n\n- stores ten whole numbers entered by the user in an array\n- finds the largest of the ten numbers\n- outputs the largest number. [6]\n\nYou may use pseudocode or a high-level programming language.",
+    "markScheme": [
+      {
+        "text": "Creates an array with 10 elements",
+        "marks": 1,
+        "guidance": ""
+      },
+      {
+        "text": "Uses a loop that repeats 10 times to take the input",
+        "marks": 1,
+        "guidance": ""
+      },
+      {
+        "text": "Casts each input to an integer and stores it at the correct index",
+        "marks": 1,
+        "guidance": ""
+      },
+      {
+        "text": "Sets a variable for the largest to the first item (or a suitably small number) before the search",
+        "marks": 1,
+        "guidance": ""
+      },
+      {
+        "text": "Loops through the array comparing each item with the largest so far, and updates it when a bigger item is found",
+        "marks": 1,
+        "guidance": ""
+      },
+      {
+        "text": "Outputs the largest number after the loop has finished",
         "marks": 1,
         "guidance": ""
       }
     ]
   },
   {
-    "id": "ocr-selection-05",
+    "id": "ocr-strings-01",
     "board": "ocr",
-    "topic": "selection",
+    "topic": "strings",
+    "ability": 1,
+    "marks": 2,
+    "format": "text",
+    "question": "A program is written in pseudocode.\n\n```\nword = \"computer\"\nprint(word.length)\nprint(word.upper)\n```\n\nState the two values that are output. [2]",
+    "markScheme": [
+      {
+        "text": "8",
+        "marks": 1,
+        "guidance": ""
+      },
+      {
+        "text": "COMPUTER",
+        "marks": 1,
+        "guidance": ""
+      }
+    ]
+  },
+  {
+    "id": "ocr-strings-02",
+    "board": "ocr",
+    "topic": "strings",
+    "ability": 1,
+    "marks": 2,
+    "format": "text",
+    "question": "(a) State the result of `\"Hello World\".substring(6, 5)` where the first number is the starting position and the second is the number of characters. Positions start at 0. [1]\n\n(b) State what is meant by **concatenation**. [1]",
+    "markScheme": [
+      {
+        "text": "(a) World",
+        "marks": 1,
+        "guidance": ""
+      },
+      {
+        "text": "(b) Joining two (or more) strings together to make one string",
+        "marks": 1,
+        "guidance": ""
+      }
+    ]
+  },
+  {
+    "id": "ocr-strings-03",
+    "board": "ocr",
+    "topic": "strings",
+    "ability": 2,
+    "marks": 3,
+    "format": "text",
+    "question": "In a character set, the code for the letter \"A\" is 65. The function `ASC()` returns the code of a character and `CHR()` returns the character for a code.\n\n(a) State the output of `print(CHR(ASC(\"A\") + 2))`. [1]\n\n(b) State the output of `print(\"Code\".left(2))`. [1]\n\n(c) State the purpose of the function `ASC()`. [1]",
+    "markScheme": [
+      {
+        "text": "(a) C",
+        "marks": 1,
+        "guidance": ""
+      },
+      {
+        "text": "(b) Co",
+        "marks": 1,
+        "guidance": ""
+      },
+      {
+        "text": "(c) It returns the character code (number) that represents a character",
+        "marks": 1,
+        "guidance": ""
+      }
+    ]
+  },
+  {
+    "id": "ocr-strings-04",
+    "board": "ocr",
+    "topic": "strings",
+    "ability": 2,
+    "marks": 4,
+    "format": "code",
+    "question": "Write a program that asks the user to enter their first name and their last name, then outputs their initials in upper case.\n\nFor example, `Ada` and `Lovelace` would output `AL`. [4]\n\nYou may use pseudocode or a high-level programming language.",
+    "markScheme": [
+      {
+        "text": "Takes the first name AND the last name as input",
+        "marks": 1,
+        "guidance": ""
+      },
+      {
+        "text": "Takes the first character of each name",
+        "marks": 1,
+        "guidance": "Accept .left(1), .substring(0,1) or indexing."
+      },
+      {
+        "text": "Converts the initials to upper case",
+        "marks": 1,
+        "guidance": ""
+      },
+      {
+        "text": "Joins the two initials together and outputs them",
+        "marks": 1,
+        "guidance": ""
+      }
+    ]
+  },
+  {
+    "id": "ocr-strings-05",
+    "board": "ocr",
+    "topic": "strings",
+    "ability": 3,
+    "marks": 5,
+    "format": "code",
+    "question": "Write a program that asks the user to enter a word and outputs the word **reversed**.\n\nFor example, `stack` would output `kcats`. [5]\n\nYou may use pseudocode or a high-level programming language.",
+    "markScheme": [
+      {
+        "text": "Takes the word as input",
+        "marks": 1,
+        "guidance": ""
+      },
+      {
+        "text": "Sets a variable for the new word to an empty string before the loop",
+        "marks": 1,
+        "guidance": ""
+      },
+      {
+        "text": "Uses a loop that covers every character of the word",
+        "marks": 1,
+        "guidance": ""
+      },
+      {
+        "text": "Takes each character using its position in the string (index / substring)",
+        "marks": 1,
+        "guidance": ""
+      },
+      {
+        "text": "Builds the reversed word by adding each character in the correct order, and outputs it after the loop",
+        "marks": 1,
+        "guidance": ""
+      }
+    ]
+  },
+  {
+    "id": "ocr-strings-06",
+    "board": "ocr",
+    "topic": "strings",
     "ability": 3,
     "marks": 6,
     "format": "code",
-    "question": "A game gives players a star rating from their score. The score must be a whole number from 0 to 100.\n\n| Score | Output |\n|---|---|\n| 90 to 100 | 3 stars |\n| 60 to 89 | 2 stars |\n| 30 to 59 | 1 star |\n| 0 to 29 | No stars |\n\nWrite a program that asks the user to enter a score. If the score is outside the range 0 to 100 the program outputs \"Invalid\". Otherwise it outputs the correct rating. [6]\n\nYou may use pseudocode or a high-level programming language.",
+    "question": "Write a program that asks the user to enter a word, counts how many vowels (a, e, i, o, u) it contains, and outputs the count.\n\nThe program must count a capital vowel such as \"A\" as well as a lower case one. [6]\n\nYou may use pseudocode or a high-level programming language.",
     "markScheme": [
       {
-        "text": "Takes the score as input and stores it in a variable",
+        "text": "Takes the word as input",
         "marks": 1,
         "guidance": ""
       },
       {
-        "text": "Tests whether the score is invalid (below 0 OR above 100) and outputs \"Invalid\"",
-        "marks": 1,
-        "guidance": "Both limits must be checked. Accept a range check written the other way round."
-      },
-      {
-        "text": "Ratings are only output when the score is valid (correct use of ELSE / nested selection)",
+        "text": "Converts the word to lower case (or checks both cases)",
         "marks": 1,
         "guidance": ""
       },
       {
-        "text": "Outputs \"3 stars\" for 90 to 100 (boundary correct)",
+        "text": "Sets a counter to 0 before the loop",
         "marks": 1,
         "guidance": ""
       },
       {
-        "text": "Outputs \"2 stars\" for 60 to 89 (boundaries correct)",
+        "text": "Uses a loop that covers every character in the word",
         "marks": 1,
         "guidance": ""
       },
       {
-        "text": "Outputs \"1 star\" for 30 to 59 AND \"No stars\" for 0 to 29 (boundaries correct)",
+        "text": "Checks each character against all five vowels",
+        "marks": 1,
+        "guidance": ""
+      },
+      {
+        "text": "Adds 1 to the counter for each vowel and outputs the count after the loop",
         "marks": 1,
         "guidance": ""
       }
@@ -431,6 +1301,667 @@
         "text": "(b) Calls isValid with the entered password AND outputs \"Password accepted\" after the loop",
         "marks": 1,
         "guidance": ""
+      }
+    ]
+  },
+  {
+    "id": "ocr-functions-06",
+    "board": "ocr",
+    "topic": "functions",
+    "ability": 1,
+    "marks": 2,
+    "format": "text",
+    "question": "State **two** benefits of using subprograms (functions or procedures) in a program. [2]",
+    "markScheme": [
+      {
+        "text": "Code can be reused / written once and used many times",
+        "marks": 1,
+        "guidance": ""
+      },
+      {
+        "text": "Makes the program easier to read / shorter",
+        "marks": 1,
+        "guidance": ""
+      },
+      {
+        "text": "Makes it easier to test / debug (each subprogram can be tested on its own)",
+        "marks": 1,
+        "guidance": ""
+      },
+      {
+        "text": "Makes it easier to maintain / update in one place",
+        "marks": 1,
+        "guidance": ""
+      },
+      {
+        "text": "Different programmers can work on different subprograms",
+        "marks": 1,
+        "guidance": ""
+      }
+    ]
+  },
+  {
+    "id": "ocr-functions-07",
+    "board": "ocr",
+    "topic": "functions",
+    "ability": 2,
+    "marks": 3,
+    "format": "text",
+    "question": "A program is written in pseudocode.\n\n```\nfunction double(n)\n    return n * 2\nendfunction\n\nfunction addOne(n)\n    return n + 1\nendfunction\n\nx = addOne(double(4))\nprint(x)\n```\n\n(a) State the output of the program. [1]\n\n(b) State the difference between a function and a procedure. [1]\n\n(c) State the name of the parameter of the function `double`. [1]",
+    "markScheme": [
+      {
+        "text": "(a) 9",
+        "marks": 1,
+        "guidance": ""
+      },
+      {
+        "text": "(b) A function returns a value, a procedure does not",
+        "marks": 1,
+        "guidance": ""
+      },
+      {
+        "text": "(c) n",
+        "marks": 1,
+        "guidance": ""
+      }
+    ]
+  },
+  {
+    "id": "ocr-functions-08",
+    "board": "ocr",
+    "topic": "functions",
+    "ability": 3,
+    "marks": 5,
+    "format": "code",
+    "question": "Write a function called `isEven` that takes a whole number as a parameter and returns True if the number is even and False if it is not.\n\nThen write a main program that asks the user to enter a number, uses the function, and outputs `Even` or `Odd`. [5]\n\nYou may use pseudocode or a high-level programming language.",
+    "markScheme": [
+      {
+        "text": "Defines a function called isEven with one parameter",
+        "marks": 1,
+        "guidance": ""
+      },
+      {
+        "text": "Tests whether the number is even using MOD 2 (== 0)",
+        "marks": 1,
+        "guidance": ""
+      },
+      {
+        "text": "Returns True when even and False when not even",
+        "marks": 1,
+        "guidance": "Accept returning the result of the comparison."
+      },
+      {
+        "text": "Main program takes a number as input, casts it to an integer and calls the function",
+        "marks": 1,
+        "guidance": ""
+      },
+      {
+        "text": "Uses selection on the returned value to output Even or Odd",
+        "marks": 1,
+        "guidance": ""
+      }
+    ]
+  },
+  {
+    "id": "ocr-files-01",
+    "board": "ocr",
+    "topic": "files",
+    "ability": 1,
+    "marks": 2,
+    "format": "text",
+    "question": "State **two** reasons why a program might store data in a file instead of only in variables. [2]",
+    "markScheme": [
+      {
+        "text": "The data is kept after the program ends (persistent storage)",
+        "marks": 1,
+        "guidance": ""
+      },
+      {
+        "text": "Large amounts of data can be stored",
+        "marks": 1,
+        "guidance": ""
+      },
+      {
+        "text": "The data can be used again by the same program / by other programs",
+        "marks": 1,
+        "guidance": ""
+      },
+      {
+        "text": "The data can be shared / edited outside the program",
+        "marks": 1,
+        "guidance": ""
+      }
+    ]
+  },
+  {
+    "id": "ocr-files-02",
+    "board": "ocr",
+    "topic": "files",
+    "ability": 1,
+    "marks": 1,
+    "format": "text",
+    "question": "State **one** reason why a program should close a file when it has finished with it. [1]",
+    "markScheme": [
+      {
+        "text": "Makes sure all the data has been written (saved) to the file",
+        "marks": 1,
+        "guidance": "Accept: stops the file being corrupted; frees the file so other programs can use it."
+      }
+    ]
+  },
+  {
+    "id": "ocr-files-03",
+    "board": "ocr",
+    "topic": "files",
+    "ability": 2,
+    "marks": 3,
+    "format": "text",
+    "question": "A program is written in pseudocode.\n\n```\nmyFile = open(\"scores.txt\")\nwhile NOT myFile.endOfFile()\n    print(myFile.readLine())\nendwhile\nmyFile.close()\n```\n\n(a) Describe what this program does. [2]\n\n(b) State the purpose of `myFile.endOfFile()`. [1]",
+    "markScheme": [
+      {
+        "text": "(a) Opens the file scores.txt",
+        "marks": 1,
+        "guidance": ""
+      },
+      {
+        "text": "(a) Outputs every line of the file, one at a time, until the end of the file is reached",
+        "marks": 1,
+        "guidance": ""
+      },
+      {
+        "text": "(b) It returns True when there are no more lines to read in the file",
+        "marks": 1,
+        "guidance": ""
+      }
+    ]
+  },
+  {
+    "id": "ocr-files-04",
+    "board": "ocr",
+    "topic": "files",
+    "ability": 2,
+    "marks": 4,
+    "format": "code",
+    "question": "Write a program that asks the user to enter a name and stores it in a new file called `names.txt`. [4]\n\nYou may use pseudocode or a high-level programming language.",
+    "markScheme": [
+      {
+        "text": "Takes the name as input",
+        "marks": 1,
+        "guidance": ""
+      },
+      {
+        "text": "Creates (or opens) the file names.txt for writing",
+        "marks": 1,
+        "guidance": ""
+      },
+      {
+        "text": "Writes the name to the file",
+        "marks": 1,
+        "guidance": "Accept writeLine or an equivalent write command."
+      },
+      {
+        "text": "Closes the file",
+        "marks": 1,
+        "guidance": ""
+      }
+    ]
+  },
+  {
+    "id": "ocr-files-05",
+    "board": "ocr",
+    "topic": "files",
+    "ability": 3,
+    "marks": 5,
+    "format": "code",
+    "question": "A file called `marks.txt` contains one whole number on each line.\n\nWrite a program that reads every mark in the file and outputs the total of the marks. [5]\n\nYou may use pseudocode or a high-level programming language.",
+    "markScheme": [
+      {
+        "text": "Opens marks.txt for reading",
+        "marks": 1,
+        "guidance": ""
+      },
+      {
+        "text": "Uses a loop that repeats until the end of the file is reached",
+        "marks": 1,
+        "guidance": ""
+      },
+      {
+        "text": "Reads a line from the file each time round the loop",
+        "marks": 1,
+        "guidance": ""
+      },
+      {
+        "text": "Casts each line to an integer and adds it to a total that starts at 0",
+        "marks": 1,
+        "guidance": ""
+      },
+      {
+        "text": "Closes the file and outputs the total after the loop",
+        "marks": 1,
+        "guidance": ""
+      }
+    ]
+  },
+  {
+    "id": "ocr-files-06",
+    "board": "ocr",
+    "topic": "files",
+    "ability": 3,
+    "marks": 6,
+    "format": "code",
+    "question": "A file called `temps.txt` contains one whole number on each line. Each number is a temperature.\n\nWrite a program that reads the file and writes only the temperatures **above 25** to a new file called `hot.txt`. Each temperature must be on its own line. [6]\n\nYou may use pseudocode or a high-level programming language.",
+    "markScheme": [
+      {
+        "text": "Opens temps.txt for reading",
+        "marks": 1,
+        "guidance": ""
+      },
+      {
+        "text": "Creates (or opens) hot.txt for writing",
+        "marks": 1,
+        "guidance": ""
+      },
+      {
+        "text": "Uses a loop that repeats until the end of temps.txt is reached",
+        "marks": 1,
+        "guidance": ""
+      },
+      {
+        "text": "Reads each line and casts it to an integer",
+        "marks": 1,
+        "guidance": ""
+      },
+      {
+        "text": "Uses selection to test if the temperature is above 25, and writes it to hot.txt only if it is",
+        "marks": 1,
+        "guidance": "Do not award if 25 itself is written."
+      },
+      {
+        "text": "Closes both files",
+        "marks": 1,
+        "guidance": ""
+      }
+    ]
+  },
+  {
+    "id": "ocr-searching-sorting-01",
+    "board": "ocr",
+    "topic": "searching-sorting",
+    "ability": 1,
+    "marks": 2,
+    "format": "text",
+    "question": "State the names of **two** algorithms that can be used to search a list. [2]",
+    "markScheme": [
+      {
+        "text": "Linear search",
+        "marks": 1,
+        "guidance": ""
+      },
+      {
+        "text": "Binary search",
+        "marks": 1,
+        "guidance": ""
+      }
+    ]
+  },
+  {
+    "id": "ocr-searching-sorting-02",
+    "board": "ocr",
+    "topic": "searching-sorting",
+    "ability": 1,
+    "marks": 1,
+    "format": "text",
+    "question": "A binary search can only be used if the data has one particular property. State this property. [1]",
+    "markScheme": [
+      {
+        "text": "The data must be sorted (in order)",
+        "marks": 1,
+        "guidance": ""
+      }
+    ]
+  },
+  {
+    "id": "ocr-searching-sorting-03",
+    "board": "ocr",
+    "topic": "searching-sorting",
+    "ability": 2,
+    "marks": 3,
+    "format": "text",
+    "question": "A list of numbers is stored in order:\n\n[4, 9, 12, 17, 23, 31, 40]\n\nA binary search is used to find the value 31. The first item is at position 0.\n\n(a) State the item that is checked first. [1]\n\n(b) State the total number of items that are checked (including 31) before it is found. [1]\n\n(c) State **one** reason why a binary search is usually faster than a linear search on a large sorted list. [1]",
+    "markScheme": [
+      {
+        "text": "(a) 17",
+        "marks": 1,
+        "guidance": ""
+      },
+      {
+        "text": "(b) 2",
+        "marks": 1,
+        "guidance": "The items checked are 17 and then 31."
+      },
+      {
+        "text": "(c) It halves (removes half of) the remaining items each time it checks",
+        "marks": 1,
+        "guidance": "Accept: it does not check every item."
+      }
+    ]
+  },
+  {
+    "id": "ocr-searching-sorting-04",
+    "board": "ocr",
+    "topic": "searching-sorting",
+    "ability": 2,
+    "marks": 4,
+    "format": "text",
+    "question": "A bubble sort is used to sort this list into ascending order:\n\n[5, 3, 8, 1]\n\n(a) Show the list after the **first** pass of the bubble sort. [2]\n\n(b) Show the list after the **second** pass. [1]\n\n(c) State how the algorithm can tell that the list is fully sorted. [1]",
+    "markScheme": [
+      {
+        "text": "(a) The largest item, 8, has moved to the end of the list",
+        "marks": 1,
+        "guidance": ""
+      },
+      {
+        "text": "(a) The other items are in the order 3, 5, 1 - so the list is [3, 5, 1, 8]",
+        "marks": 1,
+        "guidance": ""
+      },
+      {
+        "text": "(b) [3, 1, 5, 8]",
+        "marks": 1,
+        "guidance": ""
+      },
+      {
+        "text": "(c) A complete pass is made with no swaps",
+        "marks": 1,
+        "guidance": "Accept: no swaps are made in a pass."
+      }
+    ]
+  },
+  {
+    "id": "ocr-searching-sorting-05",
+    "board": "ocr",
+    "topic": "searching-sorting",
+    "ability": 3,
+    "marks": 5,
+    "format": "code",
+    "question": "A list of whole numbers is stored in an array called `numbers`. Write a program that uses a **linear search** to look for a value entered by the user.\n\nThe program must output the position (index) of the value if it is found, or the message `Not found` if it is not in the array. [5]\n\nYou may use pseudocode or a high-level programming language.",
+    "markScheme": [
+      {
+        "text": "Takes the value to search for as input",
+        "marks": 1,
+        "guidance": ""
+      },
+      {
+        "text": "Uses a loop that goes through the items of the array",
+        "marks": 1,
+        "guidance": ""
+      },
+      {
+        "text": "Compares each item with the value being searched for",
+        "marks": 1,
+        "guidance": ""
+      },
+      {
+        "text": "Outputs the position (index) when a match is found and stops searching",
+        "marks": 1,
+        "guidance": "Accept a flag variable, exit, or break."
+      },
+      {
+        "text": "Outputs Not found only after every item has been checked without a match",
+        "marks": 1,
+        "guidance": ""
+      }
+    ]
+  },
+  {
+    "id": "ocr-searching-sorting-06",
+    "board": "ocr",
+    "topic": "searching-sorting",
+    "ability": 3,
+    "marks": 6,
+    "format": "text",
+    "question": "Describe how a **merge sort** works. [6]",
+    "markScheme": [
+      {
+        "text": "The list is split into two halves",
+        "marks": 1,
+        "guidance": ""
+      },
+      {
+        "text": "Each half is split again, repeatedly (divide)",
+        "marks": 1,
+        "guidance": "Accept: the list is divided in half until..."
+      },
+      {
+        "text": "...until every sublist contains only one item",
+        "marks": 1,
+        "guidance": ""
+      },
+      {
+        "text": "A list with one item is already sorted",
+        "marks": 1,
+        "guidance": ""
+      },
+      {
+        "text": "Pairs of sublists are merged by comparing their first items and taking the smaller one each time",
+        "marks": 1,
+        "guidance": ""
+      },
+      {
+        "text": "Merging is repeated until there is one sorted list",
+        "marks": 1,
+        "guidance": ""
+      }
+    ]
+  },
+  {
+    "id": "ocr-robust-programs-01",
+    "board": "ocr",
+    "topic": "robust-programs",
+    "ability": 1,
+    "marks": 2,
+    "format": "text",
+    "question": "State **two** types of validation check. [2]",
+    "markScheme": [
+      {
+        "text": "Range check",
+        "marks": 1,
+        "guidance": ""
+      },
+      {
+        "text": "Length check",
+        "marks": 1,
+        "guidance": ""
+      },
+      {
+        "text": "Presence check",
+        "marks": 1,
+        "guidance": ""
+      },
+      {
+        "text": "Type check",
+        "marks": 1,
+        "guidance": ""
+      },
+      {
+        "text": "Format check",
+        "marks": 1,
+        "guidance": ""
+      }
+    ]
+  },
+  {
+    "id": "ocr-robust-programs-02",
+    "board": "ocr",
+    "topic": "robust-programs",
+    "ability": 1,
+    "marks": 2,
+    "format": "text",
+    "question": "State **two** methods that can be used to authenticate a user. [2]",
+    "markScheme": [
+      {
+        "text": "Username and password",
+        "marks": 1,
+        "guidance": ""
+      },
+      {
+        "text": "PIN",
+        "marks": 1,
+        "guidance": ""
+      },
+      {
+        "text": "Biometrics (fingerprint, face or eye scan)",
+        "marks": 1,
+        "guidance": ""
+      },
+      {
+        "text": "A code sent to a phone / two-factor authentication",
+        "marks": 1,
+        "guidance": ""
+      },
+      {
+        "text": "A confirmation link or code sent by email",
+        "marks": 1,
+        "guidance": "Do not accept: CAPTCHA on its own."
+      }
+    ]
+  },
+  {
+    "id": "ocr-robust-programs-03",
+    "board": "ocr",
+    "topic": "robust-programs",
+    "ability": 2,
+    "marks": 3,
+    "format": "text",
+    "question": "A program asks the user to enter their age. The age must be a whole number from 13 to 19 inclusive.\n\n(a) State **two** values that are boundary test data for this program. [2]\n\n(b) State **one** example of erroneous test data for this program. [1]",
+    "markScheme": [
+      {
+        "text": "(a) 13",
+        "marks": 1,
+        "guidance": "Accept 12 as a boundary value just outside the range."
+      },
+      {
+        "text": "(a) 19",
+        "marks": 1,
+        "guidance": "Accept 20 as a boundary value just outside the range."
+      },
+      {
+        "text": "(b) Any value that is not a whole number, such as a letter or word (e.g. \"abc\") or a decimal (e.g. 15.5)",
+        "marks": 1,
+        "guidance": "Do not accept a whole number that is outside the range (that is invalid, not erroneous)."
+      }
+    ]
+  },
+  {
+    "id": "ocr-robust-programs-04",
+    "board": "ocr",
+    "topic": "robust-programs",
+    "ability": 2,
+    "marks": 4,
+    "format": "text",
+    "question": "Explain the difference between a **syntax error** and a **logic error**. Give an example of each. [4]",
+    "markScheme": [
+      {
+        "text": "Syntax error: the code breaks the rules (grammar) of the programming language, so the program will not run / be translated",
+        "marks": 1,
+        "guidance": ""
+      },
+      {
+        "text": "Example of a syntax error, such as a missing bracket, a missing colon or a misspelt keyword",
+        "marks": 1,
+        "guidance": ""
+      },
+      {
+        "text": "Logic error: the program runs but produces a wrong or unexpected result",
+        "marks": 1,
+        "guidance": ""
+      },
+      {
+        "text": "Example of a logic error, such as using + instead of -, > instead of >=, or a loop that runs one time too few",
+        "marks": 1,
+        "guidance": ""
+      }
+    ]
+  },
+  {
+    "id": "ocr-robust-programs-05",
+    "board": "ocr",
+    "topic": "robust-programs",
+    "ability": 3,
+    "marks": 5,
+    "format": "code",
+    "question": "A website requires a password of at least 8 characters.\n\nWrite a program that asks the user to enter a password and keeps asking until the password is at least 8 characters long. When a valid password is entered the program outputs `Password accepted`. [5]\n\nYou may use pseudocode or a high-level programming language.",
+    "markScheme": [
+      {
+        "text": "Takes a password as input and stores it",
+        "marks": 1,
+        "guidance": ""
+      },
+      {
+        "text": "Uses a condition-controlled loop (WHILE / DO UNTIL)",
+        "marks": 1,
+        "guidance": ""
+      },
+      {
+        "text": "The loop condition is correct: repeats while the length is less than 8 (or stops when it is 8 or more)",
+        "marks": 1,
+        "guidance": "Accept .length or LEN()."
+      },
+      {
+        "text": "Asks for the password again inside the loop",
+        "marks": 1,
+        "guidance": ""
+      },
+      {
+        "text": "Outputs Password accepted once, after a valid password has been entered",
+        "marks": 1,
+        "guidance": ""
+      }
+    ]
+  },
+  {
+    "id": "ocr-robust-programs-06",
+    "board": "ocr",
+    "topic": "robust-programs",
+    "ability": 3,
+    "marks": 6,
+    "format": "text",
+    "question": "(a) Describe **two** ways a programmer can make a program easier to maintain. [4]\n\n(b) Explain what is meant by **iterative testing**. [2]",
+    "markScheme": [
+      {
+        "text": "(a) Uses comments to explain what the code does",
+        "marks": 1,
+        "guidance": ""
+      },
+      {
+        "text": "(a) ...so another programmer can understand it / it is easier to find where to make a change",
+        "marks": 1,
+        "guidance": "Award for a correct reason linked to a way given."
+      },
+      {
+        "text": "(a) Uses meaningful variable and subprogram names",
+        "marks": 1,
+        "guidance": ""
+      },
+      {
+        "text": "(a) ...so it is clear what the data / code is for",
+        "marks": 1,
+        "guidance": "Award for a correct reason linked to a way given."
+      },
+      {
+        "text": "(a) Uses indentation and white space to show the structure of the code",
+        "marks": 1,
+        "guidance": "Accept: uses subprograms so code can be reused and changed in one place."
+      },
+      {
+        "text": "(b) Testing is carried out repeatedly during development, testing each part as it is written",
+        "marks": 1,
+        "guidance": ""
+      },
+      {
+        "text": "(b) Errors found are fixed and the part is tested again",
+        "marks": 1,
+        "guidance": "Accept: before moving on to the next part."
       }
     ]
   }

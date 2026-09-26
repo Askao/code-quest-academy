@@ -211,6 +211,12 @@ test("question labels ignore the 'you may use pseudocode' boilerplate and a bare
   );
 });
 
+test("a question that opens with 'Write a program that:' is labelled by its first bullet", () => {
+  const q =
+    "Write a program that:\n\n- asks the user to enter the price of one item\n- asks for the quantity\n\nYou may use pseudocode. [5]";
+  assert.equal(questionLabel(q), "Write a program that: asks the user to enter the price of one item");
+});
+
 test("every pilot question gets a meaningful label", async () => {
   const fs = await import("node:fs");
   for (const board of ["ocr", "aqa"]) {

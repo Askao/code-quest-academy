@@ -1,5 +1,18 @@
 # Assessment question bank
 
+The pool feeds two things: **teacher-set, teacher-marked assessments**, and
+**student revision papers** (`/revise`), where a student builds their own paper,
+marks it against the mark scheme and gets papers that lean on questions they
+lost marks on before. A bigger pool means less repetition in both.
+
+Coverage: every programming topic on the course (fundamentals, sequencing,
+selection, iteration, lists, strings, subprograms, files, searching & sorting,
+robust programs) for both boards, plus AQA's databases. Each topic needs at
+least one question at each of the three ability levels for each board that
+teaches it. Not yet covered: the theory content of the exams (systems
+architecture, networks, security, ethics, boolean logic) - the site has no
+lessons for those yet.
+
 Original exam-style questions for teacher-marked assessments, in the style of
 OCR (J277) and AQA (8525) GCSE Computer Science. **They are not exam-board
 questions** - the board's wording, command words, pseudocode and mark-scheme
@@ -45,8 +58,8 @@ teacher's score is capped at `marks`. It must never offer fewer.
    the board doesn't teach, and a topic missing a difficulty level.
 3. `node scripts/build-assessment-seed.mjs` - regenerates
    `supabase/migrations/20260926130000_seed_assessment_questions.sql`.
-4. `npm i --no-save @electric-sql/pglite && node scripts/test-assessments-sql.mjs`
-   - checks the seed loads and the access rules still hold.
+4. `npm i --no-save @electric-sql/pglite && node scripts/test-assessments-sql.mjs && node scripts/test-revision-sql.mjs`
+   - checks the seed loads, the access rules still hold, and revision papers still build from the bigger pool.
 5. Apply the regenerated seed to the database. It is safe to apply again: questions
    are upserted by id, and marking already done keeps its own copy of each point's marks.
 

@@ -72,7 +72,9 @@ test("marks and ability are in range, and marks rise with ability like a real pa
 
 test("the [n] marks printed in the question add up to its marks", () => {
   for (const q of bank) {
-    const printed = [...q.question.matchAll(/\[(\d+)\]/g)].reduce((s, m) => s + Number(m[1]), 0);
+    // Brackets inside code (an array index like scores[2]) are not mark totals.
+    const prose = q.question.replace(/```[\s\S]*?```/g, "").replace(/`[^`]*`/g, "");
+    const printed = [...prose.matchAll(/\[(\d+)\]/g)].reduce((s, m) => s + Number(m[1]), 0);
     assert.equal(printed, q.marks, `${q.id}: question shows [${printed}] but is worth ${q.marks}`);
   }
 });
@@ -111,10 +113,13 @@ test("programming questions ask the student to write something", () => {
   }
 });
 
-test("every topic in the pool has questions at every ability level, on both boards", () => {
+test("every topic in the pool has questions at every ability level, on each board that teaches it", () => {
   const topics = new Set(bank.map((q) => q.topic));
   for (const b of boards) {
+    const taught = new Set(topicsFor("gcse", b).map((t) => t.key as string));
     for (const t of topics) {
+      // AQA-only topics (databases) have no OCR questions to check.
+      if (!taught.has(t)) continue;
       for (const a of [1, 2, 3]) {
         assert.ok(
           bank.some((q) => q.board === b && q.topic === t && q.ability === a),

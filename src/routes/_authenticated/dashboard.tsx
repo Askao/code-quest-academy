@@ -5,6 +5,7 @@ import {
 } from "@/components/StudentAssessments";
 import { studentHomeworkArchiveReason } from "@/lib/archive";
 import { ResultsAnalysis } from "@/components/ResultsAnalysis";
+import { RevisionCard } from "@/components/RevisionCard";
 import { JoinClassBox } from "@/components/JoinClassBox";
 import { createFileRoute, Link } from "@tanstack/react-router";
 import { useQuery, useQueryClient } from "@tanstack/react-query";
@@ -419,6 +420,8 @@ function Dashboard() {
       <StudentArchive homework={archivedHomework} />
 
       <ResultsAnalysis />
+
+      <RevisionCard />
 
       <section>
         <h2 className="mb-3 text-xl font-semibold">Your skill levels</h2>
