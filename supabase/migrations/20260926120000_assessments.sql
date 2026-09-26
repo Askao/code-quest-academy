@@ -19,6 +19,9 @@ CREATE TABLE public.assessment_questions (
   track public.track NOT NULL DEFAULT 'gcse',
   board text NOT NULL CHECK (board IN ('ocr', 'aqa')),
   topic text NOT NULL,
+  -- What the question is really testing (finer than the topic). Two questions
+  -- with the same concept feel like a repeat, so a paper avoids pairing them.
+  concept text,
   marks int NOT NULL CHECK (marks BETWEEN 1 AND 12),
   -- 1 = accessible, 2 = core, 3 = stretch. Marks rise with demand, as in a
   -- real paper: a recall question is 1-2 marks, extended code 6-8.

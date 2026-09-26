@@ -129,3 +129,30 @@ test("every topic in the pool has questions at every ability level, on each boar
     }
   }
 });
+
+test("every question has a concept, and no concept is over-used on a board", () => {
+  const withConcept = bank as (Question & { concept?: string })[];
+  for (const q of withConcept) {
+    assert.match(q.concept ?? "", /^[a-z0-9]+(-[a-z0-9]+)*$/, `${q.id}: needs a kebab-case concept`);
+  }
+  for (const b of boards) {
+    const counts = new Map<string, number>();
+    for (const q of withConcept.filter((x) => x.board === b)) {
+      counts.set(q.concept!, (counts.get(q.concept!) ?? 0) + 1);
+    }
+    for (const [concept, n] of counts) {
+      assert.ok(n <= 4, `${b}: concept "${concept}" has ${n} questions - split it, it is too broad to stop repeats`);
+    }
+  }
+});
+
+test("no two questions on a board are word-for-word the same", () => {
+  for (const b of boards) {
+    const seen = new Map<string, string>();
+    for (const q of bank.filter((x) => x.board === b)) {
+      const key = q.question.toLowerCase().replace(/[^a-z0-9]/g, "");
+      assert.ok(!seen.has(key), `${q.id} repeats ${seen.get(key)}`);
+      seen.set(key, q.id);
+    }
+  }
+});

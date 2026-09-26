@@ -101,14 +101,20 @@ export async function fetchBankMeta(board: BoardKey): Promise<BankQuestionMeta[]
   for (let from = 0; ; from += PAGE) {
     const { data, error } = await sb
       .from("assessment_questions")
-      .select("id, topic, ability, marks")
+      .select("id, topic, concept, ability, marks")
       .eq("track", "gcse")
       .eq("board", board)
       .order("id")
       .range(from, from + PAGE - 1);
     if (error) throw new Error(error.message);
     for (const r of data ?? []) {
-      out.push({ id: r.id, topic: r.topic, ability: r.ability as Ability, marks: r.marks });
+      out.push({
+        id: r.id,
+        topic: r.topic,
+        concept: r.concept ?? null,
+        ability: r.ability as Ability,
+        marks: r.marks,
+      });
     }
     if ((data ?? []).length < PAGE) return out;
   }

@@ -11,7 +11,20 @@ export type Difficulty = "mixed" | "easier" | "harder";
 /** What's needed to build a paper - deliberately no question text, so a
  * large pool can be listed cheaply and the wording fetched only for the
  * questions actually chosen. */
-export type BankQuestionMeta = { id: string; topic: string; ability: Ability; marks: number };
+export type BankQuestionMeta = {
+  id: string;
+  topic: string;
+  ability: Ability;
+  marks: number;
+  /**
+   * What the question is really testing, finer than its topic. Two questions
+   * with the same concept feel like a repeat, so a paper avoids using both.
+   * A question with no concept counts as its own.
+   */
+  concept?: string | null;
+};
+
+const conceptOf = (q: BankQuestionMeta) => q.concept ?? q.id;
 
 export const ABILITY_LABEL: Record<Ability, string> = {
   1: "Accessible",
@@ -113,7 +126,43 @@ export function buildPaper(opts: {
   if (count <= 0) return [];
 
   const topicOrder = shuffled(chosenTopics, random);
-  const targets = abilityTargets(count, opts.difficulty);
+
+  // First choice: at most one question from each concept, so nothing on the
+  // paper is a repeat of anything else on it.
+  const seenConcepts = new Set<string>();
+  const distinct = shuffled(candidates, random).filter((q) => {
+    const c = conceptOf(q);
+    if (seenConcepts.has(c)) return false;
+    seenConcepts.add(c);
+    return true;
+  });
+  const picked = pickFrom(distinct, Math.min(count, distinct.length), topicOrder, opts.difficulty, random);
+
+  // Only if the topics don't have enough concepts to fill the paper are
+  // repeats of a concept allowed, and then only to make up the numbers.
+  if (picked.length < count) {
+    const used = new Set(picked.map((q) => q.id));
+    const rest = candidates.filter((q) => !used.has(q.id));
+    picked.push(...pickFrom(rest, count - picked.length, topicOrder, opts.difficulty, random));
+  }
+
+  return sortForPaper(picked);
+}
+
+/**
+ * Choose `count` from `candidates`: split between ability levels per
+ * `difficulty`, spread across the topics. Where a level runs short the gap is
+ * filled from the nearest other level instead of leaving the paper short.
+ */
+function pickFrom(
+  candidates: BankQuestionMeta[],
+  count: number,
+  topicOrder: string[],
+  difficulty: Difficulty,
+  random: () => number,
+): BankQuestionMeta[] {
+  if (count <= 0) return [];
+  const targets = abilityTargets(count, difficulty);
   const remaining = new Set(candidates.map((q) => q.id));
   const picked: BankQuestionMeta[] = [];
 
@@ -130,15 +179,14 @@ export function buildPaper(opts: {
 
   // Top up any shortfall from whichever level is closest to the mix asked for.
   if (picked.length < count) {
-    const wanted = (a: Ability) => ABILITY_MIX[opts.difficulty][a];
+    const wanted = (a: Ability) => ABILITY_MIX[difficulty][a];
     const rest = shuffled(
       candidates.filter((q) => remaining.has(q.id)),
       random,
     ).sort((x, y) => wanted(y.ability) - wanted(x.ability));
     for (const q of takeAcrossTopics(rest, topicOrder, count - picked.length)) picked.push(q);
   }
-
-  return sortForPaper(picked);
+  return picked;
 }
 
 /** Easiest first, and within a level keep a topic's questions together. */
@@ -173,7 +221,11 @@ export function replaceQuestion(opts: {
     free.filter((q) => q.ability === old.ability),
     free,
   ];
-  const pool = tiers.find((t) => t.length > 0);
+  // A swap that doesn't repeat something already on the paper is better than
+  // one that does, at any tier.
+  const others = new Set(opts.paper.filter((_, i) => i !== opts.index).map(conceptOf));
+  const fresh = (list: BankQuestionMeta[]) => list.filter((q) => !others.has(conceptOf(q)));
+  const pool = tiers.map(fresh).find((t) => t.length > 0) ?? tiers.find((t) => t.length > 0);
   if (!pool) return null;
   const replacement = shuffled(pool, random)[0]!;
   return sortForPaper(opts.paper.map((q, i) => (i === opts.index ? replacement : q)));

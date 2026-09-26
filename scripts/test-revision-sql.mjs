@@ -57,6 +57,7 @@ const ok = (name, cond, extra = "") => {
 await db.exec(fs.readFileSync(root + "20260926120000_assessments.sql", "utf8"));
 await db.exec(fs.readFileSync(root + "20260926130000_seed_assessment_questions.sql", "utf8"));
 await db.exec(fs.readFileSync(root + "20260930130000_revision_papers.sql", "utf8"));
+await db.exec(fs.readFileSync(root + "20260930140000_question_concepts.sql", "utf8"));
 
 const as = async (who, sql) => {
   await db.exec(`SET ROLE authenticated; SET app.uid = '${U[who]}'`);
@@ -173,16 +174,18 @@ r = await as("S1", `SELECT public.revision_history() AS h`);
 const hist = (await as("S1", `SELECT question_id, fraction FROM public.revision_history()`)).rows;
 ok("history holds one row per question met", hist.length === 6);
 ok("...with the fraction of marks got", hist.every((h) => h.fraction >= 0 && h.fraction <= 1));
-const weakN = Math.min(missedIds.length, 4);
+const missedConcepts = new Set(
+  (await admin(`SELECT DISTINCT concept FROM public.assessment_questions WHERE id IN (${missedIds.map((i) => `'${i}'`).join(",")})`)).rows.map((r) => r.concept),
+).size;
 r = await created("S1", `'ocr','{}',${Math.min(6, bankCount)},'weak','Fix my gaps',NULL`);
 const weakItems = await itemsOf(r.paper.paper_id);
 const includedMissed = weakItems.filter((i) => missedIds.includes(i.question_id)).length;
-ok("a 'weak' paper includes every question they lost marks on (up to its size)", includedMissed === Math.min(missedIds.length, 6), `${includedMissed} of ${missedIds.length}`);
+ok("a 'weak' paper includes a question for every concept they lost marks on (up to its size)", includedMissed === Math.min(missedConcepts, 6), `${includedMissed} of ${missedConcepts} concepts (${missedIds.length} questions)`);
 ok("...and flags them as repeats", weakItems.filter((i) => i.was_weak).length === r.paper.weak && r.paper.weak === includedMissed);
 r = await created("S1", `'ocr','{}',10,'smart','Smart',NULL`);
 const smartItems = await itemsOf(r.paper.paper_id);
 const smartMissed = smartItems.filter((i) => missedIds.includes(i.question_id)).length;
-ok("a 'smart' paper leans on misses but is not only misses", smartMissed === Math.min(missedIds.length, 7) && smartItems.length === Math.min(10, bankCount), `${smartMissed} missed of ${smartItems.length}`);
+ok("a 'smart' paper leans on misses but is not only misses", smartMissed === Math.min(missedConcepts, 7) && smartItems.length === Math.min(10, bankCount), `${smartMissed} missed of ${smartItems.length}`);
 r = await created("S1", `'ocr','{}',5,'new','Fresh',NULL`);
 const newItems = await itemsOf(r.paper.paper_id);
 const seen = new Set(hist.map((h) => h.question_id));
@@ -194,7 +197,7 @@ ok("history is private: another student sees none", (await as("S2", `SELECT coun
 // ---- teacher-marked assessments feed the same history, but only once released
 const A = "d0000000-0000-0000-0000-00000000000a";
 // three questions the student has never met in a revision paper, so what follows is about the teacher's marks alone
-const qsIt = (await admin(`SELECT id, marks FROM public.assessment_questions WHERE board='ocr' AND id NOT IN (SELECT question_id FROM public.revision_answers) ORDER BY id LIMIT 3`)).rows;
+const qsIt = (await admin(`SELECT DISTINCT ON (concept) id, marks FROM public.assessment_questions WHERE board='ocr' AND id NOT IN (SELECT question_id FROM public.revision_answers) ORDER BY concept, id LIMIT 3`)).rows;
 await admin(`INSERT INTO public.assessments (id, class_id, title, board, time_limit_minutes, question_count, total_marks) VALUES ('${A}','${C}','Live','ocr',30,3,${qsIt.reduce((s, q) => s + q.marks, 0)})`);
 for (const [i, q] of qsIt.entries()) await admin(`INSERT INTO public.assessment_items VALUES ('${A}',${i + 1},'${q.id}')`);
 r = await created("S1", `'ocr','{}',30,'smart','x',NULL`);
@@ -213,6 +216,30 @@ ok("once released, the teacher's marks count as misses", r.rows[0].n === 3);
 r = await created("S1", `'ocr','{}',10,'weak','x',NULL`);
 const back = await itemsOf(r.paper.paper_id);
 ok("...and those questions come back in a weak paper", qsIt.every((q) => back.some((i) => i.question_id === q.id && i.was_weak)));
+
+// ---- variety: no repeats of a concept, topics take turns
+const conceptOf = async (pid) =>
+  (await admin(`SELECT q.concept FROM public.revision_items i JOIN public.assessment_questions q ON q.id = i.question_id WHERE i.paper_id='${pid}'`)).rows.map((x) => x.concept);
+const topicOf = async (pid) =>
+  (await admin(`SELECT q.topic FROM public.revision_items i JOIN public.assessment_questions q ON q.id = i.question_id WHERE i.paper_id='${pid}'`)).rows.map((x) => x.topic);
+let repeats = 0, lowTopicSpread = 0;
+for (let k = 0; k < 12; k++) {
+  const p = (await as("S2", `SELECT public.create_revision_paper('ocr','{}',10,'smart','v',NULL) AS r`)).rows[0].r.paper_id;
+  const cs = await conceptOf(p);
+  if (new Set(cs).size !== cs.length) repeats++;
+  if (new Set(await topicOf(p)).size < 8) lowTopicSpread++;
+}
+ok("12 random papers of 10: none has two questions on the same concept", repeats === 0, `${repeats} had a repeat`);
+ok("...and each draws on at least 8 different topics (topics take turns)", lowTopicSpread === 0, `${lowTopicSpread} were lumpy`);
+const itConcepts = (await admin(`SELECT count(DISTINCT concept)::int n, count(*)::int q FROM public.assessment_questions WHERE board='ocr' AND topic='iteration'`)).rows[0];
+r = await as("S2", `SELECT public.create_revision_paper('ocr','{iteration}',${itConcepts.q},'smart','all of iteration',NULL) AS r`);
+const itPaper = r.rows[0].r;
+ok("a small topic still fills the paper when concepts run out (repeats come last)", itPaper.questions === itConcepts.q, JSON.stringify(itPaper));
+ok("...using every concept at least once", new Set(await conceptOf(itPaper.paper_id)).size === itConcepts.n);
+r = await as("S2", `SELECT public.create_revision_paper('ocr','{iteration}',${itConcepts.n},'smart','one of each',NULL) AS r`);
+const oneEach = await conceptOf(r.rows[0].r.paper_id);
+ok("asking for exactly as many as there are concepts gives one of each", new Set(oneEach).size === oneEach.length && oneEach.length === itConcepts.n);
+ok("every question in the bank has a concept", (await admin(`SELECT count(*)::int n FROM public.assessment_questions WHERE concept IS NULL OR concept = ''`)).rows[0].n === 0);
 
 // ---- topic summary for the builder
 r = await as("S1", `SELECT public.revision_topics('ocr') AS t`);

@@ -379,3 +379,56 @@ test("an answer not stored in part form goes into the first box instead of being
     "",
   ]);
 });
+
+// ---- variety: nothing on a paper should feel like a repeat of something else on it
+
+// Three topics, each with several concepts and more than one question per concept.
+const conceptBank = (): BankQuestionMeta[] =>
+  ["iteration", "lists", "files"].flatMap((topic) =>
+    ["a", "b", "c", "d"].flatMap((concept, ci) =>
+      [1, 2].map((n) => ({
+        id: `${topic}-${concept}-${n}`,
+        topic,
+        concept: `${topic}-${concept}`,
+        ability: (((ci + n) % 3) + 1) as Ability,
+        marks: 2,
+      })),
+    ),
+  );
+
+test("a paper never has two questions on the same concept when there are enough concepts", () => {
+  const b = conceptBank(); // 12 concepts, 24 questions
+  for (let seed = 1; seed <= 60; seed++) {
+    for (const count of [4, 8, 12]) {
+      const paper = buildPaper({ bank: b, topics: [], count, difficulty: "mixed", random: seeded(seed) });
+      assert.equal(paper.length, count);
+      const concepts = paper.map((q) => q.concept);
+      assert.equal(new Set(concepts).size, concepts.length, `seed ${seed}, ${count} questions: a concept repeated`);
+    }
+  }
+});
+
+test("when concepts run out the paper is still filled, repeating a concept only to make up the numbers", () => {
+  const b = conceptBank(); // 12 concepts
+  const paper = buildPaper({ bank: b, topics: [], count: 16, difficulty: "mixed", random: seeded(3) });
+  assert.equal(paper.length, 16);
+  assert.equal(new Set(paper.map((q) => q.id)).size, 16, "no question twice");
+  assert.equal(new Set(paper.map((q) => q.concept)).size, 12, "every concept is used before any repeats");
+});
+
+test("questions with no concept are treated as different from each other", () => {
+  const b = bank("iteration", 6); // no concept field at all
+  const paper = buildPaper({ bank: b, topics: ["iteration"], count: 10, difficulty: "mixed", random: seeded(9) });
+  assert.equal(paper.length, 10);
+});
+
+test("swapping a question avoids a concept already on the paper", () => {
+  const b = conceptBank();
+  for (let seed = 1; seed <= 40; seed++) {
+    const paper = buildPaper({ bank: b, topics: [], count: 8, difficulty: "mixed", random: seeded(seed) });
+    const swapped = replaceQuestion({ bank: b, topics: [], paper, index: 2, random: seeded(seed + 100) });
+    assert.ok(swapped);
+    const concepts = swapped.map((q) => q.concept);
+    assert.equal(new Set(concepts).size, concepts.length, `seed ${seed}: the swap brought in a repeat`);
+  }
+});

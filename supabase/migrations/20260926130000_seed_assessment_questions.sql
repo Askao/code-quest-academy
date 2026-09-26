@@ -2,13 +2,13 @@
 -- Do not edit by hand - change the JSON and regenerate. Safe to re-run.
 -- 138 questions.
 
-INSERT INTO public.assessment_questions (id, track, board, topic, marks, ability, answer_format, question)
-VALUES ($aq$ocr-fundamentals-01$aq$, 'gcse', $aq$ocr$aq$, $aq$fundamentals$aq$, 2, 1, $aq$text$aq$, $aq$Give the data type of each of the following values.
+INSERT INTO public.assessment_questions (id, track, board, topic, concept, marks, ability, answer_format, question)
+VALUES ($aq$ocr-fundamentals-01$aq$, 'gcse', $aq$ocr$aq$, $aq$fundamentals$aq$, $aq$data-types$aq$, 2, 1, $aq$text$aq$, $aq$Give the data type of each of the following values.
 
 (a) 7.5 [1]
 
 (b) "7" [1]$aq$)
-ON CONFLICT (id) DO UPDATE SET board = EXCLUDED.board, topic = EXCLUDED.topic, marks = EXCLUDED.marks,
+ON CONFLICT (id) DO UPDATE SET board = EXCLUDED.board, topic = EXCLUDED.topic, concept = EXCLUDED.concept, marks = EXCLUDED.marks,
   ability = EXCLUDED.ability, answer_format = EXCLUDED.answer_format, question = EXCLUDED.question;
 DELETE FROM public.assessment_mark_points WHERE question_id = $aq$ocr-fundamentals-01$aq$ AND position > 2;
 INSERT INTO public.assessment_mark_points (question_id, position, text, marks, guidance)
@@ -18,9 +18,9 @@ INSERT INTO public.assessment_mark_points (question_id, position, text, marks, g
 VALUES ($aq$ocr-fundamentals-01$aq$, 2, $aq$(b) String / text$aq$, 1, $aq$Accept: string of characters. Do not accept: character, integer.$aq$)
 ON CONFLICT (question_id, position) DO UPDATE SET text = EXCLUDED.text, marks = EXCLUDED.marks, guidance = EXCLUDED.guidance;
 
-INSERT INTO public.assessment_questions (id, track, board, topic, marks, ability, answer_format, question)
-VALUES ($aq$ocr-fundamentals-02$aq$, 'gcse', $aq$ocr$aq$, $aq$fundamentals$aq$, 2, 1, $aq$text$aq$, $aq$Explain what is meant by a **variable**. [2]$aq$)
-ON CONFLICT (id) DO UPDATE SET board = EXCLUDED.board, topic = EXCLUDED.topic, marks = EXCLUDED.marks,
+INSERT INTO public.assessment_questions (id, track, board, topic, concept, marks, ability, answer_format, question)
+VALUES ($aq$ocr-fundamentals-02$aq$, 'gcse', $aq$ocr$aq$, $aq$fundamentals$aq$, $aq$variable-constant$aq$, 2, 1, $aq$text$aq$, $aq$Explain what is meant by a **variable**. [2]$aq$)
+ON CONFLICT (id) DO UPDATE SET board = EXCLUDED.board, topic = EXCLUDED.topic, concept = EXCLUDED.concept, marks = EXCLUDED.marks,
   ability = EXCLUDED.ability, answer_format = EXCLUDED.answer_format, question = EXCLUDED.question;
 DELETE FROM public.assessment_mark_points WHERE question_id = $aq$ocr-fundamentals-02$aq$ AND position > 2;
 INSERT INTO public.assessment_mark_points (question_id, position, text, marks, guidance)
@@ -30,8 +30,8 @@ INSERT INTO public.assessment_mark_points (question_id, position, text, marks, g
 VALUES ($aq$ocr-fundamentals-02$aq$, 2, $aq$The value can change (be overwritten) while the program is running$aq$, 1, $aq$Do not accept: 'a value that varies' on its own.$aq$)
 ON CONFLICT (question_id, position) DO UPDATE SET text = EXCLUDED.text, marks = EXCLUDED.marks, guidance = EXCLUDED.guidance;
 
-INSERT INTO public.assessment_questions (id, track, board, topic, marks, ability, answer_format, question)
-VALUES ($aq$ocr-fundamentals-03$aq$, 'gcse', $aq$ocr$aq$, $aq$fundamentals$aq$, 3, 2, $aq$text$aq$, $aq$A program is written in pseudocode.
+INSERT INTO public.assessment_questions (id, track, board, topic, concept, marks, ability, answer_format, question)
+VALUES ($aq$ocr-fundamentals-03$aq$, 'gcse', $aq$ocr$aq$, $aq$fundamentals$aq$, $aq$input-casting$aq$, 3, 2, $aq$text$aq$, $aq$A program is written in pseudocode.
 
 ```
 a = input("Enter the first number")
@@ -44,7 +44,7 @@ The user enters 4 for the first number and 5 for the second number.
 (a) State the output of the program. [1]
 
 (b) Explain why the output is not 9. [2]$aq$)
-ON CONFLICT (id) DO UPDATE SET board = EXCLUDED.board, topic = EXCLUDED.topic, marks = EXCLUDED.marks,
+ON CONFLICT (id) DO UPDATE SET board = EXCLUDED.board, topic = EXCLUDED.topic, concept = EXCLUDED.concept, marks = EXCLUDED.marks,
   ability = EXCLUDED.ability, answer_format = EXCLUDED.answer_format, question = EXCLUDED.question;
 DELETE FROM public.assessment_mark_points WHERE question_id = $aq$ocr-fundamentals-03$aq$ AND position > 3;
 INSERT INTO public.assessment_mark_points (question_id, position, text, marks, guidance)
@@ -57,13 +57,13 @@ INSERT INTO public.assessment_mark_points (question_id, position, text, marks, g
 VALUES ($aq$ocr-fundamentals-03$aq$, 3, $aq$(b) The + operator joins (concatenates) two strings together instead of adding them$aq$, 1, $aq$Accept: they need to be cast to integers with int().$aq$)
 ON CONFLICT (question_id, position) DO UPDATE SET text = EXCLUDED.text, marks = EXCLUDED.marks, guidance = EXCLUDED.guidance;
 
-INSERT INTO public.assessment_questions (id, track, board, topic, marks, ability, answer_format, question)
-VALUES ($aq$ocr-fundamentals-04$aq$, 'gcse', $aq$ocr$aq$, $aq$fundamentals$aq$, 4, 2, $aq$text$aq$, $aq$A program calculates the VAT on a price. The VAT rate, 0.2, is stored as a **constant**.
+INSERT INTO public.assessment_questions (id, track, board, topic, concept, marks, ability, answer_format, question)
+VALUES ($aq$ocr-fundamentals-04$aq$, 'gcse', $aq$ocr$aq$, $aq$fundamentals$aq$, $aq$variable-constant$aq$, 4, 2, $aq$text$aq$, $aq$A program calculates the VAT on a price. The VAT rate, 0.2, is stored as a **constant**.
 
 (a) Explain what is meant by a constant. [2]
 
 (b) Give **two** benefits of using a constant instead of typing 0.2 in each place it is needed. [2]$aq$)
-ON CONFLICT (id) DO UPDATE SET board = EXCLUDED.board, topic = EXCLUDED.topic, marks = EXCLUDED.marks,
+ON CONFLICT (id) DO UPDATE SET board = EXCLUDED.board, topic = EXCLUDED.topic, concept = EXCLUDED.concept, marks = EXCLUDED.marks,
   ability = EXCLUDED.ability, answer_format = EXCLUDED.answer_format, question = EXCLUDED.question;
 DELETE FROM public.assessment_mark_points WHERE question_id = $aq$ocr-fundamentals-04$aq$ AND position > 6;
 INSERT INTO public.assessment_mark_points (question_id, position, text, marks, guidance)
@@ -85,8 +85,8 @@ INSERT INTO public.assessment_mark_points (question_id, position, text, marks, g
 VALUES ($aq$ocr-fundamentals-04$aq$, 6, $aq$(b) Stops the value being changed by accident$aq$, 1, $aq$$aq$)
 ON CONFLICT (question_id, position) DO UPDATE SET text = EXCLUDED.text, marks = EXCLUDED.marks, guidance = EXCLUDED.guidance;
 
-INSERT INTO public.assessment_questions (id, track, board, topic, marks, ability, answer_format, question)
-VALUES ($aq$ocr-fundamentals-05$aq$, 'gcse', $aq$ocr$aq$, $aq$fundamentals$aq$, 5, 3, $aq$code$aq$, $aq$Write a program that:
+INSERT INTO public.assessment_questions (id, track, board, topic, concept, marks, ability, answer_format, question)
+VALUES ($aq$ocr-fundamentals-05$aq$, 'gcse', $aq$ocr$aq$, $aq$fundamentals$aq$, $aq$arithmetic-program$aq$, 5, 3, $aq$code$aq$, $aq$Write a program that:
 
 - asks the user to enter the price of one item (which may include pence)
 - asks the user to enter how many of the item they want (a whole number)
@@ -94,7 +94,7 @@ VALUES ($aq$ocr-fundamentals-05$aq$, 'gcse', $aq$ocr$aq$, $aq$fundamentals$aq$, 
 - outputs the message `The total is` followed by the total cost. [5]
 
 You may use pseudocode or a high-level programming language.$aq$)
-ON CONFLICT (id) DO UPDATE SET board = EXCLUDED.board, topic = EXCLUDED.topic, marks = EXCLUDED.marks,
+ON CONFLICT (id) DO UPDATE SET board = EXCLUDED.board, topic = EXCLUDED.topic, concept = EXCLUDED.concept, marks = EXCLUDED.marks,
   ability = EXCLUDED.ability, answer_format = EXCLUDED.answer_format, question = EXCLUDED.question;
 DELETE FROM public.assessment_mark_points WHERE question_id = $aq$ocr-fundamentals-05$aq$ AND position > 5;
 INSERT INTO public.assessment_mark_points (question_id, position, text, marks, guidance)
@@ -113,15 +113,15 @@ INSERT INTO public.assessment_mark_points (question_id, position, text, marks, g
 VALUES ($aq$ocr-fundamentals-05$aq$, 5, $aq$Outputs the message with the total$aq$, 1, $aq$Accept the total being cast to a string when it is joined to the message.$aq$)
 ON CONFLICT (question_id, position) DO UPDATE SET text = EXCLUDED.text, marks = EXCLUDED.marks, guidance = EXCLUDED.guidance;
 
-INSERT INTO public.assessment_questions (id, track, board, topic, marks, ability, answer_format, question)
-VALUES ($aq$ocr-fundamentals-06$aq$, 'gcse', $aq$ocr$aq$, $aq$fundamentals$aq$, 6, 3, $aq$code$aq$, $aq$A teacher marks a test out of 40.
+INSERT INTO public.assessment_questions (id, track, board, topic, concept, marks, ability, answer_format, question)
+VALUES ($aq$ocr-fundamentals-06$aq$, 'gcse', $aq$ocr$aq$, $aq$fundamentals$aq$, $aq$input-casting$aq$, 6, 3, $aq$code$aq$, $aq$A teacher marks a test out of 40.
 
 (a) Explain what is meant by **casting**. [2]
 
 (b) Write a program that asks the user to enter a mark out of 40, calculates the percentage, and outputs the percentage. [4]
 
 You may use pseudocode or a high-level programming language.$aq$)
-ON CONFLICT (id) DO UPDATE SET board = EXCLUDED.board, topic = EXCLUDED.topic, marks = EXCLUDED.marks,
+ON CONFLICT (id) DO UPDATE SET board = EXCLUDED.board, topic = EXCLUDED.topic, concept = EXCLUDED.concept, marks = EXCLUDED.marks,
   ability = EXCLUDED.ability, answer_format = EXCLUDED.answer_format, question = EXCLUDED.question;
 DELETE FROM public.assessment_mark_points WHERE question_id = $aq$ocr-fundamentals-06$aq$ AND position > 6;
 INSERT INTO public.assessment_mark_points (question_id, position, text, marks, guidance)
@@ -143,13 +143,13 @@ INSERT INTO public.assessment_mark_points (question_id, position, text, marks, g
 VALUES ($aq$ocr-fundamentals-06$aq$, 6, $aq$(b) Outputs the percentage$aq$, 1, $aq$$aq$)
 ON CONFLICT (question_id, position) DO UPDATE SET text = EXCLUDED.text, marks = EXCLUDED.marks, guidance = EXCLUDED.guidance;
 
-INSERT INTO public.assessment_questions (id, track, board, topic, marks, ability, answer_format, question)
-VALUES ($aq$ocr-sequencing-01$aq$, 'gcse', $aq$ocr$aq$, $aq$sequencing$aq$, 2, 1, $aq$text$aq$, $aq$State the result of each of the following calculations.
+INSERT INTO public.assessment_questions (id, track, board, topic, concept, marks, ability, answer_format, question)
+VALUES ($aq$ocr-sequencing-01$aq$, 'gcse', $aq$ocr$aq$, $aq$sequencing$aq$, $aq$arithmetic-operators$aq$, 2, 1, $aq$text$aq$, $aq$State the result of each of the following calculations.
 
 (a) 17 MOD 5 [1]
 
 (b) 17 DIV 5 [1]$aq$)
-ON CONFLICT (id) DO UPDATE SET board = EXCLUDED.board, topic = EXCLUDED.topic, marks = EXCLUDED.marks,
+ON CONFLICT (id) DO UPDATE SET board = EXCLUDED.board, topic = EXCLUDED.topic, concept = EXCLUDED.concept, marks = EXCLUDED.marks,
   ability = EXCLUDED.ability, answer_format = EXCLUDED.answer_format, question = EXCLUDED.question;
 DELETE FROM public.assessment_mark_points WHERE question_id = $aq$ocr-sequencing-01$aq$ AND position > 2;
 INSERT INTO public.assessment_mark_points (question_id, position, text, marks, guidance)
@@ -159,17 +159,17 @@ INSERT INTO public.assessment_mark_points (question_id, position, text, marks, g
 VALUES ($aq$ocr-sequencing-01$aq$, 2, $aq$(b) 3$aq$, 1, $aq$$aq$)
 ON CONFLICT (question_id, position) DO UPDATE SET text = EXCLUDED.text, marks = EXCLUDED.marks, guidance = EXCLUDED.guidance;
 
-INSERT INTO public.assessment_questions (id, track, board, topic, marks, ability, answer_format, question)
-VALUES ($aq$ocr-sequencing-02$aq$, 'gcse', $aq$ocr$aq$, $aq$sequencing$aq$, 1, 1, $aq$text$aq$, $aq$State what the operator `^` does in a calculation such as `3 ^ 2`. [1]$aq$)
-ON CONFLICT (id) DO UPDATE SET board = EXCLUDED.board, topic = EXCLUDED.topic, marks = EXCLUDED.marks,
+INSERT INTO public.assessment_questions (id, track, board, topic, concept, marks, ability, answer_format, question)
+VALUES ($aq$ocr-sequencing-02$aq$, 'gcse', $aq$ocr$aq$, $aq$sequencing$aq$, $aq$arithmetic-operators$aq$, 1, 1, $aq$text$aq$, $aq$State what the operator `^` does in a calculation such as `3 ^ 2`. [1]$aq$)
+ON CONFLICT (id) DO UPDATE SET board = EXCLUDED.board, topic = EXCLUDED.topic, concept = EXCLUDED.concept, marks = EXCLUDED.marks,
   ability = EXCLUDED.ability, answer_format = EXCLUDED.answer_format, question = EXCLUDED.question;
 DELETE FROM public.assessment_mark_points WHERE question_id = $aq$ocr-sequencing-02$aq$ AND position > 1;
 INSERT INTO public.assessment_mark_points (question_id, position, text, marks, guidance)
 VALUES ($aq$ocr-sequencing-02$aq$, 1, $aq$Raises the first number to the power of the second (exponent), so 3 ^ 2 is 9$aq$, 1, $aq$Accept: squares the number when used with 2.$aq$)
 ON CONFLICT (question_id, position) DO UPDATE SET text = EXCLUDED.text, marks = EXCLUDED.marks, guidance = EXCLUDED.guidance;
 
-INSERT INTO public.assessment_questions (id, track, board, topic, marks, ability, answer_format, question)
-VALUES ($aq$ocr-sequencing-03$aq$, 'gcse', $aq$ocr$aq$, $aq$sequencing$aq$, 4, 2, $aq$text$aq$, $aq$A program is written in pseudocode.
+INSERT INTO public.assessment_questions (id, track, board, topic, concept, marks, ability, answer_format, question)
+VALUES ($aq$ocr-sequencing-03$aq$, 'gcse', $aq$ocr$aq$, $aq$sequencing$aq$, $aq$arithmetic-operators$aq$, 4, 2, $aq$text$aq$, $aq$A program is written in pseudocode.
 
 ```
 a = 8
@@ -183,7 +183,7 @@ print(c + d + e)
 (a) State the value stored in each of the variables `c`, `d` and `e`. [3]
 
 (b) State the output of the program. [1]$aq$)
-ON CONFLICT (id) DO UPDATE SET board = EXCLUDED.board, topic = EXCLUDED.topic, marks = EXCLUDED.marks,
+ON CONFLICT (id) DO UPDATE SET board = EXCLUDED.board, topic = EXCLUDED.topic, concept = EXCLUDED.concept, marks = EXCLUDED.marks,
   ability = EXCLUDED.ability, answer_format = EXCLUDED.answer_format, question = EXCLUDED.question;
 DELETE FROM public.assessment_mark_points WHERE question_id = $aq$ocr-sequencing-03$aq$ AND position > 4;
 INSERT INTO public.assessment_mark_points (question_id, position, text, marks, guidance)
@@ -199,8 +199,8 @@ INSERT INTO public.assessment_mark_points (question_id, position, text, marks, g
 VALUES ($aq$ocr-sequencing-03$aq$, 4, $aq$(b) 68$aq$, 1, $aq$Follow through from the values given in (a) if the addition is correct.$aq$)
 ON CONFLICT (question_id, position) DO UPDATE SET text = EXCLUDED.text, marks = EXCLUDED.marks, guidance = EXCLUDED.guidance;
 
-INSERT INTO public.assessment_questions (id, track, board, topic, marks, ability, answer_format, question)
-VALUES ($aq$ocr-sequencing-04$aq$, 'gcse', $aq$ocr$aq$, $aq$sequencing$aq$, 3, 2, $aq$text$aq$, $aq$(a) State what is meant by **sequence** in programming. [1]
+INSERT INTO public.assessment_questions (id, track, board, topic, concept, marks, ability, answer_format, question)
+VALUES ($aq$ocr-sequencing-04$aq$, 'gcse', $aq$ocr$aq$, $aq$sequencing$aq$, $aq$sequence-order$aq$, 3, 2, $aq$text$aq$, $aq$(a) State what is meant by **sequence** in programming. [1]
 
 (b) The lines of this program are in the wrong order.
 
@@ -212,7 +212,7 @@ b = 6
 ```
 
 Explain why the program will not work as intended. [2]$aq$)
-ON CONFLICT (id) DO UPDATE SET board = EXCLUDED.board, topic = EXCLUDED.topic, marks = EXCLUDED.marks,
+ON CONFLICT (id) DO UPDATE SET board = EXCLUDED.board, topic = EXCLUDED.topic, concept = EXCLUDED.concept, marks = EXCLUDED.marks,
   ability = EXCLUDED.ability, answer_format = EXCLUDED.answer_format, question = EXCLUDED.question;
 DELETE FROM public.assessment_mark_points WHERE question_id = $aq$ocr-sequencing-04$aq$ AND position > 3;
 INSERT INTO public.assessment_mark_points (question_id, position, text, marks, guidance)
@@ -225,13 +225,13 @@ INSERT INTO public.assessment_mark_points (question_id, position, text, marks, g
 VALUES ($aq$ocr-sequencing-04$aq$, 3, $aq$(b) §a§ and §b§ are used before they have been assigned values / the instructions are run in order from the top$aq$, 1, $aq$Accept: total has no value / would cause an error.$aq$)
 ON CONFLICT (question_id, position) DO UPDATE SET text = EXCLUDED.text, marks = EXCLUDED.marks, guidance = EXCLUDED.guidance;
 
-INSERT INTO public.assessment_questions (id, track, board, topic, marks, ability, answer_format, question)
-VALUES ($aq$ocr-sequencing-05$aq$, 'gcse', $aq$ocr$aq$, $aq$sequencing$aq$, 5, 3, $aq$code$aq$, $aq$Write a program that asks the user to enter a number of minutes and outputs the equivalent number of whole hours and the number of minutes left over.
+INSERT INTO public.assessment_questions (id, track, board, topic, concept, marks, ability, answer_format, question)
+VALUES ($aq$ocr-sequencing-05$aq$, 'gcse', $aq$ocr$aq$, $aq$sequencing$aq$, $aq$div-mod-program$aq$, 5, 3, $aq$code$aq$, $aq$Write a program that asks the user to enter a number of minutes and outputs the equivalent number of whole hours and the number of minutes left over.
 
 For example, 135 minutes would output 2 hours and 15 minutes. [5]
 
 You may use pseudocode or a high-level programming language.$aq$)
-ON CONFLICT (id) DO UPDATE SET board = EXCLUDED.board, topic = EXCLUDED.topic, marks = EXCLUDED.marks,
+ON CONFLICT (id) DO UPDATE SET board = EXCLUDED.board, topic = EXCLUDED.topic, concept = EXCLUDED.concept, marks = EXCLUDED.marks,
   ability = EXCLUDED.ability, answer_format = EXCLUDED.answer_format, question = EXCLUDED.question;
 DELETE FROM public.assessment_mark_points WHERE question_id = $aq$ocr-sequencing-05$aq$ AND position > 5;
 INSERT INTO public.assessment_mark_points (question_id, position, text, marks, guidance)
@@ -250,8 +250,8 @@ INSERT INTO public.assessment_mark_points (question_id, position, text, marks, g
 VALUES ($aq$ocr-sequencing-05$aq$, 5, $aq$Outputs the minutes left over$aq$, 1, $aq$Accept both being output in one message.$aq$)
 ON CONFLICT (question_id, position) DO UPDATE SET text = EXCLUDED.text, marks = EXCLUDED.marks, guidance = EXCLUDED.guidance;
 
-INSERT INTO public.assessment_questions (id, track, board, topic, marks, ability, answer_format, question)
-VALUES ($aq$ocr-sequencing-06$aq$, 'gcse', $aq$ocr$aq$, $aq$sequencing$aq$, 6, 3, $aq$code$aq$, $aq$A café splits a bill equally between the people at a table.
+INSERT INTO public.assessment_questions (id, track, board, topic, concept, marks, ability, answer_format, question)
+VALUES ($aq$ocr-sequencing-06$aq$, 'gcse', $aq$ocr$aq$, $aq$sequencing$aq$, $aq$arithmetic-program$aq$, 6, 3, $aq$code$aq$, $aq$A café splits a bill equally between the people at a table.
 
 Write a program that:
 
@@ -261,7 +261,7 @@ Write a program that:
 - outputs the amount rounded to 2 decimal places. [6]
 
 You may use pseudocode or a high-level programming language.$aq$)
-ON CONFLICT (id) DO UPDATE SET board = EXCLUDED.board, topic = EXCLUDED.topic, marks = EXCLUDED.marks,
+ON CONFLICT (id) DO UPDATE SET board = EXCLUDED.board, topic = EXCLUDED.topic, concept = EXCLUDED.concept, marks = EXCLUDED.marks,
   ability = EXCLUDED.ability, answer_format = EXCLUDED.answer_format, question = EXCLUDED.question;
 DELETE FROM public.assessment_mark_points WHERE question_id = $aq$ocr-sequencing-06$aq$ AND position > 6;
 INSERT INTO public.assessment_mark_points (question_id, position, text, marks, guidance)
@@ -283,20 +283,20 @@ INSERT INTO public.assessment_mark_points (question_id, position, text, marks, g
 VALUES ($aq$ocr-sequencing-06$aq$, 6, $aq$Outputs the amount each person pays$aq$, 1, $aq$$aq$)
 ON CONFLICT (question_id, position) DO UPDATE SET text = EXCLUDED.text, marks = EXCLUDED.marks, guidance = EXCLUDED.guidance;
 
-INSERT INTO public.assessment_questions (id, track, board, topic, marks, ability, answer_format, question)
-VALUES ($aq$ocr-selection-01$aq$, 'gcse', $aq$ocr$aq$, $aq$selection$aq$, 1, 1, $aq$text$aq$, $aq$State what is meant by selection in a program. [1]$aq$)
-ON CONFLICT (id) DO UPDATE SET board = EXCLUDED.board, topic = EXCLUDED.topic, marks = EXCLUDED.marks,
+INSERT INTO public.assessment_questions (id, track, board, topic, concept, marks, ability, answer_format, question)
+VALUES ($aq$ocr-selection-01$aq$, 'gcse', $aq$ocr$aq$, $aq$selection$aq$, $aq$selection-definition$aq$, 1, 1, $aq$text$aq$, $aq$State what is meant by selection in a program. [1]$aq$)
+ON CONFLICT (id) DO UPDATE SET board = EXCLUDED.board, topic = EXCLUDED.topic, concept = EXCLUDED.concept, marks = EXCLUDED.marks,
   ability = EXCLUDED.ability, answer_format = EXCLUDED.answer_format, question = EXCLUDED.question;
 DELETE FROM public.assessment_mark_points WHERE question_id = $aq$ocr-selection-01$aq$ AND position > 1;
 INSERT INTO public.assessment_mark_points (question_id, position, text, marks, guidance)
 VALUES ($aq$ocr-selection-01$aq$, 1, $aq$A decision is made in the program / different code runs depending on whether a condition is true or false$aq$, 1, $aq$Accept: an example using IF.$aq$)
 ON CONFLICT (question_id, position) DO UPDATE SET text = EXCLUDED.text, marks = EXCLUDED.marks, guidance = EXCLUDED.guidance;
 
-INSERT INTO public.assessment_questions (id, track, board, topic, marks, ability, answer_format, question)
-VALUES ($aq$ocr-selection-02$aq$, 'gcse', $aq$ocr$aq$, $aq$selection$aq$, 2, 1, $aq$text$aq$, $aq$In the OCR Exam Reference Language, the symbols `=` and `==` are used in programs.
+INSERT INTO public.assessment_questions (id, track, board, topic, concept, marks, ability, answer_format, question)
+VALUES ($aq$ocr-selection-02$aq$, 'gcse', $aq$ocr$aq$, $aq$selection$aq$, $aq$selection-definition$aq$, 2, 1, $aq$text$aq$, $aq$In the OCR Exam Reference Language, the symbols `=` and `==` are used in programs.
 
 State the purpose of each symbol. [2]$aq$)
-ON CONFLICT (id) DO UPDATE SET board = EXCLUDED.board, topic = EXCLUDED.topic, marks = EXCLUDED.marks,
+ON CONFLICT (id) DO UPDATE SET board = EXCLUDED.board, topic = EXCLUDED.topic, concept = EXCLUDED.concept, marks = EXCLUDED.marks,
   ability = EXCLUDED.ability, answer_format = EXCLUDED.answer_format, question = EXCLUDED.question;
 DELETE FROM public.assessment_mark_points WHERE question_id = $aq$ocr-selection-02$aq$ AND position > 2;
 INSERT INTO public.assessment_mark_points (question_id, position, text, marks, guidance)
@@ -306,8 +306,8 @@ INSERT INTO public.assessment_mark_points (question_id, position, text, marks, g
 VALUES ($aq$ocr-selection-02$aq$, 2, $aq$`==` compares two values to check whether they are equal (comparison)$aq$, 1, $aq$$aq$)
 ON CONFLICT (question_id, position) DO UPDATE SET text = EXCLUDED.text, marks = EXCLUDED.marks, guidance = EXCLUDED.guidance;
 
-INSERT INTO public.assessment_questions (id, track, board, topic, marks, ability, answer_format, question)
-VALUES ($aq$ocr-selection-03$aq$, 'gcse', $aq$ocr$aq$, $aq$selection$aq$, 3, 2, $aq$text$aq$, $aq$The following program is written in OCR Exam Reference Language.
+INSERT INTO public.assessment_questions (id, track, board, topic, concept, marks, ability, answer_format, question)
+VALUES ($aq$ocr-selection-03$aq$, 'gcse', $aq$ocr$aq$, $aq$selection$aq$, $aq$selection-trace$aq$, 3, 2, $aq$text$aq$, $aq$The following program is written in OCR Exam Reference Language.
 
 ```
 mark = int(input("Enter mark"))
@@ -327,7 +327,7 @@ State the output when the user enters:
 (b) 50 [1]
 
 (c) 49 [1]$aq$)
-ON CONFLICT (id) DO UPDATE SET board = EXCLUDED.board, topic = EXCLUDED.topic, marks = EXCLUDED.marks,
+ON CONFLICT (id) DO UPDATE SET board = EXCLUDED.board, topic = EXCLUDED.topic, concept = EXCLUDED.concept, marks = EXCLUDED.marks,
   ability = EXCLUDED.ability, answer_format = EXCLUDED.answer_format, question = EXCLUDED.question;
 DELETE FROM public.assessment_mark_points WHERE question_id = $aq$ocr-selection-03$aq$ AND position > 3;
 INSERT INTO public.assessment_mark_points (question_id, position, text, marks, guidance)
@@ -340,8 +340,8 @@ INSERT INTO public.assessment_mark_points (question_id, position, text, marks, g
 VALUES ($aq$ocr-selection-03$aq$, 3, $aq$(c) Fail$aq$, 1, $aq$$aq$)
 ON CONFLICT (question_id, position) DO UPDATE SET text = EXCLUDED.text, marks = EXCLUDED.marks, guidance = EXCLUDED.guidance;
 
-INSERT INTO public.assessment_questions (id, track, board, topic, marks, ability, answer_format, question)
-VALUES ($aq$ocr-selection-04$aq$, 'gcse', $aq$ocr$aq$, $aq$selection$aq$, 4, 2, $aq$code$aq$, $aq$A cinema sells tickets. The price depends on the customer's age and whether they have a student card.
+INSERT INTO public.assessment_questions (id, track, board, topic, concept, marks, ability, answer_format, question)
+VALUES ($aq$ocr-selection-04$aq$, 'gcse', $aq$ocr$aq$, $aq$selection$aq$, $aq$selection-nested$aq$, 4, 2, $aq$code$aq$, $aq$A cinema sells tickets. The price depends on the customer's age and whether they have a student card.
 
 | Customer | Ticket price |
 |---|---|
@@ -356,7 +356,7 @@ Write a program that:
 - outputs the ticket price. [4]
 
 You may use pseudocode or a high-level programming language.$aq$)
-ON CONFLICT (id) DO UPDATE SET board = EXCLUDED.board, topic = EXCLUDED.topic, marks = EXCLUDED.marks,
+ON CONFLICT (id) DO UPDATE SET board = EXCLUDED.board, topic = EXCLUDED.topic, concept = EXCLUDED.concept, marks = EXCLUDED.marks,
   ability = EXCLUDED.ability, answer_format = EXCLUDED.answer_format, question = EXCLUDED.question;
 DELETE FROM public.assessment_mark_points WHERE question_id = $aq$ocr-selection-04$aq$ AND position > 4;
 INSERT INTO public.assessment_mark_points (question_id, position, text, marks, guidance)
@@ -372,8 +372,8 @@ INSERT INTO public.assessment_mark_points (question_id, position, text, marks, g
 VALUES ($aq$ocr-selection-04$aq$, 4, $aq$Gives £15 for aged 16 or over without a student card AND outputs the price in every case$aq$, 1, $aq$$aq$)
 ON CONFLICT (question_id, position) DO UPDATE SET text = EXCLUDED.text, marks = EXCLUDED.marks, guidance = EXCLUDED.guidance;
 
-INSERT INTO public.assessment_questions (id, track, board, topic, marks, ability, answer_format, question)
-VALUES ($aq$ocr-selection-05$aq$, 'gcse', $aq$ocr$aq$, $aq$selection$aq$, 6, 3, $aq$code$aq$, $aq$A game gives players a star rating from their score. The score must be a whole number from 0 to 100.
+INSERT INTO public.assessment_questions (id, track, board, topic, concept, marks, ability, answer_format, question)
+VALUES ($aq$ocr-selection-05$aq$, 'gcse', $aq$ocr$aq$, $aq$selection$aq$, $aq$selection-ranges$aq$, 6, 3, $aq$code$aq$, $aq$A game gives players a star rating from their score. The score must be a whole number from 0 to 100.
 
 | Score | Output |
 |---|---|
@@ -385,7 +385,7 @@ VALUES ($aq$ocr-selection-05$aq$, 'gcse', $aq$ocr$aq$, $aq$selection$aq$, 6, 3, 
 Write a program that asks the user to enter a score. If the score is outside the range 0 to 100 the program outputs "Invalid". Otherwise it outputs the correct rating. [6]
 
 You may use pseudocode or a high-level programming language.$aq$)
-ON CONFLICT (id) DO UPDATE SET board = EXCLUDED.board, topic = EXCLUDED.topic, marks = EXCLUDED.marks,
+ON CONFLICT (id) DO UPDATE SET board = EXCLUDED.board, topic = EXCLUDED.topic, concept = EXCLUDED.concept, marks = EXCLUDED.marks,
   ability = EXCLUDED.ability, answer_format = EXCLUDED.answer_format, question = EXCLUDED.question;
 DELETE FROM public.assessment_mark_points WHERE question_id = $aq$ocr-selection-05$aq$ AND position > 6;
 INSERT INTO public.assessment_mark_points (question_id, position, text, marks, guidance)
@@ -407,8 +407,8 @@ INSERT INTO public.assessment_mark_points (question_id, position, text, marks, g
 VALUES ($aq$ocr-selection-05$aq$, 6, $aq$Outputs "1 star" for 30 to 59 AND "No stars" for 0 to 29 (boundaries correct)$aq$, 1, $aq$$aq$)
 ON CONFLICT (question_id, position) DO UPDATE SET text = EXCLUDED.text, marks = EXCLUDED.marks, guidance = EXCLUDED.guidance;
 
-INSERT INTO public.assessment_questions (id, track, board, topic, marks, ability, answer_format, question)
-VALUES ($aq$ocr-selection-06$aq$, 'gcse', $aq$ocr$aq$, $aq$selection$aq$, 2, 1, $aq$text$aq$, $aq$A program is written in pseudocode.
+INSERT INTO public.assessment_questions (id, track, board, topic, concept, marks, ability, answer_format, question)
+VALUES ($aq$ocr-selection-06$aq$, 'gcse', $aq$ocr$aq$, $aq$selection$aq$, $aq$selection-trace$aq$, 2, 1, $aq$text$aq$, $aq$A program is written in pseudocode.
 
 ```
 if x > 5 then
@@ -423,7 +423,7 @@ endif
 (a) State the output when x is 7. [1]
 
 (b) State the output when x is 4. [1]$aq$)
-ON CONFLICT (id) DO UPDATE SET board = EXCLUDED.board, topic = EXCLUDED.topic, marks = EXCLUDED.marks,
+ON CONFLICT (id) DO UPDATE SET board = EXCLUDED.board, topic = EXCLUDED.topic, concept = EXCLUDED.concept, marks = EXCLUDED.marks,
   ability = EXCLUDED.ability, answer_format = EXCLUDED.answer_format, question = EXCLUDED.question;
 DELETE FROM public.assessment_mark_points WHERE question_id = $aq$ocr-selection-06$aq$ AND position > 2;
 INSERT INTO public.assessment_mark_points (question_id, position, text, marks, guidance)
@@ -433,15 +433,15 @@ INSERT INTO public.assessment_mark_points (question_id, position, text, marks, g
 VALUES ($aq$ocr-selection-06$aq$, 2, $aq$(b) B$aq$, 1, $aq$$aq$)
 ON CONFLICT (question_id, position) DO UPDATE SET text = EXCLUDED.text, marks = EXCLUDED.marks, guidance = EXCLUDED.guidance;
 
-INSERT INTO public.assessment_questions (id, track, board, topic, marks, ability, answer_format, question)
-VALUES ($aq$ocr-selection-07$aq$, 'gcse', $aq$ocr$aq$, $aq$selection$aq$, 3, 2, $aq$text$aq$, $aq$State whether each of the following expressions is True or False.
+INSERT INTO public.assessment_questions (id, track, board, topic, concept, marks, ability, answer_format, question)
+VALUES ($aq$ocr-selection-07$aq$, 'gcse', $aq$ocr$aq$, $aq$selection$aq$, $aq$boolean-expressions$aq$, 3, 2, $aq$text$aq$, $aq$State whether each of the following expressions is True or False.
 
 (a) (5 > 3) AND (2 > 4) [1]
 
 (b) NOT (7 == 7) [1]
 
 (c) (4 < 2) OR (9 MOD 3 == 0) [1]$aq$)
-ON CONFLICT (id) DO UPDATE SET board = EXCLUDED.board, topic = EXCLUDED.topic, marks = EXCLUDED.marks,
+ON CONFLICT (id) DO UPDATE SET board = EXCLUDED.board, topic = EXCLUDED.topic, concept = EXCLUDED.concept, marks = EXCLUDED.marks,
   ability = EXCLUDED.ability, answer_format = EXCLUDED.answer_format, question = EXCLUDED.question;
 DELETE FROM public.assessment_mark_points WHERE question_id = $aq$ocr-selection-07$aq$ AND position > 3;
 INSERT INTO public.assessment_mark_points (question_id, position, text, marks, guidance)
@@ -454,8 +454,8 @@ INSERT INTO public.assessment_mark_points (question_id, position, text, marks, g
 VALUES ($aq$ocr-selection-07$aq$, 3, $aq$(c) True$aq$, 1, $aq$$aq$)
 ON CONFLICT (question_id, position) DO UPDATE SET text = EXCLUDED.text, marks = EXCLUDED.marks, guidance = EXCLUDED.guidance;
 
-INSERT INTO public.assessment_questions (id, track, board, topic, marks, ability, answer_format, question)
-VALUES ($aq$ocr-selection-08$aq$, 'gcse', $aq$ocr$aq$, $aq$selection$aq$, 5, 3, $aq$code$aq$, $aq$A leisure centre charges for entry by age.
+INSERT INTO public.assessment_questions (id, track, board, topic, concept, marks, ability, answer_format, question)
+VALUES ($aq$ocr-selection-08$aq$, 'gcse', $aq$ocr$aq$, $aq$selection$aq$, $aq$selection-ranges$aq$, 5, 3, $aq$code$aq$, $aq$A leisure centre charges for entry by age.
 
 | Age | Charge |
 |---|---|
@@ -467,7 +467,7 @@ VALUES ($aq$ocr-selection-08$aq$, 'gcse', $aq$ocr$aq$, $aq$selection$aq$, 5, 3, 
 Write a program that asks the user to enter their age and outputs the charge. [5]
 
 You may use pseudocode or a high-level programming language.$aq$)
-ON CONFLICT (id) DO UPDATE SET board = EXCLUDED.board, topic = EXCLUDED.topic, marks = EXCLUDED.marks,
+ON CONFLICT (id) DO UPDATE SET board = EXCLUDED.board, topic = EXCLUDED.topic, concept = EXCLUDED.concept, marks = EXCLUDED.marks,
   ability = EXCLUDED.ability, answer_format = EXCLUDED.answer_format, question = EXCLUDED.question;
 DELETE FROM public.assessment_mark_points WHERE question_id = $aq$ocr-selection-08$aq$ AND position > 5;
 INSERT INTO public.assessment_mark_points (question_id, position, text, marks, guidance)
@@ -486,9 +486,9 @@ INSERT INTO public.assessment_mark_points (question_id, position, text, marks, g
 VALUES ($aq$ocr-selection-08$aq$, 5, $aq$65 or over outputs £4, and a charge is output in every case$aq$, 1, $aq$$aq$)
 ON CONFLICT (question_id, position) DO UPDATE SET text = EXCLUDED.text, marks = EXCLUDED.marks, guidance = EXCLUDED.guidance;
 
-INSERT INTO public.assessment_questions (id, track, board, topic, marks, ability, answer_format, question)
-VALUES ($aq$ocr-iteration-01$aq$, 'gcse', $aq$ocr$aq$, $aq$iteration$aq$, 2, 1, $aq$text$aq$, $aq$Identify **two** types of loop (iteration) used in programming. [2]$aq$)
-ON CONFLICT (id) DO UPDATE SET board = EXCLUDED.board, topic = EXCLUDED.topic, marks = EXCLUDED.marks,
+INSERT INTO public.assessment_questions (id, track, board, topic, concept, marks, ability, answer_format, question)
+VALUES ($aq$ocr-iteration-01$aq$, 'gcse', $aq$ocr$aq$, $aq$iteration$aq$, $aq$loop-types$aq$, 2, 1, $aq$text$aq$, $aq$Identify **two** types of loop (iteration) used in programming. [2]$aq$)
+ON CONFLICT (id) DO UPDATE SET board = EXCLUDED.board, topic = EXCLUDED.topic, concept = EXCLUDED.concept, marks = EXCLUDED.marks,
   ability = EXCLUDED.ability, answer_format = EXCLUDED.answer_format, question = EXCLUDED.question;
 DELETE FROM public.assessment_mark_points WHERE question_id = $aq$ocr-iteration-01$aq$ AND position > 2;
 INSERT INTO public.assessment_mark_points (question_id, position, text, marks, guidance)
@@ -498,11 +498,11 @@ INSERT INTO public.assessment_mark_points (question_id, position, text, marks, g
 VALUES ($aq$ocr-iteration-01$aq$, 2, $aq$Condition-controlled loop (accept: WHILE loop / DO UNTIL loop / REPEAT UNTIL loop)$aq$, 1, $aq$$aq$)
 ON CONFLICT (question_id, position) DO UPDATE SET text = EXCLUDED.text, marks = EXCLUDED.marks, guidance = EXCLUDED.guidance;
 
-INSERT INTO public.assessment_questions (id, track, board, topic, marks, ability, answer_format, question)
-VALUES ($aq$ocr-iteration-02$aq$, 'gcse', $aq$ocr$aq$, $aq$iteration$aq$, 2, 1, $aq$text$aq$, $aq$A program asks a user to enter a password. It keeps asking until the password is correct.
+INSERT INTO public.assessment_questions (id, track, board, topic, concept, marks, ability, answer_format, question)
+VALUES ($aq$ocr-iteration-02$aq$, 'gcse', $aq$ocr$aq$, $aq$iteration$aq$, $aq$loop-types$aq$, 2, 1, $aq$text$aq$, $aq$A program asks a user to enter a password. It keeps asking until the password is correct.
 
 Explain why a condition-controlled loop is more suitable for this program than a count-controlled loop. [2]$aq$)
-ON CONFLICT (id) DO UPDATE SET board = EXCLUDED.board, topic = EXCLUDED.topic, marks = EXCLUDED.marks,
+ON CONFLICT (id) DO UPDATE SET board = EXCLUDED.board, topic = EXCLUDED.topic, concept = EXCLUDED.concept, marks = EXCLUDED.marks,
   ability = EXCLUDED.ability, answer_format = EXCLUDED.answer_format, question = EXCLUDED.question;
 DELETE FROM public.assessment_mark_points WHERE question_id = $aq$ocr-iteration-02$aq$ AND position > 3;
 INSERT INTO public.assessment_mark_points (question_id, position, text, marks, guidance)
@@ -515,8 +515,8 @@ INSERT INTO public.assessment_mark_points (question_id, position, text, marks, g
 VALUES ($aq$ocr-iteration-02$aq$, 3, $aq$A count-controlled loop repeats a fixed / set number of times$aq$, 1, $aq$$aq$)
 ON CONFLICT (question_id, position) DO UPDATE SET text = EXCLUDED.text, marks = EXCLUDED.marks, guidance = EXCLUDED.guidance;
 
-INSERT INTO public.assessment_questions (id, track, board, topic, marks, ability, answer_format, question)
-VALUES ($aq$ocr-iteration-03$aq$, 'gcse', $aq$ocr$aq$, $aq$iteration$aq$, 3, 2, $aq$text$aq$, $aq$The following program is written in OCR Exam Reference Language.
+INSERT INTO public.assessment_questions (id, track, board, topic, concept, marks, ability, answer_format, question)
+VALUES ($aq$ocr-iteration-03$aq$, 'gcse', $aq$ocr$aq$, $aq$iteration$aq$, $aq$loop-trace$aq$, 3, 2, $aq$text$aq$, $aq$The following program is written in OCR Exam Reference Language.
 
 ```
 total = 0
@@ -531,7 +531,7 @@ print(total)
 (b) State the number of times the line `total = total + i` is executed. [1]
 
 (c) State the purpose of the variable `total`. [1]$aq$)
-ON CONFLICT (id) DO UPDATE SET board = EXCLUDED.board, topic = EXCLUDED.topic, marks = EXCLUDED.marks,
+ON CONFLICT (id) DO UPDATE SET board = EXCLUDED.board, topic = EXCLUDED.topic, concept = EXCLUDED.concept, marks = EXCLUDED.marks,
   ability = EXCLUDED.ability, answer_format = EXCLUDED.answer_format, question = EXCLUDED.question;
 DELETE FROM public.assessment_mark_points WHERE question_id = $aq$ocr-iteration-03$aq$ AND position > 3;
 INSERT INTO public.assessment_mark_points (question_id, position, text, marks, guidance)
@@ -544,11 +544,11 @@ INSERT INTO public.assessment_mark_points (question_id, position, text, marks, g
 VALUES ($aq$ocr-iteration-03$aq$, 3, $aq$(c) It stores / holds the running total (sum) of the values of i$aq$, 1, $aq$Accept: it adds up the numbers.$aq$)
 ON CONFLICT (question_id, position) DO UPDATE SET text = EXCLUDED.text, marks = EXCLUDED.marks, guidance = EXCLUDED.guidance;
 
-INSERT INTO public.assessment_questions (id, track, board, topic, marks, ability, answer_format, question)
-VALUES ($aq$ocr-iteration-04$aq$, 'gcse', $aq$ocr$aq$, $aq$iteration$aq$, 4, 2, $aq$code$aq$, $aq$Write a program that asks the user to enter a number between 1 and 10. The program must keep asking until a valid number is entered. When a valid number is entered, the program outputs "Thank you". [4]
+INSERT INTO public.assessment_questions (id, track, board, topic, concept, marks, ability, answer_format, question)
+VALUES ($aq$ocr-iteration-04$aq$, 'gcse', $aq$ocr$aq$, $aq$iteration$aq$, $aq$repeat-until-valid$aq$, 4, 2, $aq$code$aq$, $aq$Write a program that asks the user to enter a number between 1 and 10. The program must keep asking until a valid number is entered. When a valid number is entered, the program outputs "Thank you". [4]
 
 You may use pseudocode or a high-level programming language.$aq$)
-ON CONFLICT (id) DO UPDATE SET board = EXCLUDED.board, topic = EXCLUDED.topic, marks = EXCLUDED.marks,
+ON CONFLICT (id) DO UPDATE SET board = EXCLUDED.board, topic = EXCLUDED.topic, concept = EXCLUDED.concept, marks = EXCLUDED.marks,
   ability = EXCLUDED.ability, answer_format = EXCLUDED.answer_format, question = EXCLUDED.question;
 DELETE FROM public.assessment_mark_points WHERE question_id = $aq$ocr-iteration-04$aq$ AND position > 4;
 INSERT INTO public.assessment_mark_points (question_id, position, text, marks, guidance)
@@ -564,15 +564,15 @@ INSERT INTO public.assessment_mark_points (question_id, position, text, marks, g
 VALUES ($aq$ocr-iteration-04$aq$, 4, $aq$Asks for the number again inside the loop AND outputs "Thank you" after the loop (once, when valid)$aq$, 1, $aq$$aq$)
 ON CONFLICT (question_id, position) DO UPDATE SET text = EXCLUDED.text, marks = EXCLUDED.marks, guidance = EXCLUDED.guidance;
 
-INSERT INTO public.assessment_questions (id, track, board, topic, marks, ability, answer_format, question)
-VALUES ($aq$ocr-iteration-05$aq$, 'gcse', $aq$ocr$aq$, $aq$iteration$aq$, 6, 3, $aq$code$aq$, $aq$A teacher wants a program to help with marking. The program must:
+INSERT INTO public.assessment_questions (id, track, board, topic, concept, marks, ability, answer_format, question)
+VALUES ($aq$ocr-iteration-05$aq$, 'gcse', $aq$ocr$aq$, $aq$iteration$aq$, $aq$loop-totals$aq$, 6, 3, $aq$code$aq$, $aq$A teacher wants a program to help with marking. The program must:
 
 - ask the user to enter five test marks, one at a time
 - calculate and output the average (mean) mark
 - output the highest mark entered. [6]
 
 Write the program. You may use pseudocode or a high-level programming language.$aq$)
-ON CONFLICT (id) DO UPDATE SET board = EXCLUDED.board, topic = EXCLUDED.topic, marks = EXCLUDED.marks,
+ON CONFLICT (id) DO UPDATE SET board = EXCLUDED.board, topic = EXCLUDED.topic, concept = EXCLUDED.concept, marks = EXCLUDED.marks,
   ability = EXCLUDED.ability, answer_format = EXCLUDED.answer_format, question = EXCLUDED.question;
 DELETE FROM public.assessment_mark_points WHERE question_id = $aq$ocr-iteration-05$aq$ AND position > 6;
 INSERT INTO public.assessment_mark_points (question_id, position, text, marks, guidance)
@@ -594,8 +594,8 @@ INSERT INTO public.assessment_mark_points (question_id, position, text, marks, g
 VALUES ($aq$ocr-iteration-05$aq$, 6, $aq$Outputs both the average and the highest mark (after the loop)$aq$, 1, $aq$$aq$)
 ON CONFLICT (question_id, position) DO UPDATE SET text = EXCLUDED.text, marks = EXCLUDED.marks, guidance = EXCLUDED.guidance;
 
-INSERT INTO public.assessment_questions (id, track, board, topic, marks, ability, answer_format, question)
-VALUES ($aq$ocr-iteration-06$aq$, 'gcse', $aq$ocr$aq$, $aq$iteration$aq$, 2, 1, $aq$text$aq$, $aq$A program is written in pseudocode.
+INSERT INTO public.assessment_questions (id, track, board, topic, concept, marks, ability, answer_format, question)
+VALUES ($aq$ocr-iteration-06$aq$, 'gcse', $aq$ocr$aq$, $aq$iteration$aq$, $aq$loop-trace$aq$, 2, 1, $aq$text$aq$, $aq$A program is written in pseudocode.
 
 ```
 for i = 1 to 4
@@ -604,7 +604,7 @@ next i
 ```
 
 State the values that are output. [2]$aq$)
-ON CONFLICT (id) DO UPDATE SET board = EXCLUDED.board, topic = EXCLUDED.topic, marks = EXCLUDED.marks,
+ON CONFLICT (id) DO UPDATE SET board = EXCLUDED.board, topic = EXCLUDED.topic, concept = EXCLUDED.concept, marks = EXCLUDED.marks,
   ability = EXCLUDED.ability, answer_format = EXCLUDED.answer_format, question = EXCLUDED.question;
 DELETE FROM public.assessment_mark_points WHERE question_id = $aq$ocr-iteration-06$aq$ AND position > 2;
 INSERT INTO public.assessment_mark_points (question_id, position, text, marks, guidance)
@@ -614,8 +614,8 @@ INSERT INTO public.assessment_mark_points (question_id, position, text, marks, g
 VALUES ($aq$ocr-iteration-06$aq$, 2, $aq$All four values are output: 2, 4, 6, 8$aq$, 1, $aq$Accept the values on one line or separate lines.$aq$)
 ON CONFLICT (question_id, position) DO UPDATE SET text = EXCLUDED.text, marks = EXCLUDED.marks, guidance = EXCLUDED.guidance;
 
-INSERT INTO public.assessment_questions (id, track, board, topic, marks, ability, answer_format, question)
-VALUES ($aq$ocr-iteration-07$aq$, 'gcse', $aq$ocr$aq$, $aq$iteration$aq$, 3, 2, $aq$text$aq$, $aq$A program is written in pseudocode.
+INSERT INTO public.assessment_questions (id, track, board, topic, concept, marks, ability, answer_format, question)
+VALUES ($aq$ocr-iteration-07$aq$, 'gcse', $aq$ocr$aq$, $aq$iteration$aq$, $aq$loop-trace$aq$, 3, 2, $aq$text$aq$, $aq$A program is written in pseudocode.
 
 ```
 total = 0
@@ -632,7 +632,7 @@ print(total)
 (b) State the value of `x` when the loop ends. [1]
 
 (c) State the output of the program. [1]$aq$)
-ON CONFLICT (id) DO UPDATE SET board = EXCLUDED.board, topic = EXCLUDED.topic, marks = EXCLUDED.marks,
+ON CONFLICT (id) DO UPDATE SET board = EXCLUDED.board, topic = EXCLUDED.topic, concept = EXCLUDED.concept, marks = EXCLUDED.marks,
   ability = EXCLUDED.ability, answer_format = EXCLUDED.answer_format, question = EXCLUDED.question;
 DELETE FROM public.assessment_mark_points WHERE question_id = $aq$ocr-iteration-07$aq$ AND position > 3;
 INSERT INTO public.assessment_mark_points (question_id, position, text, marks, guidance)
@@ -645,13 +645,13 @@ INSERT INTO public.assessment_mark_points (question_id, position, text, marks, g
 VALUES ($aq$ocr-iteration-07$aq$, 3, $aq$(c) 31$aq$, 1, $aq$1 + 2 + 4 + 8 + 16.$aq$)
 ON CONFLICT (question_id, position) DO UPDATE SET text = EXCLUDED.text, marks = EXCLUDED.marks, guidance = EXCLUDED.guidance;
 
-INSERT INTO public.assessment_questions (id, track, board, topic, marks, ability, answer_format, question)
-VALUES ($aq$ocr-iteration-08$aq$, 'gcse', $aq$ocr$aq$, $aq$iteration$aq$, 5, 3, $aq$code$aq$, $aq$Write a program that asks the user to enter positive whole numbers, one at a time. The user enters 0 to show they have finished (the 0 is not one of the numbers).
+INSERT INTO public.assessment_questions (id, track, board, topic, concept, marks, ability, answer_format, question)
+VALUES ($aq$ocr-iteration-08$aq$, 'gcse', $aq$ocr$aq$, $aq$iteration$aq$, $aq$loop-sentinel$aq$, 5, 3, $aq$code$aq$, $aq$Write a program that asks the user to enter positive whole numbers, one at a time. The user enters 0 to show they have finished (the 0 is not one of the numbers).
 
 The program must output how many numbers were entered and the average of those numbers. [5]
 
 You may use pseudocode or a high-level programming language.$aq$)
-ON CONFLICT (id) DO UPDATE SET board = EXCLUDED.board, topic = EXCLUDED.topic, marks = EXCLUDED.marks,
+ON CONFLICT (id) DO UPDATE SET board = EXCLUDED.board, topic = EXCLUDED.topic, concept = EXCLUDED.concept, marks = EXCLUDED.marks,
   ability = EXCLUDED.ability, answer_format = EXCLUDED.answer_format, question = EXCLUDED.question;
 DELETE FROM public.assessment_mark_points WHERE question_id = $aq$ocr-iteration-08$aq$ AND position > 5;
 INSERT INTO public.assessment_mark_points (question_id, position, text, marks, guidance)
@@ -670,9 +670,9 @@ INSERT INTO public.assessment_mark_points (question_id, position, text, marks, g
 VALUES ($aq$ocr-iteration-08$aq$, 5, $aq$After the loop, outputs the count and the average (total divided by count)$aq$, 1, $aq$Accept a check that stops division by zero when no numbers are entered.$aq$)
 ON CONFLICT (question_id, position) DO UPDATE SET text = EXCLUDED.text, marks = EXCLUDED.marks, guidance = EXCLUDED.guidance;
 
-INSERT INTO public.assessment_questions (id, track, board, topic, marks, ability, answer_format, question)
-VALUES ($aq$ocr-lists-01$aq$, 'gcse', $aq$ocr$aq$, $aq$lists$aq$, 2, 1, $aq$text$aq$, $aq$Explain what is meant by an **array**. [2]$aq$)
-ON CONFLICT (id) DO UPDATE SET board = EXCLUDED.board, topic = EXCLUDED.topic, marks = EXCLUDED.marks,
+INSERT INTO public.assessment_questions (id, track, board, topic, concept, marks, ability, answer_format, question)
+VALUES ($aq$ocr-lists-01$aq$, 'gcse', $aq$ocr$aq$, $aq$lists$aq$, $aq$array-definition$aq$, 2, 1, $aq$text$aq$, $aq$Explain what is meant by an **array**. [2]$aq$)
+ON CONFLICT (id) DO UPDATE SET board = EXCLUDED.board, topic = EXCLUDED.topic, concept = EXCLUDED.concept, marks = EXCLUDED.marks,
   ability = EXCLUDED.ability, answer_format = EXCLUDED.answer_format, question = EXCLUDED.question;
 DELETE FROM public.assessment_mark_points WHERE question_id = $aq$ocr-lists-01$aq$ AND position > 2;
 INSERT INTO public.assessment_mark_points (question_id, position, text, marks, guidance)
@@ -682,17 +682,17 @@ INSERT INTO public.assessment_mark_points (question_id, position, text, marks, g
 VALUES ($aq$ocr-lists-01$aq$, 2, $aq$Each item is accessed using an index / position number$aq$, 1, $aq$Accept: the items are usually the same data type.$aq$)
 ON CONFLICT (question_id, position) DO UPDATE SET text = EXCLUDED.text, marks = EXCLUDED.marks, guidance = EXCLUDED.guidance;
 
-INSERT INTO public.assessment_questions (id, track, board, topic, marks, ability, answer_format, question)
-VALUES ($aq$ocr-lists-02$aq$, 'gcse', $aq$ocr$aq$, $aq$lists$aq$, 1, 1, $aq$text$aq$, $aq$In OCR Exam Reference Language, the first item in an array is stored at an index. State the index of the first item. [1]$aq$)
-ON CONFLICT (id) DO UPDATE SET board = EXCLUDED.board, topic = EXCLUDED.topic, marks = EXCLUDED.marks,
+INSERT INTO public.assessment_questions (id, track, board, topic, concept, marks, ability, answer_format, question)
+VALUES ($aq$ocr-lists-02$aq$, 'gcse', $aq$ocr$aq$, $aq$lists$aq$, $aq$array-definition$aq$, 1, 1, $aq$text$aq$, $aq$In OCR Exam Reference Language, the first item in an array is stored at an index. State the index of the first item. [1]$aq$)
+ON CONFLICT (id) DO UPDATE SET board = EXCLUDED.board, topic = EXCLUDED.topic, concept = EXCLUDED.concept, marks = EXCLUDED.marks,
   ability = EXCLUDED.ability, answer_format = EXCLUDED.answer_format, question = EXCLUDED.question;
 DELETE FROM public.assessment_mark_points WHERE question_id = $aq$ocr-lists-02$aq$ AND position > 1;
 INSERT INTO public.assessment_mark_points (question_id, position, text, marks, guidance)
 VALUES ($aq$ocr-lists-02$aq$, 1, $aq$0$aq$, 1, $aq$Do not accept 1.$aq$)
 ON CONFLICT (question_id, position) DO UPDATE SET text = EXCLUDED.text, marks = EXCLUDED.marks, guidance = EXCLUDED.guidance;
 
-INSERT INTO public.assessment_questions (id, track, board, topic, marks, ability, answer_format, question)
-VALUES ($aq$ocr-lists-03$aq$, 'gcse', $aq$ocr$aq$, $aq$lists$aq$, 3, 2, $aq$text$aq$, $aq$An array is created and filled.
+INSERT INTO public.assessment_questions (id, track, board, topic, concept, marks, ability, answer_format, question)
+VALUES ($aq$ocr-lists-03$aq$, 'gcse', $aq$ocr$aq$, $aq$lists$aq$, $aq$array-trace$aq$, 3, 2, $aq$text$aq$, $aq$An array is created and filled.
 
 ```
 array scores[5]
@@ -711,7 +711,7 @@ print(scores[1])
 (b) State the output of the second `print` statement. [1]
 
 (c) State the number of items in the array `scores`. [1]$aq$)
-ON CONFLICT (id) DO UPDATE SET board = EXCLUDED.board, topic = EXCLUDED.topic, marks = EXCLUDED.marks,
+ON CONFLICT (id) DO UPDATE SET board = EXCLUDED.board, topic = EXCLUDED.topic, concept = EXCLUDED.concept, marks = EXCLUDED.marks,
   ability = EXCLUDED.ability, answer_format = EXCLUDED.answer_format, question = EXCLUDED.question;
 DELETE FROM public.assessment_mark_points WHERE question_id = $aq$ocr-lists-03$aq$ AND position > 3;
 INSERT INTO public.assessment_mark_points (question_id, position, text, marks, guidance)
@@ -724,11 +724,11 @@ INSERT INTO public.assessment_mark_points (question_id, position, text, marks, g
 VALUES ($aq$ocr-lists-03$aq$, 3, $aq$(c) 5$aq$, 1, $aq$$aq$)
 ON CONFLICT (question_id, position) DO UPDATE SET text = EXCLUDED.text, marks = EXCLUDED.marks, guidance = EXCLUDED.guidance;
 
-INSERT INTO public.assessment_questions (id, track, board, topic, marks, ability, answer_format, question)
-VALUES ($aq$ocr-lists-04$aq$, 'gcse', $aq$ocr$aq$, $aq$lists$aq$, 4, 2, $aq$code$aq$, $aq$Write a program that stores five names in an array called `names` and then uses a loop to output each name. [4]
+INSERT INTO public.assessment_questions (id, track, board, topic, concept, marks, ability, answer_format, question)
+VALUES ($aq$ocr-lists-04$aq$, 'gcse', $aq$ocr$aq$, $aq$lists$aq$, $aq$array-loop-output$aq$, 4, 2, $aq$code$aq$, $aq$Write a program that stores five names in an array called `names` and then uses a loop to output each name. [4]
 
 You may use pseudocode or a high-level programming language.$aq$)
-ON CONFLICT (id) DO UPDATE SET board = EXCLUDED.board, topic = EXCLUDED.topic, marks = EXCLUDED.marks,
+ON CONFLICT (id) DO UPDATE SET board = EXCLUDED.board, topic = EXCLUDED.topic, concept = EXCLUDED.concept, marks = EXCLUDED.marks,
   ability = EXCLUDED.ability, answer_format = EXCLUDED.answer_format, question = EXCLUDED.question;
 DELETE FROM public.assessment_mark_points WHERE question_id = $aq$ocr-lists-04$aq$ AND position > 4;
 INSERT INTO public.assessment_mark_points (question_id, position, text, marks, guidance)
@@ -744,8 +744,8 @@ INSERT INTO public.assessment_mark_points (question_id, position, text, marks, g
 VALUES ($aq$ocr-lists-04$aq$, 4, $aq$Outputs each item using the loop variable as the index$aq$, 1, $aq$Accept a FOR EACH style loop in a high-level language.$aq$)
 ON CONFLICT (question_id, position) DO UPDATE SET text = EXCLUDED.text, marks = EXCLUDED.marks, guidance = EXCLUDED.guidance;
 
-INSERT INTO public.assessment_questions (id, track, board, topic, marks, ability, answer_format, question)
-VALUES ($aq$ocr-lists-05$aq$, 'gcse', $aq$ocr$aq$, $aq$lists$aq$, 5, 3, $aq$text$aq$, $aq$A two-dimensional array called `grid` stores whole numbers. It is accessed as `grid[row, column]` and both indexes start at 0.
+INSERT INTO public.assessment_questions (id, track, board, topic, concept, marks, ability, answer_format, question)
+VALUES ($aq$ocr-lists-05$aq$, 'gcse', $aq$ocr$aq$, $aq$lists$aq$, $aq$array-2d$aq$, 5, 3, $aq$text$aq$, $aq$A two-dimensional array called `grid` stores whole numbers. It is accessed as `grid[row, column]` and both indexes start at 0.
 
 | | Column 0 | Column 1 | Column 2 |
 |---|---|---|---|
@@ -760,7 +760,7 @@ VALUES ($aq$ocr-lists-05$aq$, 'gcse', $aq$ocr$aq$, $aq$lists$aq$, 5, 3, $aq$text
 (c) Write code that uses **nested loops** to output every value in the array. [3]
 
 You may use pseudocode or a high-level programming language.$aq$)
-ON CONFLICT (id) DO UPDATE SET board = EXCLUDED.board, topic = EXCLUDED.topic, marks = EXCLUDED.marks,
+ON CONFLICT (id) DO UPDATE SET board = EXCLUDED.board, topic = EXCLUDED.topic, concept = EXCLUDED.concept, marks = EXCLUDED.marks,
   ability = EXCLUDED.ability, answer_format = EXCLUDED.answer_format, question = EXCLUDED.question;
 DELETE FROM public.assessment_mark_points WHERE question_id = $aq$ocr-lists-05$aq$ AND position > 5;
 INSERT INTO public.assessment_mark_points (question_id, position, text, marks, guidance)
@@ -779,15 +779,15 @@ INSERT INTO public.assessment_mark_points (question_id, position, text, marks, g
 VALUES ($aq$ocr-lists-05$aq$, 5, $aq$(c) Outputs grid[row, column] using both loop variables$aq$, 1, $aq$Accept the loop variables being any valid names.$aq$)
 ON CONFLICT (question_id, position) DO UPDATE SET text = EXCLUDED.text, marks = EXCLUDED.marks, guidance = EXCLUDED.guidance;
 
-INSERT INTO public.assessment_questions (id, track, board, topic, marks, ability, answer_format, question)
-VALUES ($aq$ocr-lists-06$aq$, 'gcse', $aq$ocr$aq$, $aq$lists$aq$, 6, 3, $aq$code$aq$, $aq$Write a program that:
+INSERT INTO public.assessment_questions (id, track, board, topic, concept, marks, ability, answer_format, question)
+VALUES ($aq$ocr-lists-06$aq$, 'gcse', $aq$ocr$aq$, $aq$lists$aq$, $aq$array-search-total$aq$, 6, 3, $aq$code$aq$, $aq$Write a program that:
 
 - stores ten whole numbers entered by the user in an array
 - finds the largest of the ten numbers
 - outputs the largest number. [6]
 
 You may use pseudocode or a high-level programming language.$aq$)
-ON CONFLICT (id) DO UPDATE SET board = EXCLUDED.board, topic = EXCLUDED.topic, marks = EXCLUDED.marks,
+ON CONFLICT (id) DO UPDATE SET board = EXCLUDED.board, topic = EXCLUDED.topic, concept = EXCLUDED.concept, marks = EXCLUDED.marks,
   ability = EXCLUDED.ability, answer_format = EXCLUDED.answer_format, question = EXCLUDED.question;
 DELETE FROM public.assessment_mark_points WHERE question_id = $aq$ocr-lists-06$aq$ AND position > 6;
 INSERT INTO public.assessment_mark_points (question_id, position, text, marks, guidance)
@@ -809,8 +809,8 @@ INSERT INTO public.assessment_mark_points (question_id, position, text, marks, g
 VALUES ($aq$ocr-lists-06$aq$, 6, $aq$Outputs the largest number after the loop has finished$aq$, 1, $aq$$aq$)
 ON CONFLICT (question_id, position) DO UPDATE SET text = EXCLUDED.text, marks = EXCLUDED.marks, guidance = EXCLUDED.guidance;
 
-INSERT INTO public.assessment_questions (id, track, board, topic, marks, ability, answer_format, question)
-VALUES ($aq$ocr-strings-01$aq$, 'gcse', $aq$ocr$aq$, $aq$strings$aq$, 2, 1, $aq$text$aq$, $aq$A program is written in pseudocode.
+INSERT INTO public.assessment_questions (id, track, board, topic, concept, marks, ability, answer_format, question)
+VALUES ($aq$ocr-strings-01$aq$, 'gcse', $aq$ocr$aq$, $aq$strings$aq$, $aq$string-functions$aq$, 2, 1, $aq$text$aq$, $aq$A program is written in pseudocode.
 
 ```
 word = "computer"
@@ -819,7 +819,7 @@ print(word.upper)
 ```
 
 State the two values that are output. [2]$aq$)
-ON CONFLICT (id) DO UPDATE SET board = EXCLUDED.board, topic = EXCLUDED.topic, marks = EXCLUDED.marks,
+ON CONFLICT (id) DO UPDATE SET board = EXCLUDED.board, topic = EXCLUDED.topic, concept = EXCLUDED.concept, marks = EXCLUDED.marks,
   ability = EXCLUDED.ability, answer_format = EXCLUDED.answer_format, question = EXCLUDED.question;
 DELETE FROM public.assessment_mark_points WHERE question_id = $aq$ocr-strings-01$aq$ AND position > 2;
 INSERT INTO public.assessment_mark_points (question_id, position, text, marks, guidance)
@@ -829,11 +829,11 @@ INSERT INTO public.assessment_mark_points (question_id, position, text, marks, g
 VALUES ($aq$ocr-strings-01$aq$, 2, $aq$COMPUTER$aq$, 1, $aq$$aq$)
 ON CONFLICT (question_id, position) DO UPDATE SET text = EXCLUDED.text, marks = EXCLUDED.marks, guidance = EXCLUDED.guidance;
 
-INSERT INTO public.assessment_questions (id, track, board, topic, marks, ability, answer_format, question)
-VALUES ($aq$ocr-strings-02$aq$, 'gcse', $aq$ocr$aq$, $aq$strings$aq$, 2, 1, $aq$text$aq$, $aq$(a) State the result of `"Hello World".substring(6, 5)` where the first number is the starting position and the second is the number of characters. Positions start at 0. [1]
+INSERT INTO public.assessment_questions (id, track, board, topic, concept, marks, ability, answer_format, question)
+VALUES ($aq$ocr-strings-02$aq$, 'gcse', $aq$ocr$aq$, $aq$strings$aq$, $aq$string-functions$aq$, 2, 1, $aq$text$aq$, $aq$(a) State the result of `"Hello World".substring(6, 5)` where the first number is the starting position and the second is the number of characters. Positions start at 0. [1]
 
 (b) State what is meant by **concatenation**. [1]$aq$)
-ON CONFLICT (id) DO UPDATE SET board = EXCLUDED.board, topic = EXCLUDED.topic, marks = EXCLUDED.marks,
+ON CONFLICT (id) DO UPDATE SET board = EXCLUDED.board, topic = EXCLUDED.topic, concept = EXCLUDED.concept, marks = EXCLUDED.marks,
   ability = EXCLUDED.ability, answer_format = EXCLUDED.answer_format, question = EXCLUDED.question;
 DELETE FROM public.assessment_mark_points WHERE question_id = $aq$ocr-strings-02$aq$ AND position > 2;
 INSERT INTO public.assessment_mark_points (question_id, position, text, marks, guidance)
@@ -843,15 +843,15 @@ INSERT INTO public.assessment_mark_points (question_id, position, text, marks, g
 VALUES ($aq$ocr-strings-02$aq$, 2, $aq$(b) Joining two (or more) strings together to make one string$aq$, 1, $aq$$aq$)
 ON CONFLICT (question_id, position) DO UPDATE SET text = EXCLUDED.text, marks = EXCLUDED.marks, guidance = EXCLUDED.guidance;
 
-INSERT INTO public.assessment_questions (id, track, board, topic, marks, ability, answer_format, question)
-VALUES ($aq$ocr-strings-03$aq$, 'gcse', $aq$ocr$aq$, $aq$strings$aq$, 3, 2, $aq$text$aq$, $aq$In a character set, the code for the letter "A" is 65. The function `ASC()` returns the code of a character and `CHR()` returns the character for a code.
+INSERT INTO public.assessment_questions (id, track, board, topic, concept, marks, ability, answer_format, question)
+VALUES ($aq$ocr-strings-03$aq$, 'gcse', $aq$ocr$aq$, $aq$strings$aq$, $aq$character-codes$aq$, 3, 2, $aq$text$aq$, $aq$In a character set, the code for the letter "A" is 65. The function `ASC()` returns the code of a character and `CHR()` returns the character for a code.
 
 (a) State the output of `print(CHR(ASC("A") + 2))`. [1]
 
 (b) State the output of `print("Code".left(2))`. [1]
 
 (c) State the purpose of the function `ASC()`. [1]$aq$)
-ON CONFLICT (id) DO UPDATE SET board = EXCLUDED.board, topic = EXCLUDED.topic, marks = EXCLUDED.marks,
+ON CONFLICT (id) DO UPDATE SET board = EXCLUDED.board, topic = EXCLUDED.topic, concept = EXCLUDED.concept, marks = EXCLUDED.marks,
   ability = EXCLUDED.ability, answer_format = EXCLUDED.answer_format, question = EXCLUDED.question;
 DELETE FROM public.assessment_mark_points WHERE question_id = $aq$ocr-strings-03$aq$ AND position > 3;
 INSERT INTO public.assessment_mark_points (question_id, position, text, marks, guidance)
@@ -864,13 +864,13 @@ INSERT INTO public.assessment_mark_points (question_id, position, text, marks, g
 VALUES ($aq$ocr-strings-03$aq$, 3, $aq$(c) It returns the character code (number) that represents a character$aq$, 1, $aq$$aq$)
 ON CONFLICT (question_id, position) DO UPDATE SET text = EXCLUDED.text, marks = EXCLUDED.marks, guidance = EXCLUDED.guidance;
 
-INSERT INTO public.assessment_questions (id, track, board, topic, marks, ability, answer_format, question)
-VALUES ($aq$ocr-strings-04$aq$, 'gcse', $aq$ocr$aq$, $aq$strings$aq$, 4, 2, $aq$code$aq$, $aq$Write a program that asks the user to enter their first name and their last name, then outputs their initials in upper case.
+INSERT INTO public.assessment_questions (id, track, board, topic, concept, marks, ability, answer_format, question)
+VALUES ($aq$ocr-strings-04$aq$, 'gcse', $aq$ocr$aq$, $aq$strings$aq$, $aq$string-initials$aq$, 4, 2, $aq$code$aq$, $aq$Write a program that asks the user to enter their first name and their last name, then outputs their initials in upper case.
 
 For example, `Ada` and `Lovelace` would output `AL`. [4]
 
 You may use pseudocode or a high-level programming language.$aq$)
-ON CONFLICT (id) DO UPDATE SET board = EXCLUDED.board, topic = EXCLUDED.topic, marks = EXCLUDED.marks,
+ON CONFLICT (id) DO UPDATE SET board = EXCLUDED.board, topic = EXCLUDED.topic, concept = EXCLUDED.concept, marks = EXCLUDED.marks,
   ability = EXCLUDED.ability, answer_format = EXCLUDED.answer_format, question = EXCLUDED.question;
 DELETE FROM public.assessment_mark_points WHERE question_id = $aq$ocr-strings-04$aq$ AND position > 4;
 INSERT INTO public.assessment_mark_points (question_id, position, text, marks, guidance)
@@ -886,13 +886,13 @@ INSERT INTO public.assessment_mark_points (question_id, position, text, marks, g
 VALUES ($aq$ocr-strings-04$aq$, 4, $aq$Joins the two initials together and outputs them$aq$, 1, $aq$$aq$)
 ON CONFLICT (question_id, position) DO UPDATE SET text = EXCLUDED.text, marks = EXCLUDED.marks, guidance = EXCLUDED.guidance;
 
-INSERT INTO public.assessment_questions (id, track, board, topic, marks, ability, answer_format, question)
-VALUES ($aq$ocr-strings-05$aq$, 'gcse', $aq$ocr$aq$, $aq$strings$aq$, 5, 3, $aq$code$aq$, $aq$Write a program that asks the user to enter a word and outputs the word **reversed**.
+INSERT INTO public.assessment_questions (id, track, board, topic, concept, marks, ability, answer_format, question)
+VALUES ($aq$ocr-strings-05$aq$, 'gcse', $aq$ocr$aq$, $aq$strings$aq$, $aq$string-reverse$aq$, 5, 3, $aq$code$aq$, $aq$Write a program that asks the user to enter a word and outputs the word **reversed**.
 
 For example, `stack` would output `kcats`. [5]
 
 You may use pseudocode or a high-level programming language.$aq$)
-ON CONFLICT (id) DO UPDATE SET board = EXCLUDED.board, topic = EXCLUDED.topic, marks = EXCLUDED.marks,
+ON CONFLICT (id) DO UPDATE SET board = EXCLUDED.board, topic = EXCLUDED.topic, concept = EXCLUDED.concept, marks = EXCLUDED.marks,
   ability = EXCLUDED.ability, answer_format = EXCLUDED.answer_format, question = EXCLUDED.question;
 DELETE FROM public.assessment_mark_points WHERE question_id = $aq$ocr-strings-05$aq$ AND position > 5;
 INSERT INTO public.assessment_mark_points (question_id, position, text, marks, guidance)
@@ -911,13 +911,13 @@ INSERT INTO public.assessment_mark_points (question_id, position, text, marks, g
 VALUES ($aq$ocr-strings-05$aq$, 5, $aq$Builds the reversed word by adding each character in the correct order, and outputs it after the loop$aq$, 1, $aq$$aq$)
 ON CONFLICT (question_id, position) DO UPDATE SET text = EXCLUDED.text, marks = EXCLUDED.marks, guidance = EXCLUDED.guidance;
 
-INSERT INTO public.assessment_questions (id, track, board, topic, marks, ability, answer_format, question)
-VALUES ($aq$ocr-strings-06$aq$, 'gcse', $aq$ocr$aq$, $aq$strings$aq$, 6, 3, $aq$code$aq$, $aq$Write a program that asks the user to enter a word, counts how many vowels (a, e, i, o, u) it contains, and outputs the count.
+INSERT INTO public.assessment_questions (id, track, board, topic, concept, marks, ability, answer_format, question)
+VALUES ($aq$ocr-strings-06$aq$, 'gcse', $aq$ocr$aq$, $aq$strings$aq$, $aq$string-counting$aq$, 6, 3, $aq$code$aq$, $aq$Write a program that asks the user to enter a word, counts how many vowels (a, e, i, o, u) it contains, and outputs the count.
 
 The program must count a capital vowel such as "A" as well as a lower case one. [6]
 
 You may use pseudocode or a high-level programming language.$aq$)
-ON CONFLICT (id) DO UPDATE SET board = EXCLUDED.board, topic = EXCLUDED.topic, marks = EXCLUDED.marks,
+ON CONFLICT (id) DO UPDATE SET board = EXCLUDED.board, topic = EXCLUDED.topic, concept = EXCLUDED.concept, marks = EXCLUDED.marks,
   ability = EXCLUDED.ability, answer_format = EXCLUDED.answer_format, question = EXCLUDED.question;
 DELETE FROM public.assessment_mark_points WHERE question_id = $aq$ocr-strings-06$aq$ AND position > 6;
 INSERT INTO public.assessment_mark_points (question_id, position, text, marks, guidance)
@@ -939,9 +939,9 @@ INSERT INTO public.assessment_mark_points (question_id, position, text, marks, g
 VALUES ($aq$ocr-strings-06$aq$, 6, $aq$Adds 1 to the counter for each vowel and outputs the count after the loop$aq$, 1, $aq$$aq$)
 ON CONFLICT (question_id, position) DO UPDATE SET text = EXCLUDED.text, marks = EXCLUDED.marks, guidance = EXCLUDED.guidance;
 
-INSERT INTO public.assessment_questions (id, track, board, topic, marks, ability, answer_format, question)
-VALUES ($aq$ocr-functions-01$aq$, 'gcse', $aq$ocr$aq$, $aq$functions$aq$, 2, 1, $aq$text$aq$, $aq$State **two** benefits of using subprograms in a program. [2]$aq$)
-ON CONFLICT (id) DO UPDATE SET board = EXCLUDED.board, topic = EXCLUDED.topic, marks = EXCLUDED.marks,
+INSERT INTO public.assessment_questions (id, track, board, topic, concept, marks, ability, answer_format, question)
+VALUES ($aq$ocr-functions-01$aq$, 'gcse', $aq$ocr$aq$, $aq$functions$aq$, $aq$subprogram-benefits$aq$, 2, 1, $aq$text$aq$, $aq$State **two** benefits of using subprograms in a program. [2]$aq$)
+ON CONFLICT (id) DO UPDATE SET board = EXCLUDED.board, topic = EXCLUDED.topic, concept = EXCLUDED.concept, marks = EXCLUDED.marks,
   ability = EXCLUDED.ability, answer_format = EXCLUDED.answer_format, question = EXCLUDED.question;
 DELETE FROM public.assessment_mark_points WHERE question_id = $aq$ocr-functions-01$aq$ AND position > 5;
 INSERT INTO public.assessment_mark_points (question_id, position, text, marks, guidance)
@@ -960,9 +960,9 @@ INSERT INTO public.assessment_mark_points (question_id, position, text, marks, g
 VALUES ($aq$ocr-functions-01$aq$, 5, $aq$Different programmers can work on different subprograms at the same time$aq$, 1, $aq$$aq$)
 ON CONFLICT (question_id, position) DO UPDATE SET text = EXCLUDED.text, marks = EXCLUDED.marks, guidance = EXCLUDED.guidance;
 
-INSERT INTO public.assessment_questions (id, track, board, topic, marks, ability, answer_format, question)
-VALUES ($aq$ocr-functions-02$aq$, 'gcse', $aq$ocr$aq$, $aq$functions$aq$, 2, 1, $aq$text$aq$, $aq$State the difference between a function and a procedure. [2]$aq$)
-ON CONFLICT (id) DO UPDATE SET board = EXCLUDED.board, topic = EXCLUDED.topic, marks = EXCLUDED.marks,
+INSERT INTO public.assessment_questions (id, track, board, topic, concept, marks, ability, answer_format, question)
+VALUES ($aq$ocr-functions-02$aq$, 'gcse', $aq$ocr$aq$, $aq$functions$aq$, $aq$function-vs-procedure$aq$, 2, 1, $aq$text$aq$, $aq$State the difference between a function and a procedure. [2]$aq$)
+ON CONFLICT (id) DO UPDATE SET board = EXCLUDED.board, topic = EXCLUDED.topic, concept = EXCLUDED.concept, marks = EXCLUDED.marks,
   ability = EXCLUDED.ability, answer_format = EXCLUDED.answer_format, question = EXCLUDED.question;
 DELETE FROM public.assessment_mark_points WHERE question_id = $aq$ocr-functions-02$aq$ AND position > 2;
 INSERT INTO public.assessment_mark_points (question_id, position, text, marks, guidance)
@@ -972,8 +972,8 @@ INSERT INTO public.assessment_mark_points (question_id, position, text, marks, g
 VALUES ($aq$ocr-functions-02$aq$, 2, $aq$A procedure does not return a value$aq$, 1, $aq$$aq$)
 ON CONFLICT (question_id, position) DO UPDATE SET text = EXCLUDED.text, marks = EXCLUDED.marks, guidance = EXCLUDED.guidance;
 
-INSERT INTO public.assessment_questions (id, track, board, topic, marks, ability, answer_format, question)
-VALUES ($aq$ocr-functions-03$aq$, 'gcse', $aq$ocr$aq$, $aq$functions$aq$, 3, 2, $aq$text$aq$, $aq$The following program is written in OCR Exam Reference Language.
+INSERT INTO public.assessment_questions (id, track, board, topic, concept, marks, ability, answer_format, question)
+VALUES ($aq$ocr-functions-03$aq$, 'gcse', $aq$ocr$aq$, $aq$functions$aq$, $aq$subprogram-trace$aq$, 3, 2, $aq$text$aq$, $aq$The following program is written in OCR Exam Reference Language.
 
 ```
 function double(n)
@@ -989,7 +989,7 @@ print(result)
 (b) State the value that is output. [1]
 
 (c) Identify the line of code that calls the function. [1]$aq$)
-ON CONFLICT (id) DO UPDATE SET board = EXCLUDED.board, topic = EXCLUDED.topic, marks = EXCLUDED.marks,
+ON CONFLICT (id) DO UPDATE SET board = EXCLUDED.board, topic = EXCLUDED.topic, concept = EXCLUDED.concept, marks = EXCLUDED.marks,
   ability = EXCLUDED.ability, answer_format = EXCLUDED.answer_format, question = EXCLUDED.question;
 DELETE FROM public.assessment_mark_points WHERE question_id = $aq$ocr-functions-03$aq$ AND position > 3;
 INSERT INTO public.assessment_mark_points (question_id, position, text, marks, guidance)
@@ -1002,13 +1002,13 @@ INSERT INTO public.assessment_mark_points (question_id, position, text, marks, g
 VALUES ($aq$ocr-functions-03$aq$, 3, $aq$(c) result = double(7)$aq$, 1, $aq$Accept the function call double(7).$aq$)
 ON CONFLICT (question_id, position) DO UPDATE SET text = EXCLUDED.text, marks = EXCLUDED.marks, guidance = EXCLUDED.guidance;
 
-INSERT INTO public.assessment_questions (id, track, board, topic, marks, ability, answer_format, question)
-VALUES ($aq$ocr-functions-04$aq$, 'gcse', $aq$ocr$aq$, $aq$functions$aq$, 4, 2, $aq$code$aq$, $aq$Write a function called `areaRect` that takes the width and the length of a rectangle as parameters and returns its area.
+INSERT INTO public.assessment_questions (id, track, board, topic, concept, marks, ability, answer_format, question)
+VALUES ($aq$ocr-functions-04$aq$, 'gcse', $aq$ocr$aq$, $aq$functions$aq$, $aq$subprogram-write-maths$aq$, 4, 2, $aq$code$aq$, $aq$Write a function called `areaRect` that takes the width and the length of a rectangle as parameters and returns its area.
 
 Then write a line of code that calls the function with the values 4 and 6 and outputs the result. [4]
 
 You may use pseudocode or a high-level programming language.$aq$)
-ON CONFLICT (id) DO UPDATE SET board = EXCLUDED.board, topic = EXCLUDED.topic, marks = EXCLUDED.marks,
+ON CONFLICT (id) DO UPDATE SET board = EXCLUDED.board, topic = EXCLUDED.topic, concept = EXCLUDED.concept, marks = EXCLUDED.marks,
   ability = EXCLUDED.ability, answer_format = EXCLUDED.answer_format, question = EXCLUDED.question;
 DELETE FROM public.assessment_mark_points WHERE question_id = $aq$ocr-functions-04$aq$ AND position > 4;
 INSERT INTO public.assessment_mark_points (question_id, position, text, marks, guidance)
@@ -1024,15 +1024,15 @@ INSERT INTO public.assessment_mark_points (question_id, position, text, marks, g
 VALUES ($aq$ocr-functions-04$aq$, 4, $aq$Calls the function with the arguments 4 and 6 AND outputs the returned value$aq$, 1, $aq$$aq$)
 ON CONFLICT (question_id, position) DO UPDATE SET text = EXCLUDED.text, marks = EXCLUDED.marks, guidance = EXCLUDED.guidance;
 
-INSERT INTO public.assessment_questions (id, track, board, topic, marks, ability, answer_format, question)
-VALUES ($aq$ocr-functions-05$aq$, 'gcse', $aq$ocr$aq$, $aq$functions$aq$, 6, 3, $aq$code$aq$, $aq$A website only accepts a password that is at least 8 characters long and contains at least one digit (0 to 9).
+INSERT INTO public.assessment_questions (id, track, board, topic, concept, marks, ability, answer_format, question)
+VALUES ($aq$ocr-functions-05$aq$, 'gcse', $aq$ocr$aq$, $aq$functions$aq$, $aq$subprogram-validate$aq$, 6, 3, $aq$code$aq$, $aq$A website only accepts a password that is at least 8 characters long and contains at least one digit (0 to 9).
 
 (a) Write a function called `isValid` that takes a password as a parameter. It returns `True` if the password meets both rules and `False` if it does not. [4]
 
 (b) Write the program that keeps asking the user to enter a password until `isValid` returns `True`, then outputs "Password accepted". [2]
 
 You may use pseudocode or a high-level programming language.$aq$)
-ON CONFLICT (id) DO UPDATE SET board = EXCLUDED.board, topic = EXCLUDED.topic, marks = EXCLUDED.marks,
+ON CONFLICT (id) DO UPDATE SET board = EXCLUDED.board, topic = EXCLUDED.topic, concept = EXCLUDED.concept, marks = EXCLUDED.marks,
   ability = EXCLUDED.ability, answer_format = EXCLUDED.answer_format, question = EXCLUDED.question;
 DELETE FROM public.assessment_mark_points WHERE question_id = $aq$ocr-functions-05$aq$ AND position > 6;
 INSERT INTO public.assessment_mark_points (question_id, position, text, marks, guidance)
@@ -1054,29 +1054,22 @@ INSERT INTO public.assessment_mark_points (question_id, position, text, marks, g
 VALUES ($aq$ocr-functions-05$aq$, 6, $aq$(b) Calls isValid with the entered password AND outputs "Password accepted" after the loop$aq$, 1, $aq$$aq$)
 ON CONFLICT (question_id, position) DO UPDATE SET text = EXCLUDED.text, marks = EXCLUDED.marks, guidance = EXCLUDED.guidance;
 
-INSERT INTO public.assessment_questions (id, track, board, topic, marks, ability, answer_format, question)
-VALUES ($aq$ocr-functions-06$aq$, 'gcse', $aq$ocr$aq$, $aq$functions$aq$, 2, 1, $aq$text$aq$, $aq$State **two** benefits of using subprograms (functions or procedures) in a program. [2]$aq$)
-ON CONFLICT (id) DO UPDATE SET board = EXCLUDED.board, topic = EXCLUDED.topic, marks = EXCLUDED.marks,
+INSERT INTO public.assessment_questions (id, track, board, topic, concept, marks, ability, answer_format, question)
+VALUES ($aq$ocr-functions-06$aq$, 'gcse', $aq$ocr$aq$, $aq$functions$aq$, $aq$parameters-return$aq$, 2, 1, $aq$text$aq$, $aq$(a) State what is meant by **calling** a subprogram. [1]
+
+(b) State what is meant by a **return value**. [1]$aq$)
+ON CONFLICT (id) DO UPDATE SET board = EXCLUDED.board, topic = EXCLUDED.topic, concept = EXCLUDED.concept, marks = EXCLUDED.marks,
   ability = EXCLUDED.ability, answer_format = EXCLUDED.answer_format, question = EXCLUDED.question;
-DELETE FROM public.assessment_mark_points WHERE question_id = $aq$ocr-functions-06$aq$ AND position > 5;
+DELETE FROM public.assessment_mark_points WHERE question_id = $aq$ocr-functions-06$aq$ AND position > 2;
 INSERT INTO public.assessment_mark_points (question_id, position, text, marks, guidance)
-VALUES ($aq$ocr-functions-06$aq$, 1, $aq$Code can be reused / written once and used many times$aq$, 1, $aq$$aq$)
+VALUES ($aq$ocr-functions-06$aq$, 1, $aq$(a) Running (using) the subprogram by writing its name, with any values it needs$aq$, 1, $aq$$aq$)
 ON CONFLICT (question_id, position) DO UPDATE SET text = EXCLUDED.text, marks = EXCLUDED.marks, guidance = EXCLUDED.guidance;
 INSERT INTO public.assessment_mark_points (question_id, position, text, marks, guidance)
-VALUES ($aq$ocr-functions-06$aq$, 2, $aq$Makes the program easier to read / shorter$aq$, 1, $aq$$aq$)
-ON CONFLICT (question_id, position) DO UPDATE SET text = EXCLUDED.text, marks = EXCLUDED.marks, guidance = EXCLUDED.guidance;
-INSERT INTO public.assessment_mark_points (question_id, position, text, marks, guidance)
-VALUES ($aq$ocr-functions-06$aq$, 3, $aq$Makes it easier to test / debug (each subprogram can be tested on its own)$aq$, 1, $aq$$aq$)
-ON CONFLICT (question_id, position) DO UPDATE SET text = EXCLUDED.text, marks = EXCLUDED.marks, guidance = EXCLUDED.guidance;
-INSERT INTO public.assessment_mark_points (question_id, position, text, marks, guidance)
-VALUES ($aq$ocr-functions-06$aq$, 4, $aq$Makes it easier to maintain / update in one place$aq$, 1, $aq$$aq$)
-ON CONFLICT (question_id, position) DO UPDATE SET text = EXCLUDED.text, marks = EXCLUDED.marks, guidance = EXCLUDED.guidance;
-INSERT INTO public.assessment_mark_points (question_id, position, text, marks, guidance)
-VALUES ($aq$ocr-functions-06$aq$, 5, $aq$Different programmers can work on different subprograms$aq$, 1, $aq$$aq$)
+VALUES ($aq$ocr-functions-06$aq$, 2, $aq$(b) A value that a function sends back to the place where it was called$aq$, 1, $aq$Do not accept: a value that is printed.$aq$)
 ON CONFLICT (question_id, position) DO UPDATE SET text = EXCLUDED.text, marks = EXCLUDED.marks, guidance = EXCLUDED.guidance;
 
-INSERT INTO public.assessment_questions (id, track, board, topic, marks, ability, answer_format, question)
-VALUES ($aq$ocr-functions-07$aq$, 'gcse', $aq$ocr$aq$, $aq$functions$aq$, 3, 2, $aq$text$aq$, $aq$A program is written in pseudocode.
+INSERT INTO public.assessment_questions (id, track, board, topic, concept, marks, ability, answer_format, question)
+VALUES ($aq$ocr-functions-07$aq$, 'gcse', $aq$ocr$aq$, $aq$functions$aq$, $aq$subprogram-trace$aq$, 3, 2, $aq$text$aq$, $aq$A program is written in pseudocode.
 
 ```
 function double(n)
@@ -1096,7 +1089,7 @@ print(x)
 (b) State the difference between a function and a procedure. [1]
 
 (c) State the name of the parameter of the function `double`. [1]$aq$)
-ON CONFLICT (id) DO UPDATE SET board = EXCLUDED.board, topic = EXCLUDED.topic, marks = EXCLUDED.marks,
+ON CONFLICT (id) DO UPDATE SET board = EXCLUDED.board, topic = EXCLUDED.topic, concept = EXCLUDED.concept, marks = EXCLUDED.marks,
   ability = EXCLUDED.ability, answer_format = EXCLUDED.answer_format, question = EXCLUDED.question;
 DELETE FROM public.assessment_mark_points WHERE question_id = $aq$ocr-functions-07$aq$ AND position > 3;
 INSERT INTO public.assessment_mark_points (question_id, position, text, marks, guidance)
@@ -1109,13 +1102,13 @@ INSERT INTO public.assessment_mark_points (question_id, position, text, marks, g
 VALUES ($aq$ocr-functions-07$aq$, 3, $aq$(c) n$aq$, 1, $aq$$aq$)
 ON CONFLICT (question_id, position) DO UPDATE SET text = EXCLUDED.text, marks = EXCLUDED.marks, guidance = EXCLUDED.guidance;
 
-INSERT INTO public.assessment_questions (id, track, board, topic, marks, ability, answer_format, question)
-VALUES ($aq$ocr-functions-08$aq$, 'gcse', $aq$ocr$aq$, $aq$functions$aq$, 5, 3, $aq$code$aq$, $aq$Write a function called `isEven` that takes a whole number as a parameter and returns True if the number is even and False if it is not.
+INSERT INTO public.assessment_questions (id, track, board, topic, concept, marks, ability, answer_format, question)
+VALUES ($aq$ocr-functions-08$aq$, 'gcse', $aq$ocr$aq$, $aq$functions$aq$, $aq$subprogram-boolean$aq$, 5, 3, $aq$code$aq$, $aq$Write a function called `isEven` that takes a whole number as a parameter and returns True if the number is even and False if it is not.
 
 Then write a main program that asks the user to enter a number, uses the function, and outputs `Even` or `Odd`. [5]
 
 You may use pseudocode or a high-level programming language.$aq$)
-ON CONFLICT (id) DO UPDATE SET board = EXCLUDED.board, topic = EXCLUDED.topic, marks = EXCLUDED.marks,
+ON CONFLICT (id) DO UPDATE SET board = EXCLUDED.board, topic = EXCLUDED.topic, concept = EXCLUDED.concept, marks = EXCLUDED.marks,
   ability = EXCLUDED.ability, answer_format = EXCLUDED.answer_format, question = EXCLUDED.question;
 DELETE FROM public.assessment_mark_points WHERE question_id = $aq$ocr-functions-08$aq$ AND position > 5;
 INSERT INTO public.assessment_mark_points (question_id, position, text, marks, guidance)
@@ -1134,9 +1127,9 @@ INSERT INTO public.assessment_mark_points (question_id, position, text, marks, g
 VALUES ($aq$ocr-functions-08$aq$, 5, $aq$Uses selection on the returned value to output Even or Odd$aq$, 1, $aq$$aq$)
 ON CONFLICT (question_id, position) DO UPDATE SET text = EXCLUDED.text, marks = EXCLUDED.marks, guidance = EXCLUDED.guidance;
 
-INSERT INTO public.assessment_questions (id, track, board, topic, marks, ability, answer_format, question)
-VALUES ($aq$ocr-files-01$aq$, 'gcse', $aq$ocr$aq$, $aq$files$aq$, 2, 1, $aq$text$aq$, $aq$State **two** reasons why a program might store data in a file instead of only in variables. [2]$aq$)
-ON CONFLICT (id) DO UPDATE SET board = EXCLUDED.board, topic = EXCLUDED.topic, marks = EXCLUDED.marks,
+INSERT INTO public.assessment_questions (id, track, board, topic, concept, marks, ability, answer_format, question)
+VALUES ($aq$ocr-files-01$aq$, 'gcse', $aq$ocr$aq$, $aq$files$aq$, $aq$file-reasons$aq$, 2, 1, $aq$text$aq$, $aq$State **two** reasons why a program might store data in a file instead of only in variables. [2]$aq$)
+ON CONFLICT (id) DO UPDATE SET board = EXCLUDED.board, topic = EXCLUDED.topic, concept = EXCLUDED.concept, marks = EXCLUDED.marks,
   ability = EXCLUDED.ability, answer_format = EXCLUDED.answer_format, question = EXCLUDED.question;
 DELETE FROM public.assessment_mark_points WHERE question_id = $aq$ocr-files-01$aq$ AND position > 4;
 INSERT INTO public.assessment_mark_points (question_id, position, text, marks, guidance)
@@ -1152,17 +1145,17 @@ INSERT INTO public.assessment_mark_points (question_id, position, text, marks, g
 VALUES ($aq$ocr-files-01$aq$, 4, $aq$The data can be shared / edited outside the program$aq$, 1, $aq$$aq$)
 ON CONFLICT (question_id, position) DO UPDATE SET text = EXCLUDED.text, marks = EXCLUDED.marks, guidance = EXCLUDED.guidance;
 
-INSERT INTO public.assessment_questions (id, track, board, topic, marks, ability, answer_format, question)
-VALUES ($aq$ocr-files-02$aq$, 'gcse', $aq$ocr$aq$, $aq$files$aq$, 1, 1, $aq$text$aq$, $aq$State **one** reason why a program should close a file when it has finished with it. [1]$aq$)
-ON CONFLICT (id) DO UPDATE SET board = EXCLUDED.board, topic = EXCLUDED.topic, marks = EXCLUDED.marks,
+INSERT INTO public.assessment_questions (id, track, board, topic, concept, marks, ability, answer_format, question)
+VALUES ($aq$ocr-files-02$aq$, 'gcse', $aq$ocr$aq$, $aq$files$aq$, $aq$file-close$aq$, 1, 1, $aq$text$aq$, $aq$State **one** reason why a program should close a file when it has finished with it. [1]$aq$)
+ON CONFLICT (id) DO UPDATE SET board = EXCLUDED.board, topic = EXCLUDED.topic, concept = EXCLUDED.concept, marks = EXCLUDED.marks,
   ability = EXCLUDED.ability, answer_format = EXCLUDED.answer_format, question = EXCLUDED.question;
 DELETE FROM public.assessment_mark_points WHERE question_id = $aq$ocr-files-02$aq$ AND position > 1;
 INSERT INTO public.assessment_mark_points (question_id, position, text, marks, guidance)
 VALUES ($aq$ocr-files-02$aq$, 1, $aq$Makes sure all the data has been written (saved) to the file$aq$, 1, $aq$Accept: stops the file being corrupted; frees the file so other programs can use it.$aq$)
 ON CONFLICT (question_id, position) DO UPDATE SET text = EXCLUDED.text, marks = EXCLUDED.marks, guidance = EXCLUDED.guidance;
 
-INSERT INTO public.assessment_questions (id, track, board, topic, marks, ability, answer_format, question)
-VALUES ($aq$ocr-files-03$aq$, 'gcse', $aq$ocr$aq$, $aq$files$aq$, 3, 2, $aq$text$aq$, $aq$A program is written in pseudocode.
+INSERT INTO public.assessment_questions (id, track, board, topic, concept, marks, ability, answer_format, question)
+VALUES ($aq$ocr-files-03$aq$, 'gcse', $aq$ocr$aq$, $aq$files$aq$, $aq$file-read-trace$aq$, 3, 2, $aq$text$aq$, $aq$A program is written in pseudocode.
 
 ```
 myFile = open("scores.txt")
@@ -1175,7 +1168,7 @@ myFile.close()
 (a) Describe what this program does. [2]
 
 (b) State the purpose of `myFile.endOfFile()`. [1]$aq$)
-ON CONFLICT (id) DO UPDATE SET board = EXCLUDED.board, topic = EXCLUDED.topic, marks = EXCLUDED.marks,
+ON CONFLICT (id) DO UPDATE SET board = EXCLUDED.board, topic = EXCLUDED.topic, concept = EXCLUDED.concept, marks = EXCLUDED.marks,
   ability = EXCLUDED.ability, answer_format = EXCLUDED.answer_format, question = EXCLUDED.question;
 DELETE FROM public.assessment_mark_points WHERE question_id = $aq$ocr-files-03$aq$ AND position > 3;
 INSERT INTO public.assessment_mark_points (question_id, position, text, marks, guidance)
@@ -1188,11 +1181,11 @@ INSERT INTO public.assessment_mark_points (question_id, position, text, marks, g
 VALUES ($aq$ocr-files-03$aq$, 3, $aq$(b) It returns True when there are no more lines to read in the file$aq$, 1, $aq$$aq$)
 ON CONFLICT (question_id, position) DO UPDATE SET text = EXCLUDED.text, marks = EXCLUDED.marks, guidance = EXCLUDED.guidance;
 
-INSERT INTO public.assessment_questions (id, track, board, topic, marks, ability, answer_format, question)
-VALUES ($aq$ocr-files-04$aq$, 'gcse', $aq$ocr$aq$, $aq$files$aq$, 4, 2, $aq$code$aq$, $aq$Write a program that asks the user to enter a name and stores it in a new file called `names.txt`. [4]
+INSERT INTO public.assessment_questions (id, track, board, topic, concept, marks, ability, answer_format, question)
+VALUES ($aq$ocr-files-04$aq$, 'gcse', $aq$ocr$aq$, $aq$files$aq$, $aq$file-write$aq$, 4, 2, $aq$code$aq$, $aq$Write a program that asks the user to enter a name and stores it in a new file called `names.txt`. [4]
 
 You may use pseudocode or a high-level programming language.$aq$)
-ON CONFLICT (id) DO UPDATE SET board = EXCLUDED.board, topic = EXCLUDED.topic, marks = EXCLUDED.marks,
+ON CONFLICT (id) DO UPDATE SET board = EXCLUDED.board, topic = EXCLUDED.topic, concept = EXCLUDED.concept, marks = EXCLUDED.marks,
   ability = EXCLUDED.ability, answer_format = EXCLUDED.answer_format, question = EXCLUDED.question;
 DELETE FROM public.assessment_mark_points WHERE question_id = $aq$ocr-files-04$aq$ AND position > 4;
 INSERT INTO public.assessment_mark_points (question_id, position, text, marks, guidance)
@@ -1208,13 +1201,13 @@ INSERT INTO public.assessment_mark_points (question_id, position, text, marks, g
 VALUES ($aq$ocr-files-04$aq$, 4, $aq$Closes the file$aq$, 1, $aq$$aq$)
 ON CONFLICT (question_id, position) DO UPDATE SET text = EXCLUDED.text, marks = EXCLUDED.marks, guidance = EXCLUDED.guidance;
 
-INSERT INTO public.assessment_questions (id, track, board, topic, marks, ability, answer_format, question)
-VALUES ($aq$ocr-files-05$aq$, 'gcse', $aq$ocr$aq$, $aq$files$aq$, 5, 3, $aq$code$aq$, $aq$A file called `marks.txt` contains one whole number on each line.
+INSERT INTO public.assessment_questions (id, track, board, topic, concept, marks, ability, answer_format, question)
+VALUES ($aq$ocr-files-05$aq$, 'gcse', $aq$ocr$aq$, $aq$files$aq$, $aq$file-read-total$aq$, 5, 3, $aq$code$aq$, $aq$A file called `marks.txt` contains one whole number on each line.
 
 Write a program that reads every mark in the file and outputs the total of the marks. [5]
 
 You may use pseudocode or a high-level programming language.$aq$)
-ON CONFLICT (id) DO UPDATE SET board = EXCLUDED.board, topic = EXCLUDED.topic, marks = EXCLUDED.marks,
+ON CONFLICT (id) DO UPDATE SET board = EXCLUDED.board, topic = EXCLUDED.topic, concept = EXCLUDED.concept, marks = EXCLUDED.marks,
   ability = EXCLUDED.ability, answer_format = EXCLUDED.answer_format, question = EXCLUDED.question;
 DELETE FROM public.assessment_mark_points WHERE question_id = $aq$ocr-files-05$aq$ AND position > 5;
 INSERT INTO public.assessment_mark_points (question_id, position, text, marks, guidance)
@@ -1233,13 +1226,13 @@ INSERT INTO public.assessment_mark_points (question_id, position, text, marks, g
 VALUES ($aq$ocr-files-05$aq$, 5, $aq$Closes the file and outputs the total after the loop$aq$, 1, $aq$$aq$)
 ON CONFLICT (question_id, position) DO UPDATE SET text = EXCLUDED.text, marks = EXCLUDED.marks, guidance = EXCLUDED.guidance;
 
-INSERT INTO public.assessment_questions (id, track, board, topic, marks, ability, answer_format, question)
-VALUES ($aq$ocr-files-06$aq$, 'gcse', $aq$ocr$aq$, $aq$files$aq$, 6, 3, $aq$code$aq$, $aq$A file called `temps.txt` contains one whole number on each line. Each number is a temperature.
+INSERT INTO public.assessment_questions (id, track, board, topic, concept, marks, ability, answer_format, question)
+VALUES ($aq$ocr-files-06$aq$, 'gcse', $aq$ocr$aq$, $aq$files$aq$, $aq$file-filter$aq$, 6, 3, $aq$code$aq$, $aq$A file called `temps.txt` contains one whole number on each line. Each number is a temperature.
 
 Write a program that reads the file and writes only the temperatures **above 25** to a new file called `hot.txt`. Each temperature must be on its own line. [6]
 
 You may use pseudocode or a high-level programming language.$aq$)
-ON CONFLICT (id) DO UPDATE SET board = EXCLUDED.board, topic = EXCLUDED.topic, marks = EXCLUDED.marks,
+ON CONFLICT (id) DO UPDATE SET board = EXCLUDED.board, topic = EXCLUDED.topic, concept = EXCLUDED.concept, marks = EXCLUDED.marks,
   ability = EXCLUDED.ability, answer_format = EXCLUDED.answer_format, question = EXCLUDED.question;
 DELETE FROM public.assessment_mark_points WHERE question_id = $aq$ocr-files-06$aq$ AND position > 6;
 INSERT INTO public.assessment_mark_points (question_id, position, text, marks, guidance)
@@ -1261,9 +1254,9 @@ INSERT INTO public.assessment_mark_points (question_id, position, text, marks, g
 VALUES ($aq$ocr-files-06$aq$, 6, $aq$Closes both files$aq$, 1, $aq$$aq$)
 ON CONFLICT (question_id, position) DO UPDATE SET text = EXCLUDED.text, marks = EXCLUDED.marks, guidance = EXCLUDED.guidance;
 
-INSERT INTO public.assessment_questions (id, track, board, topic, marks, ability, answer_format, question)
-VALUES ($aq$ocr-searching-sorting-01$aq$, 'gcse', $aq$ocr$aq$, $aq$searching-sorting$aq$, 2, 1, $aq$text$aq$, $aq$State the names of **two** algorithms that can be used to search a list. [2]$aq$)
-ON CONFLICT (id) DO UPDATE SET board = EXCLUDED.board, topic = EXCLUDED.topic, marks = EXCLUDED.marks,
+INSERT INTO public.assessment_questions (id, track, board, topic, concept, marks, ability, answer_format, question)
+VALUES ($aq$ocr-searching-sorting-01$aq$, 'gcse', $aq$ocr$aq$, $aq$searching-sorting$aq$, $aq$algorithm-names$aq$, 2, 1, $aq$text$aq$, $aq$State the names of **two** algorithms that can be used to search a list. [2]$aq$)
+ON CONFLICT (id) DO UPDATE SET board = EXCLUDED.board, topic = EXCLUDED.topic, concept = EXCLUDED.concept, marks = EXCLUDED.marks,
   ability = EXCLUDED.ability, answer_format = EXCLUDED.answer_format, question = EXCLUDED.question;
 DELETE FROM public.assessment_mark_points WHERE question_id = $aq$ocr-searching-sorting-01$aq$ AND position > 2;
 INSERT INTO public.assessment_mark_points (question_id, position, text, marks, guidance)
@@ -1273,17 +1266,17 @@ INSERT INTO public.assessment_mark_points (question_id, position, text, marks, g
 VALUES ($aq$ocr-searching-sorting-01$aq$, 2, $aq$Binary search$aq$, 1, $aq$$aq$)
 ON CONFLICT (question_id, position) DO UPDATE SET text = EXCLUDED.text, marks = EXCLUDED.marks, guidance = EXCLUDED.guidance;
 
-INSERT INTO public.assessment_questions (id, track, board, topic, marks, ability, answer_format, question)
-VALUES ($aq$ocr-searching-sorting-02$aq$, 'gcse', $aq$ocr$aq$, $aq$searching-sorting$aq$, 1, 1, $aq$text$aq$, $aq$A binary search can only be used if the data has one particular property. State this property. [1]$aq$)
-ON CONFLICT (id) DO UPDATE SET board = EXCLUDED.board, topic = EXCLUDED.topic, marks = EXCLUDED.marks,
+INSERT INTO public.assessment_questions (id, track, board, topic, concept, marks, ability, answer_format, question)
+VALUES ($aq$ocr-searching-sorting-02$aq$, 'gcse', $aq$ocr$aq$, $aq$searching-sorting$aq$, $aq$binary-search$aq$, 1, 1, $aq$text$aq$, $aq$A binary search can only be used if the data has one particular property. State this property. [1]$aq$)
+ON CONFLICT (id) DO UPDATE SET board = EXCLUDED.board, topic = EXCLUDED.topic, concept = EXCLUDED.concept, marks = EXCLUDED.marks,
   ability = EXCLUDED.ability, answer_format = EXCLUDED.answer_format, question = EXCLUDED.question;
 DELETE FROM public.assessment_mark_points WHERE question_id = $aq$ocr-searching-sorting-02$aq$ AND position > 1;
 INSERT INTO public.assessment_mark_points (question_id, position, text, marks, guidance)
 VALUES ($aq$ocr-searching-sorting-02$aq$, 1, $aq$The data must be sorted (in order)$aq$, 1, $aq$$aq$)
 ON CONFLICT (question_id, position) DO UPDATE SET text = EXCLUDED.text, marks = EXCLUDED.marks, guidance = EXCLUDED.guidance;
 
-INSERT INTO public.assessment_questions (id, track, board, topic, marks, ability, answer_format, question)
-VALUES ($aq$ocr-searching-sorting-03$aq$, 'gcse', $aq$ocr$aq$, $aq$searching-sorting$aq$, 3, 2, $aq$text$aq$, $aq$A list of numbers is stored in order:
+INSERT INTO public.assessment_questions (id, track, board, topic, concept, marks, ability, answer_format, question)
+VALUES ($aq$ocr-searching-sorting-03$aq$, 'gcse', $aq$ocr$aq$, $aq$searching-sorting$aq$, $aq$binary-search$aq$, 3, 2, $aq$text$aq$, $aq$A list of numbers is stored in order:
 
 [4, 9, 12, 17, 23, 31, 40]
 
@@ -1294,7 +1287,7 @@ A binary search is used to find the value 31. The first item is at position 0.
 (b) State the total number of items that are checked (including 31) before it is found. [1]
 
 (c) State **one** reason why a binary search is usually faster than a linear search on a large sorted list. [1]$aq$)
-ON CONFLICT (id) DO UPDATE SET board = EXCLUDED.board, topic = EXCLUDED.topic, marks = EXCLUDED.marks,
+ON CONFLICT (id) DO UPDATE SET board = EXCLUDED.board, topic = EXCLUDED.topic, concept = EXCLUDED.concept, marks = EXCLUDED.marks,
   ability = EXCLUDED.ability, answer_format = EXCLUDED.answer_format, question = EXCLUDED.question;
 DELETE FROM public.assessment_mark_points WHERE question_id = $aq$ocr-searching-sorting-03$aq$ AND position > 3;
 INSERT INTO public.assessment_mark_points (question_id, position, text, marks, guidance)
@@ -1307,8 +1300,8 @@ INSERT INTO public.assessment_mark_points (question_id, position, text, marks, g
 VALUES ($aq$ocr-searching-sorting-03$aq$, 3, $aq$(c) It halves (removes half of) the remaining items each time it checks$aq$, 1, $aq$Accept: it does not check every item.$aq$)
 ON CONFLICT (question_id, position) DO UPDATE SET text = EXCLUDED.text, marks = EXCLUDED.marks, guidance = EXCLUDED.guidance;
 
-INSERT INTO public.assessment_questions (id, track, board, topic, marks, ability, answer_format, question)
-VALUES ($aq$ocr-searching-sorting-04$aq$, 'gcse', $aq$ocr$aq$, $aq$searching-sorting$aq$, 4, 2, $aq$text$aq$, $aq$A bubble sort is used to sort this list into ascending order:
+INSERT INTO public.assessment_questions (id, track, board, topic, concept, marks, ability, answer_format, question)
+VALUES ($aq$ocr-searching-sorting-04$aq$, 'gcse', $aq$ocr$aq$, $aq$searching-sorting$aq$, $aq$bubble-sort$aq$, 4, 2, $aq$text$aq$, $aq$A bubble sort is used to sort this list into ascending order:
 
 [5, 3, 8, 1]
 
@@ -1317,7 +1310,7 @@ VALUES ($aq$ocr-searching-sorting-04$aq$, 'gcse', $aq$ocr$aq$, $aq$searching-sor
 (b) Show the list after the **second** pass. [1]
 
 (c) State how the algorithm can tell that the list is fully sorted. [1]$aq$)
-ON CONFLICT (id) DO UPDATE SET board = EXCLUDED.board, topic = EXCLUDED.topic, marks = EXCLUDED.marks,
+ON CONFLICT (id) DO UPDATE SET board = EXCLUDED.board, topic = EXCLUDED.topic, concept = EXCLUDED.concept, marks = EXCLUDED.marks,
   ability = EXCLUDED.ability, answer_format = EXCLUDED.answer_format, question = EXCLUDED.question;
 DELETE FROM public.assessment_mark_points WHERE question_id = $aq$ocr-searching-sorting-04$aq$ AND position > 4;
 INSERT INTO public.assessment_mark_points (question_id, position, text, marks, guidance)
@@ -1333,13 +1326,13 @@ INSERT INTO public.assessment_mark_points (question_id, position, text, marks, g
 VALUES ($aq$ocr-searching-sorting-04$aq$, 4, $aq$(c) A complete pass is made with no swaps$aq$, 1, $aq$Accept: no swaps are made in a pass.$aq$)
 ON CONFLICT (question_id, position) DO UPDATE SET text = EXCLUDED.text, marks = EXCLUDED.marks, guidance = EXCLUDED.guidance;
 
-INSERT INTO public.assessment_questions (id, track, board, topic, marks, ability, answer_format, question)
-VALUES ($aq$ocr-searching-sorting-05$aq$, 'gcse', $aq$ocr$aq$, $aq$searching-sorting$aq$, 5, 3, $aq$code$aq$, $aq$A list of whole numbers is stored in an array called `numbers`. Write a program that uses a **linear search** to look for a value entered by the user.
+INSERT INTO public.assessment_questions (id, track, board, topic, concept, marks, ability, answer_format, question)
+VALUES ($aq$ocr-searching-sorting-05$aq$, 'gcse', $aq$ocr$aq$, $aq$searching-sorting$aq$, $aq$linear-search$aq$, 5, 3, $aq$code$aq$, $aq$A list of whole numbers is stored in an array called `numbers`. Write a program that uses a **linear search** to look for a value entered by the user.
 
 The program must output the position (index) of the value if it is found, or the message `Not found` if it is not in the array. [5]
 
 You may use pseudocode or a high-level programming language.$aq$)
-ON CONFLICT (id) DO UPDATE SET board = EXCLUDED.board, topic = EXCLUDED.topic, marks = EXCLUDED.marks,
+ON CONFLICT (id) DO UPDATE SET board = EXCLUDED.board, topic = EXCLUDED.topic, concept = EXCLUDED.concept, marks = EXCLUDED.marks,
   ability = EXCLUDED.ability, answer_format = EXCLUDED.answer_format, question = EXCLUDED.question;
 DELETE FROM public.assessment_mark_points WHERE question_id = $aq$ocr-searching-sorting-05$aq$ AND position > 5;
 INSERT INTO public.assessment_mark_points (question_id, position, text, marks, guidance)
@@ -1358,9 +1351,9 @@ INSERT INTO public.assessment_mark_points (question_id, position, text, marks, g
 VALUES ($aq$ocr-searching-sorting-05$aq$, 5, $aq$Outputs Not found only after every item has been checked without a match$aq$, 1, $aq$$aq$)
 ON CONFLICT (question_id, position) DO UPDATE SET text = EXCLUDED.text, marks = EXCLUDED.marks, guidance = EXCLUDED.guidance;
 
-INSERT INTO public.assessment_questions (id, track, board, topic, marks, ability, answer_format, question)
-VALUES ($aq$ocr-searching-sorting-06$aq$, 'gcse', $aq$ocr$aq$, $aq$searching-sorting$aq$, 6, 3, $aq$text$aq$, $aq$Describe how a **merge sort** works. [6]$aq$)
-ON CONFLICT (id) DO UPDATE SET board = EXCLUDED.board, topic = EXCLUDED.topic, marks = EXCLUDED.marks,
+INSERT INTO public.assessment_questions (id, track, board, topic, concept, marks, ability, answer_format, question)
+VALUES ($aq$ocr-searching-sorting-06$aq$, 'gcse', $aq$ocr$aq$, $aq$searching-sorting$aq$, $aq$merge-sort$aq$, 6, 3, $aq$text$aq$, $aq$Describe how a **merge sort** works. [6]$aq$)
+ON CONFLICT (id) DO UPDATE SET board = EXCLUDED.board, topic = EXCLUDED.topic, concept = EXCLUDED.concept, marks = EXCLUDED.marks,
   ability = EXCLUDED.ability, answer_format = EXCLUDED.answer_format, question = EXCLUDED.question;
 DELETE FROM public.assessment_mark_points WHERE question_id = $aq$ocr-searching-sorting-06$aq$ AND position > 6;
 INSERT INTO public.assessment_mark_points (question_id, position, text, marks, guidance)
@@ -1382,9 +1375,9 @@ INSERT INTO public.assessment_mark_points (question_id, position, text, marks, g
 VALUES ($aq$ocr-searching-sorting-06$aq$, 6, $aq$Merging is repeated until there is one sorted list$aq$, 1, $aq$$aq$)
 ON CONFLICT (question_id, position) DO UPDATE SET text = EXCLUDED.text, marks = EXCLUDED.marks, guidance = EXCLUDED.guidance;
 
-INSERT INTO public.assessment_questions (id, track, board, topic, marks, ability, answer_format, question)
-VALUES ($aq$ocr-robust-programs-01$aq$, 'gcse', $aq$ocr$aq$, $aq$robust-programs$aq$, 2, 1, $aq$text$aq$, $aq$State **two** types of validation check. [2]$aq$)
-ON CONFLICT (id) DO UPDATE SET board = EXCLUDED.board, topic = EXCLUDED.topic, marks = EXCLUDED.marks,
+INSERT INTO public.assessment_questions (id, track, board, topic, concept, marks, ability, answer_format, question)
+VALUES ($aq$ocr-robust-programs-01$aq$, 'gcse', $aq$ocr$aq$, $aq$robust-programs$aq$, $aq$validation-types$aq$, 2, 1, $aq$text$aq$, $aq$State **two** types of validation check. [2]$aq$)
+ON CONFLICT (id) DO UPDATE SET board = EXCLUDED.board, topic = EXCLUDED.topic, concept = EXCLUDED.concept, marks = EXCLUDED.marks,
   ability = EXCLUDED.ability, answer_format = EXCLUDED.answer_format, question = EXCLUDED.question;
 DELETE FROM public.assessment_mark_points WHERE question_id = $aq$ocr-robust-programs-01$aq$ AND position > 5;
 INSERT INTO public.assessment_mark_points (question_id, position, text, marks, guidance)
@@ -1403,9 +1396,9 @@ INSERT INTO public.assessment_mark_points (question_id, position, text, marks, g
 VALUES ($aq$ocr-robust-programs-01$aq$, 5, $aq$Format check$aq$, 1, $aq$$aq$)
 ON CONFLICT (question_id, position) DO UPDATE SET text = EXCLUDED.text, marks = EXCLUDED.marks, guidance = EXCLUDED.guidance;
 
-INSERT INTO public.assessment_questions (id, track, board, topic, marks, ability, answer_format, question)
-VALUES ($aq$ocr-robust-programs-02$aq$, 'gcse', $aq$ocr$aq$, $aq$robust-programs$aq$, 2, 1, $aq$text$aq$, $aq$State **two** methods that can be used to authenticate a user. [2]$aq$)
-ON CONFLICT (id) DO UPDATE SET board = EXCLUDED.board, topic = EXCLUDED.topic, marks = EXCLUDED.marks,
+INSERT INTO public.assessment_questions (id, track, board, topic, concept, marks, ability, answer_format, question)
+VALUES ($aq$ocr-robust-programs-02$aq$, 'gcse', $aq$ocr$aq$, $aq$robust-programs$aq$, $aq$authentication$aq$, 2, 1, $aq$text$aq$, $aq$State **two** methods that can be used to authenticate a user. [2]$aq$)
+ON CONFLICT (id) DO UPDATE SET board = EXCLUDED.board, topic = EXCLUDED.topic, concept = EXCLUDED.concept, marks = EXCLUDED.marks,
   ability = EXCLUDED.ability, answer_format = EXCLUDED.answer_format, question = EXCLUDED.question;
 DELETE FROM public.assessment_mark_points WHERE question_id = $aq$ocr-robust-programs-02$aq$ AND position > 5;
 INSERT INTO public.assessment_mark_points (question_id, position, text, marks, guidance)
@@ -1424,13 +1417,13 @@ INSERT INTO public.assessment_mark_points (question_id, position, text, marks, g
 VALUES ($aq$ocr-robust-programs-02$aq$, 5, $aq$A confirmation link or code sent by email$aq$, 1, $aq$Do not accept: CAPTCHA on its own.$aq$)
 ON CONFLICT (question_id, position) DO UPDATE SET text = EXCLUDED.text, marks = EXCLUDED.marks, guidance = EXCLUDED.guidance;
 
-INSERT INTO public.assessment_questions (id, track, board, topic, marks, ability, answer_format, question)
-VALUES ($aq$ocr-robust-programs-03$aq$, 'gcse', $aq$ocr$aq$, $aq$robust-programs$aq$, 3, 2, $aq$text$aq$, $aq$A program asks the user to enter their age. The age must be a whole number from 13 to 19 inclusive.
+INSERT INTO public.assessment_questions (id, track, board, topic, concept, marks, ability, answer_format, question)
+VALUES ($aq$ocr-robust-programs-03$aq$, 'gcse', $aq$ocr$aq$, $aq$robust-programs$aq$, $aq$test-data$aq$, 3, 2, $aq$text$aq$, $aq$A program asks the user to enter their age. The age must be a whole number from 13 to 19 inclusive.
 
 (a) State **two** values that are boundary test data for this program. [2]
 
 (b) State **one** example of erroneous test data for this program. [1]$aq$)
-ON CONFLICT (id) DO UPDATE SET board = EXCLUDED.board, topic = EXCLUDED.topic, marks = EXCLUDED.marks,
+ON CONFLICT (id) DO UPDATE SET board = EXCLUDED.board, topic = EXCLUDED.topic, concept = EXCLUDED.concept, marks = EXCLUDED.marks,
   ability = EXCLUDED.ability, answer_format = EXCLUDED.answer_format, question = EXCLUDED.question;
 DELETE FROM public.assessment_mark_points WHERE question_id = $aq$ocr-robust-programs-03$aq$ AND position > 3;
 INSERT INTO public.assessment_mark_points (question_id, position, text, marks, guidance)
@@ -1443,9 +1436,9 @@ INSERT INTO public.assessment_mark_points (question_id, position, text, marks, g
 VALUES ($aq$ocr-robust-programs-03$aq$, 3, $aq$(b) Any value that is not a whole number, such as a letter or word (e.g. "abc") or a decimal (e.g. 15.5)$aq$, 1, $aq$Do not accept a whole number that is outside the range (that is invalid, not erroneous).$aq$)
 ON CONFLICT (question_id, position) DO UPDATE SET text = EXCLUDED.text, marks = EXCLUDED.marks, guidance = EXCLUDED.guidance;
 
-INSERT INTO public.assessment_questions (id, track, board, topic, marks, ability, answer_format, question)
-VALUES ($aq$ocr-robust-programs-04$aq$, 'gcse', $aq$ocr$aq$, $aq$robust-programs$aq$, 4, 2, $aq$text$aq$, $aq$Explain the difference between a **syntax error** and a **logic error**. Give an example of each. [4]$aq$)
-ON CONFLICT (id) DO UPDATE SET board = EXCLUDED.board, topic = EXCLUDED.topic, marks = EXCLUDED.marks,
+INSERT INTO public.assessment_questions (id, track, board, topic, concept, marks, ability, answer_format, question)
+VALUES ($aq$ocr-robust-programs-04$aq$, 'gcse', $aq$ocr$aq$, $aq$robust-programs$aq$, $aq$error-types$aq$, 4, 2, $aq$text$aq$, $aq$Explain the difference between a **syntax error** and a **logic error**. Give an example of each. [4]$aq$)
+ON CONFLICT (id) DO UPDATE SET board = EXCLUDED.board, topic = EXCLUDED.topic, concept = EXCLUDED.concept, marks = EXCLUDED.marks,
   ability = EXCLUDED.ability, answer_format = EXCLUDED.answer_format, question = EXCLUDED.question;
 DELETE FROM public.assessment_mark_points WHERE question_id = $aq$ocr-robust-programs-04$aq$ AND position > 4;
 INSERT INTO public.assessment_mark_points (question_id, position, text, marks, guidance)
@@ -1461,13 +1454,13 @@ INSERT INTO public.assessment_mark_points (question_id, position, text, marks, g
 VALUES ($aq$ocr-robust-programs-04$aq$, 4, $aq$Example of a logic error, such as using + instead of -, > instead of >=, or a loop that runs one time too few$aq$, 1, $aq$$aq$)
 ON CONFLICT (question_id, position) DO UPDATE SET text = EXCLUDED.text, marks = EXCLUDED.marks, guidance = EXCLUDED.guidance;
 
-INSERT INTO public.assessment_questions (id, track, board, topic, marks, ability, answer_format, question)
-VALUES ($aq$ocr-robust-programs-05$aq$, 'gcse', $aq$ocr$aq$, $aq$robust-programs$aq$, 5, 3, $aq$code$aq$, $aq$A website requires a password of at least 8 characters.
+INSERT INTO public.assessment_questions (id, track, board, topic, concept, marks, ability, answer_format, question)
+VALUES ($aq$ocr-robust-programs-05$aq$, 'gcse', $aq$ocr$aq$, $aq$robust-programs$aq$, $aq$repeat-until-valid$aq$, 5, 3, $aq$code$aq$, $aq$A website requires a password of at least 8 characters.
 
 Write a program that asks the user to enter a password and keeps asking until the password is at least 8 characters long. When a valid password is entered the program outputs `Password accepted`. [5]
 
 You may use pseudocode or a high-level programming language.$aq$)
-ON CONFLICT (id) DO UPDATE SET board = EXCLUDED.board, topic = EXCLUDED.topic, marks = EXCLUDED.marks,
+ON CONFLICT (id) DO UPDATE SET board = EXCLUDED.board, topic = EXCLUDED.topic, concept = EXCLUDED.concept, marks = EXCLUDED.marks,
   ability = EXCLUDED.ability, answer_format = EXCLUDED.answer_format, question = EXCLUDED.question;
 DELETE FROM public.assessment_mark_points WHERE question_id = $aq$ocr-robust-programs-05$aq$ AND position > 5;
 INSERT INTO public.assessment_mark_points (question_id, position, text, marks, guidance)
@@ -1486,11 +1479,11 @@ INSERT INTO public.assessment_mark_points (question_id, position, text, marks, g
 VALUES ($aq$ocr-robust-programs-05$aq$, 5, $aq$Outputs Password accepted once, after a valid password has been entered$aq$, 1, $aq$$aq$)
 ON CONFLICT (question_id, position) DO UPDATE SET text = EXCLUDED.text, marks = EXCLUDED.marks, guidance = EXCLUDED.guidance;
 
-INSERT INTO public.assessment_questions (id, track, board, topic, marks, ability, answer_format, question)
-VALUES ($aq$ocr-robust-programs-06$aq$, 'gcse', $aq$ocr$aq$, $aq$robust-programs$aq$, 6, 3, $aq$text$aq$, $aq$(a) Describe **two** ways a programmer can make a program easier to maintain. [4]
+INSERT INTO public.assessment_questions (id, track, board, topic, concept, marks, ability, answer_format, question)
+VALUES ($aq$ocr-robust-programs-06$aq$, 'gcse', $aq$ocr$aq$, $aq$robust-programs$aq$, $aq$maintainability$aq$, 6, 3, $aq$text$aq$, $aq$(a) Describe **two** ways a programmer can make a program easier to maintain. [4]
 
 (b) Explain what is meant by **iterative testing**. [2]$aq$)
-ON CONFLICT (id) DO UPDATE SET board = EXCLUDED.board, topic = EXCLUDED.topic, marks = EXCLUDED.marks,
+ON CONFLICT (id) DO UPDATE SET board = EXCLUDED.board, topic = EXCLUDED.topic, concept = EXCLUDED.concept, marks = EXCLUDED.marks,
   ability = EXCLUDED.ability, answer_format = EXCLUDED.answer_format, question = EXCLUDED.question;
 DELETE FROM public.assessment_mark_points WHERE question_id = $aq$ocr-robust-programs-06$aq$ AND position > 7;
 INSERT INTO public.assessment_mark_points (question_id, position, text, marks, guidance)
@@ -1515,15 +1508,15 @@ INSERT INTO public.assessment_mark_points (question_id, position, text, marks, g
 VALUES ($aq$ocr-robust-programs-06$aq$, 7, $aq$(b) Errors found are fixed and the part is tested again$aq$, 1, $aq$Accept: before moving on to the next part.$aq$)
 ON CONFLICT (question_id, position) DO UPDATE SET text = EXCLUDED.text, marks = EXCLUDED.marks, guidance = EXCLUDED.guidance;
 
-INSERT INTO public.assessment_questions (id, track, board, topic, marks, ability, answer_format, question)
-VALUES ($aq$aqa-fundamentals-01$aq$, 'gcse', $aq$aqa$aq$, $aq$fundamentals$aq$, 2, 1, $aq$text$aq$, $aq$A program stores data about a cake shop.
+INSERT INTO public.assessment_questions (id, track, board, topic, concept, marks, ability, answer_format, question)
+VALUES ($aq$aqa-fundamentals-01$aq$, 'gcse', $aq$aqa$aq$, $aq$fundamentals$aq$, $aq$data-types$aq$, 2, 1, $aq$text$aq$, $aq$A program stores data about a cake shop.
 
 State the most appropriate data type for each of the following.
 
 (a) The price of a cake, for example 2.50 [1]
 
 (b) Whether a customer is a member of the loyalty scheme (yes or no) [1]$aq$)
-ON CONFLICT (id) DO UPDATE SET board = EXCLUDED.board, topic = EXCLUDED.topic, marks = EXCLUDED.marks,
+ON CONFLICT (id) DO UPDATE SET board = EXCLUDED.board, topic = EXCLUDED.topic, concept = EXCLUDED.concept, marks = EXCLUDED.marks,
   ability = EXCLUDED.ability, answer_format = EXCLUDED.answer_format, question = EXCLUDED.question;
 DELETE FROM public.assessment_mark_points WHERE question_id = $aq$aqa-fundamentals-01$aq$ AND position > 2;
 INSERT INTO public.assessment_mark_points (question_id, position, text, marks, guidance)
@@ -1533,9 +1526,9 @@ INSERT INTO public.assessment_mark_points (question_id, position, text, marks, g
 VALUES ($aq$aqa-fundamentals-01$aq$, 2, $aq$(b) Boolean$aq$, 1, $aq$Allow: Bool.$aq$)
 ON CONFLICT (question_id, position) DO UPDATE SET text = EXCLUDED.text, marks = EXCLUDED.marks, guidance = EXCLUDED.guidance;
 
-INSERT INTO public.assessment_questions (id, track, board, topic, marks, ability, answer_format, question)
-VALUES ($aq$aqa-fundamentals-02$aq$, 'gcse', $aq$aqa$aq$, $aq$fundamentals$aq$, 2, 1, $aq$text$aq$, $aq$State what is meant by **casting** and give one example. [2]$aq$)
-ON CONFLICT (id) DO UPDATE SET board = EXCLUDED.board, topic = EXCLUDED.topic, marks = EXCLUDED.marks,
+INSERT INTO public.assessment_questions (id, track, board, topic, concept, marks, ability, answer_format, question)
+VALUES ($aq$aqa-fundamentals-02$aq$, 'gcse', $aq$aqa$aq$, $aq$fundamentals$aq$, $aq$input-casting$aq$, 2, 1, $aq$text$aq$, $aq$State what is meant by **casting** and give one example. [2]$aq$)
+ON CONFLICT (id) DO UPDATE SET board = EXCLUDED.board, topic = EXCLUDED.topic, concept = EXCLUDED.concept, marks = EXCLUDED.marks,
   ability = EXCLUDED.ability, answer_format = EXCLUDED.answer_format, question = EXCLUDED.question;
 DELETE FROM public.assessment_mark_points WHERE question_id = $aq$aqa-fundamentals-02$aq$ AND position > 2;
 INSERT INTO public.assessment_mark_points (question_id, position, text, marks, guidance)
@@ -1545,8 +1538,8 @@ INSERT INTO public.assessment_mark_points (question_id, position, text, marks, g
 VALUES ($aq$aqa-fundamentals-02$aq$, 2, $aq$A correct example, such as converting a string to an integer with STRING_TO_INT$aq$, 1, $aq$Allow any correct example, in words or code.$aq$)
 ON CONFLICT (question_id, position) DO UPDATE SET text = EXCLUDED.text, marks = EXCLUDED.marks, guidance = EXCLUDED.guidance;
 
-INSERT INTO public.assessment_questions (id, track, board, topic, marks, ability, answer_format, question)
-VALUES ($aq$aqa-fundamentals-03$aq$, 'gcse', $aq$aqa$aq$, $aq$fundamentals$aq$, 3, 2, $aq$text$aq$, $aq$The following algorithm is written in pseudo-code. The function `USERINPUT` returns whatever the user types as a string.
+INSERT INTO public.assessment_questions (id, track, board, topic, concept, marks, ability, answer_format, question)
+VALUES ($aq$aqa-fundamentals-03$aq$, 'gcse', $aq$aqa$aq$, $aq$fundamentals$aq$, $aq$input-casting$aq$, 3, 2, $aq$text$aq$, $aq$The following algorithm is written in pseudo-code. The function `USERINPUT` returns whatever the user types as a string.
 
 ```
 a ← USERINPUT
@@ -1559,7 +1552,7 @@ The user types 10 and then 4.
 (a) State the output of the algorithm. [1]
 
 (b) Explain why the output is not 14. [2]$aq$)
-ON CONFLICT (id) DO UPDATE SET board = EXCLUDED.board, topic = EXCLUDED.topic, marks = EXCLUDED.marks,
+ON CONFLICT (id) DO UPDATE SET board = EXCLUDED.board, topic = EXCLUDED.topic, concept = EXCLUDED.concept, marks = EXCLUDED.marks,
   ability = EXCLUDED.ability, answer_format = EXCLUDED.answer_format, question = EXCLUDED.question;
 DELETE FROM public.assessment_mark_points WHERE question_id = $aq$aqa-fundamentals-03$aq$ AND position > 3;
 INSERT INTO public.assessment_mark_points (question_id, position, text, marks, guidance)
@@ -1572,8 +1565,8 @@ INSERT INTO public.assessment_mark_points (question_id, position, text, marks, g
 VALUES ($aq$aqa-fundamentals-03$aq$, 3, $aq$(b) + joins (concatenates) strings rather than adding them$aq$, 1, $aq$Allow: they should be converted to integers first (STRING_TO_INT).$aq$)
 ON CONFLICT (question_id, position) DO UPDATE SET text = EXCLUDED.text, marks = EXCLUDED.marks, guidance = EXCLUDED.guidance;
 
-INSERT INTO public.assessment_questions (id, track, board, topic, marks, ability, answer_format, question)
-VALUES ($aq$aqa-fundamentals-04$aq$, 'gcse', $aq$aqa$aq$, $aq$fundamentals$aq$, 4, 2, $aq$text$aq$, $aq$A library system stores data about each member.
+INSERT INTO public.assessment_questions (id, track, board, topic, concept, marks, ability, answer_format, question)
+VALUES ($aq$aqa-fundamentals-04$aq$, 'gcse', $aq$aqa$aq$, $aq$fundamentals$aq$, $aq$data-types$aq$, 4, 2, $aq$text$aq$, $aq$A library system stores data about each member.
 
 State the most appropriate data type for each of the following items of data.
 
@@ -1584,7 +1577,7 @@ State the most appropriate data type for each of the following items of data.
 (c) The member's surname [1]
 
 (d) Whether the member has any overdue books (yes or no) [1]$aq$)
-ON CONFLICT (id) DO UPDATE SET board = EXCLUDED.board, topic = EXCLUDED.topic, marks = EXCLUDED.marks,
+ON CONFLICT (id) DO UPDATE SET board = EXCLUDED.board, topic = EXCLUDED.topic, concept = EXCLUDED.concept, marks = EXCLUDED.marks,
   ability = EXCLUDED.ability, answer_format = EXCLUDED.answer_format, question = EXCLUDED.question;
 DELETE FROM public.assessment_mark_points WHERE question_id = $aq$aqa-fundamentals-04$aq$ AND position > 4;
 INSERT INTO public.assessment_mark_points (question_id, position, text, marks, guidance)
@@ -1600,8 +1593,8 @@ INSERT INTO public.assessment_mark_points (question_id, position, text, marks, g
 VALUES ($aq$aqa-fundamentals-04$aq$, 4, $aq$(d) Boolean$aq$, 1, $aq$$aq$)
 ON CONFLICT (question_id, position) DO UPDATE SET text = EXCLUDED.text, marks = EXCLUDED.marks, guidance = EXCLUDED.guidance;
 
-INSERT INTO public.assessment_questions (id, track, board, topic, marks, ability, answer_format, question)
-VALUES ($aq$aqa-fundamentals-05$aq$, 'gcse', $aq$aqa$aq$, $aq$fundamentals$aq$, 5, 3, $aq$code$aq$, $aq$Write an algorithm that:
+INSERT INTO public.assessment_questions (id, track, board, topic, concept, marks, ability, answer_format, question)
+VALUES ($aq$aqa-fundamentals-05$aq$, 'gcse', $aq$aqa$aq$, $aq$fundamentals$aq$, $aq$arithmetic-program$aq$, 5, 3, $aq$code$aq$, $aq$Write an algorithm that:
 
 - asks the user to enter the length of a rectangle in centimetres
 - asks the user to enter the width of the rectangle in centimetres
@@ -1611,7 +1604,7 @@ VALUES ($aq$aqa-fundamentals-05$aq$, 'gcse', $aq$aqa$aq$, $aq$fundamentals$aq$, 
 The length and width may include decimal places. [5]
 
 You may use pseudo-code or a high-level programming language.$aq$)
-ON CONFLICT (id) DO UPDATE SET board = EXCLUDED.board, topic = EXCLUDED.topic, marks = EXCLUDED.marks,
+ON CONFLICT (id) DO UPDATE SET board = EXCLUDED.board, topic = EXCLUDED.topic, concept = EXCLUDED.concept, marks = EXCLUDED.marks,
   ability = EXCLUDED.ability, answer_format = EXCLUDED.answer_format, question = EXCLUDED.question;
 DELETE FROM public.assessment_mark_points WHERE question_id = $aq$aqa-fundamentals-05$aq$ AND position > 5;
 INSERT INTO public.assessment_mark_points (question_id, position, text, marks, guidance)
@@ -1630,13 +1623,13 @@ INSERT INTO public.assessment_mark_points (question_id, position, text, marks, g
 VALUES ($aq$aqa-fundamentals-05$aq$, 5, $aq$Outputs the area with a message$aq$, 1, $aq$Allow the area being converted to a string if it is joined to the message.$aq$)
 ON CONFLICT (question_id, position) DO UPDATE SET text = EXCLUDED.text, marks = EXCLUDED.marks, guidance = EXCLUDED.guidance;
 
-INSERT INTO public.assessment_questions (id, track, board, topic, marks, ability, answer_format, question)
-VALUES ($aq$aqa-fundamentals-06$aq$, 'gcse', $aq$aqa$aq$, $aq$fundamentals$aq$, 6, 3, $aq$code$aq$, $aq$Temperature in Fahrenheit can be worked out from a temperature in Celsius using: F = C × 9 / 5 + 32
+INSERT INTO public.assessment_questions (id, track, board, topic, concept, marks, ability, answer_format, question)
+VALUES ($aq$aqa-fundamentals-06$aq$, 'gcse', $aq$aqa$aq$, $aq$fundamentals$aq$, $aq$arithmetic-program$aq$, 6, 3, $aq$code$aq$, $aq$Temperature in Fahrenheit can be worked out from a temperature in Celsius using: F = C × 9 / 5 + 32
 
 Write an algorithm that asks the user to enter a temperature in Celsius (which may include decimal places), converts it to Fahrenheit, and outputs the answer rounded to 1 decimal place. [6]
 
 You may use pseudo-code or a high-level programming language.$aq$)
-ON CONFLICT (id) DO UPDATE SET board = EXCLUDED.board, topic = EXCLUDED.topic, marks = EXCLUDED.marks,
+ON CONFLICT (id) DO UPDATE SET board = EXCLUDED.board, topic = EXCLUDED.topic, concept = EXCLUDED.concept, marks = EXCLUDED.marks,
   ability = EXCLUDED.ability, answer_format = EXCLUDED.answer_format, question = EXCLUDED.question;
 DELETE FROM public.assessment_mark_points WHERE question_id = $aq$aqa-fundamentals-06$aq$ AND position > 6;
 INSERT INTO public.assessment_mark_points (question_id, position, text, marks, guidance)
@@ -1658,13 +1651,13 @@ INSERT INTO public.assessment_mark_points (question_id, position, text, marks, g
 VALUES ($aq$aqa-fundamentals-06$aq$, 6, $aq$Outputs the answer$aq$, 1, $aq$$aq$)
 ON CONFLICT (question_id, position) DO UPDATE SET text = EXCLUDED.text, marks = EXCLUDED.marks, guidance = EXCLUDED.guidance;
 
-INSERT INTO public.assessment_questions (id, track, board, topic, marks, ability, answer_format, question)
-VALUES ($aq$aqa-sequencing-01$aq$, 'gcse', $aq$aqa$aq$, $aq$sequencing$aq$, 2, 1, $aq$text$aq$, $aq$State the result of each of the following calculations.
+INSERT INTO public.assessment_questions (id, track, board, topic, concept, marks, ability, answer_format, question)
+VALUES ($aq$aqa-sequencing-01$aq$, 'gcse', $aq$aqa$aq$, $aq$sequencing$aq$, $aq$arithmetic-operators$aq$, 2, 1, $aq$text$aq$, $aq$State the result of each of the following calculations.
 
 (a) 20 DIV 6 [1]
 
 (b) 20 MOD 6 [1]$aq$)
-ON CONFLICT (id) DO UPDATE SET board = EXCLUDED.board, topic = EXCLUDED.topic, marks = EXCLUDED.marks,
+ON CONFLICT (id) DO UPDATE SET board = EXCLUDED.board, topic = EXCLUDED.topic, concept = EXCLUDED.concept, marks = EXCLUDED.marks,
   ability = EXCLUDED.ability, answer_format = EXCLUDED.answer_format, question = EXCLUDED.question;
 DELETE FROM public.assessment_mark_points WHERE question_id = $aq$aqa-sequencing-01$aq$ AND position > 2;
 INSERT INTO public.assessment_mark_points (question_id, position, text, marks, guidance)
@@ -1674,17 +1667,17 @@ INSERT INTO public.assessment_mark_points (question_id, position, text, marks, g
 VALUES ($aq$aqa-sequencing-01$aq$, 2, $aq$(b) 2$aq$, 1, $aq$$aq$)
 ON CONFLICT (question_id, position) DO UPDATE SET text = EXCLUDED.text, marks = EXCLUDED.marks, guidance = EXCLUDED.guidance;
 
-INSERT INTO public.assessment_questions (id, track, board, topic, marks, ability, answer_format, question)
-VALUES ($aq$aqa-sequencing-02$aq$, 'gcse', $aq$aqa$aq$, $aq$sequencing$aq$, 1, 1, $aq$text$aq$, $aq$State the name of the arithmetic operator that gives the **remainder** when one whole number is divided by another. [1]$aq$)
-ON CONFLICT (id) DO UPDATE SET board = EXCLUDED.board, topic = EXCLUDED.topic, marks = EXCLUDED.marks,
+INSERT INTO public.assessment_questions (id, track, board, topic, concept, marks, ability, answer_format, question)
+VALUES ($aq$aqa-sequencing-02$aq$, 'gcse', $aq$aqa$aq$, $aq$sequencing$aq$, $aq$arithmetic-operators$aq$, 1, 1, $aq$text$aq$, $aq$State the name of the arithmetic operator that gives the **remainder** when one whole number is divided by another. [1]$aq$)
+ON CONFLICT (id) DO UPDATE SET board = EXCLUDED.board, topic = EXCLUDED.topic, concept = EXCLUDED.concept, marks = EXCLUDED.marks,
   ability = EXCLUDED.ability, answer_format = EXCLUDED.answer_format, question = EXCLUDED.question;
 DELETE FROM public.assessment_mark_points WHERE question_id = $aq$aqa-sequencing-02$aq$ AND position > 1;
 INSERT INTO public.assessment_mark_points (question_id, position, text, marks, guidance)
 VALUES ($aq$aqa-sequencing-02$aq$, 1, $aq$MOD (modulus)$aq$, 1, $aq$Allow: modulo.$aq$)
 ON CONFLICT (question_id, position) DO UPDATE SET text = EXCLUDED.text, marks = EXCLUDED.marks, guidance = EXCLUDED.guidance;
 
-INSERT INTO public.assessment_questions (id, track, board, topic, marks, ability, answer_format, question)
-VALUES ($aq$aqa-sequencing-03$aq$, 'gcse', $aq$aqa$aq$, $aq$sequencing$aq$, 4, 2, $aq$text$aq$, $aq$The following algorithm is written in pseudo-code.
+INSERT INTO public.assessment_questions (id, track, board, topic, concept, marks, ability, answer_format, question)
+VALUES ($aq$aqa-sequencing-03$aq$, 'gcse', $aq$aqa$aq$, $aq$sequencing$aq$, $aq$arithmetic-operators$aq$, 4, 2, $aq$text$aq$, $aq$The following algorithm is written in pseudo-code.
 
 ```
 a ← 17
@@ -1702,7 +1695,7 @@ OUTPUT e
 (c) State the value of `e`. [1]
 
 (d) State the output of the algorithm. [1]$aq$)
-ON CONFLICT (id) DO UPDATE SET board = EXCLUDED.board, topic = EXCLUDED.topic, marks = EXCLUDED.marks,
+ON CONFLICT (id) DO UPDATE SET board = EXCLUDED.board, topic = EXCLUDED.topic, concept = EXCLUDED.concept, marks = EXCLUDED.marks,
   ability = EXCLUDED.ability, answer_format = EXCLUDED.answer_format, question = EXCLUDED.question;
 DELETE FROM public.assessment_mark_points WHERE question_id = $aq$aqa-sequencing-03$aq$ AND position > 4;
 INSERT INTO public.assessment_mark_points (question_id, position, text, marks, guidance)
@@ -1718,8 +1711,8 @@ INSERT INTO public.assessment_mark_points (question_id, position, text, marks, g
 VALUES ($aq$aqa-sequencing-03$aq$, 4, $aq$(d) 6$aq$, 1, $aq$Allow follow through from (c).$aq$)
 ON CONFLICT (question_id, position) DO UPDATE SET text = EXCLUDED.text, marks = EXCLUDED.marks, guidance = EXCLUDED.guidance;
 
-INSERT INTO public.assessment_questions (id, track, board, topic, marks, ability, answer_format, question)
-VALUES ($aq$aqa-sequencing-04$aq$, 'gcse', $aq$aqa$aq$, $aq$sequencing$aq$, 3, 2, $aq$text$aq$, $aq$(a) Describe what is meant by **sequence** in an algorithm. [1]
+INSERT INTO public.assessment_questions (id, track, board, topic, concept, marks, ability, answer_format, question)
+VALUES ($aq$aqa-sequencing-04$aq$, 'gcse', $aq$aqa$aq$, $aq$sequencing$aq$, $aq$sequence-order$aq$, 3, 2, $aq$text$aq$, $aq$(a) Describe what is meant by **sequence** in an algorithm. [1]
 
 The following algorithm is written in pseudo-code.
 
@@ -1733,7 +1726,7 @@ OUTPUT x
 (b) State the output of the algorithm. [1]
 
 (c) The last two assignment lines are swapped over. State the new output. [1]$aq$)
-ON CONFLICT (id) DO UPDATE SET board = EXCLUDED.board, topic = EXCLUDED.topic, marks = EXCLUDED.marks,
+ON CONFLICT (id) DO UPDATE SET board = EXCLUDED.board, topic = EXCLUDED.topic, concept = EXCLUDED.concept, marks = EXCLUDED.marks,
   ability = EXCLUDED.ability, answer_format = EXCLUDED.answer_format, question = EXCLUDED.question;
 DELETE FROM public.assessment_mark_points WHERE question_id = $aq$aqa-sequencing-04$aq$ AND position > 3;
 INSERT INTO public.assessment_mark_points (question_id, position, text, marks, guidance)
@@ -1746,13 +1739,13 @@ INSERT INTO public.assessment_mark_points (question_id, position, text, marks, g
 VALUES ($aq$aqa-sequencing-04$aq$, 3, $aq$(c) 9$aq$, 1, $aq$$aq$)
 ON CONFLICT (question_id, position) DO UPDATE SET text = EXCLUDED.text, marks = EXCLUDED.marks, guidance = EXCLUDED.guidance;
 
-INSERT INTO public.assessment_questions (id, track, board, topic, marks, ability, answer_format, question)
-VALUES ($aq$aqa-sequencing-05$aq$, 'gcse', $aq$aqa$aq$, $aq$sequencing$aq$, 5, 3, $aq$code$aq$, $aq$Write an algorithm that asks the user to enter a number of seconds (a whole number) and outputs the equivalent whole number of minutes and the number of seconds left over.
+INSERT INTO public.assessment_questions (id, track, board, topic, concept, marks, ability, answer_format, question)
+VALUES ($aq$aqa-sequencing-05$aq$, 'gcse', $aq$aqa$aq$, $aq$sequencing$aq$, $aq$div-mod-program$aq$, 5, 3, $aq$code$aq$, $aq$Write an algorithm that asks the user to enter a number of seconds (a whole number) and outputs the equivalent whole number of minutes and the number of seconds left over.
 
 For example, 200 seconds would output 3 minutes and 20 seconds. [5]
 
 You may use pseudo-code or a high-level programming language.$aq$)
-ON CONFLICT (id) DO UPDATE SET board = EXCLUDED.board, topic = EXCLUDED.topic, marks = EXCLUDED.marks,
+ON CONFLICT (id) DO UPDATE SET board = EXCLUDED.board, topic = EXCLUDED.topic, concept = EXCLUDED.concept, marks = EXCLUDED.marks,
   ability = EXCLUDED.ability, answer_format = EXCLUDED.answer_format, question = EXCLUDED.question;
 DELETE FROM public.assessment_mark_points WHERE question_id = $aq$aqa-sequencing-05$aq$ AND position > 5;
 INSERT INTO public.assessment_mark_points (question_id, position, text, marks, guidance)
@@ -1771,8 +1764,8 @@ INSERT INTO public.assessment_mark_points (question_id, position, text, marks, g
 VALUES ($aq$aqa-sequencing-05$aq$, 5, $aq$Outputs the number of seconds left over$aq$, 1, $aq$Allow both to be output in one message.$aq$)
 ON CONFLICT (question_id, position) DO UPDATE SET text = EXCLUDED.text, marks = EXCLUDED.marks, guidance = EXCLUDED.guidance;
 
-INSERT INTO public.assessment_questions (id, track, board, topic, marks, ability, answer_format, question)
-VALUES ($aq$aqa-sequencing-06$aq$, 'gcse', $aq$aqa$aq$, $aq$sequencing$aq$, 6, 3, $aq$code$aq$, $aq$A taxi costs £3.00 plus £1.50 for each mile travelled.
+INSERT INTO public.assessment_questions (id, track, board, topic, concept, marks, ability, answer_format, question)
+VALUES ($aq$aqa-sequencing-06$aq$, 'gcse', $aq$aqa$aq$, $aq$sequencing$aq$, $aq$arithmetic-program$aq$, 6, 3, $aq$code$aq$, $aq$A taxi costs £3.00 plus £1.50 for each mile travelled.
 
 Write an algorithm that:
 
@@ -1782,7 +1775,7 @@ Write an algorithm that:
 - outputs the total to 2 decimal places. [6]
 
 You may use pseudo-code or a high-level programming language.$aq$)
-ON CONFLICT (id) DO UPDATE SET board = EXCLUDED.board, topic = EXCLUDED.topic, marks = EXCLUDED.marks,
+ON CONFLICT (id) DO UPDATE SET board = EXCLUDED.board, topic = EXCLUDED.topic, concept = EXCLUDED.concept, marks = EXCLUDED.marks,
   ability = EXCLUDED.ability, answer_format = EXCLUDED.answer_format, question = EXCLUDED.question;
 DELETE FROM public.assessment_mark_points WHERE question_id = $aq$aqa-sequencing-06$aq$ AND position > 6;
 INSERT INTO public.assessment_mark_points (question_id, position, text, marks, guidance)
@@ -1804,18 +1797,18 @@ INSERT INTO public.assessment_mark_points (question_id, position, text, marks, g
 VALUES ($aq$aqa-sequencing-06$aq$, 6, $aq$Outputs the total$aq$, 1, $aq$$aq$)
 ON CONFLICT (question_id, position) DO UPDATE SET text = EXCLUDED.text, marks = EXCLUDED.marks, guidance = EXCLUDED.guidance;
 
-INSERT INTO public.assessment_questions (id, track, board, topic, marks, ability, answer_format, question)
-VALUES ($aq$aqa-selection-01$aq$, 'gcse', $aq$aqa$aq$, $aq$selection$aq$, 1, 1, $aq$text$aq$, $aq$Give **one** example of a relational (comparison) operator. [1]$aq$)
-ON CONFLICT (id) DO UPDATE SET board = EXCLUDED.board, topic = EXCLUDED.topic, marks = EXCLUDED.marks,
+INSERT INTO public.assessment_questions (id, track, board, topic, concept, marks, ability, answer_format, question)
+VALUES ($aq$aqa-selection-01$aq$, 'gcse', $aq$aqa$aq$, $aq$selection$aq$, $aq$selection-definition$aq$, 1, 1, $aq$text$aq$, $aq$Give **one** example of a relational (comparison) operator. [1]$aq$)
+ON CONFLICT (id) DO UPDATE SET board = EXCLUDED.board, topic = EXCLUDED.topic, concept = EXCLUDED.concept, marks = EXCLUDED.marks,
   ability = EXCLUDED.ability, answer_format = EXCLUDED.answer_format, question = EXCLUDED.question;
 DELETE FROM public.assessment_mark_points WHERE question_id = $aq$aqa-selection-01$aq$ AND position > 1;
 INSERT INTO public.assessment_mark_points (question_id, position, text, marks, guidance)
 VALUES ($aq$aqa-selection-01$aq$, 1, $aq$Any one of: =, ≠ (allow: !=, <>), <, >, ≤ (allow: <=), ≥ (allow: >=)$aq$, 1, $aq$Do not allow AND / OR / NOT (these are Boolean operators).$aq$)
 ON CONFLICT (question_id, position) DO UPDATE SET text = EXCLUDED.text, marks = EXCLUDED.marks, guidance = EXCLUDED.guidance;
 
-INSERT INTO public.assessment_questions (id, track, board, topic, marks, ability, answer_format, question)
-VALUES ($aq$aqa-selection-02$aq$, 'gcse', $aq$aqa$aq$, $aq$selection$aq$, 2, 1, $aq$text$aq$, $aq$Explain why an ELSE clause is used in an IF statement. [2]$aq$)
-ON CONFLICT (id) DO UPDATE SET board = EXCLUDED.board, topic = EXCLUDED.topic, marks = EXCLUDED.marks,
+INSERT INTO public.assessment_questions (id, track, board, topic, concept, marks, ability, answer_format, question)
+VALUES ($aq$aqa-selection-02$aq$, 'gcse', $aq$aqa$aq$, $aq$selection$aq$, $aq$selection-definition$aq$, 2, 1, $aq$text$aq$, $aq$Explain why an ELSE clause is used in an IF statement. [2]$aq$)
+ON CONFLICT (id) DO UPDATE SET board = EXCLUDED.board, topic = EXCLUDED.topic, concept = EXCLUDED.concept, marks = EXCLUDED.marks,
   ability = EXCLUDED.ability, answer_format = EXCLUDED.answer_format, question = EXCLUDED.question;
 DELETE FROM public.assessment_mark_points WHERE question_id = $aq$aqa-selection-02$aq$ AND position > 2;
 INSERT INTO public.assessment_mark_points (question_id, position, text, marks, guidance)
@@ -1825,8 +1818,8 @@ INSERT INTO public.assessment_mark_points (question_id, position, text, marks, g
 VALUES ($aq$aqa-selection-02$aq$, 2, $aq$When the condition is false / when none of the conditions are met$aq$, 1, $aq$$aq$)
 ON CONFLICT (question_id, position) DO UPDATE SET text = EXCLUDED.text, marks = EXCLUDED.marks, guidance = EXCLUDED.guidance;
 
-INSERT INTO public.assessment_questions (id, track, board, topic, marks, ability, answer_format, question)
-VALUES ($aq$aqa-selection-03$aq$, 'gcse', $aq$aqa$aq$, $aq$selection$aq$, 3, 2, $aq$text$aq$, $aq$The following algorithm is written in pseudo-code.
+INSERT INTO public.assessment_questions (id, track, board, topic, concept, marks, ability, answer_format, question)
+VALUES ($aq$aqa-selection-03$aq$, 'gcse', $aq$aqa$aq$, $aq$selection$aq$, $aq$selection-trace$aq$, 3, 2, $aq$text$aq$, $aq$The following algorithm is written in pseudo-code.
 
 ```
 temp ← USERINPUT
@@ -1846,7 +1839,7 @@ State the output when the user enters:
 (b) 31 [1]
 
 (c) 14 [1]$aq$)
-ON CONFLICT (id) DO UPDATE SET board = EXCLUDED.board, topic = EXCLUDED.topic, marks = EXCLUDED.marks,
+ON CONFLICT (id) DO UPDATE SET board = EXCLUDED.board, topic = EXCLUDED.topic, concept = EXCLUDED.concept, marks = EXCLUDED.marks,
   ability = EXCLUDED.ability, answer_format = EXCLUDED.answer_format, question = EXCLUDED.question;
 DELETE FROM public.assessment_mark_points WHERE question_id = $aq$aqa-selection-03$aq$ AND position > 3;
 INSERT INTO public.assessment_mark_points (question_id, position, text, marks, guidance)
@@ -1859,13 +1852,13 @@ INSERT INTO public.assessment_mark_points (question_id, position, text, marks, g
 VALUES ($aq$aqa-selection-03$aq$, 3, $aq$(c) Cold$aq$, 1, $aq$$aq$)
 ON CONFLICT (question_id, position) DO UPDATE SET text = EXCLUDED.text, marks = EXCLUDED.marks, guidance = EXCLUDED.guidance;
 
-INSERT INTO public.assessment_questions (id, track, board, topic, marks, ability, answer_format, question)
-VALUES ($aq$aqa-selection-04$aq$, 'gcse', $aq$aqa$aq$, $aq$selection$aq$, 4, 2, $aq$code$aq$, $aq$A quiz program asks the question "What is 7 × 8?".
+INSERT INTO public.assessment_questions (id, track, board, topic, concept, marks, ability, answer_format, question)
+VALUES ($aq$aqa-selection-04$aq$, 'gcse', $aq$aqa$aq$, $aq$selection$aq$, $aq$selection-simple$aq$, 4, 2, $aq$code$aq$, $aq$A quiz program asks the question "What is 7 × 8?".
 
 Write an algorithm that takes the user's answer as input. The algorithm outputs "Correct" if the answer is 56, "Too high" if the answer is greater than 56 and "Too low" otherwise. [4]
 
 You may use pseudo-code or a high-level programming language.$aq$)
-ON CONFLICT (id) DO UPDATE SET board = EXCLUDED.board, topic = EXCLUDED.topic, marks = EXCLUDED.marks,
+ON CONFLICT (id) DO UPDATE SET board = EXCLUDED.board, topic = EXCLUDED.topic, concept = EXCLUDED.concept, marks = EXCLUDED.marks,
   ability = EXCLUDED.ability, answer_format = EXCLUDED.answer_format, question = EXCLUDED.question;
 DELETE FROM public.assessment_mark_points WHERE question_id = $aq$aqa-selection-04$aq$ AND position > 4;
 INSERT INTO public.assessment_mark_points (question_id, position, text, marks, guidance)
@@ -1881,8 +1874,8 @@ INSERT INTO public.assessment_mark_points (question_id, position, text, marks, g
 VALUES ($aq$aqa-selection-04$aq$, 4, $aq$Outputs "Too low" otherwise AND uses a valid selection structure (each message output only in its own case)$aq$, 1, $aq$$aq$)
 ON CONFLICT (question_id, position) DO UPDATE SET text = EXCLUDED.text, marks = EXCLUDED.marks, guidance = EXCLUDED.guidance;
 
-INSERT INTO public.assessment_questions (id, track, board, topic, marks, ability, answer_format, question)
-VALUES ($aq$aqa-selection-05$aq$, 'gcse', $aq$aqa$aq$, $aq$selection$aq$, 6, 3, $aq$code$aq$, $aq$A leisure centre charges for entry as shown.
+INSERT INTO public.assessment_questions (id, track, board, topic, concept, marks, ability, answer_format, question)
+VALUES ($aq$aqa-selection-05$aq$, 'gcse', $aq$aqa$aq$, $aq$selection$aq$, $aq$selection-ranges$aq$, 6, 3, $aq$code$aq$, $aq$A leisure centre charges for entry as shown.
 
 | Age | Peak time | Off-peak |
 |---|---|---|
@@ -1893,7 +1886,7 @@ VALUES ($aq$aqa-selection-05$aq$, 'gcse', $aq$aqa$aq$, $aq$selection$aq$, 6, 3, 
 Write an algorithm that asks the user for their age and whether they are visiting at peak time ("Y" or "N"). The algorithm outputs the price. [6]
 
 You may use pseudo-code or a high-level programming language.$aq$)
-ON CONFLICT (id) DO UPDATE SET board = EXCLUDED.board, topic = EXCLUDED.topic, marks = EXCLUDED.marks,
+ON CONFLICT (id) DO UPDATE SET board = EXCLUDED.board, topic = EXCLUDED.topic, concept = EXCLUDED.concept, marks = EXCLUDED.marks,
   ability = EXCLUDED.ability, answer_format = EXCLUDED.answer_format, question = EXCLUDED.question;
 DELETE FROM public.assessment_mark_points WHERE question_id = $aq$aqa-selection-05$aq$ AND position > 6;
 INSERT INTO public.assessment_mark_points (question_id, position, text, marks, guidance)
@@ -1915,8 +1908,8 @@ INSERT INTO public.assessment_mark_points (question_id, position, text, marks, g
 VALUES ($aq$aqa-selection-05$aq$, 6, $aq$The price is output in every case (using a variable or an output in each branch)$aq$, 1, $aq$$aq$)
 ON CONFLICT (question_id, position) DO UPDATE SET text = EXCLUDED.text, marks = EXCLUDED.marks, guidance = EXCLUDED.guidance;
 
-INSERT INTO public.assessment_questions (id, track, board, topic, marks, ability, answer_format, question)
-VALUES ($aq$aqa-selection-06$aq$, 'gcse', $aq$aqa$aq$, $aq$selection$aq$, 2, 1, $aq$text$aq$, $aq$The following algorithm is written in pseudo-code.
+INSERT INTO public.assessment_questions (id, track, board, topic, concept, marks, ability, answer_format, question)
+VALUES ($aq$aqa-selection-06$aq$, 'gcse', $aq$aqa$aq$, $aq$selection$aq$, $aq$selection-trace$aq$, 2, 1, $aq$text$aq$, $aq$The following algorithm is written in pseudo-code.
 
 ```
 IF score >= 70 THEN
@@ -1931,7 +1924,7 @@ ENDIF
 (a) State the output when `score` is 75. [1]
 
 (b) State the output when `score` is 50. [1]$aq$)
-ON CONFLICT (id) DO UPDATE SET board = EXCLUDED.board, topic = EXCLUDED.topic, marks = EXCLUDED.marks,
+ON CONFLICT (id) DO UPDATE SET board = EXCLUDED.board, topic = EXCLUDED.topic, concept = EXCLUDED.concept, marks = EXCLUDED.marks,
   ability = EXCLUDED.ability, answer_format = EXCLUDED.answer_format, question = EXCLUDED.question;
 DELETE FROM public.assessment_mark_points WHERE question_id = $aq$aqa-selection-06$aq$ AND position > 2;
 INSERT INTO public.assessment_mark_points (question_id, position, text, marks, guidance)
@@ -1941,15 +1934,15 @@ INSERT INTO public.assessment_mark_points (question_id, position, text, marks, g
 VALUES ($aq$aqa-selection-06$aq$, 2, $aq$(b) Pass$aq$, 1, $aq$$aq$)
 ON CONFLICT (question_id, position) DO UPDATE SET text = EXCLUDED.text, marks = EXCLUDED.marks, guidance = EXCLUDED.guidance;
 
-INSERT INTO public.assessment_questions (id, track, board, topic, marks, ability, answer_format, question)
-VALUES ($aq$aqa-selection-07$aq$, 'gcse', $aq$aqa$aq$, $aq$selection$aq$, 3, 2, $aq$text$aq$, $aq$State whether each of the following expressions is True or False.
+INSERT INTO public.assessment_questions (id, track, board, topic, concept, marks, ability, answer_format, question)
+VALUES ($aq$aqa-selection-07$aq$, 'gcse', $aq$aqa$aq$, $aq$selection$aq$, $aq$boolean-expressions$aq$, 3, 2, $aq$text$aq$, $aq$State whether each of the following expressions is True or False.
 
 (a) (6 > 2) OR (1 > 5) [1]
 
 (b) NOT (4 = 4) [1]
 
 (c) (3 < 5) AND (10 MOD 4 = 1) [1]$aq$)
-ON CONFLICT (id) DO UPDATE SET board = EXCLUDED.board, topic = EXCLUDED.topic, marks = EXCLUDED.marks,
+ON CONFLICT (id) DO UPDATE SET board = EXCLUDED.board, topic = EXCLUDED.topic, concept = EXCLUDED.concept, marks = EXCLUDED.marks,
   ability = EXCLUDED.ability, answer_format = EXCLUDED.answer_format, question = EXCLUDED.question;
 DELETE FROM public.assessment_mark_points WHERE question_id = $aq$aqa-selection-07$aq$ AND position > 3;
 INSERT INTO public.assessment_mark_points (question_id, position, text, marks, guidance)
@@ -1962,8 +1955,8 @@ INSERT INTO public.assessment_mark_points (question_id, position, text, marks, g
 VALUES ($aq$aqa-selection-07$aq$, 3, $aq$(c) False$aq$, 1, $aq$10 MOD 4 is 2, so the second part is False.$aq$)
 ON CONFLICT (question_id, position) DO UPDATE SET text = EXCLUDED.text, marks = EXCLUDED.marks, guidance = EXCLUDED.guidance;
 
-INSERT INTO public.assessment_questions (id, track, board, topic, marks, ability, answer_format, question)
-VALUES ($aq$aqa-selection-08$aq$, 'gcse', $aq$aqa$aq$, $aq$selection$aq$, 5, 3, $aq$code$aq$, $aq$A parcel company charges for delivery.
+INSERT INTO public.assessment_questions (id, track, board, topic, concept, marks, ability, answer_format, question)
+VALUES ($aq$aqa-selection-08$aq$, 'gcse', $aq$aqa$aq$, $aq$selection$aq$, $aq$selection-nested$aq$, 5, 3, $aq$code$aq$, $aq$A parcel company charges for delivery.
 
 | Weight of parcel | Delivery cost |
 |---|---|
@@ -1976,7 +1969,7 @@ Delivery is free for any order with a value of more than £100, whatever the wei
 Write an algorithm that asks the user to enter the weight of the parcel and the value of the order, and outputs the delivery cost. [5]
 
 You may use pseudo-code or a high-level programming language.$aq$)
-ON CONFLICT (id) DO UPDATE SET board = EXCLUDED.board, topic = EXCLUDED.topic, marks = EXCLUDED.marks,
+ON CONFLICT (id) DO UPDATE SET board = EXCLUDED.board, topic = EXCLUDED.topic, concept = EXCLUDED.concept, marks = EXCLUDED.marks,
   ability = EXCLUDED.ability, answer_format = EXCLUDED.answer_format, question = EXCLUDED.question;
 DELETE FROM public.assessment_mark_points WHERE question_id = $aq$aqa-selection-08$aq$ AND position > 5;
 INSERT INTO public.assessment_mark_points (question_id, position, text, marks, guidance)
@@ -1995,18 +1988,18 @@ INSERT INTO public.assessment_mark_points (question_id, position, text, marks, g
 VALUES ($aq$aqa-selection-08$aq$, 5, $aq$More than 5 kg outputs £12, and a cost is output in every case$aq$, 1, $aq$$aq$)
 ON CONFLICT (question_id, position) DO UPDATE SET text = EXCLUDED.text, marks = EXCLUDED.marks, guidance = EXCLUDED.guidance;
 
-INSERT INTO public.assessment_questions (id, track, board, topic, marks, ability, answer_format, question)
-VALUES ($aq$aqa-iteration-01$aq$, 'gcse', $aq$aqa$aq$, $aq$iteration$aq$, 1, 1, $aq$text$aq$, $aq$State what is meant by iteration. [1]$aq$)
-ON CONFLICT (id) DO UPDATE SET board = EXCLUDED.board, topic = EXCLUDED.topic, marks = EXCLUDED.marks,
+INSERT INTO public.assessment_questions (id, track, board, topic, concept, marks, ability, answer_format, question)
+VALUES ($aq$aqa-iteration-01$aq$, 'gcse', $aq$aqa$aq$, $aq$iteration$aq$, $aq$loop-types$aq$, 1, 1, $aq$text$aq$, $aq$State what is meant by iteration. [1]$aq$)
+ON CONFLICT (id) DO UPDATE SET board = EXCLUDED.board, topic = EXCLUDED.topic, concept = EXCLUDED.concept, marks = EXCLUDED.marks,
   ability = EXCLUDED.ability, answer_format = EXCLUDED.answer_format, question = EXCLUDED.question;
 DELETE FROM public.assessment_mark_points WHERE question_id = $aq$aqa-iteration-01$aq$ AND position > 1;
 INSERT INTO public.assessment_mark_points (question_id, position, text, marks, guidance)
 VALUES ($aq$aqa-iteration-01$aq$, 1, $aq$Repeating a set of instructions / a section of code (a number of times or until a condition is met)$aq$, 1, $aq$Allow: looping.$aq$)
 ON CONFLICT (question_id, position) DO UPDATE SET text = EXCLUDED.text, marks = EXCLUDED.marks, guidance = EXCLUDED.guidance;
 
-INSERT INTO public.assessment_questions (id, track, board, topic, marks, ability, answer_format, question)
-VALUES ($aq$aqa-iteration-02$aq$, 'gcse', $aq$aqa$aq$, $aq$iteration$aq$, 2, 1, $aq$text$aq$, $aq$Describe the difference between count-controlled iteration and condition-controlled iteration. [2]$aq$)
-ON CONFLICT (id) DO UPDATE SET board = EXCLUDED.board, topic = EXCLUDED.topic, marks = EXCLUDED.marks,
+INSERT INTO public.assessment_questions (id, track, board, topic, concept, marks, ability, answer_format, question)
+VALUES ($aq$aqa-iteration-02$aq$, 'gcse', $aq$aqa$aq$, $aq$iteration$aq$, $aq$loop-types$aq$, 2, 1, $aq$text$aq$, $aq$Describe the difference between count-controlled iteration and condition-controlled iteration. [2]$aq$)
+ON CONFLICT (id) DO UPDATE SET board = EXCLUDED.board, topic = EXCLUDED.topic, concept = EXCLUDED.concept, marks = EXCLUDED.marks,
   ability = EXCLUDED.ability, answer_format = EXCLUDED.answer_format, question = EXCLUDED.question;
 DELETE FROM public.assessment_mark_points WHERE question_id = $aq$aqa-iteration-02$aq$ AND position > 2;
 INSERT INTO public.assessment_mark_points (question_id, position, text, marks, guidance)
@@ -2016,8 +2009,8 @@ INSERT INTO public.assessment_mark_points (question_id, position, text, marks, g
 VALUES ($aq$aqa-iteration-02$aq$, 2, $aq$Condition-controlled iteration repeats until / while a condition is met (the number of repeats may not be known)$aq$, 1, $aq$$aq$)
 ON CONFLICT (question_id, position) DO UPDATE SET text = EXCLUDED.text, marks = EXCLUDED.marks, guidance = EXCLUDED.guidance;
 
-INSERT INTO public.assessment_questions (id, track, board, topic, marks, ability, answer_format, question)
-VALUES ($aq$aqa-iteration-03$aq$, 'gcse', $aq$aqa$aq$, $aq$iteration$aq$, 3, 2, $aq$text$aq$, $aq$The following algorithm is written in pseudo-code.
+INSERT INTO public.assessment_questions (id, track, board, topic, concept, marks, ability, answer_format, question)
+VALUES ($aq$aqa-iteration-03$aq$, 'gcse', $aq$aqa$aq$, $aq$iteration$aq$, $aq$loop-trace$aq$, 3, 2, $aq$text$aq$, $aq$The following algorithm is written in pseudo-code.
 
 ```
 total ← 0
@@ -2032,7 +2025,7 @@ OUTPUT total
 (b) State the number of times the statement `total ← total + i * 2` is executed. [1]
 
 (c) Name the type of iteration used in the algorithm. [1]$aq$)
-ON CONFLICT (id) DO UPDATE SET board = EXCLUDED.board, topic = EXCLUDED.topic, marks = EXCLUDED.marks,
+ON CONFLICT (id) DO UPDATE SET board = EXCLUDED.board, topic = EXCLUDED.topic, concept = EXCLUDED.concept, marks = EXCLUDED.marks,
   ability = EXCLUDED.ability, answer_format = EXCLUDED.answer_format, question = EXCLUDED.question;
 DELETE FROM public.assessment_mark_points WHERE question_id = $aq$aqa-iteration-03$aq$ AND position > 3;
 INSERT INTO public.assessment_mark_points (question_id, position, text, marks, guidance)
@@ -2045,11 +2038,11 @@ INSERT INTO public.assessment_mark_points (question_id, position, text, marks, g
 VALUES ($aq$aqa-iteration-03$aq$, 3, $aq$(c) Count-controlled (iteration)$aq$, 1, $aq$Allow: definite iteration.$aq$)
 ON CONFLICT (question_id, position) DO UPDATE SET text = EXCLUDED.text, marks = EXCLUDED.marks, guidance = EXCLUDED.guidance;
 
-INSERT INTO public.assessment_questions (id, track, board, topic, marks, ability, answer_format, question)
-VALUES ($aq$aqa-iteration-04$aq$, 'gcse', $aq$aqa$aq$, $aq$iteration$aq$, 4, 2, $aq$code$aq$, $aq$Write an algorithm that asks the user to enter a positive number. The algorithm must keep asking until a positive number is entered. It then outputs the square of the number (the number multiplied by itself). [4]
+INSERT INTO public.assessment_questions (id, track, board, topic, concept, marks, ability, answer_format, question)
+VALUES ($aq$aqa-iteration-04$aq$, 'gcse', $aq$aqa$aq$, $aq$iteration$aq$, $aq$repeat-until-valid$aq$, 4, 2, $aq$code$aq$, $aq$Write an algorithm that asks the user to enter a positive number. The algorithm must keep asking until a positive number is entered. It then outputs the square of the number (the number multiplied by itself). [4]
 
 You may use pseudo-code or a high-level programming language.$aq$)
-ON CONFLICT (id) DO UPDATE SET board = EXCLUDED.board, topic = EXCLUDED.topic, marks = EXCLUDED.marks,
+ON CONFLICT (id) DO UPDATE SET board = EXCLUDED.board, topic = EXCLUDED.topic, concept = EXCLUDED.concept, marks = EXCLUDED.marks,
   ability = EXCLUDED.ability, answer_format = EXCLUDED.answer_format, question = EXCLUDED.question;
 DELETE FROM public.assessment_mark_points WHERE question_id = $aq$aqa-iteration-04$aq$ AND position > 4;
 INSERT INTO public.assessment_mark_points (question_id, position, text, marks, guidance)
@@ -2065,8 +2058,8 @@ INSERT INTO public.assessment_mark_points (question_id, position, text, marks, g
 VALUES ($aq$aqa-iteration-04$aq$, 4, $aq$Outputs the number multiplied by itself after the iteration (once)$aq$, 1, $aq$$aq$)
 ON CONFLICT (question_id, position) DO UPDATE SET text = EXCLUDED.text, marks = EXCLUDED.marks, guidance = EXCLUDED.guidance;
 
-INSERT INTO public.assessment_questions (id, track, board, topic, marks, ability, answer_format, question)
-VALUES ($aq$aqa-iteration-05$aq$, 'gcse', $aq$aqa$aq$, $aq$iteration$aq$, 6, 3, $aq$code$aq$, $aq$A shop till program is being written. The user enters the price of each item, one at a time. The user enters -1 when there are no more items.
+INSERT INTO public.assessment_questions (id, track, board, topic, concept, marks, ability, answer_format, question)
+VALUES ($aq$aqa-iteration-05$aq$, 'gcse', $aq$aqa$aq$, $aq$iteration$aq$, $aq$loop-totals$aq$, 6, 3, $aq$code$aq$, $aq$A shop till program is being written. The user enters the price of each item, one at a time. The user enters -1 when there are no more items.
 
 Write an algorithm that:
 
@@ -2076,7 +2069,7 @@ Write an algorithm that:
 - outputs the total cost and the number of items. [6]
 
 The value -1 must not be included in the total or the count. You may use pseudo-code or a high-level programming language.$aq$)
-ON CONFLICT (id) DO UPDATE SET board = EXCLUDED.board, topic = EXCLUDED.topic, marks = EXCLUDED.marks,
+ON CONFLICT (id) DO UPDATE SET board = EXCLUDED.board, topic = EXCLUDED.topic, concept = EXCLUDED.concept, marks = EXCLUDED.marks,
   ability = EXCLUDED.ability, answer_format = EXCLUDED.answer_format, question = EXCLUDED.question;
 DELETE FROM public.assessment_mark_points WHERE question_id = $aq$aqa-iteration-05$aq$ AND position > 6;
 INSERT INTO public.assessment_mark_points (question_id, position, text, marks, guidance)
@@ -2098,8 +2091,8 @@ INSERT INTO public.assessment_mark_points (question_id, position, text, marks, g
 VALUES ($aq$aqa-iteration-05$aq$, 6, $aq$Outputs the total AND the count after the iteration$aq$, 1, $aq$$aq$)
 ON CONFLICT (question_id, position) DO UPDATE SET text = EXCLUDED.text, marks = EXCLUDED.marks, guidance = EXCLUDED.guidance;
 
-INSERT INTO public.assessment_questions (id, track, board, topic, marks, ability, answer_format, question)
-VALUES ($aq$aqa-iteration-06$aq$, 'gcse', $aq$aqa$aq$, $aq$iteration$aq$, 2, 1, $aq$text$aq$, $aq$The following algorithm is written in pseudo-code.
+INSERT INTO public.assessment_questions (id, track, board, topic, concept, marks, ability, answer_format, question)
+VALUES ($aq$aqa-iteration-06$aq$, 'gcse', $aq$aqa$aq$, $aq$iteration$aq$, $aq$loop-trace$aq$, 2, 1, $aq$text$aq$, $aq$The following algorithm is written in pseudo-code.
 
 ```
 FOR i ← 1 TO 3
@@ -2108,7 +2101,7 @@ ENDFOR
 ```
 
 State the values that are output. [2]$aq$)
-ON CONFLICT (id) DO UPDATE SET board = EXCLUDED.board, topic = EXCLUDED.topic, marks = EXCLUDED.marks,
+ON CONFLICT (id) DO UPDATE SET board = EXCLUDED.board, topic = EXCLUDED.topic, concept = EXCLUDED.concept, marks = EXCLUDED.marks,
   ability = EXCLUDED.ability, answer_format = EXCLUDED.answer_format, question = EXCLUDED.question;
 DELETE FROM public.assessment_mark_points WHERE question_id = $aq$aqa-iteration-06$aq$ AND position > 2;
 INSERT INTO public.assessment_mark_points (question_id, position, text, marks, guidance)
@@ -2118,8 +2111,8 @@ INSERT INTO public.assessment_mark_points (question_id, position, text, marks, g
 VALUES ($aq$aqa-iteration-06$aq$, 2, $aq$All three values are output: 5, 10, 15$aq$, 1, $aq$Allow the values on one line or separate lines.$aq$)
 ON CONFLICT (question_id, position) DO UPDATE SET text = EXCLUDED.text, marks = EXCLUDED.marks, guidance = EXCLUDED.guidance;
 
-INSERT INTO public.assessment_questions (id, track, board, topic, marks, ability, answer_format, question)
-VALUES ($aq$aqa-iteration-07$aq$, 'gcse', $aq$aqa$aq$, $aq$iteration$aq$, 3, 2, $aq$text$aq$, $aq$The following algorithm is written in pseudo-code.
+INSERT INTO public.assessment_questions (id, track, board, topic, concept, marks, ability, answer_format, question)
+VALUES ($aq$aqa-iteration-07$aq$, 'gcse', $aq$aqa$aq$, $aq$iteration$aq$, $aq$loop-trace$aq$, 3, 2, $aq$text$aq$, $aq$The following algorithm is written in pseudo-code.
 
 ```
 n ← 1
@@ -2137,7 +2130,7 @@ OUTPUT n
 (b) State the second value that is output. [1]
 
 (c) State the name of the type of iteration used in this algorithm. [1]$aq$)
-ON CONFLICT (id) DO UPDATE SET board = EXCLUDED.board, topic = EXCLUDED.topic, marks = EXCLUDED.marks,
+ON CONFLICT (id) DO UPDATE SET board = EXCLUDED.board, topic = EXCLUDED.topic, concept = EXCLUDED.concept, marks = EXCLUDED.marks,
   ability = EXCLUDED.ability, answer_format = EXCLUDED.answer_format, question = EXCLUDED.question;
 DELETE FROM public.assessment_mark_points WHERE question_id = $aq$aqa-iteration-07$aq$ AND position > 3;
 INSERT INTO public.assessment_mark_points (question_id, position, text, marks, guidance)
@@ -2150,11 +2143,11 @@ INSERT INTO public.assessment_mark_points (question_id, position, text, marks, g
 VALUES ($aq$aqa-iteration-07$aq$, 3, $aq$(c) Condition-controlled iteration$aq$, 1, $aq$Allow: WHILE loop.$aq$)
 ON CONFLICT (question_id, position) DO UPDATE SET text = EXCLUDED.text, marks = EXCLUDED.marks, guidance = EXCLUDED.guidance;
 
-INSERT INTO public.assessment_questions (id, track, board, topic, marks, ability, answer_format, question)
-VALUES ($aq$aqa-iteration-08$aq$, 'gcse', $aq$aqa$aq$, $aq$iteration$aq$, 5, 3, $aq$code$aq$, $aq$Write an algorithm that keeps asking the user to enter a password until they enter `letmein`. It then outputs `Welcome` followed by the number of attempts it took. [5]
+INSERT INTO public.assessment_questions (id, track, board, topic, concept, marks, ability, answer_format, question)
+VALUES ($aq$aqa-iteration-08$aq$, 'gcse', $aq$aqa$aq$, $aq$iteration$aq$, $aq$repeat-until-valid$aq$, 5, 3, $aq$code$aq$, $aq$Write an algorithm that keeps asking the user to enter a password until they enter `letmein`. It then outputs `Welcome` followed by the number of attempts it took. [5]
 
 You may use pseudo-code or a high-level programming language.$aq$)
-ON CONFLICT (id) DO UPDATE SET board = EXCLUDED.board, topic = EXCLUDED.topic, marks = EXCLUDED.marks,
+ON CONFLICT (id) DO UPDATE SET board = EXCLUDED.board, topic = EXCLUDED.topic, concept = EXCLUDED.concept, marks = EXCLUDED.marks,
   ability = EXCLUDED.ability, answer_format = EXCLUDED.answer_format, question = EXCLUDED.question;
 DELETE FROM public.assessment_mark_points WHERE question_id = $aq$aqa-iteration-08$aq$ AND position > 5;
 INSERT INTO public.assessment_mark_points (question_id, position, text, marks, guidance)
@@ -2173,9 +2166,9 @@ INSERT INTO public.assessment_mark_points (question_id, position, text, marks, g
 VALUES ($aq$aqa-iteration-08$aq$, 5, $aq$Outputs Welcome and the number of attempts after the iteration has finished$aq$, 1, $aq$$aq$)
 ON CONFLICT (question_id, position) DO UPDATE SET text = EXCLUDED.text, marks = EXCLUDED.marks, guidance = EXCLUDED.guidance;
 
-INSERT INTO public.assessment_questions (id, track, board, topic, marks, ability, answer_format, question)
-VALUES ($aq$aqa-lists-01$aq$, 'gcse', $aq$aqa$aq$, $aq$lists$aq$, 2, 1, $aq$text$aq$, $aq$State **two** features of an array. [2]$aq$)
-ON CONFLICT (id) DO UPDATE SET board = EXCLUDED.board, topic = EXCLUDED.topic, marks = EXCLUDED.marks,
+INSERT INTO public.assessment_questions (id, track, board, topic, concept, marks, ability, answer_format, question)
+VALUES ($aq$aqa-lists-01$aq$, 'gcse', $aq$aqa$aq$, $aq$lists$aq$, $aq$array-definition$aq$, 2, 1, $aq$text$aq$, $aq$State **two** features of an array. [2]$aq$)
+ON CONFLICT (id) DO UPDATE SET board = EXCLUDED.board, topic = EXCLUDED.topic, concept = EXCLUDED.concept, marks = EXCLUDED.marks,
   ability = EXCLUDED.ability, answer_format = EXCLUDED.answer_format, question = EXCLUDED.question;
 DELETE FROM public.assessment_mark_points WHERE question_id = $aq$aqa-lists-01$aq$ AND position > 4;
 INSERT INTO public.assessment_mark_points (question_id, position, text, marks, guidance)
@@ -2191,17 +2184,17 @@ INSERT INTO public.assessment_mark_points (question_id, position, text, marks, g
 VALUES ($aq$aqa-lists-01$aq$, 4, $aq$It stores multiple items / a collection of items$aq$, 1, $aq$$aq$)
 ON CONFLICT (question_id, position) DO UPDATE SET text = EXCLUDED.text, marks = EXCLUDED.marks, guidance = EXCLUDED.guidance;
 
-INSERT INTO public.assessment_questions (id, track, board, topic, marks, ability, answer_format, question)
-VALUES ($aq$aqa-lists-02$aq$, 'gcse', $aq$aqa$aq$, $aq$lists$aq$, 1, 1, $aq$text$aq$, $aq$An array has 8 items. The first item is at index 0. State the index of the last item. [1]$aq$)
-ON CONFLICT (id) DO UPDATE SET board = EXCLUDED.board, topic = EXCLUDED.topic, marks = EXCLUDED.marks,
+INSERT INTO public.assessment_questions (id, track, board, topic, concept, marks, ability, answer_format, question)
+VALUES ($aq$aqa-lists-02$aq$, 'gcse', $aq$aqa$aq$, $aq$lists$aq$, $aq$array-definition$aq$, 1, 1, $aq$text$aq$, $aq$An array has 8 items. The first item is at index 0. State the index of the last item. [1]$aq$)
+ON CONFLICT (id) DO UPDATE SET board = EXCLUDED.board, topic = EXCLUDED.topic, concept = EXCLUDED.concept, marks = EXCLUDED.marks,
   ability = EXCLUDED.ability, answer_format = EXCLUDED.answer_format, question = EXCLUDED.question;
 DELETE FROM public.assessment_mark_points WHERE question_id = $aq$aqa-lists-02$aq$ AND position > 1;
 INSERT INTO public.assessment_mark_points (question_id, position, text, marks, guidance)
 VALUES ($aq$aqa-lists-02$aq$, 1, $aq$7$aq$, 1, $aq$Do not allow 8.$aq$)
 ON CONFLICT (question_id, position) DO UPDATE SET text = EXCLUDED.text, marks = EXCLUDED.marks, guidance = EXCLUDED.guidance;
 
-INSERT INTO public.assessment_questions (id, track, board, topic, marks, ability, answer_format, question)
-VALUES ($aq$aqa-lists-03$aq$, 'gcse', $aq$aqa$aq$, $aq$lists$aq$, 3, 2, $aq$text$aq$, $aq$The following algorithm is written in pseudo-code.
+INSERT INTO public.assessment_questions (id, track, board, topic, concept, marks, ability, answer_format, question)
+VALUES ($aq$aqa-lists-03$aq$, 'gcse', $aq$aqa$aq$, $aq$lists$aq$, $aq$array-trace$aq$, 3, 2, $aq$text$aq$, $aq$The following algorithm is written in pseudo-code.
 
 ```
 prices ← [3, 8, 5, 10]
@@ -2216,7 +2209,7 @@ OUTPUT LEN(prices)
 (b) State the output of line 4. [1]
 
 (c) State the output of line 5. [1]$aq$)
-ON CONFLICT (id) DO UPDATE SET board = EXCLUDED.board, topic = EXCLUDED.topic, marks = EXCLUDED.marks,
+ON CONFLICT (id) DO UPDATE SET board = EXCLUDED.board, topic = EXCLUDED.topic, concept = EXCLUDED.concept, marks = EXCLUDED.marks,
   ability = EXCLUDED.ability, answer_format = EXCLUDED.answer_format, question = EXCLUDED.question;
 DELETE FROM public.assessment_mark_points WHERE question_id = $aq$aqa-lists-03$aq$ AND position > 3;
 INSERT INTO public.assessment_mark_points (question_id, position, text, marks, guidance)
@@ -2229,11 +2222,11 @@ INSERT INTO public.assessment_mark_points (question_id, position, text, marks, g
 VALUES ($aq$aqa-lists-03$aq$, 3, $aq$(c) 4$aq$, 1, $aq$$aq$)
 ON CONFLICT (question_id, position) DO UPDATE SET text = EXCLUDED.text, marks = EXCLUDED.marks, guidance = EXCLUDED.guidance;
 
-INSERT INTO public.assessment_questions (id, track, board, topic, marks, ability, answer_format, question)
-VALUES ($aq$aqa-lists-04$aq$, 'gcse', $aq$aqa$aq$, $aq$lists$aq$, 4, 2, $aq$code$aq$, $aq$Write an algorithm that creates an array called `colours` containing five colours and then uses iteration to output every colour in the array. [4]
+INSERT INTO public.assessment_questions (id, track, board, topic, concept, marks, ability, answer_format, question)
+VALUES ($aq$aqa-lists-04$aq$, 'gcse', $aq$aqa$aq$, $aq$lists$aq$, $aq$array-loop-output$aq$, 4, 2, $aq$code$aq$, $aq$Write an algorithm that creates an array called `colours` containing five colours and then uses iteration to output every colour in the array. [4]
 
 You may use pseudo-code or a high-level programming language.$aq$)
-ON CONFLICT (id) DO UPDATE SET board = EXCLUDED.board, topic = EXCLUDED.topic, marks = EXCLUDED.marks,
+ON CONFLICT (id) DO UPDATE SET board = EXCLUDED.board, topic = EXCLUDED.topic, concept = EXCLUDED.concept, marks = EXCLUDED.marks,
   ability = EXCLUDED.ability, answer_format = EXCLUDED.answer_format, question = EXCLUDED.question;
 DELETE FROM public.assessment_mark_points WHERE question_id = $aq$aqa-lists-04$aq$ AND position > 4;
 INSERT INTO public.assessment_mark_points (question_id, position, text, marks, guidance)
@@ -2249,8 +2242,8 @@ INSERT INTO public.assessment_mark_points (question_id, position, text, marks, g
 VALUES ($aq$aqa-lists-04$aq$, 4, $aq$Outputs each item using the loop variable as the index$aq$, 1, $aq$$aq$)
 ON CONFLICT (question_id, position) DO UPDATE SET text = EXCLUDED.text, marks = EXCLUDED.marks, guidance = EXCLUDED.guidance;
 
-INSERT INTO public.assessment_questions (id, track, board, topic, marks, ability, answer_format, question)
-VALUES ($aq$aqa-lists-05$aq$, 'gcse', $aq$aqa$aq$, $aq$lists$aq$, 5, 3, $aq$text$aq$, $aq$A two-dimensional array called `grid` stores whole numbers. An item is accessed as `grid[row][column]`. Both indexes start at 0.
+INSERT INTO public.assessment_questions (id, track, board, topic, concept, marks, ability, answer_format, question)
+VALUES ($aq$aqa-lists-05$aq$, 'gcse', $aq$aqa$aq$, $aq$lists$aq$, $aq$array-2d$aq$, 5, 3, $aq$text$aq$, $aq$A two-dimensional array called `grid` stores whole numbers. An item is accessed as `grid[row][column]`. Both indexes start at 0.
 
 | | Column 0 | Column 1 | Column 2 |
 |---|---|---|---|
@@ -2263,7 +2256,7 @@ VALUES ($aq$aqa-lists-05$aq$, 'gcse', $aq$aqa$aq$, $aq$lists$aq$, 5, 3, $aq$text
 (b) State the position of the value 6, written in the form `grid[row][column]`. [1]
 
 (c) Describe how **nested iteration** can be used to output every value in the array. [3]$aq$)
-ON CONFLICT (id) DO UPDATE SET board = EXCLUDED.board, topic = EXCLUDED.topic, marks = EXCLUDED.marks,
+ON CONFLICT (id) DO UPDATE SET board = EXCLUDED.board, topic = EXCLUDED.topic, concept = EXCLUDED.concept, marks = EXCLUDED.marks,
   ability = EXCLUDED.ability, answer_format = EXCLUDED.answer_format, question = EXCLUDED.question;
 DELETE FROM public.assessment_mark_points WHERE question_id = $aq$aqa-lists-05$aq$ AND position > 5;
 INSERT INTO public.assessment_mark_points (question_id, position, text, marks, guidance)
@@ -2282,15 +2275,15 @@ INSERT INTO public.assessment_mark_points (question_id, position, text, marks, g
 VALUES ($aq$aqa-lists-05$aq$, 5, $aq$(c) Each value is output using both loop variables as the indexes, grid[row][column]$aq$, 1, $aq$$aq$)
 ON CONFLICT (question_id, position) DO UPDATE SET text = EXCLUDED.text, marks = EXCLUDED.marks, guidance = EXCLUDED.guidance;
 
-INSERT INTO public.assessment_questions (id, track, board, topic, marks, ability, answer_format, question)
-VALUES ($aq$aqa-lists-06$aq$, 'gcse', $aq$aqa$aq$, $aq$lists$aq$, 6, 3, $aq$code$aq$, $aq$Write an algorithm that:
+INSERT INTO public.assessment_questions (id, track, board, topic, concept, marks, ability, answer_format, question)
+VALUES ($aq$aqa-lists-06$aq$, 'gcse', $aq$aqa$aq$, $aq$lists$aq$, $aq$array-search-total$aq$, 6, 3, $aq$code$aq$, $aq$Write an algorithm that:
 
 - uses iteration to take 8 test scores from the user and stores them in an array
 - counts how many of the scores are 50 or more
 - outputs the count. [6]
 
 You may use pseudo-code or a high-level programming language.$aq$)
-ON CONFLICT (id) DO UPDATE SET board = EXCLUDED.board, topic = EXCLUDED.topic, marks = EXCLUDED.marks,
+ON CONFLICT (id) DO UPDATE SET board = EXCLUDED.board, topic = EXCLUDED.topic, concept = EXCLUDED.concept, marks = EXCLUDED.marks,
   ability = EXCLUDED.ability, answer_format = EXCLUDED.answer_format, question = EXCLUDED.question;
 DELETE FROM public.assessment_mark_points WHERE question_id = $aq$aqa-lists-06$aq$ AND position > 6;
 INSERT INTO public.assessment_mark_points (question_id, position, text, marks, guidance)
@@ -2312,15 +2305,15 @@ INSERT INTO public.assessment_mark_points (question_id, position, text, marks, g
 VALUES ($aq$aqa-lists-06$aq$, 6, $aq$Adds 1 to the counter for each score that passes the test and outputs the count after the iteration$aq$, 1, $aq$$aq$)
 ON CONFLICT (question_id, position) DO UPDATE SET text = EXCLUDED.text, marks = EXCLUDED.marks, guidance = EXCLUDED.guidance;
 
-INSERT INTO public.assessment_questions (id, track, board, topic, marks, ability, answer_format, question)
-VALUES ($aq$aqa-strings-01$aq$, 'gcse', $aq$aqa$aq$, $aq$strings$aq$, 2, 1, $aq$text$aq$, $aq$In AQA pseudo-code, `LEN(s)` returns the number of characters in the string `s` and `SUBSTRING(start, end, s)` returns the characters from position `start` to position `end` inclusive. The first character is at position 0.
+INSERT INTO public.assessment_questions (id, track, board, topic, concept, marks, ability, answer_format, question)
+VALUES ($aq$aqa-strings-01$aq$, 'gcse', $aq$aqa$aq$, $aq$strings$aq$, $aq$string-functions$aq$, 2, 1, $aq$text$aq$, $aq$In AQA pseudo-code, `LEN(s)` returns the number of characters in the string `s` and `SUBSTRING(start, end, s)` returns the characters from position `start` to position `end` inclusive. The first character is at position 0.
 
 State the value of each of the following.
 
 (a) `LEN("robot")` [1]
 
 (b) `SUBSTRING(1, 3, "robot")` [1]$aq$)
-ON CONFLICT (id) DO UPDATE SET board = EXCLUDED.board, topic = EXCLUDED.topic, marks = EXCLUDED.marks,
+ON CONFLICT (id) DO UPDATE SET board = EXCLUDED.board, topic = EXCLUDED.topic, concept = EXCLUDED.concept, marks = EXCLUDED.marks,
   ability = EXCLUDED.ability, answer_format = EXCLUDED.answer_format, question = EXCLUDED.question;
 DELETE FROM public.assessment_mark_points WHERE question_id = $aq$aqa-strings-01$aq$ AND position > 2;
 INSERT INTO public.assessment_mark_points (question_id, position, text, marks, guidance)
@@ -2330,11 +2323,11 @@ INSERT INTO public.assessment_mark_points (question_id, position, text, marks, g
 VALUES ($aq$aqa-strings-01$aq$, 2, $aq$(b) obo$aq$, 1, $aq$$aq$)
 ON CONFLICT (question_id, position) DO UPDATE SET text = EXCLUDED.text, marks = EXCLUDED.marks, guidance = EXCLUDED.guidance;
 
-INSERT INTO public.assessment_questions (id, track, board, topic, marks, ability, answer_format, question)
-VALUES ($aq$aqa-strings-02$aq$, 'gcse', $aq$aqa$aq$, $aq$strings$aq$, 2, 1, $aq$text$aq$, $aq$(a) State what is meant by **concatenation**. [1]
+INSERT INTO public.assessment_questions (id, track, board, topic, concept, marks, ability, answer_format, question)
+VALUES ($aq$aqa-strings-02$aq$, 'gcse', $aq$aqa$aq$, $aq$strings$aq$, $aq$character-codes$aq$, 2, 1, $aq$text$aq$, $aq$(a) State what is meant by **concatenation**. [1]
 
 (b) In a character set the code for "A" is 65. State the output of `OUTPUT CODE_TO_CHAR(CHAR_TO_CODE("A") + 1)`. [1]$aq$)
-ON CONFLICT (id) DO UPDATE SET board = EXCLUDED.board, topic = EXCLUDED.topic, marks = EXCLUDED.marks,
+ON CONFLICT (id) DO UPDATE SET board = EXCLUDED.board, topic = EXCLUDED.topic, concept = EXCLUDED.concept, marks = EXCLUDED.marks,
   ability = EXCLUDED.ability, answer_format = EXCLUDED.answer_format, question = EXCLUDED.question;
 DELETE FROM public.assessment_mark_points WHERE question_id = $aq$aqa-strings-02$aq$ AND position > 2;
 INSERT INTO public.assessment_mark_points (question_id, position, text, marks, guidance)
@@ -2344,8 +2337,8 @@ INSERT INTO public.assessment_mark_points (question_id, position, text, marks, g
 VALUES ($aq$aqa-strings-02$aq$, 2, $aq$(b) B$aq$, 1, $aq$$aq$)
 ON CONFLICT (question_id, position) DO UPDATE SET text = EXCLUDED.text, marks = EXCLUDED.marks, guidance = EXCLUDED.guidance;
 
-INSERT INTO public.assessment_questions (id, track, board, topic, marks, ability, answer_format, question)
-VALUES ($aq$aqa-strings-03$aq$, 'gcse', $aq$aqa$aq$, $aq$strings$aq$, 3, 2, $aq$text$aq$, $aq$The following algorithm is written in pseudo-code. The first character of a string is at position 0.
+INSERT INTO public.assessment_questions (id, track, board, topic, concept, marks, ability, answer_format, question)
+VALUES ($aq$aqa-strings-03$aq$, 'gcse', $aq$aqa$aq$, $aq$strings$aq$, $aq$string-functions$aq$, 3, 2, $aq$text$aq$, $aq$The following algorithm is written in pseudo-code. The first character of a string is at position 0.
 
 ```
 word ← "programming"
@@ -2359,7 +2352,7 @@ OUTPUT SUBSTRING(3, 4, word) + "!"
 (b) State the output of line 3. [1]
 
 (c) State the output of line 4. [1]$aq$)
-ON CONFLICT (id) DO UPDATE SET board = EXCLUDED.board, topic = EXCLUDED.topic, marks = EXCLUDED.marks,
+ON CONFLICT (id) DO UPDATE SET board = EXCLUDED.board, topic = EXCLUDED.topic, concept = EXCLUDED.concept, marks = EXCLUDED.marks,
   ability = EXCLUDED.ability, answer_format = EXCLUDED.answer_format, question = EXCLUDED.question;
 DELETE FROM public.assessment_mark_points WHERE question_id = $aq$aqa-strings-03$aq$ AND position > 3;
 INSERT INTO public.assessment_mark_points (question_id, position, text, marks, guidance)
@@ -2372,13 +2365,13 @@ INSERT INTO public.assessment_mark_points (question_id, position, text, marks, g
 VALUES ($aq$aqa-strings-03$aq$, 3, $aq$(c) gr!$aq$, 1, $aq$$aq$)
 ON CONFLICT (question_id, position) DO UPDATE SET text = EXCLUDED.text, marks = EXCLUDED.marks, guidance = EXCLUDED.guidance;
 
-INSERT INTO public.assessment_questions (id, track, board, topic, marks, ability, answer_format, question)
-VALUES ($aq$aqa-strings-04$aq$, 'gcse', $aq$aqa$aq$, $aq$strings$aq$, 4, 2, $aq$code$aq$, $aq$Write an algorithm that asks the user to enter a name and outputs the name followed by how many letters it has.
+INSERT INTO public.assessment_questions (id, track, board, topic, concept, marks, ability, answer_format, question)
+VALUES ($aq$aqa-strings-04$aq$, 'gcse', $aq$aqa$aq$, $aq$strings$aq$, $aq$string-initials$aq$, 4, 2, $aq$code$aq$, $aq$Write an algorithm that asks the user to enter a name and outputs the name followed by how many letters it has.
 
 For example, if the user enters `Alice` the output is `Alice has 5 letters`. [4]
 
 You may use pseudo-code or a high-level programming language.$aq$)
-ON CONFLICT (id) DO UPDATE SET board = EXCLUDED.board, topic = EXCLUDED.topic, marks = EXCLUDED.marks,
+ON CONFLICT (id) DO UPDATE SET board = EXCLUDED.board, topic = EXCLUDED.topic, concept = EXCLUDED.concept, marks = EXCLUDED.marks,
   ability = EXCLUDED.ability, answer_format = EXCLUDED.answer_format, question = EXCLUDED.question;
 DELETE FROM public.assessment_mark_points WHERE question_id = $aq$aqa-strings-04$aq$ AND position > 4;
 INSERT INTO public.assessment_mark_points (question_id, position, text, marks, guidance)
@@ -2394,13 +2387,13 @@ INSERT INTO public.assessment_mark_points (question_id, position, text, marks, g
 VALUES ($aq$aqa-strings-04$aq$, 4, $aq$The number of letters is output with the name (converted to a string if it is joined to the text)$aq$, 1, $aq$Allow separate output statements.$aq$)
 ON CONFLICT (question_id, position) DO UPDATE SET text = EXCLUDED.text, marks = EXCLUDED.marks, guidance = EXCLUDED.guidance;
 
-INSERT INTO public.assessment_questions (id, track, board, topic, marks, ability, answer_format, question)
-VALUES ($aq$aqa-strings-05$aq$, 'gcse', $aq$aqa$aq$, $aq$strings$aq$, 5, 3, $aq$code$aq$, $aq$A palindrome is a word that reads the same forwards and backwards, for example `level`.
+INSERT INTO public.assessment_questions (id, track, board, topic, concept, marks, ability, answer_format, question)
+VALUES ($aq$aqa-strings-05$aq$, 'gcse', $aq$aqa$aq$, $aq$strings$aq$, $aq$string-reverse$aq$, 5, 3, $aq$code$aq$, $aq$A palindrome is a word that reads the same forwards and backwards, for example `level`.
 
 Write an algorithm that asks the user to enter a word and outputs `Palindrome` if it is a palindrome, or `Not a palindrome` if it is not. [5]
 
 You may use pseudo-code or a high-level programming language.$aq$)
-ON CONFLICT (id) DO UPDATE SET board = EXCLUDED.board, topic = EXCLUDED.topic, marks = EXCLUDED.marks,
+ON CONFLICT (id) DO UPDATE SET board = EXCLUDED.board, topic = EXCLUDED.topic, concept = EXCLUDED.concept, marks = EXCLUDED.marks,
   ability = EXCLUDED.ability, answer_format = EXCLUDED.answer_format, question = EXCLUDED.question;
 DELETE FROM public.assessment_mark_points WHERE question_id = $aq$aqa-strings-05$aq$ AND position > 5;
 INSERT INTO public.assessment_mark_points (question_id, position, text, marks, guidance)
@@ -2419,13 +2412,13 @@ INSERT INTO public.assessment_mark_points (question_id, position, text, marks, g
 VALUES ($aq$aqa-strings-05$aq$, 5, $aq$Outputs the correct message in both cases$aq$, 1, $aq$$aq$)
 ON CONFLICT (question_id, position) DO UPDATE SET text = EXCLUDED.text, marks = EXCLUDED.marks, guidance = EXCLUDED.guidance;
 
-INSERT INTO public.assessment_questions (id, track, board, topic, marks, ability, answer_format, question)
-VALUES ($aq$aqa-strings-06$aq$, 'gcse', $aq$aqa$aq$, $aq$strings$aq$, 6, 3, $aq$code$aq$, $aq$Write an algorithm that asks the user to enter a sentence and outputs the number of words in it.
+INSERT INTO public.assessment_questions (id, track, board, topic, concept, marks, ability, answer_format, question)
+VALUES ($aq$aqa-strings-06$aq$, 'gcse', $aq$aqa$aq$, $aq$strings$aq$, $aq$string-counting$aq$, 6, 3, $aq$code$aq$, $aq$Write an algorithm that asks the user to enter a sentence and outputs the number of words in it.
 
 You can assume that the words are separated by exactly one space and that the sentence does not start or end with a space. [6]
 
 You may use pseudo-code or a high-level programming language.$aq$)
-ON CONFLICT (id) DO UPDATE SET board = EXCLUDED.board, topic = EXCLUDED.topic, marks = EXCLUDED.marks,
+ON CONFLICT (id) DO UPDATE SET board = EXCLUDED.board, topic = EXCLUDED.topic, concept = EXCLUDED.concept, marks = EXCLUDED.marks,
   ability = EXCLUDED.ability, answer_format = EXCLUDED.answer_format, question = EXCLUDED.question;
 DELETE FROM public.assessment_mark_points WHERE question_id = $aq$aqa-strings-06$aq$ AND position > 6;
 INSERT INTO public.assessment_mark_points (question_id, position, text, marks, guidance)
@@ -2447,9 +2440,9 @@ INSERT INTO public.assessment_mark_points (question_id, position, text, marks, g
 VALUES ($aq$aqa-strings-06$aq$, 6, $aq$Outputs the number of words (the number of spaces plus 1)$aq$, 1, $aq$Allow a counter that starts at 1 and adds 1 for each space.$aq$)
 ON CONFLICT (question_id, position) DO UPDATE SET text = EXCLUDED.text, marks = EXCLUDED.marks, guidance = EXCLUDED.guidance;
 
-INSERT INTO public.assessment_questions (id, track, board, topic, marks, ability, answer_format, question)
-VALUES ($aq$aqa-functions-01$aq$, 'gcse', $aq$aqa$aq$, $aq$functions$aq$, 2, 1, $aq$text$aq$, $aq$Describe what is meant by a parameter of a subroutine. [2]$aq$)
-ON CONFLICT (id) DO UPDATE SET board = EXCLUDED.board, topic = EXCLUDED.topic, marks = EXCLUDED.marks,
+INSERT INTO public.assessment_questions (id, track, board, topic, concept, marks, ability, answer_format, question)
+VALUES ($aq$aqa-functions-01$aq$, 'gcse', $aq$aqa$aq$, $aq$functions$aq$, $aq$parameters-return$aq$, 2, 1, $aq$text$aq$, $aq$Describe what is meant by a parameter of a subroutine. [2]$aq$)
+ON CONFLICT (id) DO UPDATE SET board = EXCLUDED.board, topic = EXCLUDED.topic, concept = EXCLUDED.concept, marks = EXCLUDED.marks,
   ability = EXCLUDED.ability, answer_format = EXCLUDED.answer_format, question = EXCLUDED.question;
 DELETE FROM public.assessment_mark_points WHERE question_id = $aq$aqa-functions-01$aq$ AND position > 2;
 INSERT INTO public.assessment_mark_points (question_id, position, text, marks, guidance)
@@ -2459,9 +2452,9 @@ INSERT INTO public.assessment_mark_points (question_id, position, text, marks, g
 VALUES ($aq$aqa-functions-01$aq$, 2, $aq$It is named in the subroutine definition and is used within the subroutine (behaves like a local variable)$aq$, 1, $aq$$aq$)
 ON CONFLICT (question_id, position) DO UPDATE SET text = EXCLUDED.text, marks = EXCLUDED.marks, guidance = EXCLUDED.guidance;
 
-INSERT INTO public.assessment_questions (id, track, board, topic, marks, ability, answer_format, question)
-VALUES ($aq$aqa-functions-02$aq$, 'gcse', $aq$aqa$aq$, $aq$functions$aq$, 2, 1, $aq$text$aq$, $aq$State **one** difference between a local variable and a global variable. [2]$aq$)
-ON CONFLICT (id) DO UPDATE SET board = EXCLUDED.board, topic = EXCLUDED.topic, marks = EXCLUDED.marks,
+INSERT INTO public.assessment_questions (id, track, board, topic, concept, marks, ability, answer_format, question)
+VALUES ($aq$aqa-functions-02$aq$, 'gcse', $aq$aqa$aq$, $aq$functions$aq$, $aq$local-global$aq$, 2, 1, $aq$text$aq$, $aq$State **one** difference between a local variable and a global variable. [2]$aq$)
+ON CONFLICT (id) DO UPDATE SET board = EXCLUDED.board, topic = EXCLUDED.topic, concept = EXCLUDED.concept, marks = EXCLUDED.marks,
   ability = EXCLUDED.ability, answer_format = EXCLUDED.answer_format, question = EXCLUDED.question;
 DELETE FROM public.assessment_mark_points WHERE question_id = $aq$aqa-functions-02$aq$ AND position > 2;
 INSERT INTO public.assessment_mark_points (question_id, position, text, marks, guidance)
@@ -2471,8 +2464,8 @@ INSERT INTO public.assessment_mark_points (question_id, position, text, marks, g
 VALUES ($aq$aqa-functions-02$aq$, 2, $aq$A global variable can be used / accessed throughout the whole program (in any subroutine)$aq$, 1, $aq$Award both marks for a clear statement of the difference.$aq$)
 ON CONFLICT (question_id, position) DO UPDATE SET text = EXCLUDED.text, marks = EXCLUDED.marks, guidance = EXCLUDED.guidance;
 
-INSERT INTO public.assessment_questions (id, track, board, topic, marks, ability, answer_format, question)
-VALUES ($aq$aqa-functions-03$aq$, 'gcse', $aq$aqa$aq$, $aq$functions$aq$, 3, 2, $aq$text$aq$, $aq$The following algorithm is written in pseudo-code.
+INSERT INTO public.assessment_questions (id, track, board, topic, concept, marks, ability, answer_format, question)
+VALUES ($aq$aqa-functions-03$aq$, 'gcse', $aq$aqa$aq$, $aq$functions$aq$, $aq$subprogram-trace$aq$, 3, 2, $aq$text$aq$, $aq$The following algorithm is written in pseudo-code.
 
 ```
 SUBROUTINE triple(n)
@@ -2488,7 +2481,7 @@ OUTPUT a + 1
 (b) State the name of the parameter of the subroutine. [1]
 
 (c) State what the RETURN statement does. [1]$aq$)
-ON CONFLICT (id) DO UPDATE SET board = EXCLUDED.board, topic = EXCLUDED.topic, marks = EXCLUDED.marks,
+ON CONFLICT (id) DO UPDATE SET board = EXCLUDED.board, topic = EXCLUDED.topic, concept = EXCLUDED.concept, marks = EXCLUDED.marks,
   ability = EXCLUDED.ability, answer_format = EXCLUDED.answer_format, question = EXCLUDED.question;
 DELETE FROM public.assessment_mark_points WHERE question_id = $aq$aqa-functions-03$aq$ AND position > 3;
 INSERT INTO public.assessment_mark_points (question_id, position, text, marks, guidance)
@@ -2501,13 +2494,13 @@ INSERT INTO public.assessment_mark_points (question_id, position, text, marks, g
 VALUES ($aq$aqa-functions-03$aq$, 3, $aq$(c) It sends a value back to the place where the subroutine was called$aq$, 1, $aq$Allow: ends the subroutine and gives back a value.$aq$)
 ON CONFLICT (question_id, position) DO UPDATE SET text = EXCLUDED.text, marks = EXCLUDED.marks, guidance = EXCLUDED.guidance;
 
-INSERT INTO public.assessment_questions (id, track, board, topic, marks, ability, answer_format, question)
-VALUES ($aq$aqa-functions-04$aq$, 'gcse', $aq$aqa$aq$, $aq$functions$aq$, 4, 2, $aq$code$aq$, $aq$Write a subroutine called `average` that takes three numbers as parameters and returns their mean.
+INSERT INTO public.assessment_questions (id, track, board, topic, concept, marks, ability, answer_format, question)
+VALUES ($aq$aqa-functions-04$aq$, 'gcse', $aq$aqa$aq$, $aq$functions$aq$, $aq$subprogram-write-maths$aq$, 4, 2, $aq$code$aq$, $aq$Write a subroutine called `average` that takes three numbers as parameters and returns their mean.
 
 Then write a line of code that calls the subroutine with the values 4, 7 and 10 and outputs the result. [4]
 
 You may use pseudo-code or a high-level programming language.$aq$)
-ON CONFLICT (id) DO UPDATE SET board = EXCLUDED.board, topic = EXCLUDED.topic, marks = EXCLUDED.marks,
+ON CONFLICT (id) DO UPDATE SET board = EXCLUDED.board, topic = EXCLUDED.topic, concept = EXCLUDED.concept, marks = EXCLUDED.marks,
   ability = EXCLUDED.ability, answer_format = EXCLUDED.answer_format, question = EXCLUDED.question;
 DELETE FROM public.assessment_mark_points WHERE question_id = $aq$aqa-functions-04$aq$ AND position > 4;
 INSERT INTO public.assessment_mark_points (question_id, position, text, marks, guidance)
@@ -2523,13 +2516,13 @@ INSERT INTO public.assessment_mark_points (question_id, position, text, marks, g
 VALUES ($aq$aqa-functions-04$aq$, 4, $aq$Calls the subroutine with 4, 7 and 10 AND outputs the returned value$aq$, 1, $aq$$aq$)
 ON CONFLICT (question_id, position) DO UPDATE SET text = EXCLUDED.text, marks = EXCLUDED.marks, guidance = EXCLUDED.guidance;
 
-INSERT INTO public.assessment_questions (id, track, board, topic, marks, ability, answer_format, question)
-VALUES ($aq$aqa-functions-05$aq$, 'gcse', $aq$aqa$aq$, $aq$functions$aq$, 6, 3, $aq$code$aq$, $aq$Write a subroutine called `countVowels` that takes a string as a parameter and returns the number of vowels (a, e, i, o, u) in the string.
+INSERT INTO public.assessment_questions (id, track, board, topic, concept, marks, ability, answer_format, question)
+VALUES ($aq$aqa-functions-05$aq$, 'gcse', $aq$aqa$aq$, $aq$functions$aq$, $aq$subprogram-write-string$aq$, 6, 3, $aq$code$aq$, $aq$Write a subroutine called `countVowels` that takes a string as a parameter and returns the number of vowels (a, e, i, o, u) in the string.
 
 Then write the code that asks the user to enter a word, calls `countVowels` and outputs the number of vowels. [6]
 
 You may use pseudo-code or a high-level programming language.$aq$)
-ON CONFLICT (id) DO UPDATE SET board = EXCLUDED.board, topic = EXCLUDED.topic, marks = EXCLUDED.marks,
+ON CONFLICT (id) DO UPDATE SET board = EXCLUDED.board, topic = EXCLUDED.topic, concept = EXCLUDED.concept, marks = EXCLUDED.marks,
   ability = EXCLUDED.ability, answer_format = EXCLUDED.answer_format, question = EXCLUDED.question;
 DELETE FROM public.assessment_mark_points WHERE question_id = $aq$aqa-functions-05$aq$ AND position > 6;
 INSERT INTO public.assessment_mark_points (question_id, position, text, marks, guidance)
@@ -2551,22 +2544,22 @@ INSERT INTO public.assessment_mark_points (question_id, position, text, marks, g
 VALUES ($aq$aqa-functions-05$aq$, 6, $aq$Takes a word as input, calls the subroutine with it AND outputs the returned value$aq$, 1, $aq$$aq$)
 ON CONFLICT (question_id, position) DO UPDATE SET text = EXCLUDED.text, marks = EXCLUDED.marks, guidance = EXCLUDED.guidance;
 
-INSERT INTO public.assessment_questions (id, track, board, topic, marks, ability, answer_format, question)
-VALUES ($aq$aqa-functions-06$aq$, 'gcse', $aq$aqa$aq$, $aq$functions$aq$, 2, 1, $aq$text$aq$, $aq$(a) State what is meant by a **parameter** of a subroutine. [1]
+INSERT INTO public.assessment_questions (id, track, board, topic, concept, marks, ability, answer_format, question)
+VALUES ($aq$aqa-functions-06$aq$, 'gcse', $aq$aqa$aq$, $aq$functions$aq$, $aq$parameters-return$aq$, 2, 1, $aq$text$aq$, $aq$(a) State what is meant by a **return value**. [1]
 
-(b) State what is meant by a **return value**. [1]$aq$)
-ON CONFLICT (id) DO UPDATE SET board = EXCLUDED.board, topic = EXCLUDED.topic, marks = EXCLUDED.marks,
+(b) State **one** reason why a programmer might split a large program into subroutines. [1]$aq$)
+ON CONFLICT (id) DO UPDATE SET board = EXCLUDED.board, topic = EXCLUDED.topic, concept = EXCLUDED.concept, marks = EXCLUDED.marks,
   ability = EXCLUDED.ability, answer_format = EXCLUDED.answer_format, question = EXCLUDED.question;
 DELETE FROM public.assessment_mark_points WHERE question_id = $aq$aqa-functions-06$aq$ AND position > 2;
 INSERT INTO public.assessment_mark_points (question_id, position, text, marks, guidance)
-VALUES ($aq$aqa-functions-06$aq$, 1, $aq$(a) A value (variable) that is passed into a subroutine when it is called / the name for data a subroutine receives$aq$, 1, $aq$$aq$)
+VALUES ($aq$aqa-functions-06$aq$, 1, $aq$(a) A value that is sent back from a subroutine to the place it was called from$aq$, 1, $aq$$aq$)
 ON CONFLICT (question_id, position) DO UPDATE SET text = EXCLUDED.text, marks = EXCLUDED.marks, guidance = EXCLUDED.guidance;
 INSERT INTO public.assessment_mark_points (question_id, position, text, marks, guidance)
-VALUES ($aq$aqa-functions-06$aq$, 2, $aq$(b) A value that is sent back from a subroutine to the place it was called from$aq$, 1, $aq$$aq$)
+VALUES ($aq$aqa-functions-06$aq$, 2, $aq$(b) Makes the program easier to read / understand / maintain$aq$, 1, $aq$Allow: code can be reused; each subroutine can be tested separately; different people can work on different subroutines.$aq$)
 ON CONFLICT (question_id, position) DO UPDATE SET text = EXCLUDED.text, marks = EXCLUDED.marks, guidance = EXCLUDED.guidance;
 
-INSERT INTO public.assessment_questions (id, track, board, topic, marks, ability, answer_format, question)
-VALUES ($aq$aqa-functions-07$aq$, 'gcse', $aq$aqa$aq$, $aq$functions$aq$, 3, 2, $aq$text$aq$, $aq$The following algorithm is written in pseudo-code.
+INSERT INTO public.assessment_questions (id, track, board, topic, concept, marks, ability, answer_format, question)
+VALUES ($aq$aqa-functions-07$aq$, 'gcse', $aq$aqa$aq$, $aq$functions$aq$, $aq$subprogram-trace$aq$, 3, 2, $aq$text$aq$, $aq$The following algorithm is written in pseudo-code.
 
 ```
 SUBROUTINE cube(n)
@@ -2585,7 +2578,7 @@ showTotal(cube(2), 1)
 (b) State the name of the subroutine that returns a value. [1]
 
 (c) State the names of the parameters of `showTotal`. [1]$aq$)
-ON CONFLICT (id) DO UPDATE SET board = EXCLUDED.board, topic = EXCLUDED.topic, marks = EXCLUDED.marks,
+ON CONFLICT (id) DO UPDATE SET board = EXCLUDED.board, topic = EXCLUDED.topic, concept = EXCLUDED.concept, marks = EXCLUDED.marks,
   ability = EXCLUDED.ability, answer_format = EXCLUDED.answer_format, question = EXCLUDED.question;
 DELETE FROM public.assessment_mark_points WHERE question_id = $aq$aqa-functions-07$aq$ AND position > 3;
 INSERT INTO public.assessment_mark_points (question_id, position, text, marks, guidance)
@@ -2598,34 +2591,34 @@ INSERT INTO public.assessment_mark_points (question_id, position, text, marks, g
 VALUES ($aq$aqa-functions-07$aq$, 3, $aq$(c) a and b$aq$, 1, $aq$Both are needed.$aq$)
 ON CONFLICT (question_id, position) DO UPDATE SET text = EXCLUDED.text, marks = EXCLUDED.marks, guidance = EXCLUDED.guidance;
 
-INSERT INTO public.assessment_questions (id, track, board, topic, marks, ability, answer_format, question)
-VALUES ($aq$aqa-functions-08$aq$, 'gcse', $aq$aqa$aq$, $aq$functions$aq$, 5, 3, $aq$code$aq$, $aq$Write a subroutine called `average` that takes three numbers as parameters and returns their mean.
+INSERT INTO public.assessment_questions (id, track, board, topic, concept, marks, ability, answer_format, question)
+VALUES ($aq$aqa-functions-08$aq$, 'gcse', $aq$aqa$aq$, $aq$functions$aq$, $aq$subprogram-boolean$aq$, 5, 3, $aq$code$aq$, $aq$Write a subroutine called `isAdult` that takes an age as a parameter and returns True if the age is 18 or more, and False if it is not.
 
-Then write a main program that asks the user to enter three numbers, uses the subroutine, and outputs the result. [5]
+Then write a main program that asks the user to enter their age, uses the subroutine, and outputs `Adult` or `Not adult`. [5]
 
 You may use pseudo-code or a high-level programming language.$aq$)
-ON CONFLICT (id) DO UPDATE SET board = EXCLUDED.board, topic = EXCLUDED.topic, marks = EXCLUDED.marks,
+ON CONFLICT (id) DO UPDATE SET board = EXCLUDED.board, topic = EXCLUDED.topic, concept = EXCLUDED.concept, marks = EXCLUDED.marks,
   ability = EXCLUDED.ability, answer_format = EXCLUDED.answer_format, question = EXCLUDED.question;
 DELETE FROM public.assessment_mark_points WHERE question_id = $aq$aqa-functions-08$aq$ AND position > 5;
 INSERT INTO public.assessment_mark_points (question_id, position, text, marks, guidance)
-VALUES ($aq$aqa-functions-08$aq$, 1, $aq$Defines a subroutine called average with three parameters$aq$, 1, $aq$$aq$)
+VALUES ($aq$aqa-functions-08$aq$, 1, $aq$Defines a subroutine called isAdult with one parameter$aq$, 1, $aq$$aq$)
 ON CONFLICT (question_id, position) DO UPDATE SET text = EXCLUDED.text, marks = EXCLUDED.marks, guidance = EXCLUDED.guidance;
 INSERT INTO public.assessment_mark_points (question_id, position, text, marks, guidance)
-VALUES ($aq$aqa-functions-08$aq$, 2, $aq$Calculates the sum of the three numbers divided by 3, with correct use of brackets$aq$, 1, $aq$$aq$)
+VALUES ($aq$aqa-functions-08$aq$, 2, $aq$Tests the age using the correct boundary (18 is an adult)$aq$, 1, $aq$Do not allow age > 18.$aq$)
 ON CONFLICT (question_id, position) DO UPDATE SET text = EXCLUDED.text, marks = EXCLUDED.marks, guidance = EXCLUDED.guidance;
 INSERT INTO public.assessment_mark_points (question_id, position, text, marks, guidance)
-VALUES ($aq$aqa-functions-08$aq$, 3, $aq$Returns the result from the subroutine$aq$, 1, $aq$$aq$)
+VALUES ($aq$aqa-functions-08$aq$, 3, $aq$Returns True when the age is 18 or more and False otherwise$aq$, 1, $aq$Allow returning the result of the comparison.$aq$)
 ON CONFLICT (question_id, position) DO UPDATE SET text = EXCLUDED.text, marks = EXCLUDED.marks, guidance = EXCLUDED.guidance;
 INSERT INTO public.assessment_mark_points (question_id, position, text, marks, guidance)
-VALUES ($aq$aqa-functions-08$aq$, 4, $aq$The main program takes three numbers as input and converts them to numbers$aq$, 1, $aq$$aq$)
+VALUES ($aq$aqa-functions-08$aq$, 4, $aq$The main program takes the age as input and converts it to an integer$aq$, 1, $aq$$aq$)
 ON CONFLICT (question_id, position) DO UPDATE SET text = EXCLUDED.text, marks = EXCLUDED.marks, guidance = EXCLUDED.guidance;
 INSERT INTO public.assessment_mark_points (question_id, position, text, marks, guidance)
-VALUES ($aq$aqa-functions-08$aq$, 5, $aq$The main program calls the subroutine with the three numbers and outputs the returned value$aq$, 1, $aq$$aq$)
+VALUES ($aq$aqa-functions-08$aq$, 5, $aq$Calls the subroutine and uses selection on the returned value to output Adult or Not adult$aq$, 1, $aq$$aq$)
 ON CONFLICT (question_id, position) DO UPDATE SET text = EXCLUDED.text, marks = EXCLUDED.marks, guidance = EXCLUDED.guidance;
 
-INSERT INTO public.assessment_questions (id, track, board, topic, marks, ability, answer_format, question)
-VALUES ($aq$aqa-files-01$aq$, 'gcse', $aq$aqa$aq$, $aq$files$aq$, 2, 1, $aq$text$aq$, $aq$Describe **one** difference between data stored in a variable and data stored in a text file. [2]$aq$)
-ON CONFLICT (id) DO UPDATE SET board = EXCLUDED.board, topic = EXCLUDED.topic, marks = EXCLUDED.marks,
+INSERT INTO public.assessment_questions (id, track, board, topic, concept, marks, ability, answer_format, question)
+VALUES ($aq$aqa-files-01$aq$, 'gcse', $aq$aqa$aq$, $aq$files$aq$, $aq$file-reasons$aq$, 2, 1, $aq$text$aq$, $aq$Describe **one** difference between data stored in a variable and data stored in a text file. [2]$aq$)
+ON CONFLICT (id) DO UPDATE SET board = EXCLUDED.board, topic = EXCLUDED.topic, concept = EXCLUDED.concept, marks = EXCLUDED.marks,
   ability = EXCLUDED.ability, answer_format = EXCLUDED.answer_format, question = EXCLUDED.question;
 DELETE FROM public.assessment_mark_points WHERE question_id = $aq$aqa-files-01$aq$ AND position > 2;
 INSERT INTO public.assessment_mark_points (question_id, position, text, marks, guidance)
@@ -2635,22 +2628,22 @@ INSERT INTO public.assessment_mark_points (question_id, position, text, marks, g
 VALUES ($aq$aqa-files-01$aq$, 2, $aq$Data in a file is kept (persistent) after the program ends$aq$, 1, $aq$Allow: files can be used again by the program or by other programs.$aq$)
 ON CONFLICT (question_id, position) DO UPDATE SET text = EXCLUDED.text, marks = EXCLUDED.marks, guidance = EXCLUDED.guidance;
 
-INSERT INTO public.assessment_questions (id, track, board, topic, marks, ability, answer_format, question)
-VALUES ($aq$aqa-files-02$aq$, 'gcse', $aq$aqa$aq$, $aq$files$aq$, 1, 1, $aq$text$aq$, $aq$State **one** thing that could go wrong if a program writes data to a file but does not close the file. [1]$aq$)
-ON CONFLICT (id) DO UPDATE SET board = EXCLUDED.board, topic = EXCLUDED.topic, marks = EXCLUDED.marks,
+INSERT INTO public.assessment_questions (id, track, board, topic, concept, marks, ability, answer_format, question)
+VALUES ($aq$aqa-files-02$aq$, 'gcse', $aq$aqa$aq$, $aq$files$aq$, $aq$file-close$aq$, 1, 1, $aq$text$aq$, $aq$State **one** thing that could go wrong if a program writes data to a file but does not close the file. [1]$aq$)
+ON CONFLICT (id) DO UPDATE SET board = EXCLUDED.board, topic = EXCLUDED.topic, concept = EXCLUDED.concept, marks = EXCLUDED.marks,
   ability = EXCLUDED.ability, answer_format = EXCLUDED.answer_format, question = EXCLUDED.question;
 DELETE FROM public.assessment_mark_points WHERE question_id = $aq$aqa-files-02$aq$ AND position > 1;
 INSERT INTO public.assessment_mark_points (question_id, position, text, marks, guidance)
 VALUES ($aq$aqa-files-02$aq$, 1, $aq$Some of the data may not be saved to the file$aq$, 1, $aq$Allow: the file could be corrupted / the file may stay locked so other programs cannot use it.$aq$)
 ON CONFLICT (question_id, position) DO UPDATE SET text = EXCLUDED.text, marks = EXCLUDED.marks, guidance = EXCLUDED.guidance;
 
-INSERT INTO public.assessment_questions (id, track, board, topic, marks, ability, answer_format, question)
-VALUES ($aq$aqa-files-03$aq$, 'gcse', $aq$aqa$aq$, $aq$files$aq$, 3, 2, $aq$text$aq$, $aq$A program reads a text file called `scores.txt` one line at a time and outputs each line. It stops when it reaches the end of the file.
+INSERT INTO public.assessment_questions (id, track, board, topic, concept, marks, ability, answer_format, question)
+VALUES ($aq$aqa-files-03$aq$, 'gcse', $aq$aqa$aq$, $aq$files$aq$, $aq$file-read-trace$aq$, 3, 2, $aq$text$aq$, $aq$A program reads a text file called `scores.txt` one line at a time and outputs each line. It stops when it reaches the end of the file.
 
 (a) State **two** operations the program must carry out on the file itself, one before and one after the lines are read. [2]
 
 (b) State how the program knows when to stop reading. [1]$aq$)
-ON CONFLICT (id) DO UPDATE SET board = EXCLUDED.board, topic = EXCLUDED.topic, marks = EXCLUDED.marks,
+ON CONFLICT (id) DO UPDATE SET board = EXCLUDED.board, topic = EXCLUDED.topic, concept = EXCLUDED.concept, marks = EXCLUDED.marks,
   ability = EXCLUDED.ability, answer_format = EXCLUDED.answer_format, question = EXCLUDED.question;
 DELETE FROM public.assessment_mark_points WHERE question_id = $aq$aqa-files-03$aq$ AND position > 3;
 INSERT INTO public.assessment_mark_points (question_id, position, text, marks, guidance)
@@ -2663,11 +2656,11 @@ INSERT INTO public.assessment_mark_points (question_id, position, text, marks, g
 VALUES ($aq$aqa-files-03$aq$, 3, $aq$(b) It checks whether the end of the file has been reached (there are no more lines to read)$aq$, 1, $aq$$aq$)
 ON CONFLICT (question_id, position) DO UPDATE SET text = EXCLUDED.text, marks = EXCLUDED.marks, guidance = EXCLUDED.guidance;
 
-INSERT INTO public.assessment_questions (id, track, board, topic, marks, ability, answer_format, question)
-VALUES ($aq$aqa-files-04$aq$, 'gcse', $aq$aqa$aq$, $aq$files$aq$, 4, 2, $aq$code$aq$, $aq$Write an algorithm that asks the user to enter the name of a pet and stores it in a file called `pets.txt`. [4]
+INSERT INTO public.assessment_questions (id, track, board, topic, concept, marks, ability, answer_format, question)
+VALUES ($aq$aqa-files-04$aq$, 'gcse', $aq$aqa$aq$, $aq$files$aq$, $aq$file-write$aq$, 4, 2, $aq$code$aq$, $aq$Write an algorithm that asks the user to enter the name of a pet and stores it in a file called `pets.txt`. [4]
 
 You may use pseudo-code or a high-level programming language.$aq$)
-ON CONFLICT (id) DO UPDATE SET board = EXCLUDED.board, topic = EXCLUDED.topic, marks = EXCLUDED.marks,
+ON CONFLICT (id) DO UPDATE SET board = EXCLUDED.board, topic = EXCLUDED.topic, concept = EXCLUDED.concept, marks = EXCLUDED.marks,
   ability = EXCLUDED.ability, answer_format = EXCLUDED.answer_format, question = EXCLUDED.question;
 DELETE FROM public.assessment_mark_points WHERE question_id = $aq$aqa-files-04$aq$ AND position > 4;
 INSERT INTO public.assessment_mark_points (question_id, position, text, marks, guidance)
@@ -2683,13 +2676,13 @@ INSERT INTO public.assessment_mark_points (question_id, position, text, marks, g
 VALUES ($aq$aqa-files-04$aq$, 4, $aq$Closes the file$aq$, 1, $aq$$aq$)
 ON CONFLICT (question_id, position) DO UPDATE SET text = EXCLUDED.text, marks = EXCLUDED.marks, guidance = EXCLUDED.guidance;
 
-INSERT INTO public.assessment_questions (id, track, board, topic, marks, ability, answer_format, question)
-VALUES ($aq$aqa-files-05$aq$, 'gcse', $aq$aqa$aq$, $aq$files$aq$, 5, 3, $aq$code$aq$, $aq$A text file called `prices.txt` contains one price on each line. A price may include pence, for example 2.75.
+INSERT INTO public.assessment_questions (id, track, board, topic, concept, marks, ability, answer_format, question)
+VALUES ($aq$aqa-files-05$aq$, 'gcse', $aq$aqa$aq$, $aq$files$aq$, $aq$file-read-total$aq$, 5, 3, $aq$code$aq$, $aq$A text file called `prices.txt` contains one price on each line. A price may include pence, for example 2.75.
 
 Write an algorithm that reads every price in the file and outputs the total of all the prices. [5]
 
 You may use pseudo-code or a high-level programming language.$aq$)
-ON CONFLICT (id) DO UPDATE SET board = EXCLUDED.board, topic = EXCLUDED.topic, marks = EXCLUDED.marks,
+ON CONFLICT (id) DO UPDATE SET board = EXCLUDED.board, topic = EXCLUDED.topic, concept = EXCLUDED.concept, marks = EXCLUDED.marks,
   ability = EXCLUDED.ability, answer_format = EXCLUDED.answer_format, question = EXCLUDED.question;
 DELETE FROM public.assessment_mark_points WHERE question_id = $aq$aqa-files-05$aq$ AND position > 5;
 INSERT INTO public.assessment_mark_points (question_id, position, text, marks, guidance)
@@ -2708,13 +2701,13 @@ INSERT INTO public.assessment_mark_points (question_id, position, text, marks, g
 VALUES ($aq$aqa-files-05$aq$, 5, $aq$Closes the file and outputs the total after the iteration$aq$, 1, $aq$$aq$)
 ON CONFLICT (question_id, position) DO UPDATE SET text = EXCLUDED.text, marks = EXCLUDED.marks, guidance = EXCLUDED.guidance;
 
-INSERT INTO public.assessment_questions (id, track, board, topic, marks, ability, answer_format, question)
-VALUES ($aq$aqa-files-06$aq$, 'gcse', $aq$aqa$aq$, $aq$files$aq$, 6, 3, $aq$code$aq$, $aq$A text file called `names.txt` contains one name on each line.
+INSERT INTO public.assessment_questions (id, track, board, topic, concept, marks, ability, answer_format, question)
+VALUES ($aq$aqa-files-06$aq$, 'gcse', $aq$aqa$aq$, $aq$files$aq$, $aq$file-filter$aq$, 6, 3, $aq$code$aq$, $aq$A text file called `names.txt` contains one name on each line.
 
 Write an algorithm that reads the file, outputs every name that has **more than 5 characters**, and then outputs how many names were output. [6]
 
 You may use pseudo-code or a high-level programming language.$aq$)
-ON CONFLICT (id) DO UPDATE SET board = EXCLUDED.board, topic = EXCLUDED.topic, marks = EXCLUDED.marks,
+ON CONFLICT (id) DO UPDATE SET board = EXCLUDED.board, topic = EXCLUDED.topic, concept = EXCLUDED.concept, marks = EXCLUDED.marks,
   ability = EXCLUDED.ability, answer_format = EXCLUDED.answer_format, question = EXCLUDED.question;
 DELETE FROM public.assessment_mark_points WHERE question_id = $aq$aqa-files-06$aq$ AND position > 6;
 INSERT INTO public.assessment_mark_points (question_id, position, text, marks, guidance)
@@ -2736,9 +2729,9 @@ INSERT INTO public.assessment_mark_points (question_id, position, text, marks, g
 VALUES ($aq$aqa-files-06$aq$, 6, $aq$Closes the file and outputs the count after the iteration$aq$, 1, $aq$$aq$)
 ON CONFLICT (question_id, position) DO UPDATE SET text = EXCLUDED.text, marks = EXCLUDED.marks, guidance = EXCLUDED.guidance;
 
-INSERT INTO public.assessment_questions (id, track, board, topic, marks, ability, answer_format, question)
-VALUES ($aq$aqa-searching-sorting-01$aq$, 'gcse', $aq$aqa$aq$, $aq$searching-sorting$aq$, 2, 1, $aq$text$aq$, $aq$State the names of **two** sorting algorithms. [2]$aq$)
-ON CONFLICT (id) DO UPDATE SET board = EXCLUDED.board, topic = EXCLUDED.topic, marks = EXCLUDED.marks,
+INSERT INTO public.assessment_questions (id, track, board, topic, concept, marks, ability, answer_format, question)
+VALUES ($aq$aqa-searching-sorting-01$aq$, 'gcse', $aq$aqa$aq$, $aq$searching-sorting$aq$, $aq$algorithm-names$aq$, 2, 1, $aq$text$aq$, $aq$State the names of **two** sorting algorithms. [2]$aq$)
+ON CONFLICT (id) DO UPDATE SET board = EXCLUDED.board, topic = EXCLUDED.topic, concept = EXCLUDED.concept, marks = EXCLUDED.marks,
   ability = EXCLUDED.ability, answer_format = EXCLUDED.answer_format, question = EXCLUDED.question;
 DELETE FROM public.assessment_mark_points WHERE question_id = $aq$aqa-searching-sorting-01$aq$ AND position > 3;
 INSERT INTO public.assessment_mark_points (question_id, position, text, marks, guidance)
@@ -2751,17 +2744,17 @@ INSERT INTO public.assessment_mark_points (question_id, position, text, marks, g
 VALUES ($aq$aqa-searching-sorting-01$aq$, 3, $aq$Insertion sort$aq$, 1, $aq$$aq$)
 ON CONFLICT (question_id, position) DO UPDATE SET text = EXCLUDED.text, marks = EXCLUDED.marks, guidance = EXCLUDED.guidance;
 
-INSERT INTO public.assessment_questions (id, track, board, topic, marks, ability, answer_format, question)
-VALUES ($aq$aqa-searching-sorting-02$aq$, 'gcse', $aq$aqa$aq$, $aq$searching-sorting$aq$, 1, 1, $aq$text$aq$, $aq$State the name of the searching algorithm that checks each item in a list in turn, starting from the first item. [1]$aq$)
-ON CONFLICT (id) DO UPDATE SET board = EXCLUDED.board, topic = EXCLUDED.topic, marks = EXCLUDED.marks,
+INSERT INTO public.assessment_questions (id, track, board, topic, concept, marks, ability, answer_format, question)
+VALUES ($aq$aqa-searching-sorting-02$aq$, 'gcse', $aq$aqa$aq$, $aq$searching-sorting$aq$, $aq$linear-search$aq$, 1, 1, $aq$text$aq$, $aq$State the name of the searching algorithm that checks each item in a list in turn, starting from the first item. [1]$aq$)
+ON CONFLICT (id) DO UPDATE SET board = EXCLUDED.board, topic = EXCLUDED.topic, concept = EXCLUDED.concept, marks = EXCLUDED.marks,
   ability = EXCLUDED.ability, answer_format = EXCLUDED.answer_format, question = EXCLUDED.question;
 DELETE FROM public.assessment_mark_points WHERE question_id = $aq$aqa-searching-sorting-02$aq$ AND position > 1;
 INSERT INTO public.assessment_mark_points (question_id, position, text, marks, guidance)
 VALUES ($aq$aqa-searching-sorting-02$aq$, 1, $aq$Linear search$aq$, 1, $aq$$aq$)
 ON CONFLICT (question_id, position) DO UPDATE SET text = EXCLUDED.text, marks = EXCLUDED.marks, guidance = EXCLUDED.guidance;
 
-INSERT INTO public.assessment_questions (id, track, board, topic, marks, ability, answer_format, question)
-VALUES ($aq$aqa-searching-sorting-03$aq$, 'gcse', $aq$aqa$aq$, $aq$searching-sorting$aq$, 3, 2, $aq$text$aq$, $aq$A list of numbers is stored in order:
+INSERT INTO public.assessment_questions (id, track, board, topic, concept, marks, ability, answer_format, question)
+VALUES ($aq$aqa-searching-sorting-03$aq$, 'gcse', $aq$aqa$aq$, $aq$searching-sorting$aq$, $aq$binary-search$aq$, 3, 2, $aq$text$aq$, $aq$A list of numbers is stored in order:
 
 [2, 6, 11, 15, 19, 24, 30, 35, 41]
 
@@ -2772,7 +2765,7 @@ A binary search is used to find the value 35. The first item is at position 0.
 (b) State the total number of items that are checked (including 35) before it is found. [1]
 
 (c) Explain why a binary search cannot be used on a list that is not in order. [1]$aq$)
-ON CONFLICT (id) DO UPDATE SET board = EXCLUDED.board, topic = EXCLUDED.topic, marks = EXCLUDED.marks,
+ON CONFLICT (id) DO UPDATE SET board = EXCLUDED.board, topic = EXCLUDED.topic, concept = EXCLUDED.concept, marks = EXCLUDED.marks,
   ability = EXCLUDED.ability, answer_format = EXCLUDED.answer_format, question = EXCLUDED.question;
 DELETE FROM public.assessment_mark_points WHERE question_id = $aq$aqa-searching-sorting-03$aq$ AND position > 3;
 INSERT INTO public.assessment_mark_points (question_id, position, text, marks, guidance)
@@ -2785,8 +2778,8 @@ INSERT INTO public.assessment_mark_points (question_id, position, text, marks, g
 VALUES ($aq$aqa-searching-sorting-03$aq$, 3, $aq$(c) It relies on knowing whether the target is higher or lower than the middle item so that half of the list can be ignored$aq$, 1, $aq$Allow: it would ignore the half of the list that contains the item.$aq$)
 ON CONFLICT (question_id, position) DO UPDATE SET text = EXCLUDED.text, marks = EXCLUDED.marks, guidance = EXCLUDED.guidance;
 
-INSERT INTO public.assessment_questions (id, track, board, topic, marks, ability, answer_format, question)
-VALUES ($aq$aqa-searching-sorting-04$aq$, 'gcse', $aq$aqa$aq$, $aq$searching-sorting$aq$, 4, 2, $aq$text$aq$, $aq$An insertion sort is used to sort this list into ascending order:
+INSERT INTO public.assessment_questions (id, track, board, topic, concept, marks, ability, answer_format, question)
+VALUES ($aq$aqa-searching-sorting-04$aq$, 'gcse', $aq$aqa$aq$, $aq$searching-sorting$aq$, $aq$insertion-sort$aq$, 4, 2, $aq$text$aq$, $aq$An insertion sort is used to sort this list into ascending order:
 
 [4, 9, 2, 6]
 
@@ -2797,7 +2790,7 @@ The sort takes each item in turn, starting with the second, and inserts it into 
 (b) Show the final sorted list. [1]
 
 (c) Describe how an insertion sort works. [2]$aq$)
-ON CONFLICT (id) DO UPDATE SET board = EXCLUDED.board, topic = EXCLUDED.topic, marks = EXCLUDED.marks,
+ON CONFLICT (id) DO UPDATE SET board = EXCLUDED.board, topic = EXCLUDED.topic, concept = EXCLUDED.concept, marks = EXCLUDED.marks,
   ability = EXCLUDED.ability, answer_format = EXCLUDED.answer_format, question = EXCLUDED.question;
 DELETE FROM public.assessment_mark_points WHERE question_id = $aq$aqa-searching-sorting-04$aq$ AND position > 4;
 INSERT INTO public.assessment_mark_points (question_id, position, text, marks, guidance)
@@ -2813,13 +2806,13 @@ INSERT INTO public.assessment_mark_points (question_id, position, text, marks, g
 VALUES ($aq$aqa-searching-sorting-04$aq$, 4, $aq$(c) It is inserted into the correct position in the sorted part of the list (by moving larger items along)$aq$, 1, $aq$$aq$)
 ON CONFLICT (question_id, position) DO UPDATE SET text = EXCLUDED.text, marks = EXCLUDED.marks, guidance = EXCLUDED.guidance;
 
-INSERT INTO public.assessment_questions (id, track, board, topic, marks, ability, answer_format, question)
-VALUES ($aq$aqa-searching-sorting-05$aq$, 'gcse', $aq$aqa$aq$, $aq$searching-sorting$aq$, 5, 3, $aq$code$aq$, $aq$An array called `names` stores a list of names.
+INSERT INTO public.assessment_questions (id, track, board, topic, concept, marks, ability, answer_format, question)
+VALUES ($aq$aqa-searching-sorting-05$aq$, 'gcse', $aq$aqa$aq$, $aq$searching-sorting$aq$, $aq$linear-search$aq$, 5, 3, $aq$code$aq$, $aq$An array called `names` stores a list of names.
 
 Write an algorithm that uses a **linear search** to look for a name entered by the user. The algorithm must output `Found` if the name is in the array or `Not found` if it is not, followed by how many items in the array were checked. [5]
 
 You may use pseudo-code or a high-level programming language.$aq$)
-ON CONFLICT (id) DO UPDATE SET board = EXCLUDED.board, topic = EXCLUDED.topic, marks = EXCLUDED.marks,
+ON CONFLICT (id) DO UPDATE SET board = EXCLUDED.board, topic = EXCLUDED.topic, concept = EXCLUDED.concept, marks = EXCLUDED.marks,
   ability = EXCLUDED.ability, answer_format = EXCLUDED.answer_format, question = EXCLUDED.question;
 DELETE FROM public.assessment_mark_points WHERE question_id = $aq$aqa-searching-sorting-05$aq$ AND position > 5;
 INSERT INTO public.assessment_mark_points (question_id, position, text, marks, guidance)
@@ -2838,9 +2831,9 @@ INSERT INTO public.assessment_mark_points (question_id, position, text, marks, g
 VALUES ($aq$aqa-searching-sorting-05$aq$, 5, $aq$Outputs Found or Not found (Not found only after all items are checked) and the number checked$aq$, 1, $aq$$aq$)
 ON CONFLICT (question_id, position) DO UPDATE SET text = EXCLUDED.text, marks = EXCLUDED.marks, guidance = EXCLUDED.guidance;
 
-INSERT INTO public.assessment_questions (id, track, board, topic, marks, ability, answer_format, question)
-VALUES ($aq$aqa-searching-sorting-06$aq$, 'gcse', $aq$aqa$aq$, $aq$searching-sorting$aq$, 6, 3, $aq$text$aq$, $aq$Describe how a **bubble sort** works. [6]$aq$)
-ON CONFLICT (id) DO UPDATE SET board = EXCLUDED.board, topic = EXCLUDED.topic, marks = EXCLUDED.marks,
+INSERT INTO public.assessment_questions (id, track, board, topic, concept, marks, ability, answer_format, question)
+VALUES ($aq$aqa-searching-sorting-06$aq$, 'gcse', $aq$aqa$aq$, $aq$searching-sorting$aq$, $aq$bubble-sort$aq$, 6, 3, $aq$text$aq$, $aq$Describe how a **bubble sort** works. [6]$aq$)
+ON CONFLICT (id) DO UPDATE SET board = EXCLUDED.board, topic = EXCLUDED.topic, concept = EXCLUDED.concept, marks = EXCLUDED.marks,
   ability = EXCLUDED.ability, answer_format = EXCLUDED.answer_format, question = EXCLUDED.question;
 DELETE FROM public.assessment_mark_points WHERE question_id = $aq$aqa-searching-sorting-06$aq$ AND position > 6;
 INSERT INTO public.assessment_mark_points (question_id, position, text, marks, guidance)
@@ -2862,9 +2855,9 @@ INSERT INTO public.assessment_mark_points (question_id, position, text, marks, g
 VALUES ($aq$aqa-searching-sorting-06$aq$, 6, $aq$Stops when a complete pass is made with no swaps$aq$, 1, $aq$$aq$)
 ON CONFLICT (question_id, position) DO UPDATE SET text = EXCLUDED.text, marks = EXCLUDED.marks, guidance = EXCLUDED.guidance;
 
-INSERT INTO public.assessment_questions (id, track, board, topic, marks, ability, answer_format, question)
-VALUES ($aq$aqa-robust-programs-01$aq$, 'gcse', $aq$aqa$aq$, $aq$robust-programs$aq$, 2, 1, $aq$text$aq$, $aq$State what is meant by **input validation**. [2]$aq$)
-ON CONFLICT (id) DO UPDATE SET board = EXCLUDED.board, topic = EXCLUDED.topic, marks = EXCLUDED.marks,
+INSERT INTO public.assessment_questions (id, track, board, topic, concept, marks, ability, answer_format, question)
+VALUES ($aq$aqa-robust-programs-01$aq$, 'gcse', $aq$aqa$aq$, $aq$robust-programs$aq$, $aq$validation-types$aq$, 2, 1, $aq$text$aq$, $aq$State what is meant by **input validation**. [2]$aq$)
+ON CONFLICT (id) DO UPDATE SET board = EXCLUDED.board, topic = EXCLUDED.topic, concept = EXCLUDED.concept, marks = EXCLUDED.marks,
   ability = EXCLUDED.ability, answer_format = EXCLUDED.answer_format, question = EXCLUDED.question;
 DELETE FROM public.assessment_mark_points WHERE question_id = $aq$aqa-robust-programs-01$aq$ AND position > 2;
 INSERT INTO public.assessment_mark_points (question_id, position, text, marks, guidance)
@@ -2874,9 +2867,9 @@ INSERT INTO public.assessment_mark_points (question_id, position, text, marks, g
 VALUES ($aq$aqa-robust-programs-01$aq$, 2, $aq$...to make sure it is reasonable / acceptable before the program uses it$aq$, 1, $aq$Do not allow: checks the data is correct / true.$aq$)
 ON CONFLICT (question_id, position) DO UPDATE SET text = EXCLUDED.text, marks = EXCLUDED.marks, guidance = EXCLUDED.guidance;
 
-INSERT INTO public.assessment_questions (id, track, board, topic, marks, ability, answer_format, question)
-VALUES ($aq$aqa-robust-programs-02$aq$, 'gcse', $aq$aqa$aq$, $aq$robust-programs$aq$, 2, 1, $aq$text$aq$, $aq$State **two** ways a programmer can make their code easier to read and understand. [2]$aq$)
-ON CONFLICT (id) DO UPDATE SET board = EXCLUDED.board, topic = EXCLUDED.topic, marks = EXCLUDED.marks,
+INSERT INTO public.assessment_questions (id, track, board, topic, concept, marks, ability, answer_format, question)
+VALUES ($aq$aqa-robust-programs-02$aq$, 'gcse', $aq$aqa$aq$, $aq$robust-programs$aq$, $aq$maintainability$aq$, 2, 1, $aq$text$aq$, $aq$State **two** ways a programmer can make their code easier to read and understand. [2]$aq$)
+ON CONFLICT (id) DO UPDATE SET board = EXCLUDED.board, topic = EXCLUDED.topic, concept = EXCLUDED.concept, marks = EXCLUDED.marks,
   ability = EXCLUDED.ability, answer_format = EXCLUDED.answer_format, question = EXCLUDED.question;
 DELETE FROM public.assessment_mark_points WHERE question_id = $aq$aqa-robust-programs-02$aq$ AND position > 4;
 INSERT INTO public.assessment_mark_points (question_id, position, text, marks, guidance)
@@ -2892,15 +2885,15 @@ INSERT INTO public.assessment_mark_points (question_id, position, text, marks, g
 VALUES ($aq$aqa-robust-programs-02$aq$, 4, $aq$Use white space / blank lines to separate sections$aq$, 1, $aq$Allow: use subroutines to break the code into smaller parts.$aq$)
 ON CONFLICT (question_id, position) DO UPDATE SET text = EXCLUDED.text, marks = EXCLUDED.marks, guidance = EXCLUDED.guidance;
 
-INSERT INTO public.assessment_questions (id, track, board, topic, marks, ability, answer_format, question)
-VALUES ($aq$aqa-robust-programs-03$aq$, 'gcse', $aq$aqa$aq$, $aq$robust-programs$aq$, 3, 2, $aq$text$aq$, $aq$A program accepts a test mark. The mark must be a whole number from 0 to 50 inclusive.
+INSERT INTO public.assessment_questions (id, track, board, topic, concept, marks, ability, answer_format, question)
+VALUES ($aq$aqa-robust-programs-03$aq$, 'gcse', $aq$aqa$aq$, $aq$robust-programs$aq$, $aq$test-data$aq$, 3, 2, $aq$text$aq$, $aq$A program accepts a test mark. The mark must be a whole number from 0 to 50 inclusive.
 
 (a) State **one** example of normal test data. [1]
 
 (b) State **one** example of boundary test data. [1]
 
 (c) State **one** example of erroneous test data. [1]$aq$)
-ON CONFLICT (id) DO UPDATE SET board = EXCLUDED.board, topic = EXCLUDED.topic, marks = EXCLUDED.marks,
+ON CONFLICT (id) DO UPDATE SET board = EXCLUDED.board, topic = EXCLUDED.topic, concept = EXCLUDED.concept, marks = EXCLUDED.marks,
   ability = EXCLUDED.ability, answer_format = EXCLUDED.answer_format, question = EXCLUDED.question;
 DELETE FROM public.assessment_mark_points WHERE question_id = $aq$aqa-robust-programs-03$aq$ AND position > 3;
 INSERT INTO public.assessment_mark_points (question_id, position, text, marks, guidance)
@@ -2913,11 +2906,11 @@ INSERT INTO public.assessment_mark_points (question_id, position, text, marks, g
 VALUES ($aq$aqa-robust-programs-03$aq$, 3, $aq$(c) A value of the wrong data type, such as a word (e.g. "abc") or a decimal (e.g. 12.5)$aq$, 1, $aq$Do not allow a whole number outside the range.$aq$)
 ON CONFLICT (question_id, position) DO UPDATE SET text = EXCLUDED.text, marks = EXCLUDED.marks, guidance = EXCLUDED.guidance;
 
-INSERT INTO public.assessment_questions (id, track, board, topic, marks, ability, answer_format, question)
-VALUES ($aq$aqa-robust-programs-04$aq$, 'gcse', $aq$aqa$aq$, $aq$robust-programs$aq$, 4, 2, $aq$text$aq$, $aq$(a) Explain why a login system limits the number of password attempts a user is allowed. [2]
+INSERT INTO public.assessment_questions (id, track, board, topic, concept, marks, ability, answer_format, question)
+VALUES ($aq$aqa-robust-programs-04$aq$, 'gcse', $aq$aqa$aq$, $aq$robust-programs$aq$, $aq$authentication$aq$, 4, 2, $aq$text$aq$, $aq$(a) Explain why a login system limits the number of password attempts a user is allowed. [2]
 
 (b) Describe what is meant by **two-factor authentication**. [2]$aq$)
-ON CONFLICT (id) DO UPDATE SET board = EXCLUDED.board, topic = EXCLUDED.topic, marks = EXCLUDED.marks,
+ON CONFLICT (id) DO UPDATE SET board = EXCLUDED.board, topic = EXCLUDED.topic, concept = EXCLUDED.concept, marks = EXCLUDED.marks,
   ability = EXCLUDED.ability, answer_format = EXCLUDED.answer_format, question = EXCLUDED.question;
 DELETE FROM public.assessment_mark_points WHERE question_id = $aq$aqa-robust-programs-04$aq$ AND position > 4;
 INSERT INTO public.assessment_mark_points (question_id, position, text, marks, guidance)
@@ -2933,13 +2926,13 @@ INSERT INTO public.assessment_mark_points (question_id, position, text, marks, g
 VALUES ($aq$aqa-robust-programs-04$aq$, 4, $aq$(b) An example, such as a password and a code sent to their phone$aq$, 1, $aq$Allow any correct example of two different factors.$aq$)
 ON CONFLICT (question_id, position) DO UPDATE SET text = EXCLUDED.text, marks = EXCLUDED.marks, guidance = EXCLUDED.guidance;
 
-INSERT INTO public.assessment_questions (id, track, board, topic, marks, ability, answer_format, question)
-VALUES ($aq$aqa-robust-programs-05$aq$, 'gcse', $aq$aqa$aq$, $aq$robust-programs$aq$, 5, 3, $aq$code$aq$, $aq$A survey asks users to give a rating from 1 to 5.
+INSERT INTO public.assessment_questions (id, track, board, topic, concept, marks, ability, answer_format, question)
+VALUES ($aq$aqa-robust-programs-05$aq$, 'gcse', $aq$aqa$aq$, $aq$robust-programs$aq$, $aq$repeat-until-valid$aq$, 5, 3, $aq$code$aq$, $aq$A survey asks users to give a rating from 1 to 5.
 
 Write an algorithm that asks the user to enter a rating and keeps asking until a whole number from 1 to 5 is entered. When a valid rating has been entered the algorithm outputs `Thank you`. [5]
 
 You may use pseudo-code or a high-level programming language.$aq$)
-ON CONFLICT (id) DO UPDATE SET board = EXCLUDED.board, topic = EXCLUDED.topic, marks = EXCLUDED.marks,
+ON CONFLICT (id) DO UPDATE SET board = EXCLUDED.board, topic = EXCLUDED.topic, concept = EXCLUDED.concept, marks = EXCLUDED.marks,
   ability = EXCLUDED.ability, answer_format = EXCLUDED.answer_format, question = EXCLUDED.question;
 DELETE FROM public.assessment_mark_points WHERE question_id = $aq$aqa-robust-programs-05$aq$ AND position > 5;
 INSERT INTO public.assessment_mark_points (question_id, position, text, marks, guidance)
@@ -2958,8 +2951,8 @@ INSERT INTO public.assessment_mark_points (question_id, position, text, marks, g
 VALUES ($aq$aqa-robust-programs-05$aq$, 5, $aq$Outputs Thank you once, after a valid rating has been entered$aq$, 1, $aq$$aq$)
 ON CONFLICT (question_id, position) DO UPDATE SET text = EXCLUDED.text, marks = EXCLUDED.marks, guidance = EXCLUDED.guidance;
 
-INSERT INTO public.assessment_questions (id, track, board, topic, marks, ability, answer_format, question)
-VALUES ($aq$aqa-robust-programs-06$aq$, 'gcse', $aq$aqa$aq$, $aq$robust-programs$aq$, 6, 3, $aq$text$aq$, $aq$(a) State the difference between a **syntax error** and a **logic error**. [2]
+INSERT INTO public.assessment_questions (id, track, board, topic, concept, marks, ability, answer_format, question)
+VALUES ($aq$aqa-robust-programs-06$aq$, 'gcse', $aq$aqa$aq$, $aq$robust-programs$aq$, $aq$error-types$aq$, 6, 3, $aq$text$aq$, $aq$(a) State the difference between a **syntax error** and a **logic error**. [2]
 
 (b) A programmer writes this line to work out the average of three marks:
 
@@ -2970,7 +2963,7 @@ average ← a + b + c / 3
 Describe the error in this line and how to correct it. [2]
 
 (c) Explain what is meant by **final (terminal) testing**. [2]$aq$)
-ON CONFLICT (id) DO UPDATE SET board = EXCLUDED.board, topic = EXCLUDED.topic, marks = EXCLUDED.marks,
+ON CONFLICT (id) DO UPDATE SET board = EXCLUDED.board, topic = EXCLUDED.topic, concept = EXCLUDED.concept, marks = EXCLUDED.marks,
   ability = EXCLUDED.ability, answer_format = EXCLUDED.answer_format, question = EXCLUDED.question;
 DELETE FROM public.assessment_mark_points WHERE question_id = $aq$aqa-robust-programs-06$aq$ AND position > 6;
 INSERT INTO public.assessment_mark_points (question_id, position, text, marks, guidance)
@@ -2992,13 +2985,13 @@ INSERT INTO public.assessment_mark_points (question_id, position, text, marks, g
 VALUES ($aq$aqa-robust-programs-06$aq$, 6, $aq$(c) ...to check it works as intended / meets the requirements before it is used$aq$, 1, $aq$Allow: carried out before it is released.$aq$)
 ON CONFLICT (question_id, position) DO UPDATE SET text = EXCLUDED.text, marks = EXCLUDED.marks, guidance = EXCLUDED.guidance;
 
-INSERT INTO public.assessment_questions (id, track, board, topic, marks, ability, answer_format, question)
-VALUES ($aq$aqa-databases-01$aq$, 'gcse', $aq$aqa$aq$, $aq$databases$aq$, 2, 1, $aq$text$aq$, $aq$A database table stores data about students.
+INSERT INTO public.assessment_questions (id, track, board, topic, concept, marks, ability, answer_format, question)
+VALUES ($aq$aqa-databases-01$aq$, 'gcse', $aq$aqa$aq$, $aq$databases$aq$, $aq$db-terms$aq$, 2, 1, $aq$text$aq$, $aq$A database table stores data about students.
 
 (a) State the name given to a **column** in a database table. [1]
 
 (b) State the name given to a **row** in a database table. [1]$aq$)
-ON CONFLICT (id) DO UPDATE SET board = EXCLUDED.board, topic = EXCLUDED.topic, marks = EXCLUDED.marks,
+ON CONFLICT (id) DO UPDATE SET board = EXCLUDED.board, topic = EXCLUDED.topic, concept = EXCLUDED.concept, marks = EXCLUDED.marks,
   ability = EXCLUDED.ability, answer_format = EXCLUDED.answer_format, question = EXCLUDED.question;
 DELETE FROM public.assessment_mark_points WHERE question_id = $aq$aqa-databases-01$aq$ AND position > 2;
 INSERT INTO public.assessment_mark_points (question_id, position, text, marks, guidance)
@@ -3008,17 +3001,17 @@ INSERT INTO public.assessment_mark_points (question_id, position, text, marks, g
 VALUES ($aq$aqa-databases-01$aq$, 2, $aq$(b) Record$aq$, 1, $aq$Allow: tuple / entry.$aq$)
 ON CONFLICT (question_id, position) DO UPDATE SET text = EXCLUDED.text, marks = EXCLUDED.marks, guidance = EXCLUDED.guidance;
 
-INSERT INTO public.assessment_questions (id, track, board, topic, marks, ability, answer_format, question)
-VALUES ($aq$aqa-databases-02$aq$, 'gcse', $aq$aqa$aq$, $aq$databases$aq$, 1, 1, $aq$text$aq$, $aq$State the purpose of a **primary key** in a database table. [1]$aq$)
-ON CONFLICT (id) DO UPDATE SET board = EXCLUDED.board, topic = EXCLUDED.topic, marks = EXCLUDED.marks,
+INSERT INTO public.assessment_questions (id, track, board, topic, concept, marks, ability, answer_format, question)
+VALUES ($aq$aqa-databases-02$aq$, 'gcse', $aq$aqa$aq$, $aq$databases$aq$, $aq$primary-key$aq$, 1, 1, $aq$text$aq$, $aq$State the purpose of a **primary key** in a database table. [1]$aq$)
+ON CONFLICT (id) DO UPDATE SET board = EXCLUDED.board, topic = EXCLUDED.topic, concept = EXCLUDED.concept, marks = EXCLUDED.marks,
   ability = EXCLUDED.ability, answer_format = EXCLUDED.answer_format, question = EXCLUDED.question;
 DELETE FROM public.assessment_mark_points WHERE question_id = $aq$aqa-databases-02$aq$ AND position > 1;
 INSERT INTO public.assessment_mark_points (question_id, position, text, marks, guidance)
 VALUES ($aq$aqa-databases-02$aq$, 1, $aq$It uniquely identifies each record in the table$aq$, 1, $aq$Allow: no two records have the same primary key.$aq$)
 ON CONFLICT (question_id, position) DO UPDATE SET text = EXCLUDED.text, marks = EXCLUDED.marks, guidance = EXCLUDED.guidance;
 
-INSERT INTO public.assessment_questions (id, track, board, topic, marks, ability, answer_format, question)
-VALUES ($aq$aqa-databases-03$aq$, 'gcse', $aq$aqa$aq$, $aq$databases$aq$, 3, 2, $aq$text$aq$, $aq$A table called `Students` is shown.
+INSERT INTO public.assessment_questions (id, track, board, topic, concept, marks, ability, answer_format, question)
+VALUES ($aq$aqa-databases-03$aq$, 'gcse', $aq$aqa$aq$, $aq$databases$aq$, $aq$sql-read$aq$, 3, 2, $aq$text$aq$, $aq$A table called `Students` is shown.
 
 | StudentID | Name | Year | Score |
 |---|---|---|---|
@@ -3040,7 +3033,7 @@ SELECT Name FROM Students WHERE Score > 60 ORDER BY Score DESC
 ```
 
 (c) State the number of fields in the table. [1]$aq$)
-ON CONFLICT (id) DO UPDATE SET board = EXCLUDED.board, topic = EXCLUDED.topic, marks = EXCLUDED.marks,
+ON CONFLICT (id) DO UPDATE SET board = EXCLUDED.board, topic = EXCLUDED.topic, concept = EXCLUDED.concept, marks = EXCLUDED.marks,
   ability = EXCLUDED.ability, answer_format = EXCLUDED.answer_format, question = EXCLUDED.question;
 DELETE FROM public.assessment_mark_points WHERE question_id = $aq$aqa-databases-03$aq$ AND position > 3;
 INSERT INTO public.assessment_mark_points (question_id, position, text, marks, guidance)
@@ -3053,8 +3046,8 @@ INSERT INTO public.assessment_mark_points (question_id, position, text, marks, g
 VALUES ($aq$aqa-databases-03$aq$, 3, $aq$(c) 4$aq$, 1, $aq$$aq$)
 ON CONFLICT (question_id, position) DO UPDATE SET text = EXCLUDED.text, marks = EXCLUDED.marks, guidance = EXCLUDED.guidance;
 
-INSERT INTO public.assessment_questions (id, track, board, topic, marks, ability, answer_format, question)
-VALUES ($aq$aqa-databases-04$aq$, 'gcse', $aq$aqa$aq$, $aq$databases$aq$, 4, 2, $aq$code$aq$, $aq$Use the `Students` table below to answer this question.
+INSERT INTO public.assessment_questions (id, track, board, topic, concept, marks, ability, answer_format, question)
+VALUES ($aq$aqa-databases-04$aq$, 'gcse', $aq$aqa$aq$, $aq$databases$aq$, $aq$sql-read$aq$, 4, 2, $aq$code$aq$, $aq$Use the `Students` table below to answer this question.
 
 | StudentID | Name | Year | Score |
 |---|---|---|---|
@@ -3068,7 +3061,7 @@ VALUES ($aq$aqa-databases-04$aq$, 'gcse', $aq$aqa$aq$, $aq$databases$aq$, 4, 2, 
 (b) Write an SQL statement to display only the names of all the students, in alphabetical order. [2]
 
 (c) State the SQL keyword that is used to remove a record from a table. [1]$aq$)
-ON CONFLICT (id) DO UPDATE SET board = EXCLUDED.board, topic = EXCLUDED.topic, marks = EXCLUDED.marks,
+ON CONFLICT (id) DO UPDATE SET board = EXCLUDED.board, topic = EXCLUDED.topic, concept = EXCLUDED.concept, marks = EXCLUDED.marks,
   ability = EXCLUDED.ability, answer_format = EXCLUDED.answer_format, question = EXCLUDED.question;
 DELETE FROM public.assessment_mark_points WHERE question_id = $aq$aqa-databases-04$aq$ AND position > 4;
 INSERT INTO public.assessment_mark_points (question_id, position, text, marks, guidance)
@@ -3084,13 +3077,13 @@ INSERT INTO public.assessment_mark_points (question_id, position, text, marks, g
 VALUES ($aq$aqa-databases-04$aq$, 4, $aq$(c) DELETE$aq$, 1, $aq$$aq$)
 ON CONFLICT (question_id, position) DO UPDATE SET text = EXCLUDED.text, marks = EXCLUDED.marks, guidance = EXCLUDED.guidance;
 
-INSERT INTO public.assessment_questions (id, track, board, topic, marks, ability, answer_format, question)
-VALUES ($aq$aqa-databases-05$aq$, 'gcse', $aq$aqa$aq$, $aq$databases$aq$, 5, 3, $aq$code$aq$, $aq$The `Students` table has the fields `StudentID`, `Name`, `Year` and `Score`.
+INSERT INTO public.assessment_questions (id, track, board, topic, concept, marks, ability, answer_format, question)
+VALUES ($aq$aqa-databases-05$aq$, 'gcse', $aq$aqa$aq$, $aq$databases$aq$, $aq$sql-change$aq$, 5, 3, $aq$code$aq$, $aq$The `Students` table has the fields `StudentID`, `Name`, `Year` and `Score`.
 
 (a) Write an SQL statement to add a new student with the values 5, Ella, 9 and 71. [2]
 
 (b) Write an SQL statement to change the score of the student with a `StudentID` of 4 to 60. [3]$aq$)
-ON CONFLICT (id) DO UPDATE SET board = EXCLUDED.board, topic = EXCLUDED.topic, marks = EXCLUDED.marks,
+ON CONFLICT (id) DO UPDATE SET board = EXCLUDED.board, topic = EXCLUDED.topic, concept = EXCLUDED.concept, marks = EXCLUDED.marks,
   ability = EXCLUDED.ability, answer_format = EXCLUDED.answer_format, question = EXCLUDED.question;
 DELETE FROM public.assessment_mark_points WHERE question_id = $aq$aqa-databases-05$aq$ AND position > 5;
 INSERT INTO public.assessment_mark_points (question_id, position, text, marks, guidance)
@@ -3109,8 +3102,8 @@ INSERT INTO public.assessment_mark_points (question_id, position, text, marks, g
 VALUES ($aq$aqa-databases-05$aq$, 5, $aq$(b) WHERE StudentID = 4$aq$, 1, $aq$Do not award if the WHERE clause is missing (it would change every record).$aq$)
 ON CONFLICT (question_id, position) DO UPDATE SET text = EXCLUDED.text, marks = EXCLUDED.marks, guidance = EXCLUDED.guidance;
 
-INSERT INTO public.assessment_questions (id, track, board, topic, marks, ability, answer_format, question)
-VALUES ($aq$aqa-databases-06$aq$, 'gcse', $aq$aqa$aq$, $aq$databases$aq$, 6, 3, $aq$text$aq$, $aq$A school database has two tables.
+INSERT INTO public.assessment_questions (id, track, board, topic, concept, marks, ability, answer_format, question)
+VALUES ($aq$aqa-databases-06$aq$, 'gcse', $aq$aqa$aq$, $aq$databases$aq$, $aq$relational-design$aq$, 6, 3, $aq$text$aq$, $aq$A school database has two tables.
 
 **Students**
 
@@ -3132,7 +3125,7 @@ VALUES ($aq$aqa-databases-06$aq$, 'gcse', $aq$aqa$aq$, $aq$databases$aq$, 6, 3, 
 (b) Explain the purpose of a **foreign key**. [2]
 
 (c) Give **three** advantages of storing the data in two linked tables instead of one table with the tutor's name repeated for every student. [3]$aq$)
-ON CONFLICT (id) DO UPDATE SET board = EXCLUDED.board, topic = EXCLUDED.topic, marks = EXCLUDED.marks,
+ON CONFLICT (id) DO UPDATE SET board = EXCLUDED.board, topic = EXCLUDED.topic, concept = EXCLUDED.concept, marks = EXCLUDED.marks,
   ability = EXCLUDED.ability, answer_format = EXCLUDED.answer_format, question = EXCLUDED.question;
 DELETE FROM public.assessment_mark_points WHERE question_id = $aq$aqa-databases-06$aq$ AND position > 7;
 INSERT INTO public.assessment_mark_points (question_id, position, text, marks, guidance)
