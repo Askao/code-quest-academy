@@ -11,6 +11,7 @@
  */
 
 import { timingSafeEqual } from "node:crypto";
+import { ctaButton, escapeHtml, sendResendEmail, shellHtml } from "./email-shell";
 
 export const REPORTS_HOOK_PATH = "/api/reports/send-fortnightly";
 
@@ -39,46 +40,11 @@ type StudentSummary = {
   streakDays: number;
 };
 
-async function sendResendEmail(to: string, subject: string, html: string): Promise<boolean> {
-  const resendKey = process.env["RESEND_API_KEY"];
-  if (!resendKey) {
-    console.error("[reports] Missing RESEND_API_KEY");
-    return false;
-  }
-  const res = await fetch("https://api.resend.com/emails", {
-    method: "POST",
-    headers: { Authorization: `Bearer ${resendKey}`, "content-type": "application/json" },
-    body: JSON.stringify({ from: "H-Code <noreply@hcodeacademy.co.uk>", to, subject, html }),
-  });
-  if (!res.ok) {
-    console.error("[reports] Resend send failed:", res.status, await res.text());
-  }
-  return res.ok;
-}
-
-function shellHtml(bodyHtml: string): string {
-  return `<!doctype html>
-<html>
-  <body style="font-family: system-ui, sans-serif; background: #0d0d0f; color: #eee; padding: 32px 16px; margin: 0;">
-    <div style="max-width: 560px; margin: 0 auto;">
-      <p style="color: #e8c27a; font-family: monospace; font-size: 14px; margin: 0 0 24px;">&gt;_ H-Code</p>
-      ${bodyHtml}
-    </div>
-  </body>
-</html>`;
-}
-
 function statRow(label: string, value: string): string {
   return `<tr>
     <td style="padding: 8px 0; color: #ccc;">${label}</td>
     <td style="padding: 8px 0; text-align: right; font-weight: 600;">${value}</td>
   </tr>`;
-}
-
-function ctaButton(href: string, label: string): string {
-  return `<p style="margin: 24px 0 0;">
-    <a href="${href}" style="display: inline-block; background: #e8c27a; color: #111; padding: 12px 20px; border-radius: 6px; text-decoration: none; font-weight: 600;">${label}</a>
-  </p>`;
 }
 
 function studentEmailHtml(summary: StudentSummary, siteUrl: string): string {
@@ -88,7 +54,7 @@ function studentEmailHtml(summary: StudentSummary, siteUrl: string): string {
     : "You haven't practised in the last two weeks - here's a nudge to jump back in.";
   return shellHtml(`
     <h1 style="font-size: 22px; margin: 0 0 8px;">Your H-Code report</h1>
-    <p style="color: #ccc; margin: 0 0 20px;">Hi ${summary.name}, ${message}</p>
+    <p style="color: #ccc; margin: 0 0 20px;">Hi ${escapeHtml(summary.name)}, ${message}</p>
     <table style="width: 100%; border-collapse: collapse; border-top: 1px solid #333; border-bottom: 1px solid #333;">
       ${statRow("XP gained (last 14 days)", String(summary.xpGained))}
       ${statRow("Challenges passed (last 14 days)", String(summary.challengesPassed))}
@@ -112,14 +78,14 @@ function teacherEmailHtml(
         .map((s) => {
           const inactive = s.xpGained === 0 && s.challengesPassed === 0;
           return `<tr style="${inactive ? "color: #f1a3a3;" : ""}">
-            <td style="padding: 6px 0;">${s.name}${inactive ? " (no activity)" : ""}</td>
+            <td style="padding: 6px 0;">${escapeHtml(s.name)}${inactive ? " (no activity)" : ""}</td>
             <td style="padding: 6px 0; text-align: right;">${s.xpGained} XP</td>
             <td style="padding: 6px 0; text-align: right;">${s.challengesPassed} passed</td>
             <td style="padding: 6px 0; text-align: right;">${s.streakDays}🔥</td>
           </tr>`;
         })
         .join("");
-      return `<h2 style="font-size: 16px; margin: 24px 0 8px;">${c.name}</h2>
+      return `<h2 style="font-size: 16px; margin: 24px 0 8px;">${escapeHtml(c.name)}</h2>
         <table style="width: 100%; border-collapse: collapse; font-size: 14px; border-top: 1px solid #333;">
           ${rows || `<tr><td style="padding: 6px 0; color: #888;">No students in this class yet.</td></tr>`}
         </table>`;
@@ -127,7 +93,7 @@ function teacherEmailHtml(
     .join("");
   return shellHtml(`
     <h1 style="font-size: 22px; margin: 0 0 8px;">Your classes - last 14 days</h1>
-    <p style="color: #ccc; margin: 0 0 8px;">Hi ${teacherName}, here's how your students got on.</p>
+    <p style="color: #ccc; margin: 0 0 8px;">Hi ${escapeHtml(teacherName)}, here's how your students got on.</p>
     ${classesHtml}
     ${ctaButton(`${siteUrl}/teacher`, "Go to the Teacher area")}
   `);

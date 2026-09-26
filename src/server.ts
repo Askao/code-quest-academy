@@ -4,6 +4,12 @@ import { consumeLastCapturedError } from "./lib/error-capture";
 import { renderErrorPage } from "./lib/error-page";
 import { AUTH_EMAIL_HOOK_PATH, handleAuthEmailHook } from "./lib/auth-email-hook.server";
 import { REPORTS_HOOK_PATH, handleSendFortnightlyReports } from "./lib/reports.server";
+import {
+  HOMEWORK_NOTIFY_PATH,
+  HOMEWORK_REMINDERS_PATH,
+  handleHomeworkNotify,
+  handleHomeworkReminders,
+} from "./lib/homework-emails.server";
 
 type ServerEntry = {
   fetch: (request: Request, env: unknown, ctx: unknown) => Promise<Response> | Response;
@@ -79,6 +85,12 @@ export default {
         }
         if (pathname === REPORTS_HOOK_PATH) {
           return await handleSendFortnightlyReports(request);
+        }
+        if (pathname === HOMEWORK_NOTIFY_PATH) {
+          return await handleHomeworkNotify(request);
+        }
+        if (pathname === HOMEWORK_REMINDERS_PATH) {
+          return await handleHomeworkReminders(request);
         }
       } catch (error) {
         console.error(error);

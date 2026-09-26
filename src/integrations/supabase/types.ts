@@ -469,6 +469,35 @@ export type Database = {
           },
         ]
       }
+      homework_emails: {
+        Row: {
+          homework_id: string
+          kind: string
+          sent_at: string
+          student_id: string
+        }
+        Insert: {
+          homework_id: string
+          kind: string
+          sent_at?: string
+          student_id: string
+        }
+        Update: {
+          homework_id?: string
+          kind?: string
+          sent_at?: string
+          student_id?: string
+        }
+        Relationships: [
+          {
+            foreignKeyName: "homework_emails_homework_id_fkey"
+            columns: ["homework_id"]
+            isOneToOne: false
+            referencedRelation: "homework"
+            referencedColumns: ["id"]
+          },
+        ]
+      }
       homework_help_requests: {
         Row: {
           created_at: string
@@ -764,6 +793,14 @@ export type Database = {
       delete_user_account: {
         Args: { _user_id: string }
         Returns: undefined
+      }
+      admin_set_student_class: {
+        Args: { _class_id: string | null; _student_id: string }
+        Returns: undefined
+      }
+      join_class_by_code: {
+        Args: { _code: string }
+        Returns: { joined_id: string; joined_name: string }[]
       }
       admin_list_users: {
         Args: Record<PropertyKey, never>

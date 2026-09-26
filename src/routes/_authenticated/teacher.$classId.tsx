@@ -11,6 +11,7 @@ import { Progress } from "@/components/ui/progress";
 import { Tabs, TabsContent, TabsList, TabsTrigger } from "@/components/ui/tabs";
 import { AssessmentsPanel } from "@/components/AssessmentsPanel";
 import { ClassReport } from "@/components/ClassReport";
+import { notifyHomeworkSet, notifyMessage } from "@/lib/homework-notify";
 import { teacherHomeworkArchiveReason } from "@/lib/archive";
 import { ResetProgressControl } from "@/components/ResetProgressControl";
 import {
@@ -580,6 +581,12 @@ function ClassDetail() {
     setSelectedTopics([]);
     setHomeworkMaxLesson("");
     void qc.invalidateQueries({ queryKey: ["class", classId] });
+    // Email the class. Not awaited: the teacher's form is already done, and a
+    // whole class takes a few seconds to send.
+    void notifyHomeworkSet(hw.id).then((outcome) => {
+      const message = notifyMessage(outcome);
+      if (message) toast.info(message);
+    });
   };
 
   const assignLesson = async () => {

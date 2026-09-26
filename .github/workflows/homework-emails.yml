@@ -1,0 +1,23 @@
+name: Send homework reminders
+
+on:
+  schedule:
+    # Every hour, on the hour. The server skips 21:00-07:00 UK time itself, so
+    # nothing is sent overnight; the first run after 07:00 catches up.
+    - cron: "0 * * * *"
+  workflow_dispatch: {}
+
+jobs:
+  send-reminders:
+    runs-on: ubuntu-latest
+    steps:
+      - name: POST to the homework reminders endpoint
+        run: |
+          status=$(curl -s -o /tmp/response.txt -w "%{http_code}" \
+            -X POST "https://www.hcodeacademy.co.uk/api/homework/reminders" \
+            -H "Authorization: Bearer ${{ secrets.REPORTS_CRON_SECRET }}")
+          cat /tmp/response.txt
+          if [ "$status" -ge 300 ]; then
+            echo "Request failed with status $status"
+            exit 1
+          fi

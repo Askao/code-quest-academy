@@ -5,6 +5,7 @@ import {
 } from "@/components/StudentAssessments";
 import { studentHomeworkArchiveReason } from "@/lib/archive";
 import { ResultsAnalysis } from "@/components/ResultsAnalysis";
+import { JoinClassBox } from "@/components/JoinClassBox";
 import { createFileRoute, Link } from "@tanstack/react-router";
 import { useQuery, useQueryClient } from "@tanstack/react-query";
 import { supabase } from "@/integrations/supabase/client";
@@ -482,6 +483,7 @@ function Dashboard() {
               </li>
             ) : null}
           </ul>
+          {data && (data.classes ?? []).length === 0 && user ? <JoinClassBox userId={user.id} /> : null}
         </div>
 
         <div className="panel p-5">
