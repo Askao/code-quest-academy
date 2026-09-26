@@ -279,6 +279,24 @@ export function AssessmentsPanel({
             </p>
           ) : null}
           <div className="flex flex-wrap gap-2">
+            <label
+                      className={`flex cursor-pointer items-center gap-1.5 rounded-md border px-2.5 py-1.5 text-sm font-medium transition-colors ${
+                        topics.length === 0
+                          ? "border-primary/60 bg-primary/10 text-foreground"
+                          : "border-border text-muted-foreground hover:bg-secondary/30"
+                      }`}
+                    >
+                      <input
+                        type="checkbox"
+                        className="accent-primary"
+                        checked={topics.length === 0}
+                        onChange={() => {
+                          setTopics([]);
+                          setPaper(null);
+                        }}
+                      />
+                      All topics
+                    </label>
             {availableTopics.map((t) => {
               const checked = topics.includes(t.key);
               return (
@@ -306,7 +324,7 @@ export function AssessmentsPanel({
             })}
           </div>
           <p className="text-xs text-muted-foreground">
-            Leave all unticked to draw from every topic.
+            "All topics" draws from every topic. Tick one or more topics to narrow it down.
           </p>
         </div>
 

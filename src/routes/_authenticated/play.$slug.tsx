@@ -29,6 +29,8 @@ import {
 } from "@/lib/content";
 import { inline } from "@/lib/markdown";
 import { diffStrings } from "@/lib/diff";
+import { homeworkComplete, nextHomeworkTask } from "@/lib/homework-flow";
+import { loadHomeworkList } from "@/lib/homework-order";
 
 type Search = {
   mode: "practice" | "boss" | "duel" | "homework" | "recap" | "project";
@@ -381,6 +383,21 @@ function Play() {
           await submitDuelTime(search.duel, user.id, Date.now() - startedAt.current);
         }
 
+        // Finishing the last task of a homework sends them back to the
+        // dashboard (where the homework now shows as done); anything earlier
+        // keeps the "Next challenge" button, which follows the homework's list.
+        if (search.mode === "homework" && search.hw) {
+          try {
+            const list = await loadHomeworkList(search.hw, user.id);
+            if (homeworkComplete(list.items, list.passed)) {
+              toast.success("Homework complete! Taking you back to your dashboard…");
+              setTimeout(() => void navigate({ to: "/dashboard" }), 1600);
+            }
+          } catch (e) {
+            console.error("could not check homework completion", e);
+          }
+        }
+
         // Reached via a lesson's task list - only the LAST task auto-redirects
         // back to Lessons (tell them plainly, then send them there rather than
         // waiting on a manual click). Any earlier task keeps the normal
@@ -442,6 +459,26 @@ function Play() {
         void navigate({ to: "/play/$slug", params: { slug: nextProject.slug }, search });
       } else {
         void navigate({ to: "/practice" });
+      }
+      return;
+    }
+
+    // A homework: go to the next task on the student's own list (skipping
+    // any already passed), and back to the dashboard once nothing is left -
+    // never a random pick from the topic.
+    if (search.mode === "homework" && search.hw && user) {
+      try {
+        const list = await loadHomeworkList(search.hw, user.id);
+        const next = nextHomeworkTask(list.items, challenge.slug, list.passed);
+        if (next) {
+          void navigate({ to: "/play/$slug", params: { slug: next.slug }, search });
+        } else {
+          toast.success("Homework complete!");
+          void navigate({ to: "/dashboard" });
+        }
+      } catch {
+        toast.error("Couldn't load your homework - going back to it");
+        void navigate({ to: "/homework/$homeworkId", params: { homeworkId: search.hw } });
       }
       return;
     }

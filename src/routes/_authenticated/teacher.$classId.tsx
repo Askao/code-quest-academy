@@ -66,8 +66,7 @@ function ClassDetail() {
   // no cap, draw from that topic's whole homework pool as before.
   const [homeworkMaxLesson, setHomeworkMaxLesson] = useState<number | "">("");
   const [effort, setEffort] = useState("medium");
-  const [assignTopic, setAssignTopic] = useState("");
-  const [assignLessonSlug, setAssignLessonSlug] = useState("");
+  const [allowingSlug, setAllowingSlug] = useState<string | null>(null);
   const [showDeleteConfirm, setShowDeleteConfirm] = useState(false);
   const [deleteConfirmText, setDeleteConfirmText] = useState("");
   const [deleting, setDeleting] = useState(false);
@@ -589,22 +588,87 @@ function ClassDetail() {
     });
   };
 
-  const assignLesson = async () => {
-    if (!assignLessonSlug) {
-      toast.error("Choose a lesson to assign");
-      return;
-    }
+  type LessonAssignment = NonNullable<typeof data>["lessonAssignments"][number];
+
+  // Ticking a lesson opens it for the class straight away.
+  const allowLessons = async (slugs: string[]) => {
+    if (slugs.length === 0) return;
+    setAllowingSlug(slugs[0]!);
     const { error } = await supabase
       .from("lesson_assignments")
-      .insert({ class_id: classId, lesson_slug: assignLessonSlug });
+      .insert(slugs.map((lesson_slug) => ({ class_id: classId, lesson_slug })));
+    setAllowingSlug(null);
     if (error) {
-      toast.error(error.code === "23505" ? "Already assigned to this class" : error.message);
-      return;
+      toast.error(error.code === "23505" ? "Already allowed for this class" : error.message);
+    } else {
+      toast.success(slugs.length === 1 ? "Lesson allowed" : `${slugs.length} lessons allowed`);
     }
-    toast.success("Lesson assigned");
-    setAssignLessonSlug("");
     void qc.invalidateQueries({ queryKey: ["class", classId] });
   };
+
+  // Un-ticking is different: it wipes every student's progress on the lesson,
+  // so it asks first (see renderUnassignConfirm) instead of acting on the click.
+  const unassignLesson = async (a: LessonAssignment) => {
+    const lesson = getLesson(a.lessonSlug);
+    setUnassigning(true);
+    try {
+      await supabase.from("lesson_assignments").delete().eq("id", a.id);
+      if (lesson) {
+        const taskSlugs = a.tasks.map((t) => t.slug);
+        const results = await Promise.all(
+          a.completion.map((c) =>
+            resetProgress({
+              userId: c.id,
+              track: lesson.track,
+              topic: lesson.topic,
+              lessonSlug: a.lessonSlug,
+              taskSlugs,
+            }),
+          ),
+        );
+        const failed = results.filter((r) => !r.ok).length;
+        if (failed > 0) {
+          toast.error(`Unassigned, but progress reset failed for ${failed} student(s)`);
+        } else {
+          toast.success("Lesson removed and student progress reset");
+        }
+      } else {
+        toast.success("Lesson removed");
+      }
+    } finally {
+      setUnassigning(false);
+      setConfirmUnassign(null);
+      void qc.invalidateQueries({ queryKey: ["class", classId] });
+    }
+  };
+
+  const renderUnassignConfirm = (a: LessonAssignment) => (
+    <div className="mt-3 space-y-2 rounded-md border border-destructive/30 bg-destructive/5 p-3">
+      <p className="text-xs text-muted-foreground">
+        Removes this lesson from the class and resets every student's progress on it — their
+        attempts on {a.tasks.length} task{a.tasks.length === 1 ? "" : "s"} and its quiz result.
+        Their skill level and Practice progress aren't touched. Can't be undone.
+      </p>
+      <div className="flex gap-2">
+        <Button
+          size="sm"
+          variant="destructive"
+          disabled={unassigning}
+          onClick={() => void unassignLesson(a)}
+        >
+          {unassigning ? "Removing…" : "Confirm remove & reset"}
+        </Button>
+        <Button
+          size="sm"
+          variant="secondary"
+          disabled={unassigning}
+          onClick={() => setConfirmUnassign(null)}
+        >
+          Cancel
+        </Button>
+      </div>
+    </div>
+  );
 
   const jumpToHomeworkFor = (lessonTopic: string) => {
     setSelectedTopics([lessonTopic]);
@@ -755,6 +819,8 @@ function ClassDetail() {
     ];
     downloadCsv(`${lessonTitle}.csv`, rows);
   };
+
+  const assignedBySlug = new Map((data?.lessonAssignments ?? []).map((a) => [a.lessonSlug, a]));
 
   if (data && !hasAccess) {
     return (
@@ -1024,43 +1090,81 @@ function ClassDetail() {
         </TabsContent>
 
         <TabsContent value="lessons" className="space-y-6 pt-4">
-          <section className="panel space-y-3 p-5">
-            <h2 className="text-lg font-semibold">Assign a lesson</h2>
-            <p className="text-sm text-muted-foreground">
-              Students in this class see a lesson in their Learn path only once you've assigned it
-              here — practice mode stays open regardless.
-            </p>
-            <div className="grid gap-2 sm:grid-cols-2">
-              <select
-                className="rounded-md border border-border bg-card px-3 py-2 text-sm"
-                value={assignTopic}
-                onChange={(e) => {
-                  setAssignTopic(e.target.value);
-                  setAssignLessonSlug("");
-                }}
-              >
-                <option value="">Choose a topic…</option>
-                {topicsWithLessons(track, board).map((t) => (
-                  <option key={t} value={t}>
-                    {topicLabel(t)}
-                  </option>
-                ))}
-              </select>
-              <select
-                className="rounded-md border border-border bg-card px-3 py-2 text-sm"
-                value={assignLessonSlug}
-                onChange={(e) => setAssignLessonSlug(e.target.value)}
-                disabled={!assignTopic}
-              >
-                <option value="">Choose a lesson…</option>
-                {lessonsForTopic(track, assignTopic).map((l) => (
-                  <option key={l.slug} value={l.slug}>
-                    Lesson {l.order} — {l.title}
-                  </option>
-                ))}
-              </select>
+          <section className="panel space-y-4 p-5">
+            <div>
+              <h2 className="text-lg font-semibold">Lessons</h2>
+              <p className="text-sm text-muted-foreground">
+                Tick <strong>Allow</strong> to open a lesson for this class. Students only see a
+                lesson in their Learn path once you've allowed it — practice mode stays open
+                regardless.
+              </p>
             </div>
-            <Button onClick={assignLesson}>Assign lesson</Button>
+            {topicsWithLessons(track, board).map((t) => {
+              const lessons = lessonsForTopic(track, t);
+              const allowedCount = lessons.filter((l) => assignedBySlug.has(l.slug)).length;
+              return (
+                <div key={t} className="space-y-2">
+                  <div className="flex flex-wrap items-center justify-between gap-2">
+                    <h3 className="font-medium">{topicLabel(t)}</h3>
+                    <div className="flex items-center gap-3">
+                      <span className="font-mono text-xs text-muted-foreground">
+                        {allowedCount}/{lessons.length} allowed
+                      </span>
+                      {allowedCount < lessons.length ? (
+                        <Button
+                          size="sm"
+                          variant="secondary"
+                          disabled={allowingSlug !== null}
+                          onClick={() =>
+                            void allowLessons(
+                              lessons.filter((l) => !assignedBySlug.has(l.slug)).map((l) => l.slug),
+                            )
+                          }
+                        >
+                          Allow all
+                        </Button>
+                      ) : null}
+                    </div>
+                  </div>
+                  <div className="grid gap-2 sm:grid-cols-2 lg:grid-cols-3">
+                    {lessons.map((l) => {
+                      const a = assignedBySlug.get(l.slug);
+                      return (
+                        <div
+                          key={l.slug}
+                          className={`rounded-md border p-3 text-sm ${
+                            a ? "border-primary/60 bg-primary/10" : "border-border"
+                          }`}
+                        >
+                          <label className="flex cursor-pointer items-start gap-3">
+                            <input
+                              type="checkbox"
+                              className="mt-1 accent-primary"
+                              checked={!!a}
+                              disabled={allowingSlug !== null}
+                              onChange={() => {
+                                if (a) setConfirmUnassign(confirmUnassign === a.id ? null : a.id);
+                                else void allowLessons([l.slug]);
+                              }}
+                            />
+                            <span className="flex-1">
+                              <span className="block font-mono text-xs text-muted-foreground">
+                                Lesson {l.order}
+                              </span>
+                              <span className="block font-medium">{l.title}</span>
+                            </span>
+                            <span className="text-xs font-medium text-muted-foreground">
+                              {a ? "Allowed" : "Allow"}
+                            </span>
+                          </label>
+                          {a && confirmUnassign === a.id ? renderUnassignConfirm(a) : null}
+                        </div>
+                      );
+                    })}
+                  </div>
+                </div>
+              );
+            })}
           </section>
 
           <section>
@@ -1108,70 +1212,10 @@ function ClassDetail() {
                         variant="secondary"
                         onClick={() => setConfirmUnassign(confirmUnassign === a.id ? null : a.id)}
                       >
-                        Unassign
+                        Remove
                       </Button>
                     </div>
-                    {confirmUnassign === a.id ? (
-                      <div className="mt-3 space-y-2 rounded-md border border-destructive/30 bg-destructive/5 p-3">
-                        <p className="text-xs text-muted-foreground">
-                          Removes this lesson from the class and resets every student's progress on
-                          it — their attempts on {a.tasks.length} task{a.tasks.length === 1 ? "" : "s"}{" "}
-                          and its quiz result. Their skill level and Practice progress aren't
-                          touched. Can't be undone.
-                        </p>
-                        <div className="flex gap-2">
-                          <Button
-                            size="sm"
-                            variant="destructive"
-                            disabled={unassigning}
-                            onClick={async () => {
-                              setUnassigning(true);
-                              try {
-                                await supabase.from("lesson_assignments").delete().eq("id", a.id);
-                                if (lesson) {
-                                  const taskSlugs = a.tasks.map((t) => t.slug);
-                                  const results = await Promise.all(
-                                    a.completion.map((c) =>
-                                      resetProgress({
-                                        userId: c.id,
-                                        track: lesson.track,
-                                        topic: lesson.topic,
-                                        lessonSlug: a.lessonSlug,
-                                        taskSlugs,
-                                      }),
-                                    ),
-                                  );
-                                  const failed = results.filter((r) => !r.ok).length;
-                                  if (failed > 0) {
-                                    toast.error(
-                                      `Unassigned, but progress reset failed for ${failed} student(s)`,
-                                    );
-                                  } else {
-                                    toast.success("Lesson unassigned and student progress reset");
-                                  }
-                                } else {
-                                  toast.success("Lesson unassigned");
-                                }
-                              } finally {
-                                setUnassigning(false);
-                                setConfirmUnassign(null);
-                                void qc.invalidateQueries({ queryKey: ["class", classId] });
-                              }
-                            }}
-                          >
-                            {unassigning ? "Unassigning…" : "Confirm unassign & reset"}
-                          </Button>
-                          <Button
-                            size="sm"
-                            variant="secondary"
-                            disabled={unassigning}
-                            onClick={() => setConfirmUnassign(null)}
-                          >
-                            Cancel
-                          </Button>
-                        </div>
-                      </div>
-                    ) : null}
+                    {confirmUnassign === a.id ? renderUnassignConfirm(a) : null}
                     {isExpanded && a.completion.length > 0 ? (
                       <div className="mt-3 overflow-x-auto border-t border-border pt-3">
                         <table className="text-sm">
@@ -1244,10 +1288,28 @@ function ClassDetail() {
               <Label>
                 Topics{" "}
                 <span className="font-normal text-muted-foreground">
-                  (none selected = all topics, mixed together)
+                  (choose All topics, or tick the ones you want)
                 </span>
               </Label>
               <div className="flex flex-wrap gap-2">
+                <label
+                      className={`flex cursor-pointer items-center gap-1.5 rounded-md border px-2.5 py-1.5 text-sm font-medium transition-colors ${
+                        selectedTopics.length === 0
+                          ? "border-primary/60 bg-primary/10 text-foreground"
+                          : "border-border text-muted-foreground hover:bg-secondary/30"
+                      }`}
+                    >
+                      <input
+                        type="checkbox"
+                        className="accent-primary"
+                        checked={selectedTopics.length === 0}
+                        onChange={() => {
+                          setSelectedTopics([]);
+                          setHomeworkMaxLesson("");
+                        }}
+                      />
+                      All topics
+                    </label>
                 {topicsFor(track, board).map((t) => {
                   const checked = selectedTopics.includes(t.key);
                   return (
@@ -1322,7 +1384,11 @@ function ClassDetail() {
               {(() => {
                 type HW = NonNullable<typeof data>["homework"][number];
                 const renderHomework = (h: HW) => {
-                  const sorted = [...h.completion].sort((a, b) => a.done - b.done);
+                  // Alphabetical, like the roster - not by how far they've got - so
+                  // a student is in the same place every time you open it.
+                  const sorted = [...h.completion].sort((a, b) =>
+                    a.name.localeCompare(b.name, "en-GB", { sensitivity: "base", numeric: true }),
+                  );
                   const perStudentCount = Math.max(0, ...sorted.map((c) => c.total));
                   const doneCount = sorted.filter((c) => c.total > 0 && c.done === c.total).length;
                   const isExpanded = expandedHomework === h.id;

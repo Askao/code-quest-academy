@@ -7,6 +7,7 @@ import { useAuth } from "@/hooks/useAuth";
 import { Button } from "@/components/ui/button";
 import { Textarea } from "@/components/ui/textarea";
 import { topicLabel } from "@/lib/game";
+import { inListOrder } from "@/lib/homework-flow";
 
 export const Route = createFileRoute("/_authenticated/homework/$homeworkId")({
   head: () => ({
@@ -55,7 +56,7 @@ function HomeworkPage() {
       const relevantAttempts = (attempts.data ?? []).filter((a) => idSet.has(a.challenge_id));
       return {
         hw: hw.data,
-        items: items.data ?? [],
+        items: inListOrder(ids, items.data ?? []),
         done: new Set(relevantAttempts.filter((a) => a.passed).map((a) => a.challenge_id)),
         // "Ask for help" only makes sense once a student has genuinely
         // tried and failed something here, not on first load - otherwise
