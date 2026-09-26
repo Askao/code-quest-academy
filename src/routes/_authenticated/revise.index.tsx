@@ -144,6 +144,11 @@ function RevisePage() {
           scheme. Papers lean on questions you got wrong before, so your revision goes where the
           marks were lost.
         </p>
+        <p className="mt-2 max-w-2xl text-sm text-muted-foreground">
+          If you are in a class, your teacher can see a summary of your revision: how many papers you
+          have made, your own marks by topic and when you last revised. They cannot see your
+          questions or your answers.
+        </p>
       </div>
 
       <section className="panel space-y-6 p-6">

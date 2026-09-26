@@ -58,6 +58,7 @@ await db.exec(fs.readFileSync(root + "20260926120000_assessments.sql", "utf8"));
 await db.exec(fs.readFileSync(root + "20260926130000_seed_assessment_questions.sql", "utf8"));
 await db.exec(fs.readFileSync(root + "20260930130000_revision_papers.sql", "utf8"));
 await db.exec(fs.readFileSync(root + "20260930140000_question_concepts.sql", "utf8"));
+await db.exec(fs.readFileSync(root + "20260930170000_class_revision_summary.sql", "utf8"));
 
 const as = async (who, sql) => {
   await db.exec(`SET ROLE authenticated; SET app.uid = '${U[who]}'`);
@@ -269,6 +270,49 @@ for (const [t, stmt] of [
   ok(`${t}: a student cannot write to it directly`, !!direct.error, JSON.stringify(direct));
 }
 
+// ---- the teacher's class summary (counts and self-marked totals only)
+{
+  const S3 = "b0000000-0000-0000-0000-000000000003"; // in class C, has never revised
+  await admin(`INSERT INTO auth.users VALUES ('${S3}')`);
+  await admin(`INSERT INTO public.class_members VALUES ('${C}','${S3}')`);
+  const qs = (await admin(`SELECT id, topic, marks FROM public.assessment_questions WHERE board='ocr' AND topic IN ('selection','iteration') ORDER BY topic, id LIMIT 40`)).rows;
+  const sel = qs.filter((q) => q.topic === "selection").slice(0, 2);
+  const itr = qs.filter((q) => q.topic === "iteration").slice(0, 1);
+  const mk = async (student, submitted) => {
+    const id = (await admin(`INSERT INTO public.revision_papers (student_id, title, board, submitted_at) VALUES ('${student}','x','ocr', ${submitted ? "now()" : "NULL"}) RETURNING id`)).rows[0].id;
+    return id;
+  };
+  const base = (await admin(`SELECT count(*)::int made, count(submitted_at)::int done FROM public.revision_papers WHERE student_id='${U.S1}'`)).rows[0];
+  const P_done = await mk(U.S1, true);
+  const P_open = await mk(U.S1, false);
+  const P_other = await mk(U.S2, true); // S2 is in no class
+  let expSel = 0, availSel = 0, expItr = 0, availItr = 0;
+  for (const q of sel) {
+    await admin(`INSERT INTO public.revision_answers (paper_id, question_id, marked, marks_awarded) VALUES ('${P_done}','${q.id}', true, ${q.marks})`);
+    expSel += q.marks; availSel += q.marks;
+  }
+  for (const q of itr) {
+    await admin(`INSERT INTO public.revision_answers (paper_id, question_id, marked, marks_awarded) VALUES ('${P_done}','${q.id}', true, 0)`);
+    availItr += q.marks;
+  }
+  // an unmarked answer must not count towards the totals
+  await admin(`INSERT INTO public.revision_answers (paper_id, question_id, marked, marks_awarded) VALUES ('${P_other}','${sel[0].id}', true, 1)`);
+
+  const sum = await as("T", `SELECT * FROM public.class_revision_summary('${C}') ORDER BY student_id`);
+  ok("the teacher gets one row per class member, including a student who has never revised", !sum.error && sum.rows.length === 2, JSON.stringify(sum));
+  const r1 = sum.rows.find((x) => x.student_id === U.S1);
+  const r3 = sum.rows.find((x) => x.student_id === S3);
+  ok("papers made and handed in are counted", r1.papers_made === base.made + 2 && r1.papers_handed_in === base.done + 1, JSON.stringify(r1));
+  ok("self-marked totals add up", r1.marks_awarded === expSel && r1.marks_available === availSel + availItr, JSON.stringify(r1));
+  const topics = Object.fromEntries(r1.topics.map((t) => [t.topic, t]));
+  ok("...and are broken down by topic", topics.selection?.awarded === expSel && topics.selection?.available === availSel && topics.iteration?.awarded === 0 && topics.iteration?.available === availItr, JSON.stringify(r1.topics));
+  ok("a student who has never revised shows zeros and no last-active date", r3.papers_made === 0 && r3.marks_available === 0 && r3.last_active === null && r3.topics.length === 0, JSON.stringify(r3));
+  ok("a student outside the class never appears", !sum.rows.some((x) => x.student_id === U.S2));
+  ok("the summary carries no questions or answers", Object.keys(r1).sort().join() === "last_active,marks_available,marks_awarded,papers_handed_in,papers_made,student_id,topics");
+  ok("a student cannot use it, even on their own class", (await as("S1", `SELECT * FROM public.class_revision_summary('${C}')`)).rows.length === 0);
+  ok("a teacher of a different class gets nothing", (await as("S2", `SELECT * FROM public.class_revision_summary('${C}')`)).rows.length === 0);
+  ok("the teacher still cannot read the papers themselves", (await as("T", "SELECT count(*)::int n FROM public.revision_answers")).rows[0].n === 0);
+}
 
 
 console.log(`
