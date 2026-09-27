@@ -23,7 +23,12 @@
     {
       "lessonSlug": "gcse-databases-1",
       "question": "Which SQL keyword selects every column in a table, without naming them one by one?",
-      "options": ["*", "ALL", "EVERY", "FULL"],
+      "options": [
+        "*",
+        "ALL",
+        "EVERY",
+        "FULL"
+      ],
       "answer": "*",
       "explanation": "SELECT * means \"every column\" — a shortcut instead of listing each column name."
     },
@@ -42,7 +47,12 @@
     {
       "lessonSlug": "gcse-databases-2",
       "question": "Which keyword filters which rows a query returns?",
-      "options": ["WHERE", "FILTER", "IF", "SELECT"],
+      "options": [
+        "WHERE",
+        "FILTER",
+        "IF",
+        "SELECT"
+      ],
       "answer": "WHERE",
       "explanation": "WHERE adds a condition — only rows matching it are included in the result."
     },
@@ -92,7 +102,11 @@
         "Name the exact column you want after `SELECT`, instead of using `*`.",
         "Use `SELECT name FROM students;`."
       ],
-      "tests": [{ "expect": "Ada\nGrace\nAlan\nMargaret\nTim" }]
+      "tests": [
+        {
+          "expect": "Ada\nGrace\nAlan\nMargaret\nTim"
+        }
+      ]
     },
     {
       "slug": "gcse-databases-t1-03",
@@ -107,7 +121,11 @@
         "List the columns you want after `SELECT`, separated by a comma.",
         "Use `SELECT name, year FROM students;` — they come back in the order you list them."
       ],
-      "tests": [{ "expect": "Ada, 10\nGrace, 11\nAlan, 10\nMargaret, 9\nTim, 11" }]
+      "tests": [
+        {
+          "expect": "Ada, 10\nGrace, 11\nAlan, 10\nMargaret, 9\nTim, 11"
+        }
+      ]
     },
     {
       "slug": "gcse-databases-t1-stretch",
@@ -123,7 +141,11 @@
         "The order you name the columns after `SELECT` is the order they come back in — put `year` before `name`.",
         "Use `SELECT year, name FROM students;`."
       ],
-      "tests": [{ "expect": "10, Ada\n11, Grace\n10, Alan\n9, Margaret\n11, Tim" }]
+      "tests": [
+        {
+          "expect": "10, Ada\n11, Grace\n10, Alan\n9, Margaret\n11, Tim"
+        }
+      ]
     },
     {
       "slug": "gcse-databases-t2-01",
@@ -138,7 +160,11 @@
         "Add a `WHERE` clause after the table name to filter which rows come back.",
         "Use `SELECT name FROM students WHERE year = 10;`."
       ],
-      "tests": [{ "expect": "Ada\nAlan" }]
+      "tests": [
+        {
+          "expect": "Ada\nAlan"
+        }
+      ]
     },
     {
       "slug": "gcse-databases-t2-02",
@@ -153,7 +179,11 @@
         "Text values in a `WHERE` clause need single quotes around them, e.g. `'Turing'` — numbers don't.",
         "Use `SELECT name FROM students WHERE house = 'Turing';`."
       ],
-      "tests": [{ "expect": "Ada\nAlan" }]
+      "tests": [
+        {
+          "expect": "Ada\nAlan"
+        }
+      ]
     },
     {
       "slug": "gcse-databases-t2-03",
@@ -168,7 +198,11 @@
         "`WHERE` accepts comparison operators like `>` and `<`, not just `=`.",
         "Use `SELECT name FROM students WHERE year > 10;`."
       ],
-      "tests": [{ "expect": "Grace\nTim" }]
+      "tests": [
+        {
+          "expect": "Grace\nTim"
+        }
+      ]
     },
     {
       "slug": "gcse-databases-t2-04",
@@ -183,7 +217,11 @@
         "`ORDER BY` sorts the results — by default, smallest/earliest first.",
         "Use `SELECT name FROM students ORDER BY name;`."
       ],
-      "tests": [{ "expect": "Ada\nAlan\nGrace\nMargaret\nTim" }]
+      "tests": [
+        {
+          "expect": "Ada\nAlan\nGrace\nMargaret\nTim"
+        }
+      ]
     },
     {
       "slug": "gcse-databases-t2-stretch",
@@ -199,7 +237,231 @@
         "Combine a `WHERE` clause to filter for year 11 with an `ORDER BY` clause to sort what's left.",
         "Use `SELECT name FROM students WHERE year = 11 ORDER BY name;`."
       ],
-      "tests": [{ "expect": "Grace\nTim" }]
+      "tests": [
+        {
+          "expect": "Grace\nTim"
+        }
+      ]
+    }
+  ],
+  "practiceTasks": [
+    {
+      "slug": "gcse-databases-p-01",
+      "tier": 1,
+      "difficulty": 1,
+      "xp": 10,
+      "title": "Just the year 10s",
+      "brief": "Below is a table called `students`. Write a query that selects every column, for every student in year 10.",
+      "starter": "-- Sample database: a students table\nCREATE TABLE students (id INTEGER, name TEXT, year INTEGER, house TEXT);\nINSERT INTO students VALUES\n  (1, 'Ada', 10, 'Turing'),\n  (2, 'Grace', 11, 'Lovelace'),\n  (3, 'Alan', 10, 'Hopper'),\n  (4, 'Margaret', 9, 'Hopper'),\n  (5, 'Tim', 11, 'Lovelace'),\n  (6, 'Rosa', 9, 'Turing'),\n  (7, 'Kwame', 10, 'Turing');\n\n-- Write your query below this line:\n",
+      "hints": [
+        "`WHERE` filters rows down to the ones you ask for, instead of returning every row.",
+        "`SELECT * FROM students WHERE year = 10;`"
+      ],
+      "tests": [
+        {
+          "expect": "1, Ada, 10, Turing\n3, Alan, 10, Hopper\n7, Kwame, 10, Turing"
+        }
+      ]
+    },
+    {
+      "slug": "gcse-databases-p-02",
+      "tier": 1,
+      "difficulty": 1,
+      "xp": 10,
+      "title": "Everything about the books",
+      "brief": "Below is a table called `books`. Write a query that selects every column, for every book.",
+      "starter": "-- Sample database: a library's books table (price in pounds)\nCREATE TABLE books (id INTEGER, title TEXT, author TEXT, year_published INTEGER, price INTEGER);\nINSERT INTO books VALUES\n  (1, 'The Hobbit', 'J.R.R. Tolkien', 1937, 8),\n  (2, 'Charlotte''s Web', 'E.B. White', 1952, 4),\n  (3, 'Matilda', 'Roald Dahl', 1988, 7),\n  (4, 'Holes', 'Louis Sachar', 1998, 6),\n  (5, 'The Giver', 'Lois Lowry', 1993, 3),\n  (6, 'Wonder', 'R.J. Palacio', 2012, 9),\n  (7, 'Percy Jackson and the Lightning Thief', 'Rick Riordan', 2005, 5),\n  (8, 'Diary of a Wimpy Kid', 'Jeff Kinney', 2007, 11);\n\n-- Write your query below this line:\n",
+      "hints": [
+        "`SELECT *` returns every column, so you don't have to name them one by one.",
+        "`SELECT * FROM books;`"
+      ],
+      "tests": [
+        {
+          "expect": "1, The Hobbit, J.R.R. Tolkien, 1937, 8\n2, Charlotte's Web, E.B. White, 1952, 4\n3, Matilda, Roald Dahl, 1988, 7\n4, Holes, Louis Sachar, 1998, 6\n5, The Giver, Lois Lowry, 1993, 3\n6, Wonder, R.J. Palacio, 2012, 9\n7, Percy Jackson and the Lightning Thief, Rick Riordan, 2005, 5\n8, Diary of a Wimpy Kid, Jeff Kinney, 2007, 11"
+        }
+      ]
+    },
+    {
+      "slug": "gcse-databases-p-03",
+      "tier": 2,
+      "difficulty": 2,
+      "xp": 15,
+      "title": "Just the titles",
+      "brief": "Using the `books` table, write a query that selects only the `title` column, for every book.",
+      "starter": "-- Sample database: a library's books table (price in pounds)\nCREATE TABLE books (id INTEGER, title TEXT, author TEXT, year_published INTEGER, price INTEGER);\nINSERT INTO books VALUES\n  (1, 'The Hobbit', 'J.R.R. Tolkien', 1937, 8),\n  (2, 'Charlotte''s Web', 'E.B. White', 1952, 4),\n  (3, 'Matilda', 'Roald Dahl', 1988, 7),\n  (4, 'Holes', 'Louis Sachar', 1998, 6),\n  (5, 'The Giver', 'Lois Lowry', 1993, 3),\n  (6, 'Wonder', 'R.J. Palacio', 2012, 9),\n  (7, 'Percy Jackson and the Lightning Thief', 'Rick Riordan', 2005, 5),\n  (8, 'Diary of a Wimpy Kid', 'Jeff Kinney', 2007, 11);\n\n-- Write your query below this line:\n",
+      "hints": [
+        "Name the one column you want, instead of using `*`.",
+        "`SELECT title FROM books;`"
+      ],
+      "tests": [
+        {
+          "expect": "The Hobbit\nCharlotte's Web\nMatilda\nHoles\nThe Giver\nWonder\nPercy Jackson and the Lightning Thief\nDiary of a Wimpy Kid"
+        }
+      ]
+    },
+    {
+      "slug": "gcse-databases-p-04",
+      "tier": 2,
+      "difficulty": 2,
+      "xp": 15,
+      "title": "The cheap ones",
+      "brief": "Using the `books` table, write a query that selects the `title` and `price` of every book that costs less than £5.",
+      "starter": "-- Sample database: a library's books table (price in pounds)\nCREATE TABLE books (id INTEGER, title TEXT, author TEXT, year_published INTEGER, price INTEGER);\nINSERT INTO books VALUES\n  (1, 'The Hobbit', 'J.R.R. Tolkien', 1937, 8),\n  (2, 'Charlotte''s Web', 'E.B. White', 1952, 4),\n  (3, 'Matilda', 'Roald Dahl', 1988, 7),\n  (4, 'Holes', 'Louis Sachar', 1998, 6),\n  (5, 'The Giver', 'Lois Lowry', 1993, 3),\n  (6, 'Wonder', 'R.J. Palacio', 2012, 9),\n  (7, 'Percy Jackson and the Lightning Thief', 'Rick Riordan', 2005, 5),\n  (8, 'Diary of a Wimpy Kid', 'Jeff Kinney', 2007, 11);\n\n-- Write your query below this line:\n",
+      "hints": [
+        "Combine a comparison in `WHERE` with picking specific columns in `SELECT`.",
+        "`SELECT title, price FROM books WHERE price < 5;`"
+      ],
+      "tests": [
+        {
+          "expect": "Charlotte's Web, 4\nThe Giver, 3"
+        }
+      ]
+    },
+    {
+      "slug": "gcse-databases-p-05",
+      "tier": 2,
+      "difficulty": 2,
+      "xp": 15,
+      "title": "Turing house",
+      "brief": "Using the `students` table, write a query that selects the `name` of every student in Turing house.",
+      "starter": "-- Sample database: a students table\nCREATE TABLE students (id INTEGER, name TEXT, year INTEGER, house TEXT);\nINSERT INTO students VALUES\n  (1, 'Ada', 10, 'Turing'),\n  (2, 'Grace', 11, 'Lovelace'),\n  (3, 'Alan', 10, 'Hopper'),\n  (4, 'Margaret', 9, 'Hopper'),\n  (5, 'Tim', 11, 'Lovelace'),\n  (6, 'Rosa', 9, 'Turing'),\n  (7, 'Kwame', 10, 'Turing');\n\n-- Write your query below this line:\n",
+      "hints": [
+        "Text values in `WHERE` go in single quotes: `WHERE house = 'Turing'`.",
+        "`SELECT name FROM students WHERE house = 'Turing';`"
+      ],
+      "tests": [
+        {
+          "expect": "Ada\nRosa\nKwame"
+        }
+      ]
+    },
+    {
+      "slug": "gcse-databases-p-06",
+      "tier": 3,
+      "difficulty": 2,
+      "xp": 20,
+      "title": "Cheapest first",
+      "brief": "Using the `books` table, write a query that selects the `title` and `price` of every book, ordered from cheapest to most expensive.",
+      "starter": "-- Sample database: a library's books table (price in pounds)\nCREATE TABLE books (id INTEGER, title TEXT, author TEXT, year_published INTEGER, price INTEGER);\nINSERT INTO books VALUES\n  (1, 'The Hobbit', 'J.R.R. Tolkien', 1937, 8),\n  (2, 'Charlotte''s Web', 'E.B. White', 1952, 4),\n  (3, 'Matilda', 'Roald Dahl', 1988, 7),\n  (4, 'Holes', 'Louis Sachar', 1998, 6),\n  (5, 'The Giver', 'Lois Lowry', 1993, 3),\n  (6, 'Wonder', 'R.J. Palacio', 2012, 9),\n  (7, 'Percy Jackson and the Lightning Thief', 'Rick Riordan', 2005, 5),\n  (8, 'Diary of a Wimpy Kid', 'Jeff Kinney', 2007, 11);\n\n-- Write your query below this line:\n",
+      "hints": [
+        "`ORDER BY` sorts the results. On its own, it sorts smallest (or earliest, or A to Z) first.",
+        "`SELECT title, price FROM books ORDER BY price;`"
+      ],
+      "tests": [
+        {
+          "expect": "The Giver, 3\nCharlotte's Web, 4\nPercy Jackson and the Lightning Thief, 5\nHoles, 6\nMatilda, 7\nThe Hobbit, 8\nWonder, 9\nDiary of a Wimpy Kid, 11"
+        }
+      ]
+    },
+    {
+      "slug": "gcse-databases-p-07",
+      "tier": 3,
+      "difficulty": 3,
+      "xp": 20,
+      "title": "Newest first",
+      "brief": "Using the `books` table, write a query that selects the `title` and `year_published` of every book, with the newest book first.",
+      "starter": "-- Sample database: a library's books table (price in pounds)\nCREATE TABLE books (id INTEGER, title TEXT, author TEXT, year_published INTEGER, price INTEGER);\nINSERT INTO books VALUES\n  (1, 'The Hobbit', 'J.R.R. Tolkien', 1937, 8),\n  (2, 'Charlotte''s Web', 'E.B. White', 1952, 4),\n  (3, 'Matilda', 'Roald Dahl', 1988, 7),\n  (4, 'Holes', 'Louis Sachar', 1998, 6),\n  (5, 'The Giver', 'Lois Lowry', 1993, 3),\n  (6, 'Wonder', 'R.J. Palacio', 2012, 9),\n  (7, 'Percy Jackson and the Lightning Thief', 'Rick Riordan', 2005, 5),\n  (8, 'Diary of a Wimpy Kid', 'Jeff Kinney', 2007, 11);\n\n-- Write your query below this line:\n",
+      "hints": [
+        "`ORDER BY` sorts oldest/smallest first by default. Add `DESC` to reverse it.",
+        "`SELECT title, year_published FROM books ORDER BY year_published DESC;`"
+      ],
+      "tests": [
+        {
+          "expect": "Wonder, 2012\nDiary of a Wimpy Kid, 2007\nPercy Jackson and the Lightning Thief, 2005\nHoles, 1998\nThe Giver, 1993\nMatilda, 1988\nCharlotte's Web, 1952\nThe Hobbit, 1937"
+        }
+      ]
+    },
+    {
+      "slug": "gcse-databases-p-08",
+      "tier": 3,
+      "difficulty": 3,
+      "xp": 20,
+      "title": "Year 10 Turing",
+      "brief": "Using the `students` table, write a query that selects the `name` of every student who is in year 10 AND in Turing house.",
+      "starter": "-- Sample database: a students table\nCREATE TABLE students (id INTEGER, name TEXT, year INTEGER, house TEXT);\nINSERT INTO students VALUES\n  (1, 'Ada', 10, 'Turing'),\n  (2, 'Grace', 11, 'Lovelace'),\n  (3, 'Alan', 10, 'Hopper'),\n  (4, 'Margaret', 9, 'Hopper'),\n  (5, 'Tim', 11, 'Lovelace'),\n  (6, 'Rosa', 9, 'Turing'),\n  (7, 'Kwame', 10, 'Turing');\n\n-- Write your query below this line:\n",
+      "hints": [
+        "`AND` between two conditions in `WHERE` means both have to be true for a row to be included.",
+        "`SELECT name FROM students WHERE year = 10 AND house = 'Turing';`"
+      ],
+      "tests": [
+        {
+          "expect": "Ada\nKwame"
+        }
+      ]
+    },
+    {
+      "slug": "gcse-databases-p-09",
+      "tier": 4,
+      "difficulty": 3,
+      "xp": 25,
+      "title": "Turing or Hopper",
+      "brief": "Using the `students` table, write a query that selects the `name` of every student who is in Turing house OR Hopper house.",
+      "starter": "-- Sample database: a students table\nCREATE TABLE students (id INTEGER, name TEXT, year INTEGER, house TEXT);\nINSERT INTO students VALUES\n  (1, 'Ada', 10, 'Turing'),\n  (2, 'Grace', 11, 'Lovelace'),\n  (3, 'Alan', 10, 'Hopper'),\n  (4, 'Margaret', 9, 'Hopper'),\n  (5, 'Tim', 11, 'Lovelace'),\n  (6, 'Rosa', 9, 'Turing'),\n  (7, 'Kwame', 10, 'Turing');\n\n-- Write your query below this line:\n",
+      "hints": [
+        "`OR` between two conditions means a row is included if either one is true.",
+        "`SELECT name FROM students WHERE house = 'Turing' OR house = 'Hopper';`"
+      ],
+      "tests": [
+        {
+          "expect": "Ada\nAlan\nMargaret\nRosa\nKwame"
+        }
+      ]
+    },
+    {
+      "slug": "gcse-databases-p-10",
+      "tier": 4,
+      "difficulty": 4,
+      "xp": 25,
+      "title": "Well-paid staff",
+      "brief": "Below is a table called `staff`. Write a query that selects the `name`, `department` and `salary` of every staff member earning over £30,000, with the highest earner first.",
+      "starter": "-- Sample database: a school office staff table\nCREATE TABLE staff (id INTEGER, name TEXT, department TEXT, salary INTEGER);\nINSERT INTO staff VALUES\n  (1, 'Priya Shah', 'IT', 34000),\n  (2, 'Tom Reid', 'Admin', 24000),\n  (3, 'Freya Marsh', 'IT', 41000),\n  (4, 'Jayden Price', 'Admin', 26000),\n  (5, 'Noor Ahmed', 'Science', 38000),\n  (6, 'Lily Byrne', 'IT', 29000);\n\n-- Write your query below this line:\n",
+      "hints": [
+        "You need a `WHERE` condition and an `ORDER BY`, both in the same query, with `ORDER BY` last.",
+        "`SELECT name, department, salary FROM staff WHERE salary > 30000 ORDER BY salary DESC;`"
+      ],
+      "tests": [
+        {
+          "expect": "Freya Marsh, IT, 41000\nNoor Ahmed, Science, 38000\nPriya Shah, IT, 34000"
+        }
+      ]
+    },
+    {
+      "slug": "gcse-databases-p-s1",
+      "tier": 4,
+      "difficulty": 5,
+      "xp": 35,
+      "stretch": true,
+      "title": "🌟 IT department, A to Z",
+      "brief": "Using the `staff` table, write a query that selects the `name` and `salary` of everyone in the IT department, in alphabetical order by name.",
+      "starter": "-- Sample database: a school office staff table\nCREATE TABLE staff (id INTEGER, name TEXT, department TEXT, salary INTEGER);\nINSERT INTO staff VALUES\n  (1, 'Priya Shah', 'IT', 34000),\n  (2, 'Tom Reid', 'Admin', 24000),\n  (3, 'Freya Marsh', 'IT', 41000),\n  (4, 'Jayden Price', 'Admin', 26000),\n  (5, 'Noor Ahmed', 'Science', 38000),\n  (6, 'Lily Byrne', 'IT', 29000);\n\n-- Write your query below this line:\n",
+      "hints": [
+        "Filter to the department first with `WHERE`, then sort by name - `ORDER BY` sorts text alphabetically the same way it sorts numbers.",
+        "`SELECT name, salary FROM staff WHERE department = 'IT' ORDER BY name;`"
+      ],
+      "tests": [
+        {
+          "expect": "Freya Marsh, 41000\nLily Byrne, 29000\nPriya Shah, 34000"
+        }
+      ]
+    },
+    {
+      "slug": "gcse-databases-p-s2",
+      "tier": 4,
+      "difficulty": 5,
+      "xp": 35,
+      "stretch": true,
+      "title": "🌟 Recent bargains",
+      "brief": "Using the `books` table, write a query that selects the `title` and `price` of every book published after the year 2000 AND costing less than £10, with the most expensive of those first.",
+      "starter": "-- Sample database: a library's books table (price in pounds)\nCREATE TABLE books (id INTEGER, title TEXT, author TEXT, year_published INTEGER, price INTEGER);\nINSERT INTO books VALUES\n  (1, 'The Hobbit', 'J.R.R. Tolkien', 1937, 8),\n  (2, 'Charlotte''s Web', 'E.B. White', 1952, 4),\n  (3, 'Matilda', 'Roald Dahl', 1988, 7),\n  (4, 'Holes', 'Louis Sachar', 1998, 6),\n  (5, 'The Giver', 'Lois Lowry', 1993, 3),\n  (6, 'Wonder', 'R.J. Palacio', 2012, 9),\n  (7, 'Percy Jackson and the Lightning Thief', 'Rick Riordan', 2005, 5),\n  (8, 'Diary of a Wimpy Kid', 'Jeff Kinney', 2007, 11);\n\n-- Write your query below this line:\n",
+      "hints": [
+        "Two conditions joined with `AND`, then an `ORDER BY` with `DESC` to put the priciest first - `ORDER BY` still comes last.",
+        "`SELECT title, price FROM books WHERE year_published > 2000 AND price < 10 ORDER BY price DESC;`"
+      ],
+      "tests": [
+        {
+          "expect": "Wonder, 9\nPercy Jackson and the Lightning Thief, 5"
+        }
+      ]
     }
   ]
 }
