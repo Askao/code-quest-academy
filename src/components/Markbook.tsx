@@ -116,63 +116,124 @@ export function Markbook({
         </div>
       </div>
 
-      <div className="overflow-x-auto">
-        <table className="w-full text-left text-sm" style={{ minWidth: `${420 + topics.length * 56}px` }}>
-          <thead className="text-xs uppercase tracking-wide text-muted-foreground">
-            <tr>
-              <th className="py-2 pr-3 font-medium">Student</th>
-              {topics.map((t) => (
-                <th key={t.key} className="px-1 py-2 text-center font-medium" title={t.label}>
-                  {abbreviate(t.label)}
+      <div className="relative">
+        <div className="overflow-x-auto rounded-md border border-border">
+          <table className="w-max min-w-full text-left text-sm">
+            <thead className="text-xs uppercase tracking-wide text-muted-foreground">
+              <tr>
+                <th className="sticky left-0 z-10 border-r border-border bg-card px-3 py-2 font-medium">
+                  Student
                 </th>
-              ))}
-              <th className="px-3 py-2 text-center font-medium">Assess.</th>
-              <th className="px-3 py-2 text-center font-medium">HW</th>
-              <th className="px-3 py-2 text-center font-medium">Flags</th>
-              <th className="py-2 pl-3 font-medium">Last active</th>
-            </tr>
-          </thead>
-          <tbody className="divide-y divide-border">
-            {sorted.map((r) => (
-              <tr key={r.student.id}>
-                <td className="py-2 pr-3 font-medium">{r.student.name}</td>
-                {r.levels.map((level, i) => (
-                  <td key={topics[i]!.key} className="px-1 py-2 text-center">
-                    <LevelChip level={level} />
-                  </td>
+                {topics.map((t) => (
+                  <th key={t.key} className="px-1.5 py-2 text-center font-medium" title={t.label}>
+                    {abbreviate(t.label)}
+                  </th>
                 ))}
-                <td className="px-3 py-2 text-center tabular-nums">
-                  {r.assessPercent === null ? "-" : `${r.assessPercent}%`}
-                </td>
-                <td className="px-3 py-2 text-center tabular-nums">
-                  {r.homeworkPercent === null ? "-" : `${r.homeworkPercent}%`}
-                </td>
-                <td className="px-3 py-2 text-center text-sm">
-                  {r.student.struggling ? (
-                    <span title={strugglingTooltip(r.student.strugglingTopics, topicLabel)}>🔴</span>
-                  ) : null}
-                  {r.student.readyForMore ? <span title="Ready for more">🟡</span> : null}
-                  {!r.student.struggling && !r.student.readyForMore ? (
-                    <span className="text-muted-foreground">—</span>
-                  ) : null}
-                </td>
-                <td className="py-2 pl-3 tabular-nums text-muted-foreground">
-                  {r.student.lastActive
-                    ? new Date(r.student.lastActive).toLocaleDateString("en-GB", {
-                        day: "numeric",
-                        month: "short",
-                      })
-                    : "-"}
-                </td>
+                <th className="px-3 py-2 text-center font-medium">Assess.</th>
+                <th className="px-3 py-2 text-center font-medium">HW</th>
+                <th className="px-3 py-2 text-center font-medium">Flags</th>
+                <th className="px-3 py-2 font-medium">Last active</th>
               </tr>
-            ))}
-          </tbody>
-        </table>
+            </thead>
+            <tbody className="divide-y divide-border">
+              {sorted.map((r) => (
+                <tr key={r.student.id}>
+                  <td className="sticky left-0 z-10 border-r border-border bg-card px-3 py-2 font-medium">
+                    {r.student.name}
+                  </td>
+                  {r.levels.map((level, i) => (
+                    <td key={topics[i]!.key} className="px-1.5 py-2 text-center">
+                      <LevelChip level={level} />
+                    </td>
+                  ))}
+                  <td className="px-3 py-2 text-center tabular-nums">
+                    {r.assessPercent === null ? "-" : `${r.assessPercent}%`}
+                  </td>
+                  <td className="px-3 py-2 text-center tabular-nums">
+                    {r.homeworkPercent === null ? "-" : `${r.homeworkPercent}%`}
+                  </td>
+                  <td className="px-3 py-2 text-center text-sm">
+                    {r.student.struggling ? (
+                      <span title={strugglingTooltip(r.student.strugglingTopics, topicLabel)}>🔴</span>
+                    ) : null}
+                    {r.student.readyForMore ? <span title="Ready for more">🟡</span> : null}
+                    {!r.student.struggling && !r.student.readyForMore ? (
+                      <span className="text-muted-foreground">—</span>
+                    ) : null}
+                  </td>
+                  <td className="px-3 py-2 tabular-nums text-muted-foreground">
+                    {r.student.lastActive
+                      ? new Date(r.student.lastActive).toLocaleDateString("en-GB", {
+                          day: "numeric",
+                          month: "short",
+                        })
+                      : "-"}
+                  </td>
+                </tr>
+              ))}
+            </tbody>
+          </table>
+        </div>
+        <p className="mt-1.5 text-xs text-muted-foreground sm:hidden">
+          ← Scroll sideways for every topic — the student column stays put.
+        </p>
       </div>
-      <p className="text-xs text-muted-foreground">
-        Skill level: 1 (new to the topic) to 5 (confident). A blank cell means no attempt yet.
-      </p>
+
+      <MarkbookLegend topics={topics} />
     </section>
+  );
+}
+
+function MarkbookLegend({ topics }: { topics: { key: string; label: string }[] }) {
+  return (
+    <details className="rounded-md border border-border text-sm">
+      <summary className="cursor-pointer select-none px-3 py-2 font-medium text-muted-foreground hover:text-foreground">
+        What does this all mean?
+      </summary>
+      <div className="space-y-4 border-t border-border p-4">
+        <div>
+          <p className="mb-1.5 font-medium">Skill level</p>
+          <div className="flex flex-wrap items-center gap-3 text-xs text-muted-foreground">
+            <span className="flex items-center gap-1.5">
+              <LevelChip level={1} /> new to the topic
+            </span>
+            <span className="flex items-center gap-1.5">
+              <LevelChip level={3} /> getting there
+            </span>
+            <span className="flex items-center gap-1.5">
+              <LevelChip level={5} /> confident
+            </span>
+            <span className="flex items-center gap-1.5">
+              <LevelChip level={null} /> no attempt yet
+            </span>
+          </div>
+        </div>
+        <div className="grid gap-3 sm:grid-cols-2">
+          <p>
+            <span className="font-medium">Assess.</span> — average % across every marked, teacher-set
+            assessment.
+          </p>
+          <p>
+            <span className="font-medium">HW</span> — homework tasks completed, as a percentage of every
+            homework task this class has been set.
+          </p>
+          <p>
+            <span className="font-medium">Flags</span> — 🔴 Struggling (failed Test 3+ times in a row in
+            one topic), 🟡 Ready for more (cleared every core practice task), — neither.
+          </p>
+          <p>
+            <span className="font-medium">Last active</span> — the most recent time they clicked Test, in
+            any mode (lessons, practice, homework).
+          </p>
+        </div>
+        <div>
+          <p className="mb-1.5 font-medium">Topics</p>
+          <p className="text-xs text-muted-foreground">
+            {topics.map((t) => `${abbreviate(t.label)} = ${t.label}`).join(" · ")}
+          </p>
+        </div>
+      </div>
+    </details>
   );
 }
 
