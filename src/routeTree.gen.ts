@@ -21,6 +21,7 @@ import { Route as AuthenticatedDuelsRouteImport } from './routes/_authenticated/
 import { Route as AuthenticatedLeaderboardRouteImport } from './routes/_authenticated/leaderboard'
 import { Route as AuthenticatedPracticeRouteImport } from './routes/_authenticated/practice'
 import { Route as JoinCodeRouteImport } from './routes/join.$code'
+import { Route as AuthenticatedAdminTaskDraftsRouteImport } from './routes/_authenticated/admin.task-drafts'
 import { Route as AuthenticatedHomeworkHomeworkIdRouteImport } from './routes/_authenticated/homework.$homeworkId'
 import { Route as AuthenticatedLearnIndexRouteImport } from './routes/_authenticated/learn.index'
 import { Route as AuthenticatedLearnLessonSlugRouteImport } from './routes/_authenticated/learn.$lessonSlug'
@@ -92,6 +93,12 @@ const JoinCodeRoute = JoinCodeRouteImport.update({
   path: '/join/$code',
   getParentRoute: () => rootRouteImport,
 } as any)
+const AuthenticatedAdminTaskDraftsRoute =
+  AuthenticatedAdminTaskDraftsRouteImport.update({
+    id: '/task-drafts',
+    path: '/task-drafts',
+    getParentRoute: () => AuthenticatedAdminRoute,
+  } as any)
 const AuthenticatedHomeworkHomeworkIdRoute =
   AuthenticatedHomeworkHomeworkIdRouteImport.update({
     id: '/homework/$homeworkId',
@@ -157,12 +164,13 @@ export interface FileRoutesByFullPath {
   '/confirm-email': typeof ConfirmEmailRoute
   '/ide': typeof IdeRoute
   '/account': typeof AuthenticatedAccountRoute
-  '/admin': typeof AuthenticatedAdminRoute
+  '/admin': typeof AuthenticatedAdminRouteWithChildren
   '/dashboard': typeof AuthenticatedDashboardRoute
   '/duels': typeof AuthenticatedDuelsRoute
   '/leaderboard': typeof AuthenticatedLeaderboardRoute
   '/practice': typeof AuthenticatedPracticeRoute
   '/join/$code': typeof JoinCodeRoute
+  '/admin/task-drafts': typeof AuthenticatedAdminTaskDraftsRoute
   '/homework/$homeworkId': typeof AuthenticatedHomeworkHomeworkIdRoute
   '/learn/$lessonSlug': typeof AuthenticatedLearnLessonSlugRoute
   '/mark/$assessmentId': typeof AuthenticatedMarkAssessmentIdRoute
@@ -180,12 +188,13 @@ export interface FileRoutesByTo {
   '/confirm-email': typeof ConfirmEmailRoute
   '/ide': typeof IdeRoute
   '/account': typeof AuthenticatedAccountRoute
-  '/admin': typeof AuthenticatedAdminRoute
+  '/admin': typeof AuthenticatedAdminRouteWithChildren
   '/dashboard': typeof AuthenticatedDashboardRoute
   '/duels': typeof AuthenticatedDuelsRoute
   '/leaderboard': typeof AuthenticatedLeaderboardRoute
   '/practice': typeof AuthenticatedPracticeRoute
   '/join/$code': typeof JoinCodeRoute
+  '/admin/task-drafts': typeof AuthenticatedAdminTaskDraftsRoute
   '/homework/$homeworkId': typeof AuthenticatedHomeworkHomeworkIdRoute
   '/learn/$lessonSlug': typeof AuthenticatedLearnLessonSlugRoute
   '/mark/$assessmentId': typeof AuthenticatedMarkAssessmentIdRoute
@@ -205,12 +214,13 @@ export interface FileRoutesById {
   '/confirm-email': typeof ConfirmEmailRoute
   '/ide': typeof IdeRoute
   '/_authenticated/account': typeof AuthenticatedAccountRoute
-  '/_authenticated/admin': typeof AuthenticatedAdminRoute
+  '/_authenticated/admin': typeof AuthenticatedAdminRouteWithChildren
   '/_authenticated/dashboard': typeof AuthenticatedDashboardRoute
   '/_authenticated/duels': typeof AuthenticatedDuelsRoute
   '/_authenticated/leaderboard': typeof AuthenticatedLeaderboardRoute
   '/_authenticated/practice': typeof AuthenticatedPracticeRoute
   '/join/$code': typeof JoinCodeRoute
+  '/_authenticated/admin/task-drafts': typeof AuthenticatedAdminTaskDraftsRoute
   '/_authenticated/homework/$homeworkId': typeof AuthenticatedHomeworkHomeworkIdRoute
   '/_authenticated/learn/$lessonSlug': typeof AuthenticatedLearnLessonSlugRoute
   '/_authenticated/mark/$assessmentId': typeof AuthenticatedMarkAssessmentIdRoute
@@ -236,6 +246,7 @@ export interface FileRouteTypes {
     | '/leaderboard'
     | '/practice'
     | '/join/$code'
+    | '/admin/task-drafts'
     | '/homework/$homeworkId'
     | '/learn/$lessonSlug'
     | '/mark/$assessmentId'
@@ -259,6 +270,7 @@ export interface FileRouteTypes {
     | '/leaderboard'
     | '/practice'
     | '/join/$code'
+    | '/admin/task-drafts'
     | '/homework/$homeworkId'
     | '/learn/$lessonSlug'
     | '/mark/$assessmentId'
@@ -283,6 +295,7 @@ export interface FileRouteTypes {
     | '/_authenticated/leaderboard'
     | '/_authenticated/practice'
     | '/join/$code'
+    | '/_authenticated/admin/task-drafts'
     | '/_authenticated/homework/$homeworkId'
     | '/_authenticated/learn/$lessonSlug'
     | '/_authenticated/mark/$assessmentId'
@@ -390,6 +403,13 @@ declare module '@tanstack/react-router' {
       preLoaderRoute: typeof JoinCodeRouteImport
       parentRoute: typeof rootRouteImport
     }
+    '/_authenticated/admin/task-drafts': {
+      id: '/_authenticated/admin/task-drafts'
+      path: '/task-drafts'
+      fullPath: '/admin/task-drafts'
+      preLoaderRoute: typeof AuthenticatedAdminTaskDraftsRouteImport
+      parentRoute: typeof AuthenticatedAdminRoute
+    }
     '/_authenticated/homework/$homeworkId': {
       id: '/_authenticated/homework/$homeworkId'
       path: '/homework/$homeworkId'
@@ -463,9 +483,20 @@ declare module '@tanstack/react-router' {
   }
 }
 
+interface AuthenticatedAdminRouteChildren {
+  AuthenticatedAdminTaskDraftsRoute: typeof AuthenticatedAdminTaskDraftsRoute
+}
+
+const AuthenticatedAdminRouteChildren: AuthenticatedAdminRouteChildren = {
+  AuthenticatedAdminTaskDraftsRoute: AuthenticatedAdminTaskDraftsRoute,
+}
+
+const AuthenticatedAdminRouteWithChildren =
+  AuthenticatedAdminRoute._addFileChildren(AuthenticatedAdminRouteChildren)
+
 interface AuthenticatedRouteRouteChildren {
   AuthenticatedAccountRoute: typeof AuthenticatedAccountRoute
-  AuthenticatedAdminRoute: typeof AuthenticatedAdminRoute
+  AuthenticatedAdminRoute: typeof AuthenticatedAdminRouteWithChildren
   AuthenticatedDashboardRoute: typeof AuthenticatedDashboardRoute
   AuthenticatedDuelsRoute: typeof AuthenticatedDuelsRoute
   AuthenticatedLeaderboardRoute: typeof AuthenticatedLeaderboardRoute
@@ -484,7 +515,7 @@ interface AuthenticatedRouteRouteChildren {
 
 const AuthenticatedRouteRouteChildren: AuthenticatedRouteRouteChildren = {
   AuthenticatedAccountRoute: AuthenticatedAccountRoute,
-  AuthenticatedAdminRoute: AuthenticatedAdminRoute,
+  AuthenticatedAdminRoute: AuthenticatedAdminRouteWithChildren,
   AuthenticatedDashboardRoute: AuthenticatedDashboardRoute,
   AuthenticatedDuelsRoute: AuthenticatedDuelsRoute,
   AuthenticatedLeaderboardRoute: AuthenticatedLeaderboardRoute,
