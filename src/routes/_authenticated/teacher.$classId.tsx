@@ -911,7 +911,7 @@ function ClassDetail() {
         ) : null}
         <p className="mt-2 max-w-xl text-xs text-muted-foreground">
           Share this link with your students — it's the only way they can join this class and become
-          a student here. Signing up separately at h-code.up.railway.app doesn't enroll them in
+          a student here. Signing up separately at hcodeacademy.co.uk doesn't enroll them in
           anything.
         </p>
       </div>

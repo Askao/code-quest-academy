@@ -385,7 +385,11 @@ function LessonPage() {
   useEffect(() => setRecapPassed(false), [lesson.slug]);
 
   const topicOrder = topicsWithLessons(lesson.track, gcseBoard);
-  const topicIndex = topicOrder.indexOf(lesson.topic);
+  // topicOrder's elements are typed as the literal GCSE_TOPICS/ALEVEL_TOPICS
+  // union (from game.ts's `as const` lists); lesson.topic is deliberately
+  // loose (it comes straight off the JSON content), so indexOf needs a cast
+  // here rather than tightening TaskContent/Lesson's topic type everywhere.
+  const topicIndex = topicOrder.indexOf(lesson.topic as (typeof topicOrder)[number]);
   const previousTopicComplete =
     topicIndex <= 0 ||
     isTopicComplete(lesson.track, topicOrder[topicIndex - 1]!, passed, quizPassed);
