@@ -58,7 +58,10 @@ async function pagedIn<T>(
  * "no assessments" instead of throwing, so the report still shows practice
  * and homework rather than an error.
  */
-function useClassAssessmentData(classId: string) {
+/** Exported so other class-page panels (Markbook) can share this fetch and
+ * feed the same data into class-report.ts's per-student functions, rather
+ * than each panel querying assessments separately. */
+export function useClassAssessmentData(classId: string) {
   return useQuery({
     queryKey: ["class-report-data", classId],
     staleTime: 30_000,

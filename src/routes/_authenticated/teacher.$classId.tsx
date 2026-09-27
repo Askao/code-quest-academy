@@ -11,6 +11,7 @@ import { Progress } from "@/components/ui/progress";
 import { Tabs, TabsContent, TabsList, TabsTrigger } from "@/components/ui/tabs";
 import { AssessmentsPanel } from "@/components/AssessmentsPanel";
 import { ClassReport } from "@/components/ClassReport";
+import { Markbook } from "@/components/Markbook";
 import { RevisionSummaryPanel } from "@/components/RevisionSummaryPanel";
 import { notifyHomeworkSet, notifyMessage } from "@/lib/homework-notify";
 import { fillMissingHomeworkForClass } from "@/lib/homework-late-join";
@@ -976,6 +977,7 @@ function ClassDetail() {
       <Tabs value={activeTab} onValueChange={setActiveTab}>
         <TabsList>
           <TabsTrigger value="overview">Students & report</TabsTrigger>
+          <TabsTrigger value="markbook">Markbook</TabsTrigger>
           <TabsTrigger value="lessons">Lessons</TabsTrigger>
           <TabsTrigger value="homework">Homework</TabsTrigger>
           <TabsTrigger value="assessments">Assessments</TabsTrigger>
@@ -1122,6 +1124,16 @@ function ClassDetail() {
             students={data?.students ?? []}
             homework={data?.homework ?? []}
             practiceByTopic={topicSummary}
+          />
+        </TabsContent>
+
+        <TabsContent value="markbook" className="pt-4">
+          <Markbook
+            classId={classId}
+            track={track}
+            board={board}
+            students={data?.students ?? []}
+            homework={data?.homework ?? []}
           />
         </TabsContent>
 

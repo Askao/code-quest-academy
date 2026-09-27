@@ -1,4 +1,4 @@
-import { createFileRoute, useNavigate } from "@tanstack/react-router";
+import { createFileRoute, Link, useNavigate } from "@tanstack/react-router";
 import { useQuery, useQueryClient } from "@tanstack/react-query";
 import { toast } from "sonner";
 import { supabase } from "@/integrations/supabase/client";
@@ -6,6 +6,7 @@ import { useAuth } from "@/hooks/useAuth";
 import { Button } from "@/components/ui/button";
 import { pickChallenge } from "@/lib/progress";
 import type { TrackKey } from "@/lib/game";
+import { currentLosingStreak, DUEL_STREAK_THRESHOLD } from "@/lib/duel-streak";
 
 export const Route = createFileRoute("/_authenticated/duels")({
   head: () => ({
@@ -115,6 +116,10 @@ function Duels() {
   const trackOf = (classId: string) =>
     (data?.classes.find((c) => c!.id === classId)?.track as TrackKey) ?? "gcse";
 
+  // Trial: private to this student only - never shown next to a classmate's
+  // name, never surfaced to a teacher. See src/lib/duel-streak.ts.
+  const streak = user && data ? currentLosingStreak(data.duels, user.id) : 0;
+
   return (
     <div className="space-y-8">
       <div>
@@ -123,6 +128,18 @@ function Duels() {
           Pick a classmate, both solve the same challenge — fastest correct answer wins.
         </p>
       </div>
+
+      {streak >= DUEL_STREAK_THRESHOLD ? (
+        <div className="panel flex flex-wrap items-center justify-between gap-3 border-primary/40 p-4">
+          <p className="text-sm">
+            You've lost your last <strong>{streak}</strong> duels in a row. No shame in it — a bit of
+            Practice on your weaker topics before the next one might help.
+          </p>
+          <Button asChild size="sm" variant="secondary">
+            <Link to="/practice">Go to Practice</Link>
+          </Button>
+        </div>
+      ) : null}
 
       <section>
         <h2 className="mb-3 text-xl font-semibold">Classmates</h2>

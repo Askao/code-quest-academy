@@ -295,11 +295,16 @@ function Teacher() {
 
   return (
     <div className="space-y-8">
-      <div>
-        <h1 className="text-3xl font-bold">Teacher area</h1>
-        <p className="mt-1 text-muted-foreground">
-          Create a class, share the join code, then set homework and watch progress.
-        </p>
+      <div className="flex flex-wrap items-start justify-between gap-3">
+        <div>
+          <h1 className="text-3xl font-bold">Teacher area</h1>
+          <p className="mt-1 text-muted-foreground">
+            Create a class, share the join code, then set homework and watch progress.
+          </p>
+        </div>
+        <Button asChild size="sm" variant="secondary">
+          <Link to="/admin/task-drafts">Task drafts</Link>
+        </Button>
       </div>
 
       <div className="panel space-y-3 p-5">
