@@ -3,6 +3,7 @@ import { useQuery, useQueryClient } from "@tanstack/react-query";
 import { Fragment, useEffect, useRef, useState } from "react";
 import { toast } from "sonner";
 import { supabase } from "@/integrations/supabase/client";
+import { sb } from "@/lib/assessments-db";
 import { useAuth } from "@/hooks/useAuth";
 import { Button } from "@/components/ui/button";
 import { Input } from "@/components/ui/input";
@@ -79,6 +80,8 @@ function ClassDetail() {
   const [expandedLesson, setExpandedLesson] = useState<string | null>(null);
   const [confirmUnassign, setConfirmUnassign] = useState<string | null>(null);
   const [unassigning, setUnassigning] = useState(false);
+  const [confirmRemoveStudent, setConfirmRemoveStudent] = useState<string | null>(null);
+  const [removingStudent, setRemovingStudent] = useState(false);
   const [expandedHomework, setExpandedHomework] = useState<string | null>(null);
   const [coTeacherEmail, setCoTeacherEmail] = useState("");
   const [addingCoTeacher, setAddingCoTeacher] = useState(false);
@@ -204,6 +207,15 @@ function ClassDetail() {
         const accuracy = mineAttempts.length
           ? Math.round((mineAttempts.filter((a) => a.passed).length / mineAttempts.length) * 100)
           : 0;
+        // stats.last_active only moves on a passed daily recap (see
+        // progress.ts's own comment on why) - it's the right source for the
+        // streak, but reused here it made "Last active" look wrong for any
+        // student grinding Practice or homework without ever doing a recap.
+        // attempts is already ordered newest-first, so its first row for
+        // this student (if any, within the 500 fetched) is their true most
+        // recent Test click across every mode. Falls back to last_active for
+        // the rare case a very active class's fetch cap missed it.
+        const lastActive = mineAttempts[0]?.created_at ?? s?.last_active ?? null;
         // Automatic struggling detection: three fails in a row on any topic
         // (see consecutive_fails in src/lib/progress.ts) - surfaced here
         // instead of relying on a student to self-report being stuck.
@@ -259,7 +271,7 @@ function ClassDetail() {
           streak: s?.streak_days ?? 0,
           avg,
           accuracy,
-          lastActive: s?.last_active,
+          lastActive,
           skills: mine,
           struggling,
           strugglingTopics: strugglingIn,
@@ -670,6 +682,59 @@ function ClassDetail() {
     }
   };
 
+  // Unenrols one student - their account, progress, homework history and
+  // attempts are all untouched, they just stop being in this class (see
+  // remove_student_from_class's own comment for why this is separate from
+  // the admin-only admin_set_student_class). Confirmed inline first, the
+  // same as unassignLesson above, since it isn't reversible from here.
+  const removeStudent = async (studentId: string, name: string) => {
+    setRemovingStudent(true);
+    try {
+      const { error } = await sb.rpc("remove_student_from_class", {
+        _student_id: studentId,
+        _class_id: classId,
+      });
+      if (error) {
+        toast.error(error.message);
+        return;
+      }
+      toast.success(`${name} removed from the class`);
+      setExpandedStudent(null);
+      void qc.invalidateQueries({ queryKey: ["class", classId] });
+    } finally {
+      setRemovingStudent(false);
+      setConfirmRemoveStudent(null);
+    }
+  };
+
+  const renderRemoveStudentConfirm = (studentId: string, name: string) => (
+    <div className="mb-4 space-y-2 rounded-md border border-destructive/30 bg-destructive/5 p-3">
+      <p className="text-xs text-muted-foreground">
+        Removes {name} from this class. Their account, XP, skill levels, homework history and past
+        attempts are all kept — they just won't be on this roster or see this class's homework and
+        lessons any more. They (or you, from Admin) can put them back in a class at any time.
+      </p>
+      <div className="flex gap-2">
+        <Button
+          size="sm"
+          variant="destructive"
+          disabled={removingStudent}
+          onClick={() => void removeStudent(studentId, name)}
+        >
+          {removingStudent ? "Removing…" : "Confirm remove from class"}
+        </Button>
+        <Button
+          size="sm"
+          variant="secondary"
+          disabled={removingStudent}
+          onClick={() => setConfirmRemoveStudent(null)}
+        >
+          Cancel
+        </Button>
+      </div>
+    </div>
+  );
+
   const renderUnassignConfirm = (a: LessonAssignment) => (
     <div className="mt-3 space-y-2 rounded-md border border-destructive/30 bg-destructive/5 p-3">
       <p className="text-xs text-muted-foreground">
@@ -1056,6 +1121,22 @@ function ClassDetail() {
                     {expandedStudent === s.id ? (
                       <tr className="border-b border-border/60 bg-secondary/10">
                         <td colSpan={8} className="p-4">
+                          {confirmRemoveStudent === s.id ? (
+                            renderRemoveStudentConfirm(s.id, s.name)
+                          ) : (
+                            <div className="mb-3 flex justify-end">
+                              <Button
+                                size="sm"
+                                variant="secondary"
+                                onClick={(e) => {
+                                  e.stopPropagation();
+                                  setConfirmRemoveStudent(s.id);
+                                }}
+                              >
+                                Remove from class
+                              </Button>
+                            </div>
+                          )}
                           <div className="grid gap-3 sm:grid-cols-2 lg:grid-cols-3">
                             {topicsFor(track, board).map((t) => {
                               const lvl = Number(
