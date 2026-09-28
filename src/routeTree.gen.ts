@@ -19,6 +19,7 @@ import { Route as AuthenticatedAdminRouteImport } from './routes/_authenticated/
 import { Route as AuthenticatedDashboardRouteImport } from './routes/_authenticated/dashboard'
 import { Route as AuthenticatedDuelsRouteImport } from './routes/_authenticated/duels'
 import { Route as AuthenticatedLeaderboardRouteImport } from './routes/_authenticated/leaderboard'
+import { Route as AuthenticatedLockerRouteImport } from './routes/_authenticated/locker'
 import { Route as AuthenticatedPracticeRouteImport } from './routes/_authenticated/practice'
 import { Route as JoinCodeRouteImport } from './routes/join.$code'
 import { Route as AuthenticatedAdminTaskDraftsRouteImport } from './routes/_authenticated/admin.task-drafts'
@@ -83,6 +84,11 @@ const AuthenticatedLeaderboardRoute =
     path: '/leaderboard',
     getParentRoute: () => AuthenticatedRouteRoute,
   } as any)
+const AuthenticatedLockerRoute = AuthenticatedLockerRouteImport.update({
+  id: '/locker',
+  path: '/locker',
+  getParentRoute: () => AuthenticatedRouteRoute,
+} as any)
 const AuthenticatedPracticeRoute = AuthenticatedPracticeRouteImport.update({
   id: '/practice',
   path: '/practice',
@@ -168,6 +174,7 @@ export interface FileRoutesByFullPath {
   '/dashboard': typeof AuthenticatedDashboardRoute
   '/duels': typeof AuthenticatedDuelsRoute
   '/leaderboard': typeof AuthenticatedLeaderboardRoute
+  '/locker': typeof AuthenticatedLockerRoute
   '/practice': typeof AuthenticatedPracticeRoute
   '/join/$code': typeof JoinCodeRoute
   '/admin/task-drafts': typeof AuthenticatedAdminTaskDraftsRoute
@@ -192,6 +199,7 @@ export interface FileRoutesByTo {
   '/dashboard': typeof AuthenticatedDashboardRoute
   '/duels': typeof AuthenticatedDuelsRoute
   '/leaderboard': typeof AuthenticatedLeaderboardRoute
+  '/locker': typeof AuthenticatedLockerRoute
   '/practice': typeof AuthenticatedPracticeRoute
   '/join/$code': typeof JoinCodeRoute
   '/admin/task-drafts': typeof AuthenticatedAdminTaskDraftsRoute
@@ -218,6 +226,7 @@ export interface FileRoutesById {
   '/_authenticated/dashboard': typeof AuthenticatedDashboardRoute
   '/_authenticated/duels': typeof AuthenticatedDuelsRoute
   '/_authenticated/leaderboard': typeof AuthenticatedLeaderboardRoute
+  '/_authenticated/locker': typeof AuthenticatedLockerRoute
   '/_authenticated/practice': typeof AuthenticatedPracticeRoute
   '/join/$code': typeof JoinCodeRoute
   '/_authenticated/admin/task-drafts': typeof AuthenticatedAdminTaskDraftsRoute
@@ -244,6 +253,7 @@ export interface FileRouteTypes {
     | '/dashboard'
     | '/duels'
     | '/leaderboard'
+    | '/locker'
     | '/practice'
     | '/join/$code'
     | '/admin/task-drafts'
@@ -268,6 +278,7 @@ export interface FileRouteTypes {
     | '/dashboard'
     | '/duels'
     | '/leaderboard'
+    | '/locker'
     | '/practice'
     | '/join/$code'
     | '/admin/task-drafts'
@@ -293,6 +304,7 @@ export interface FileRouteTypes {
     | '/_authenticated/dashboard'
     | '/_authenticated/duels'
     | '/_authenticated/leaderboard'
+    | '/_authenticated/locker'
     | '/_authenticated/practice'
     | '/join/$code'
     | '/_authenticated/admin/task-drafts'
@@ -387,6 +399,13 @@ declare module '@tanstack/react-router' {
       path: '/leaderboard'
       fullPath: '/leaderboard'
       preLoaderRoute: typeof AuthenticatedLeaderboardRouteImport
+      parentRoute: typeof AuthenticatedRouteRoute
+    }
+    '/_authenticated/locker': {
+      id: '/_authenticated/locker'
+      path: '/locker'
+      fullPath: '/locker'
+      preLoaderRoute: typeof AuthenticatedLockerRouteImport
       parentRoute: typeof AuthenticatedRouteRoute
     }
     '/_authenticated/practice': {
@@ -500,6 +519,7 @@ interface AuthenticatedRouteRouteChildren {
   AuthenticatedDashboardRoute: typeof AuthenticatedDashboardRoute
   AuthenticatedDuelsRoute: typeof AuthenticatedDuelsRoute
   AuthenticatedLeaderboardRoute: typeof AuthenticatedLeaderboardRoute
+  AuthenticatedLockerRoute: typeof AuthenticatedLockerRoute
   AuthenticatedPracticeRoute: typeof AuthenticatedPracticeRoute
   AuthenticatedHomeworkHomeworkIdRoute: typeof AuthenticatedHomeworkHomeworkIdRoute
   AuthenticatedLearnLessonSlugRoute: typeof AuthenticatedLearnLessonSlugRoute
@@ -519,6 +539,7 @@ const AuthenticatedRouteRouteChildren: AuthenticatedRouteRouteChildren = {
   AuthenticatedDashboardRoute: AuthenticatedDashboardRoute,
   AuthenticatedDuelsRoute: AuthenticatedDuelsRoute,
   AuthenticatedLeaderboardRoute: AuthenticatedLeaderboardRoute,
+  AuthenticatedLockerRoute: AuthenticatedLockerRoute,
   AuthenticatedPracticeRoute: AuthenticatedPracticeRoute,
   AuthenticatedHomeworkHomeworkIdRoute: AuthenticatedHomeworkHomeworkIdRoute,
   AuthenticatedLearnLessonSlugRoute: AuthenticatedLearnLessonSlugRoute,

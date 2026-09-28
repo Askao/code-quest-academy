@@ -122,6 +122,127 @@ export function skillPercent(level: number) {
   return Math.round(((clamped - 1) / 4) * 100);
 }
 
+/**
+ * Avatars and banners a student can equip once unlocked. Unlock eligibility
+ * is enforced server-side by `cosmetic_unlocked` in
+ * supabase/migrations/20260930210000_locker_cosmetics.sql (equipping goes
+ * through `set_cosmetic`, which checks it) - this catalog is only what's
+ * drawn and what requirement text is shown for a locked one. The `key` and
+ * `requiredLevel`/`requirement` here MUST stay in sync with that SQL CASE
+ * statement, or a student could see (or fail to see) an avatar as unlocked
+ * when the database disagrees.
+ */
+export const AVATARS: { key: string; name: string; icon: string; requirement: string }[] = [
+  { key: "sprout", name: "Sprout", icon: "🌱", requirement: "Reach level 1" },
+  { key: "spark", name: "Spark", icon: "✨", requirement: "Reach level 3" },
+  { key: "compass", name: "Compass", icon: "🧭", requirement: "Reach level 5" },
+  { key: "owl", name: "Owl", icon: "🦉", requirement: "Reach level 7" },
+  { key: "fox", name: "Fox", icon: "🦊", requirement: "Reach level 9" },
+  { key: "rocket", name: "Rocket", icon: "🚀", requirement: "Reach level 12" },
+  { key: "phoenix", name: "Phoenix", icon: "🐦‍🔥", requirement: "Reach level 15" },
+  { key: "wolf", name: "Wolf", icon: "🐺", requirement: "Reach level 18" },
+  { key: "dragon", name: "Dragon", icon: "🐉", requirement: "Reach level 22" },
+  { key: "crown", name: "Crown", icon: "👑", requirement: "Reach level 27" },
+  { key: "comet", name: "Comet", icon: "☄️", requirement: "Win a duel" },
+  { key: "century", name: "Century", icon: "💯", requirement: "Pass 100 challenges" },
+  { key: "duellist_crest", name: "Duellist's Crest", icon: "⚔️", requirement: "Win 5 duels" },
+  { key: "streak_flame", name: "Streak Flame", icon: "🔥", requirement: "Hit a 14 day streak" },
+];
+
+export const BANNERS: { key: string; name: string; gradient: string; requirement: string }[] = [
+  {
+    key: "horizon",
+    name: "Horizon",
+    gradient: "linear-gradient(135deg, #fde68a, #fca5a5, #93c5fd)",
+    requirement: "Reach level 1",
+  },
+  {
+    key: "ember",
+    name: "Ember",
+    gradient: "linear-gradient(135deg, #7c2d12, #ea580c, #fbbf24)",
+    requirement: "Reach level 5",
+  },
+  {
+    key: "circuit",
+    name: "Circuit",
+    gradient: "linear-gradient(135deg, #0f172a, #0891b2, #67e8f9)",
+    requirement: "Reach level 10",
+  },
+  {
+    key: "aurora",
+    name: "Aurora",
+    gradient: "linear-gradient(135deg, #064e3b, #10b981, #a78bfa)",
+    requirement: "Reach level 15",
+  },
+  {
+    key: "midnight",
+    name: "Midnight",
+    gradient: "linear-gradient(135deg, #020617, #1e1b4b, #4338ca)",
+    requirement: "Reach level 20",
+  },
+  {
+    key: "champion",
+    name: "Champion",
+    gradient: "linear-gradient(135deg, #78350f, #d97706, #fef08a)",
+    requirement: "Reach level 25",
+  },
+];
+
+/**
+ * Mirrors `cosmetic_unlocked` in the same migration, for display only (a
+ * greyed-out lock icon and "Reach level 9" caption in the Locker) - the
+ * server independently re-checks eligibility in `set_cosmetic` before ever
+ * writing selected_avatar/selected_banner, so this being out of sync would
+ * only mislead the UI, not open a security hole. Keep the two in sync
+ * anyway, or a student sees a wrong locked/unlocked state.
+ */
+export function cosmeticUnlockedClientSide(
+  key: string,
+  ctx: { level: number; duelWins: number; passedCount: number; bestStreak: number },
+): boolean {
+  switch (key) {
+    case "sprout":
+    case "horizon":
+      return ctx.level >= 1;
+    case "spark":
+      return ctx.level >= 3;
+    case "compass":
+    case "ember":
+      return ctx.level >= 5;
+    case "owl":
+      return ctx.level >= 7;
+    case "fox":
+      return ctx.level >= 9;
+    case "circuit":
+      return ctx.level >= 10;
+    case "rocket":
+      return ctx.level >= 12;
+    case "phoenix":
+    case "aurora":
+      return ctx.level >= 15;
+    case "wolf":
+      return ctx.level >= 18;
+    case "midnight":
+      return ctx.level >= 20;
+    case "dragon":
+      return ctx.level >= 22;
+    case "champion":
+      return ctx.level >= 25;
+    case "crown":
+      return ctx.level >= 27;
+    case "comet":
+      return ctx.duelWins >= 1;
+    case "century":
+      return ctx.passedCount >= 100;
+    case "duellist_crest":
+      return ctx.duelWins >= 5;
+    case "streak_flame":
+      return ctx.bestStreak >= 14;
+    default:
+      return false;
+  }
+}
+
 export const BADGES: Record<string, { name: string; description: string; icon: string }> = {
   first_pass: { name: "First light", description: "Passed your first challenge", icon: "🌱" },
   ten_pass: { name: "Ten up", description: "Passed 10 challenges", icon: "🔟" },

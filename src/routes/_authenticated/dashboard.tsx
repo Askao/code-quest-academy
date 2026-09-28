@@ -10,13 +10,16 @@ import { JoinClassBox } from "@/components/JoinClassBox";
 import { createFileRoute, Link } from "@tanstack/react-router";
 import { useQuery, useQueryClient } from "@tanstack/react-query";
 import { supabase } from "@/integrations/supabase/client";
+import { sb } from "@/lib/assessments-db";
 import { useAuth } from "@/hooks/useAuth";
 import { Button } from "@/components/ui/button";
 import { Progress } from "@/components/ui/progress";
 import { ResetProgressControl } from "@/components/ResetProgressControl";
+import { CosmeticAvatar } from "@/components/CosmeticAvatar";
 import { corePracticeTasksForTopic, lessonsForTopic, projectGroupsForTopic } from "@/lib/content";
 import {
   BADGES,
+  BANNERS,
   levelFromXp,
   skillLabel,
   skillPercent,
@@ -47,7 +50,7 @@ function Dashboard() {
     queryFn: async () => {
       const uid = user!.id;
       const todayStart = new Date().toISOString().slice(0, 10) + "T00:00:00.000Z";
-      const [stats, skills, badges, memberships, recapToday, passedRes] = await Promise.all([
+      const [stats, skills, badges, memberships, recapToday, passedRes, cosmetics] = await Promise.all([
         supabase.from("stats").select("*").eq("user_id", uid).maybeSingle(),
         supabase.from("skills").select("*").eq("user_id", uid),
         supabase.from("badges").select("*").eq("user_id", uid),
@@ -64,6 +67,7 @@ function Dashboard() {
         // three-year span needs a sense of overall shape, not just today's
         // streak and level.
         supabase.from("attempts").select("passed, challenges!inner(slug)").eq("user_id", uid).eq("passed", true),
+        sb.from("profiles").select("selected_avatar, selected_banner").eq("id", uid).maybeSingle(),
       ]);
       const classIds = (memberships.data ?? []).map((m) => m.class_id);
       const homeworkRes = classIds.length
@@ -129,6 +133,8 @@ function Dashboard() {
         recapDoneToday: (recapToday.count ?? 0) > 0,
         passedSlugs,
         totalPassed,
+        selectedAvatar: cosmetics.data?.selected_avatar ?? null,
+        selectedBanner: cosmetics.data?.selected_banner ?? null,
       };
     },
   });
@@ -314,11 +320,36 @@ function Dashboard() {
     );
   }
 
+  const selectedBannerGradient = BANNERS.find((b) => b.key === data?.selectedBanner)?.gradient;
+
   return (
     <div className="space-y-8">
-      <div>
-        <h1 className="text-3xl font-bold">Hi {fullName || "there"} 👋</h1>
-        <p className="mt-1 text-muted-foreground">Here's where you're at right now.</p>
+      <div
+        className="relative overflow-hidden rounded-xl"
+        style={selectedBannerGradient ? { background: selectedBannerGradient } : undefined}
+      >
+        <div
+          className={`flex flex-wrap items-center gap-4 ${selectedBannerGradient ? "p-5" : ""}`}
+        >
+          {selectedBannerGradient ? (
+            <CosmeticAvatar avatarKey={data?.selectedAvatar} size="lg" className="ring-2 ring-background" />
+          ) : null}
+          <div className="min-w-0 flex-1">
+            <h1
+              className={`text-3xl font-bold ${selectedBannerGradient ? "text-white drop-shadow" : ""}`}
+            >
+              Hi {fullName || "there"} 👋
+            </h1>
+            <p
+              className={`mt-1 ${selectedBannerGradient ? "text-white/85 drop-shadow" : "text-muted-foreground"}`}
+            >
+              Here's where you're at right now.
+            </p>
+          </div>
+          <Button asChild size="sm" variant={selectedBannerGradient ? "secondary" : "outline"}>
+            <Link to="/locker">Locker</Link>
+          </Button>
+        </div>
       </div>
 
       <div className="grid gap-4 sm:grid-cols-3">

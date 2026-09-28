@@ -56,6 +56,9 @@ export function AppShell({ children }: { children: ReactNode }) {
       <NavLink to="/leaderboard" onClick={closeMenu}>
         Leaderboard
       </NavLink>
+      <NavLink to="/locker" onClick={closeMenu}>
+        Locker
+      </NavLink>
       {isTeacher ? (
         <NavLink to="/teacher" onClick={closeMenu}>
           Teacher
