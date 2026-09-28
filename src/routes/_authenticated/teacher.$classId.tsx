@@ -4,6 +4,7 @@ import { Fragment, useEffect, useRef, useState } from "react";
 import { toast } from "sonner";
 import { supabase } from "@/integrations/supabase/client";
 import { sb } from "@/lib/assessments-db";
+import { pagedIn } from "@/lib/paged-in";
 import { useAuth } from "@/hooks/useAuth";
 import { Button } from "@/components/ui/button";
 import { Input } from "@/components/ui/input";
@@ -168,33 +169,42 @@ function ClassDetail() {
       // practice/project completion below, so it runs whenever there are
       // students at all, not just when a lesson's been assigned - the quiz
       // fetch stays lesson-gated since nothing else uses it.
-      const [passedTasksRes, quizPassedRes] = await Promise.all([
+      //
+      // Both go through pagedIn rather than a plain .select().in(): a class
+      // with any real history quickly passes PostgREST's 1000-row response
+      // cap, and a query with no .range() doesn't error when that happens -
+      // it just quietly hands back the first page, in whatever order the
+      // database feels like, for a handful of students and nobody else.
+      // That's exactly what "lessons show no progress even though students
+      // have done the work" looks like, so this isn't optional here.
+      const [passedTaskRows, quizPassedRows] = await Promise.all([
         ids.length
-          ? supabase
-              .from("attempts")
-              .select("user_id, challenges!inner(slug)")
-              .in("user_id", ids)
-              .eq("passed", true)
-          : Promise.resolve({ data: [] }),
+          ? pagedIn<{ user_id: string; challenges: { slug: string } }>(
+              supabase,
+              "attempts",
+              "user_id, challenges!inner(slug)",
+              "user_id",
+              ids,
+            )
+          : Promise.resolve([]),
         ids.length && assignedLessonSlugs.length
-          ? supabase
-              .from("quiz_attempts")
-              .select("user_id, lesson_slug")
-              .in("user_id", ids)
-              .eq("passed", true)
-          : Promise.resolve({ data: [] }),
+          ? pagedIn<{ user_id: string; lesson_slug: string }>(
+              supabase,
+              "quiz_attempts",
+              "user_id, lesson_slug",
+              "user_id",
+              ids,
+            )
+          : Promise.resolve([]),
       ]);
       const passedTaskSlugsByUser = new Map<string, Set<string>>();
-      for (const row of (passedTasksRes.data ?? []) as unknown as {
-        user_id: string;
-        challenges: { slug: string };
-      }[]) {
+      for (const row of passedTaskRows) {
         const set = passedTaskSlugsByUser.get(row.user_id) ?? new Set<string>();
         set.add(row.challenges.slug);
         passedTaskSlugsByUser.set(row.user_id, set);
       }
       const quizPassedByUser = new Map<string, Set<string>>();
-      for (const row of (quizPassedRes.data ?? []) as { user_id: string; lesson_slug: string }[]) {
+      for (const row of quizPassedRows) {
         const set = quizPassedByUser.get(row.user_id) ?? new Set<string>();
         set.add(row.lesson_slug);
         quizPassedByUser.set(row.user_id, set);

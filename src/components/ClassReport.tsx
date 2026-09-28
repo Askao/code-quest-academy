@@ -22,35 +22,9 @@ import { FlagsGuide } from "@/components/FlagsGuide";
 import { STRUGGLING_THRESHOLD, strugglingTooltip } from "@/lib/flags";
 import { BAND_LABEL, bandFor, type Band } from "@/lib/results-analysis";
 import { fetchQuestions, sb, type BankQuestion } from "@/lib/assessments-db";
+import { pagedIn } from "@/lib/paged-in";
 
 // ------------------------------------------------------------ data
-
-const PAGE = 1000;
-
-async function pagedIn<T>(
-  table: string,
-  select: string,
-  column: string,
-  ids: string[],
-): Promise<T[]> {
-  const out: T[] = [];
-  // 100 ids per request keeps the URL short; each request is paged past
-  // PostgREST's 1000-row default so a big class can't be silently truncated.
-  for (let i = 0; i < ids.length; i += 100) {
-    const chunk = ids.slice(i, i + 100);
-    for (let from = 0; ; from += PAGE) {
-      const { data, error } = await sb
-        .from(table)
-        .select(select)
-        .in(column, chunk)
-        .range(from, from + PAGE - 1);
-      if (error) throw new Error(error.message);
-      out.push(...((data ?? []) as T[]));
-      if ((data ?? []).length < PAGE) break;
-    }
-  }
-  return out;
-}
 
 /**
  * Everything about a class's assessments the report needs. If the
@@ -79,12 +53,14 @@ export function useClassAssessmentData(classId: string) {
 
         const [items, attempts] = await Promise.all([
           pagedIn<{ assessment_id: string; position: number; question_id: string }>(
+            sb,
             "assessment_items",
             "assessment_id, position, question_id",
             "assessment_id",
             ids,
           ),
           pagedIn<ReportData["attempts"][number]>(
+            sb,
             "assessment_attempts",
             "id, assessment_id, student_id, started_at, submitted_at, marked_at",
             "assessment_id",
@@ -97,6 +73,7 @@ export function useClassAssessmentData(classId: string) {
           questions.push(...(await fetchQuestions(questionIds.slice(i, i + 100))));
         }
         const answers = await pagedIn<ReportData["answers"][number]>(
+          sb,
           "assessment_answers",
           "attempt_id, question_id, marks_awarded, teacher_comment",
           "attempt_id",
