@@ -2,8 +2,10 @@ import { createFileRoute, Link, useNavigate } from "@tanstack/react-router";
 import { useQuery, useQueryClient } from "@tanstack/react-query";
 import { toast } from "sonner";
 import { supabase } from "@/integrations/supabase/client";
+import { sb } from "@/lib/assessments-db";
 import { useAuth } from "@/hooks/useAuth";
 import { Button } from "@/components/ui/button";
+import { CosmeticAvatar } from "@/components/CosmeticAvatar";
 import { pickChallenge } from "@/lib/progress";
 import type { TrackKey } from "@/lib/game";
 import { currentLosingStreak, DUEL_STREAK_THRESHOLD } from "@/lib/duel-streak";
@@ -67,18 +69,23 @@ function Duels() {
         (m) => otherIds.has(m.student_id) && !staffIds.has(m.student_id),
       );
       const profiles = others.length
-        ? await supabase
+        ? await sb
             .from("profiles")
-            .select("id, full_name")
+            .select("id, full_name, selected_avatar")
             .in(
               "id",
               others.map((o) => o.student_id),
             )
-        : { data: [] as { id: string; full_name: string | null }[] };
+        : { data: [] as { id: string; full_name: string | null; selected_avatar: string | null }[] };
       const nameOf = new Map((profiles.data ?? []).map((p) => [p.id, p.full_name]));
+      const avatarOf = new Map((profiles.data ?? []).map((p) => [p.id, p.selected_avatar]));
       return {
         classes: (memberships.data ?? []).map((m) => m.classes).filter(Boolean),
-        classmates: others.map((o) => ({ ...o, name: nameOf.get(o.student_id) ?? "Student" })),
+        classmates: others.map((o) => ({
+          ...o,
+          name: nameOf.get(o.student_id) ?? "Student",
+          avatar: avatarOf.get(o.student_id) ?? null,
+        })),
         duels: duels.data ?? [],
       };
     },
@@ -149,6 +156,7 @@ function Duels() {
               key={`${c.class_id}-${c.student_id}`}
               className="panel flex items-center gap-3 p-4"
             >
+              <CosmeticAvatar avatarKey={c.avatar} size="sm" />
               <span className="flex-1 font-medium">{c.name}</span>
               <Button
                 size="sm"

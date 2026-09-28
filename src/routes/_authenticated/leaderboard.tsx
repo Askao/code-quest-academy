@@ -2,9 +2,11 @@ import { createFileRoute, Link } from "@tanstack/react-router";
 import { useQuery } from "@tanstack/react-query";
 import { useState, type ReactNode } from "react";
 import { supabase } from "@/integrations/supabase/client";
+import { sb } from "@/lib/assessments-db";
 import { useAuth } from "@/hooks/useAuth";
 import { Button } from "@/components/ui/button";
 import { Tabs, TabsContent, TabsList, TabsTrigger } from "@/components/ui/tabs";
+import { CosmeticAvatar } from "@/components/CosmeticAvatar";
 import { levelFromXp, type TrackKey } from "@/lib/game";
 
 export const Route = createFileRoute("/_authenticated/leaderboard")({
@@ -27,7 +29,7 @@ export const Route = createFileRoute("/_authenticated/leaderboard")({
 
 const TOP_N = 10;
 
-type Row = { id: string; name: string; cells: ReactNode[] };
+type Row = { id: string; name: string; avatar?: string | null; cells: ReactNode[] };
 
 function rankIcon(i: number) {
   return i === 0 ? "🥇" : i === 1 ? "🥈" : i === 2 ? "🥉" : i + 1;
@@ -65,7 +67,12 @@ function LeaderboardTable({
               className={`border-b border-border/60 ${r.id === currentUserId ? "bg-secondary/60" : ""}`}
             >
               <td className="p-3 font-mono">{rankIcon(i)}</td>
-              <td className="p-3 font-medium">{r.name}</td>
+              <td className="p-3 font-medium">
+                <div className="flex items-center gap-2">
+                  <CosmeticAvatar avatarKey={r.avatar} size="sm" />
+                  {r.name}
+                </div>
+              </td>
               {r.cells.map((c, j) => (
                 <td key={j} className="p-3">
                   {c}
@@ -175,7 +182,7 @@ function Leaderboard() {
 
       const sinceIso = new Date(Date.now() - windowDays * 86400000).toISOString();
       const [profiles, stats, duels, recentAttempts] = await Promise.all([
-        supabase.from("profiles").select("id, full_name").in("id", ids),
+        sb.from("profiles").select("id, full_name, selected_avatar").in("id", ids),
         supabase.from("stats").select("*").in("user_id", ids),
         supabase
           .from("duels")
@@ -190,6 +197,8 @@ function Leaderboard() {
       ]);
       const nameOf = (id: string) =>
         (profiles.data ?? []).find((p) => p.id === id)?.full_name ?? "Student";
+      const avatarOf = (id: string) =>
+        (profiles.data ?? []).find((p) => p.id === id)?.selected_avatar ?? null;
       const wins = new Map<string, number>();
       (duels.data ?? []).forEach((d) => {
         if (d.winner_id) wins.set(d.winner_id, (wins.get(d.winner_id) ?? 0) + 1);
@@ -202,6 +211,7 @@ function Leaderboard() {
           return {
             id,
             name: nameOf(id),
+            avatar: avatarOf(id),
             xp,
             cells: [
               levelFromXp(xp).level,
@@ -228,6 +238,7 @@ function Leaderboard() {
         .map((r) => ({
           id: r.id,
           name: r.name,
+          avatar: avatarOf(r.id),
           cells: [
             <span key="gained" className="text-primary">
               +{r.xp} XP
@@ -244,17 +255,18 @@ function Leaderboard() {
     enabled: scope === "school" && !!resolvedSchoolId,
     queryFn: async () => {
       const [topXp, improved] = await Promise.all([
-        supabase.rpc("leaderboard_top_xp", { _class_id: null, _track: schoolTrack, _limit: TOP_N }),
-        supabase.rpc("leaderboard_most_improved", {
+        sb.rpc("leaderboard_top_xp", { _class_id: null, _track: schoolTrack, _limit: TOP_N }),
+        sb.rpc("leaderboard_most_improved", {
           _class_id: null,
           _track: schoolTrack,
           _limit: TOP_N,
         }),
       ]);
       return {
-        topXp: (topXp.data ?? []).map((r) => ({
+        topXp: (topXp.data ?? []).map((r: { id: string; name: string; avatar: string | null; xp: number; streak_days: number }) => ({
           id: r.id,
           name: r.name,
+          avatar: r.avatar,
           cells: [
             levelFromXp(r.xp).level,
             <span key="xp" className="text-primary">
@@ -263,9 +275,10 @@ function Leaderboard() {
             `${r.streak_days} 🔥`,
           ] as ReactNode[],
         })),
-        improved: (improved.data ?? []).map((r) => ({
+        improved: (improved.data ?? []).map((r: { id: string; name: string; avatar: string | null; xp_gained: number }) => ({
           id: r.id,
           name: r.name,
+          avatar: r.avatar,
           cells: [
             <span key="gained" className="text-primary">
               +{r.xp_gained} XP
