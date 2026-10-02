@@ -733,6 +733,34 @@
       ]
     },
     {
+      "slug": "gcse-fundamentals-hw-09",
+      "lesson": 3,
+      "tier": 2,
+      "difficulty": 2,
+      "xp": 20,
+      "title": "Change from a £20 note",
+      "brief": "Input the price of an item as a whole number of pounds (it will be less than 20). You pay with a £20 note. Print the change you get back, as a whole number.",
+      "starter": "",
+      "hints": [
+        "Cast the input to an integer before doing any arithmetic.",
+        "int(input()) gives the price; the change is 20 minus the price."
+      ],
+      "tests": [
+        {
+          "stdin": "12",
+          "expect": "8"
+        },
+        {
+          "stdin": "5",
+          "expect": "15"
+        },
+        {
+          "stdin": "17",
+          "expect": "3"
+        }
+      ]
+    },
+    {
       "slug": "gcse-fundamentals-hw-10",
       "lesson": 1,
       "tier": 1,
@@ -820,6 +848,34 @@
       "tests": [
         {
           "expect": "Ada\n14\n1.6\nTrue"
+        }
+      ]
+    },
+    {
+      "slug": "gcse-fundamentals-hw-14",
+      "lesson": 3,
+      "tier": 2,
+      "difficulty": 2,
+      "xp": 20,
+      "title": "Years until you are 18",
+      "brief": "Input your age as a whole number (it will be under 18). Print how many years it is until you turn 18.",
+      "starter": "",
+      "hints": [
+        "Cast the input to an integer before doing any arithmetic.",
+        "int(input()) gives the age; the answer is 18 minus the age."
+      ],
+      "tests": [
+        {
+          "stdin": "14",
+          "expect": "4"
+        },
+        {
+          "stdin": "16",
+          "expect": "2"
+        },
+        {
+          "stdin": "11",
+          "expect": "7"
         }
       ]
     },
@@ -1031,6 +1087,34 @@
         {
           "stdin": "Sam\n1\n3.2",
           "expect": "Sam owns 1 pet(s), the heaviest weighing 3.2kg"
+        }
+      ]
+    },
+    {
+      "slug": "gcse-fundamentals-hw-24",
+      "lesson": 3,
+      "tier": 3,
+      "difficulty": 3,
+      "xp": 25,
+      "title": "Bake sale total",
+      "brief": "Input the number of cakes sold, then the number of cookies sold, each as a whole number. Cakes cost £1.50 each and cookies cost £0.75 each. Print the total raised in the format `Total raised: £<total>`, with the total shown to exactly 2 decimal places.",
+      "starter": "",
+      "hints": [
+        "Cast both inputs to integers, then multiply each by its price and add the two results.",
+        "Format the total in an f-string with :.2f so it always shows exactly 2 decimal places."
+      ],
+      "tests": [
+        {
+          "stdin": "4\n2",
+          "expect": "Total raised: £7.50"
+        },
+        {
+          "stdin": "10\n8",
+          "expect": "Total raised: £21.00"
+        },
+        {
+          "stdin": "3\n6",
+          "expect": "Total raised: £9.00"
         }
       ]
     },
