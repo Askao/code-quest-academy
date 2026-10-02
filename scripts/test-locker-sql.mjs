@@ -24,7 +24,7 @@ await db.exec(`
   CREATE TABLE public.profiles (id uuid PRIMARY KEY, email text, full_name text, school_id uuid);
   CREATE TABLE public.stats (user_id uuid PRIMARY KEY, xp int NOT NULL DEFAULT 0, best_streak int NOT NULL DEFAULT 0);
   CREATE TABLE public.duels (id uuid PRIMARY KEY DEFAULT gen_random_uuid(), winner_id uuid);
-  CREATE TABLE public.attempts (id uuid PRIMARY KEY DEFAULT gen_random_uuid(), user_id uuid, passed boolean NOT NULL DEFAULT false);
+  CREATE TABLE public.attempts (id uuid PRIMARY KEY DEFAULT gen_random_uuid(), user_id uuid, challenge_id uuid, passed boolean NOT NULL DEFAULT false);
   GRANT USAGE ON SCHEMA auth TO authenticated;
   GRANT SELECT, UPDATE ON public.profiles TO authenticated;
   GRANT SELECT ON public.stats, public.duels, public.attempts, auth.users TO authenticated;
@@ -33,6 +33,7 @@ await db.exec(`
 `);
 
 await db.exec(fs.readFileSync(root + "20260930210000_locker_cosmetics.sql", "utf8"));
+await db.exec(fs.readFileSync(root + "20261002120000_century_counts_distinct_challenges.sql", "utf8"));
 
 const U = {
   S1: "a0000000-0000-0000-0000-000000000001", // level 10, no wins
@@ -47,8 +48,11 @@ await db.exec(`
     ('${U.S2}', 0, 0),
     ('${U.S3}', 60000, 14);
   INSERT INTO public.duels (winner_id) VALUES ${Array(5).fill(`('${U.S3}')`).join(",")};
-  INSERT INTO public.attempts (user_id, passed) VALUES
-    ${Array(100).fill(`('${U.S3}', true)`).join(",")}, ('${U.S3}', false);
+  INSERT INTO public.attempts (user_id, challenge_id, passed)
+    SELECT '${U.S3}', gen_random_uuid(), true FROM generate_series(1, 100);
+  INSERT INTO public.attempts (user_id, challenge_id, passed) VALUES ('${U.S3}', gen_random_uuid(), false);
+  INSERT INTO public.attempts (user_id, challenge_id, passed)
+    SELECT '${U.S1}', ('c0000000-0000-0000-0000-00000000000' || (g % 3 + 1))::uuid, true FROM generate_series(1, 150) g;
 `);
 
 let pass = 0,
@@ -87,7 +91,11 @@ ok("S2 (level 1) does not have comet before winning a duel", !(await unlocked("S
 await db.exec(`INSERT INTO public.duels (winner_id) VALUES ('${U.S2}')`);
 ok("S2 has comet after winning a duel", await unlocked("S2", "comet"));
 ok("S3 has century (100 passes, the 101st being unpassed doesn't matter)", await unlocked("S3", "century"));
-ok("S1 does not have century", !(await unlocked("S1", "century")));
+ok("S1 does not have century: 150 replays of 3 challenges is only 3 challenges", !(await unlocked("S1", "century")));
+let cnt = await as("S3", `SELECT public.my_passed_challenge_count() AS n`);
+ok("my_passed_challenge_count counts distinct passed challenges for the caller", cnt.rows?.[0]?.n === 100, JSON.stringify(cnt));
+cnt = await as("S1", `SELECT public.my_passed_challenge_count() AS n`);
+ok("...and a farmer's replays collapse to 3", cnt.rows?.[0]?.n === 3, JSON.stringify(cnt));
 ok("S3 has duellist_crest (5 duel wins)", await unlocked("S3", "duellist_crest"));
 ok("S2 does not have duellist_crest (only 1 win)", !(await unlocked("S2", "duellist_crest")));
 ok("S3 has streak_flame (14-day best streak)", await unlocked("S3", "streak_flame"));
