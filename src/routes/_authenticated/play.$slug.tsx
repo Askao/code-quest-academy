@@ -367,7 +367,11 @@ function Play() {
           mode: search.mode,
           firstTry: attemptNumber === 1 && hintsShown === 0,
         });
-        toast.success(`Passed! +${summary.xpAwarded} XP`);
+        toast.success(
+          summary.alreadyCompleted
+            ? "Passed again - you've already completed this one, so no extra XP."
+            : `Passed! +${summary.xpAwarded} XP`,
+        );
         summary.newBadges.forEach((b) =>
           toast(`${BADGES[b]?.icon ?? "🏅"} Badge unlocked: ${BADGES[b]?.name ?? b}`),
         );
