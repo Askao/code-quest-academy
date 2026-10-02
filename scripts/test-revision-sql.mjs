@@ -232,14 +232,17 @@ for (let k = 0; k < 12; k++) {
 }
 ok("12 random papers of 10: none has two questions on the same concept", repeats === 0, `${repeats} had a repeat`);
 ok("...and each draws on at least 8 different topics (topics take turns)", lowTopicSpread === 0, `${lowTopicSpread} were lumpy`);
-const itConcepts = (await admin(`SELECT count(DISTINCT concept)::int n, count(*)::int q FROM public.assessment_questions WHERE board='ocr' AND topic='iteration'`)).rows[0];
-r = await as("S2", `SELECT public.create_revision_paper('ocr','{iteration}',${itConcepts.q},'smart','all of iteration',NULL) AS r`);
+// A paper holds 3 to 30 questions, so this needs a topic that runs out of
+// concepts before 30 yet still has 30 questions to fill the paper from.
+const smallTopic = (await admin(`SELECT topic, count(DISTINCT concept)::int n FROM public.assessment_questions WHERE board='ocr' GROUP BY topic HAVING count(DISTINCT concept) < 30 AND count(*) >= 30 ORDER BY count(DISTINCT concept) LIMIT 1`)).rows[0];
+const PAPER = 30;
+r = await as("S2", `SELECT public.create_revision_paper('ocr','{${smallTopic.topic}}',${PAPER},'smart','all of ${smallTopic.topic}',NULL) AS r`);
 const itPaper = r.rows[0].r;
-ok("a small topic still fills the paper when concepts run out (repeats come last)", itPaper.questions === itConcepts.q, JSON.stringify(itPaper));
-ok("...using every concept at least once", new Set(await conceptOf(itPaper.paper_id)).size === itConcepts.n);
-r = await as("S2", `SELECT public.create_revision_paper('ocr','{iteration}',${itConcepts.n},'smart','one of each',NULL) AS r`);
+ok("a small topic still fills the paper when concepts run out (repeats come last)", itPaper.questions === PAPER, JSON.stringify(itPaper));
+ok("...using every concept at least once", new Set(await conceptOf(itPaper.paper_id)).size === smallTopic.n);
+r = await as("S2", `SELECT public.create_revision_paper('ocr','{${smallTopic.topic}}',${smallTopic.n},'smart','one of each',NULL) AS r`);
 const oneEach = await conceptOf(r.rows[0].r.paper_id);
-ok("asking for exactly as many as there are concepts gives one of each", new Set(oneEach).size === oneEach.length && oneEach.length === itConcepts.n);
+ok("asking for exactly as many as there are concepts gives one of each", new Set(oneEach).size === oneEach.length && oneEach.length === smallTopic.n);
 ok("every question in the bank has a concept", (await admin(`SELECT count(*)::int n FROM public.assessment_questions WHERE concept IS NULL OR concept = ''`)).rows[0].n === 0);
 
 // ---- topic summary for the builder
@@ -275,7 +278,7 @@ for (const [t, stmt] of [
   const S3 = "b0000000-0000-0000-0000-000000000003"; // in class C, has never revised
   await admin(`INSERT INTO auth.users VALUES ('${S3}')`);
   await admin(`INSERT INTO public.class_members VALUES ('${C}','${S3}')`);
-  const qs = (await admin(`SELECT id, topic, marks FROM public.assessment_questions WHERE board='ocr' AND topic IN ('selection','iteration') ORDER BY topic, id LIMIT 40`)).rows;
+  const qs = (await admin(`SELECT id, topic, marks FROM public.assessment_questions WHERE board='ocr' AND topic IN ('selection','iteration') ORDER BY topic, id LIMIT 200`)).rows;
   const sel = qs.filter((q) => q.topic === "selection").slice(0, 2);
   const itr = qs.filter((q) => q.topic === "iteration").slice(0, 1);
   const mk = async (student, submitted) => {

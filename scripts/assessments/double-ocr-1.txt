@@ -1,0 +1,817 @@
+### ocr-fundamentals-19 | data-type-of-value | 1 | 2 | text
+State the data type of each of the following values.
+
+(a) `42` [1]
+
+(b) `"42"` [1]
+--- scheme
+1 | (a) Integer | Accept: int, whole number.
+1 | (b) String | Accept: str, text.
+
+### ocr-fundamentals-20 | variable-purpose | 1 | 1 | text
+State **one** reason why a programmer uses a variable in a program. [1]
+--- scheme
+1 | Any one of: to store a value that can change while the program runs / to store data that has been input so it can be used later / to give a value a name so it can be used more than once | Do not accept: "to store a variable" (circular).
+
+### ocr-fundamentals-21 | assignment-timing | 1 | 2 | text
+```
+x = 6
+y = x * 2
+x = 1
+print(y)
+```
+
+(a) State the output of this program. [1]
+
+(b) Explain why the output is not 2. [1]
+--- scheme
+1 | (a) 12 |
+1 | (b) y was calculated when x was 6 / changing x afterwards does not change the value already stored in y | Accept: the value of y is only worked out once, at line 2.
+
+### ocr-fundamentals-22 | input-returns-string | 1 | 1 | text
+State the data type of the value that is returned by the `input()` function. [1]
+--- scheme
+1 | String | Accept: str, text. Do not accept: integer.
+
+### ocr-fundamentals-23 | print-statement | 1 | 2 | code
+Write a single statement that outputs the text `Welcome to the quiz`. [2]
+--- scheme
+1 | Uses an output / print statement (e.g. print(...)) |
+1 | The text is correct and inside quotation marks | Accept: single or double quotation marks.
+
+### ocr-fundamentals-24 | comment-purpose | 1 | 1 | text
+State the purpose of a **comment** in a program. [1]
+--- scheme
+1 | To explain what the code does for a person reading it (it is ignored when the program runs) | Accept: to make the code easier to understand / maintain.
+
+### ocr-fundamentals-25 | float-identify | 1 | 1 | text
+Which **one** of these values is a real (float) number? [1]
+
+`4` `4.5` `"4.5"` `True`
+--- scheme
+1 | 4.5 |
+
+### ocr-fundamentals-26 | plus-on-strings | 1 | 2 | text
+```
+print("5" + "3")
+print(5 + 3)
+```
+
+State the output of each `print` statement. [2]
+--- scheme
+1 | 53 | First statement joins (concatenates) two strings.
+1 | 8 | Second statement adds two integers.
+
+### ocr-fundamentals-27 | variable-update-trace | 2 | 3 | text
+```
+score = 10
+score = score + 5
+score = score * 2
+print(score - 4)
+```
+
+(a) State the value stored in `score` after line 2. [1]
+
+(b) State the value stored in `score` after line 3. [1]
+
+(c) State the output of the program. [1]
+--- scheme
+1 | (a) 15 |
+1 | (b) 30 |
+1 | (c) 26 |
+
+### ocr-fundamentals-28 | casting-output-trace | 2 | 3 | text
+```
+a = "3"
+b = "4"
+print(a + b)
+print(int(a) + int(b))
+print(a * 2)
+```
+
+State the output of each of the three `print` statements. [3]
+--- scheme
+1 | 34 |
+1 | 7 |
+1 | 33 | `a * 2` repeats the string twice. Accept "33" with quotes.
+
+### ocr-fundamentals-29 | type-error-explain | 2 | 3 | text
+```
+age = input("Enter your age")
+nextYear = age + 1
+print(nextYear)
+```
+
+(a) Explain why this program produces an error when it is run. [2]
+
+(b) Write a corrected version of line 1. [1]
+--- scheme
+1 | (a) input() returns a string / age is a string |
+1 | (a) A string cannot be added to an integer (the + operator cannot join a string and a number) |
+1 | (b) age = int(input("Enter your age")) | Accept float(...) if the line is otherwise correct.
+
+### ocr-fundamentals-30 | const-benefit | 2 | 3 | text
+```
+const vat = 0.2
+total = price + price * vat
+```
+
+(a) State what is meant by a **constant**. [1]
+
+(b) Give **two** benefits of using the constant `vat` instead of typing `0.2` each time it is needed. [2]
+--- scheme
+1 | (a) A value that is given a name and cannot change while the program runs |
+1 | (b) If the rate changes it only needs to be changed in one place |
+1 | (b) The name makes the code easier to read / understand | Accept: reduces the chance of typing mistakes.
+
+### ocr-fundamentals-31 | input-area-trace | 2 | 4 | text
+A user enters `4` and then `6` when the following program is run.
+
+```
+w = int(input("Width"))
+h = int(input("Height"))
+area = w * h
+print("Area: " + str(area))
+```
+
+(a) State the output of the program. [1]
+
+(b) State why `str(area)` is needed on line 4. [1]
+
+(c) State the data type of the variable `w`. [1]
+
+(d) State the data type of the variable `area`. [1]
+--- scheme
+1 | (a) Area: 24 |
+1 | (b) area is an integer and must be converted to a string before it can be joined to the text |
+1 | (c) Integer |
+1 | (d) Integer |
+
+### ocr-fundamentals-32 | cast-results | 2 | 3 | text
+State the result of each of the following expressions.
+
+(a) `int(7.9)` [1]
+
+(b) `float(3)` [1]
+
+(c) `str(12) + "1"` [1]
+--- scheme
+1 | (a) 7 | The decimal part is removed, not rounded.
+1 | (b) 3.0 |
+1 | (c) 121 | Accept "121" in quotation marks.
+
+### ocr-fundamentals-33 | choose-data-type | 2 | 4 | text
+A program stores the following data. State the most appropriate data type for each item.
+
+(a) The number of pets a person owns. [1]
+
+(b) The price of an item in pounds and pence. [1]
+
+(c) Whether a customer is a member of a club. [1]
+
+(d) A postcode, such as `CB2 1TN`. [1]
+--- scheme
+1 | (a) Integer |
+1 | (b) Real / float |
+1 | (c) Boolean |
+1 | (d) String | Do not accept: character (a postcode has several characters).
+
+### ocr-fundamentals-34 | meaningful-names | 2 | 3 | text
+A programmer uses the identifiers `x`, `y` and `z` to store a student's name, age and exam mark.
+
+(a) Give **two** reasons why meaningful identifiers should be used instead. [2]
+
+(b) Give a suitable identifier for the variable that stores the exam mark. [1]
+--- scheme
+1 | (a) Makes the code easier to read / understand |
+1 | (a) Makes the code easier to maintain / debug / edit later | Accept: other programmers can follow it more easily.
+1 | (b) Any sensible name such as examMark, mark, exam_mark | Do not accept: names with spaces.
+
+### ocr-fundamentals-35 | program-vat | 3 | 5 | code
+Write a program that:
+
+- asks the user to enter the price of an item, which may include pence
+- asks the user to enter the quantity bought, as a whole number
+- adds VAT at 20% to the total cost
+- outputs the final cost.
+
+Use a constant for the VAT rate. [5]
+
+You may use pseudocode or a high-level programming language.
+--- scheme
+1 | Inputs the price and casts it to a real / float |
+1 | Inputs the quantity and casts it to an integer |
+1 | Uses a constant (e.g. const vat = 0.2) for the VAT rate |
+1 | Calculates the total with VAT correctly (e.g. price * quantity * (1 + vat)) |
+1 | Outputs the final cost | Accept rounding to 2 decimal places.
+
+### ocr-fundamentals-36 | fix-program-errors | 3 | 5 | code
+```
+name = input("Enter your name")
+age = input("Enter your age")
+nextAge = age + 1
+print("Next year " + name + " will be " + nextAge)
+```
+
+(a) Identify **two** errors in this program. [2]
+
+(b) Write a corrected version of the program. [3]
+--- scheme
+1 | (a) age is a string - it needs to be cast to an integer before 1 is added |
+1 | (a) nextAge is an integer - it needs to be converted to a string (str) before it is joined to text |
+1 | (b) Casts the input to an integer (e.g. age = int(input(...))) |
+1 | (b) Uses str(nextAge) in the print statement |
+1 | (b) The rest of the program is unchanged and would run correctly |
+
+### ocr-sequencing-19 | sequence-definition | 1 | 1 | text
+State what is meant by **sequence** in programming. [1]
+--- scheme
+1 | Instructions are carried out one after another in the order they are written |
+
+### ocr-sequencing-20 | mod-basic | 1 | 1 | text
+State the output of `print(17 MOD 5)`. [1]
+--- scheme
+1 | 2 | 17 divided by 5 is 3 remainder 2.
+
+### ocr-sequencing-21 | div-basic | 1 | 1 | text
+State the output of `print(17 DIV 5)`. [1]
+--- scheme
+1 | 3 | DIV gives the whole number part of the division.
+
+### ocr-sequencing-22 | power-and-division | 1 | 2 | text
+State the output of each of the following.
+
+(a) `print(2 ^ 4)` [1]
+
+(b) `print(10 / 4)` [1]
+--- scheme
+1 | (a) 16 |
+1 | (b) 2.5 | `/` gives the real (decimal) result.
+
+### ocr-sequencing-23 | output-sequence | 1 | 1 | text
+```
+print("A")
+print("B")
+print("A")
+```
+
+State the output of this program. [1]
+--- scheme
+1 | A, B, A (each on its own line, in that order) | Accept A B A written on three lines. Do not accept if the order is changed.
+
+### ocr-sequencing-24 | input-process-output | 1 | 2 | text
+A program asks the user for their name, stores it, and then outputs `Hello` followed by the name.
+
+State the **three** things the program does, in the order they happen. [2]
+--- scheme
+1 | The name is input first (the user is asked for it) |
+1 | The name is stored in a variable, and only then is the greeting output | The three steps must be in the order input, store, output.
+
+### ocr-sequencing-25 | variable-chain-trace | 2 | 3 | text
+```
+a = 4
+b = a * 3
+c = b - a
+print(a + b + c)
+```
+
+(a) State the value stored in `b`. [1]
+
+(b) State the value stored in `c`. [1]
+
+(c) State the output of the program. [1]
+--- scheme
+1 | (a) 12 |
+1 | (b) 8 |
+1 | (c) 24 |
+
+### ocr-sequencing-26 | mod-div-clock | 2 | 3 | text
+```
+minutes = 135
+hours = minutes DIV 60
+remaining = minutes MOD 60
+print(hours)
+print(remaining)
+```
+
+(a) State the value of `hours`. [1]
+
+(b) State the value of `remaining`. [1]
+
+(c) State why `DIV` and `MOD` are used together in this program. [1]
+--- scheme
+1 | (a) 2 |
+1 | (b) 15 |
+1 | (c) To split the minutes into whole hours and the minutes left over | Accept: to convert minutes into hours and minutes.
+
+### ocr-sequencing-27 | average-brackets | 2 | 3 | text
+```
+test1 = 14
+test2 = 9
+test3 = 13
+average = (test1 + test2 + test3) / 3
+print(average)
+```
+
+(a) State the output of the program. [1]
+
+(b) Explain why the brackets are needed on line 4. [2]
+--- scheme
+1 | (a) 12 | Accept: 12.0.
+1 | (b) Division is carried out before addition (operator precedence) |
+1 | (b) Without the brackets only test3 would be divided by 3, giving the wrong average | Accept: the result would be 27.33.
+
+### ocr-sequencing-28 | string-build-trace | 2 | 3 | text
+```
+first = "Grace"
+last = "Hopper"
+full = first + " " + last
+print(full)
+print(first + last)
+```
+
+(a) State the output of line 4. [1]
+
+(b) State the output of line 5. [1]
+
+(c) State the name for joining two strings together. [1]
+--- scheme
+1 | (a) Grace Hopper |
+1 | (b) GraceHopper |
+1 | (c) Concatenation |
+
+### ocr-sequencing-29 | write-short-sequence | 2 | 3 | code
+Write a program that asks the user for their favourite colour and then outputs `Your favourite colour is` followed by the colour. [3]
+--- scheme
+1 | Takes an input from the user |
+1 | Stores the input in a variable |
+1 | Outputs the text joined to the stored colour |
+
+### ocr-sequencing-30 | formula-evaluation | 2 | 3 | text
+```
+celsius = 20
+fahrenheit = celsius * 9 / 5 + 32
+print(fahrenheit)
+```
+
+(a) State the output of the program. [1]
+
+(b) State the value of `celsius * 9`. [1]
+
+(c) Explain why the `+ 32` is carried out last. [1]
+--- scheme
+1 | (a) 68 | Accept: 68.0.
+1 | (b) 180 |
+1 | (c) Multiplication and division are carried out before addition (operator precedence) |
+
+### ocr-sequencing-31 | write-perimeter | 2 | 4 | code
+Write a program that asks the user to enter the length and the width of a rectangle, both as whole numbers, and outputs the perimeter of the rectangle. [4]
+--- scheme
+1 | Inputs both the length and the width |
+1 | Casts both inputs to integers |
+1 | Calculates the perimeter correctly (e.g. 2 * (length + width)) |
+1 | Outputs the perimeter |
+
+### ocr-sequencing-32 | write-coin-change | 3 | 5 | code
+A shop gives change in 20p coins. Write a program that:
+
+- asks the user to enter an amount of change in pence, as a whole number
+- outputs the number of whole 20p coins that can be given
+- outputs the number of pence that are left over.
+
+For example, an input of `75` outputs 3 coins and 15 pence. [5]
+
+You may use pseudocode or a high-level programming language.
+--- scheme
+1 | Inputs the amount and casts it to an integer |
+1 | Calculates the number of coins using DIV 20 (or equivalent integer division) |
+1 | Calculates the pence left using MOD 20 (or equivalent) |
+1 | Outputs the number of coins |
+1 | Outputs the pence left over |
+
+### ocr-sequencing-33 | long-trace | 3 | 5 | text
+```
+x = 7
+y = 3
+z = x MOD y
+w = x DIV y
+x = z + w * y
+y = x - 2
+print(x)
+print(y)
+```
+
+(a) State the value of `z` after line 3. [1]
+
+(b) State the value of `w` after line 4. [1]
+
+(c) State the value of `x` after line 5. [1]
+
+(d) State the value of `y` after line 6. [1]
+
+(e) State the full output of the program. [1]
+--- scheme
+1 | (a) 1 |
+1 | (b) 2 |
+1 | (c) 7 |
+1 | (d) 5 |
+1 | (e) 7 then 5 (on separate lines) | Follow through from earlier answers if the output matches them.
+
+### ocr-sequencing-34 | bill-split-program | 3 | 5 | code
+Write a program that:
+
+- asks the user to enter the cost of a meal, which may include pence
+- asks the user to enter the number of people sharing it, as a whole number
+- adds a 10% tip to the cost of the meal
+- outputs the amount each person must pay. [5]
+
+You may use pseudocode or a high-level programming language.
+--- scheme
+1 | Inputs the cost and casts it to a real / float |
+1 | Inputs the number of people and casts it to an integer |
+1 | Adds the 10% tip correctly (e.g. cost * 1.1) |
+1 | Divides the total by the number of people |
+1 | Outputs the amount each person pays |
+
+### ocr-sequencing-35 | program-explain | 3 | 5 | text
+```
+n = int(input("Enter a number"))
+double = n * 2
+triple = n * 3
+print(double + triple)
+```
+
+(a) State the output when the user enters `4`. [1]
+
+(b) State the output when the user enters `10`. [1]
+
+(c) Describe what this program does for any number entered. [1]
+
+(d) Describe how line 4 could be changed so that the program outputs seven times the number. [2]
+--- scheme
+1 | (a) 20 |
+1 | (b) 50 |
+1 | (c) It outputs five times the number entered | Accept: it adds double and triple of the number.
+1 | (d) Add a further calculation or change the expression so that the total is 7 times n (e.g. print(n * 7)) |
+1 | (d) The change is correct and would give 7 times the number for any input | Accept: print(double + triple + n * 2).
+
+### ocr-sequencing-36 | coach-numbers | 3 | 5 | text
+A school trip has 130 students. Each coach holds 48 students.
+
+(a) Write an expression using `DIV` that gives the number of **full** coaches. [1]
+
+(b) Write an expression using `MOD` that gives the number of students left over after the full coaches are filled. [1]
+
+(c) State the value of each expression in (a) and (b). [2]
+
+(d) State the total number of coaches the school must book and give a reason. [1]
+--- scheme
+1 | (a) 130 DIV 48 |
+1 | (b) 130 MOD 48 |
+1 | (c) 2 full coaches |
+1 | (c) 34 students left over |
+1 | (d) 3 coaches, because the 34 left-over students still need a coach | Accept: one more than the DIV result.
+
+### ocr-selection-25 | selection-purpose | 1 | 1 | text
+State what a selection statement allows a program to do. [1]
+--- scheme
+1 | Make a decision / choose which code to run depending on whether a condition is true or false |
+
+### ocr-selection-26 | operator-meaning | 1 | 2 | text
+State the meaning of each of the following operators.
+
+(a) `==` [1]
+
+(b) `!=` [1]
+--- scheme
+1 | (a) Is equal to |
+1 | (b) Is not equal to |
+
+### ocr-selection-27 | boolean-result | 1 | 2 | text
+State whether each of the following expressions evaluates to `True` or `False`.
+
+(a) `8 > 5` [1]
+
+(b) `3 >= 4` [1]
+--- scheme
+1 | (a) True |
+1 | (b) False |
+
+### ocr-selection-28 | logic-basic | 1 | 2 | text
+State the result of each of the following.
+
+(a) `True AND False` [1]
+
+(b) `True OR False` [1]
+--- scheme
+1 | (a) False |
+1 | (b) True |
+
+### ocr-selection-29 | else-purpose | 1 | 1 | text
+State when the code in the `else` part of an `if` statement is run. [1]
+--- scheme
+1 | When the condition in the if (and any elseif) is not true / is false |
+
+### ocr-selection-30 | if-without-else | 1 | 2 | text
+```
+x = 12
+if x > 10 then
+    print("Big")
+endif
+print("Done")
+```
+
+State the output of this program. [2]
+--- scheme
+1 | Big |
+1 | Done | The final line is outside the if statement, so it always runs.
+
+### ocr-selection-31 | elseif-benefit | 1 | 1 | text
+State **one** advantage of using `elseif` instead of several separate `if` statements. [1]
+--- scheme
+1 | Any one of: once a condition is true the remaining conditions are skipped / the program is shorter and clearer / only one branch can run | Accept: it is more efficient.
+
+### ocr-selection-32 | nested-definition | 1 | 1 | text
+State what is meant by a **nested** selection statement. [1]
+--- scheme
+1 | A selection (if) statement placed inside another selection statement | Accept: an if inside an if.
+
+### ocr-selection-33 | grade-boundary-trace | 2 | 3 | text
+```
+mark = int(input("Enter mark"))
+if mark >= 80 then
+    print("A")
+elseif mark >= 65 then
+    print("B")
+elseif mark >= 50 then
+    print("C")
+else
+    print("D")
+endif
+```
+
+State the output when the user enters:
+
+(a) 80 [1]
+
+(b) 64 [1]
+
+(c) 49 [1]
+--- scheme
+1 | (a) A |
+1 | (b) C | 64 is below 65 but at least 50.
+1 | (c) D |
+
+### ocr-selection-34 | and-condition-trace | 2 | 3 | text
+```
+age = int(input("Age"))
+hasTicket = input("Ticket? (y/n)")
+if age >= 12 AND hasTicket == "y" then
+    print("Enter")
+else
+    print("Refused")
+endif
+```
+
+State the output when the user enters:
+
+(a) `15` then `y` [1]
+
+(b) `11` then `y` [1]
+
+(c) `18` then `n` [1]
+--- scheme
+1 | (a) Enter |
+1 | (b) Refused |
+1 | (c) Refused |
+
+### ocr-selection-35 | or-condition-trace | 2 | 3 | text
+```
+day = input("Enter the day")
+if day == "Sat" OR day == "Sun" then
+    print("Weekend")
+else
+    print("Weekday")
+endif
+```
+
+State the output when the user enters:
+
+(a) `Sun` [1]
+
+(b) `Mon` [1]
+
+(c) `sat` [1]
+--- scheme
+1 | (a) Weekend |
+1 | (b) Weekday |
+1 | (c) Weekday | Comparisons are case-sensitive, so `sat` does not equal `Sat`.
+
+### ocr-selection-36 | condition-order-error | 2 | 3 | text
+```
+if mark >= 50 then
+    print("Pass")
+elseif mark >= 70 then
+    print("Distinction")
+else
+    print("Fail")
+endif
+```
+
+(a) Explain why a mark of 80 does not output `Distinction`. [2]
+
+(b) Describe how the program should be changed so that it works correctly. [1]
+--- scheme
+1 | (a) 80 is greater than or equal to 50 so the first condition is true |
+1 | (a) The remaining conditions are skipped, so the distinction test is never reached |
+1 | (b) Test mark >= 70 first (before mark >= 50) | Accept: reorder the conditions from highest to lowest.
+
+### ocr-selection-37 | write-positive | 2 | 3 | code
+Write a program that asks the user to enter a number and outputs `Positive` if it is greater than zero, or `Not positive` otherwise. [3]
+--- scheme
+1 | Inputs a number and casts it |
+1 | Uses a selection statement with the condition > 0 |
+1 | Outputs both messages correctly in the correct branches |
+
+### ocr-selection-38 | write-even-odd | 2 | 3 | code
+Write a program that asks the user to enter a whole number and outputs `Even` if the number is even, or `Odd` if it is odd. [3]
+--- scheme
+1 | Inputs a whole number and casts it to an integer |
+1 | Uses MOD 2 (e.g. n MOD 2 == 0) as the condition |
+1 | Outputs Even and Odd in the correct branches |
+
+### ocr-selection-39 | write-condition | 2 | 4 | text
+A library lets a person borrow a book if they are a member **and** they have fewer than 5 books on loan. The variable `isMember` stores `True` or `False` and `booksOut` stores a whole number.
+
+(a) Write a condition that is `True` when the person can borrow a book. [2]
+
+(b) State the result of the condition when `isMember` is `True` and `booksOut` is 5. [1]
+
+(c) State the result of the condition when `isMember` is `True` and `booksOut` is 3. [1]
+--- scheme
+1 | (a) Checks that isMember is True | Accept: isMember on its own, or isMember == True.
+1 | (a) Checks booksOut < 5 and combines the two tests with AND |
+1 | (b) False |
+1 | (c) True |
+
+### ocr-selection-40 | nested-trace | 2 | 4 | text
+```
+score = 62
+attended = True
+if score >= 50 then
+    if attended == True then
+        print("Pass with attendance")
+    else
+        print("Pass, attendance missing")
+    endif
+else
+    print("Fail")
+endif
+```
+
+(a) State the output of the program. [1]
+
+(b) State the output if `attended` is changed to `False`. [1]
+
+(c) State the output if `score` is changed to `40` and `attended` stays `True`. [1]
+
+(d) State the name given to the structure used in this program. [1]
+--- scheme
+1 | (a) Pass with attendance |
+1 | (b) Pass, attendance missing |
+1 | (c) Fail |
+1 | (d) Nested selection | Accept: nested if.
+
+### ocr-selection-41 | write-password-check | 2 | 4 | code
+The password for a system is `Secret99`.
+
+Write a program that asks the user to enter the password and outputs `Access granted` if it is correct, or `Access denied` if it is not. [4]
+--- scheme
+1 | Inputs the password |
+1 | Compares the input with "Secret99" using == |
+1 | Outputs Access granted when the password matches |
+1 | Outputs Access denied otherwise (else branch) |
+
+### ocr-selection-42 | write-age-category | 2 | 4 | code
+Write a program that asks the user to enter their age as a whole number and outputs:
+
+- `Child` if the age is under 13
+- `Teenager` if the age is from 13 to 17
+- `Adult` if the age is 18 or over. [4]
+--- scheme
+1 | Inputs the age and casts it to an integer |
+1 | Child output for an age under 13 |
+1 | Teenager output for ages 13 to 17 (correct boundaries) |
+1 | Adult output for 18 or over (else or correct condition) |
+
+### ocr-selection-43 | write-leap-year | 3 | 6 | code
+A year is a leap year if it is divisible by 4, except that a year divisible by 100 is **not** a leap year unless it is also divisible by 400.
+
+Write a program that asks the user to enter a year and outputs `Leap year` or `Not a leap year`. [6]
+
+You may use pseudocode or a high-level programming language.
+--- scheme
+1 | Inputs the year and casts it to an integer |
+1 | Tests divisibility by 4 using MOD |
+1 | Tests divisibility by 100 using MOD |
+1 | Tests divisibility by 400 using MOD |
+1 | Combines the tests so that the logic is correct for all years (e.g. 1900 is not a leap year but 2000 is) |
+1 | Outputs both messages in the correct branches |
+
+### ocr-selection-44 | write-triangle-valid | 3 | 5 | code
+Three side lengths can form a triangle only if the sum of any two sides is greater than the third side.
+
+Write a program that asks the user to enter three whole numbers and outputs `Valid` if they can form a triangle, or `Invalid` if they cannot. [5]
+
+You may use pseudocode or a high-level programming language.
+--- scheme
+1 | Inputs three numbers and casts them |
+1 | Compares the sum of two sides with the third side correctly |
+1 | Makes all three comparisons (a + b > c, a + c > b, b + c > a) |
+1 | Combines the comparisons using AND |
+1 | Outputs Valid and Invalid in the correct branches |
+
+### ocr-selection-45 | complex-trace | 3 | 5 | text
+```
+n = int(input("Enter a number"))
+if n MOD 2 == 0 then
+    if n > 10 then
+        print("Big even")
+    else
+        print("Small even")
+    endif
+elseif n > 10 then
+    print("Big odd")
+else
+    print("Small odd")
+endif
+```
+
+State the output when the user enters:
+
+(a) 4 [1]
+
+(b) 15 [1]
+
+(c) 12 [1]
+
+(d) 7 [1]
+
+(e) Explain why entering 12 does not output `Big odd`. [1]
+--- scheme
+1 | (a) Small even |
+1 | (b) Big odd |
+1 | (c) Big even |
+1 | (d) Small odd |
+1 | (e) 12 MOD 2 is 0 so the first branch runs and the elseif is skipped | Accept: only one branch of an if / elseif chain runs.
+
+### ocr-selection-46 | write-discount | 3 | 5 | code
+A shop gives a discount on the total of an order:
+
+- under £50: no discount
+- £50 to £99.99: 10% discount
+- £100 or more: 20% discount
+
+Write a program that asks the user to enter the total, which may include pence, and outputs the amount to pay after the discount. [5]
+
+You may use pseudocode or a high-level programming language.
+--- scheme
+1 | Inputs the total and casts it to a real / float |
+1 | Selection for under 50 with no discount applied |
+1 | Selection for the 10% band with correct boundaries |
+1 | Selection for the 20% band (100 or over) |
+1 | Calculates and outputs the amount to pay correctly in each case |
+
+### ocr-selection-47 | selection-rewrite | 3 | 5 | text
+```
+if age >= 18 then
+    if hasLicence == True then
+        print("Can drive")
+    endif
+endif
+```
+
+(a) Rewrite this code using a **single** selection statement. [2]
+
+(b) State the output when `age` is 20 and `hasLicence` is `False`. [1]
+
+(c) State the output when `age` is 17 and `hasLicence` is `True`. [1]
+
+(d) Give **one** benefit of rewriting the code in the way you described in (a). [1]
+--- scheme
+1 | (a) One if statement with both conditions | Accept: if age >= 18 AND hasLicence == True then
+1 | (a) Combined using AND, followed by print("Can drive") and endif |
+1 | (b) No output (nothing is printed) |
+1 | (c) No output (nothing is printed) |
+1 | (d) Shorter / easier to read / fewer lines / less indentation |
+
+### ocr-selection-48 | write-vowel | 3 | 5 | code
+Write a program that asks the user to enter a single lower-case letter and outputs `Vowel` if it is `a`, `e`, `i`, `o` or `u`, or `Consonant` otherwise. [5]
+
+You may use pseudocode or a high-level programming language.
+--- scheme
+1 | Inputs a letter |
+1 | Compares the letter with at least one vowel |
+1 | Compares the letter with all five vowels |
+1 | Combines the comparisons correctly (OR, or checks membership in a list/string) |
+1 | Outputs Vowel and Consonant in the correct branches |

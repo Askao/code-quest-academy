@@ -1,0 +1,1263 @@
+### aqa-functions-25 | subprogram-definition | 1 | 1 | text
+State what is meant by a **subroutine**. [1]
+--- scheme
+1 | A named block of code that performs a task and can be called (used) from elsewhere in the program | Allow: a function or procedure.
+
+### aqa-functions-26 | parameter-definition | 1 | 1 | text
+State what is meant by a **parameter**. [1]
+--- scheme
+1 | A value (variable) that is passed into a subroutine when it is called | Allow: the name listed in the brackets of the subroutine definition.
+
+### aqa-functions-27 | return-purpose | 1 | 1 | text
+State the purpose of the `RETURN` statement in a subroutine. [1]
+--- scheme
+1 | It sends a value back to the part of the program that called the subroutine |
+
+### aqa-functions-28 | function-call-output | 1 | 1 | text
+The following algorithm is written in pseudo-code.
+
+```
+SUBROUTINE cube(n)
+  RETURN n * n * n
+ENDSUBROUTINE
+
+OUTPUT cube(3)
+```
+
+State the output of this algorithm. [1]
+--- scheme
+1 | 27 |
+
+### aqa-functions-29 | local-variable-definition | 1 | 1 | text
+State what is meant by a **local variable**. [1]
+--- scheme
+1 | A variable that can only be used (is only visible) inside the subroutine in which it is created |
+
+### aqa-functions-30 | procedure-call-output | 1 | 2 | text
+The following algorithm is written in pseudo-code.
+
+```
+SUBROUTINE hello(name)
+  OUTPUT "Hi " + name
+ENDSUBROUTINE
+
+hello("Cara")
+hello("Dev")
+```
+
+State the output of this algorithm. [2]
+--- scheme
+1 | Hi Cara |
+1 | Hi Dev |
+
+### aqa-functions-31 | function-call-identify | 1 | 2 | text
+The following algorithm is written in pseudo-code.
+
+```
+SUBROUTINE multiply(a, b)
+  RETURN a * b
+ENDSUBROUTINE
+
+result ← multiply(6, 7)
+```
+
+(a) State the name of the subroutine. [1]
+
+(b) State the values that are passed to the subroutine when it is called. [1]
+--- scheme
+1 | (a) multiply |
+1 | (b) 6 and 7 |
+
+### aqa-functions-32 | function-two-calls | 2 | 3 | text
+The following algorithm is written in pseudo-code.
+
+```
+SUBROUTINE triple(n)
+  RETURN n * 3
+ENDSUBROUTINE
+
+a ← triple(3)
+b ← triple(a)
+OUTPUT a + b
+```
+
+(a) State the value stored in `a`. [1]
+
+(b) State the value stored in `b`. [1]
+
+(c) State the output of the algorithm. [1]
+--- scheme
+1 | (a) 9 |
+1 | (b) 27 |
+1 | (c) 36 |
+
+### aqa-functions-33 | function-selection-trace | 2 | 3 | text
+The following algorithm is written in pseudo-code.
+
+```
+SUBROUTINE ticket(age)
+  IF age >= 16 THEN
+    RETURN "Adult"
+  ELSE
+    RETURN "Child"
+  ENDIF
+ENDSUBROUTINE
+
+OUTPUT ticket(25)
+OUTPUT ticket(9)
+```
+
+(a) State the first output. [1]
+
+(b) State the second output. [1]
+
+(c) State the data type of the value returned by the subroutine. [1]
+--- scheme
+1 | (a) Adult |
+1 | (b) Child |
+1 | (c) String |
+
+### aqa-functions-34 | global-local-trace | 2 | 3 | text
+The following algorithm is written in pseudo-code. Assume that the variable `x` inside the subroutine is a new **local** variable.
+
+```
+x ← 5
+
+SUBROUTINE change()
+  x ← 10
+  OUTPUT x
+ENDSUBROUTINE
+
+change()
+OUTPUT x
+```
+
+(a) State the first output. [1]
+
+(b) State the second output. [1]
+
+(c) Explain why the second output is not 10. [1]
+--- scheme
+1 | (a) 10 |
+1 | (b) 5 |
+1 | (c) The x inside the subroutine is a local variable, separate from the x outside it, so the outside x is unchanged |
+
+### aqa-functions-35 | write-function-smaller | 2 | 3 | code
+Write a subroutine called `smaller` that takes two numbers as parameters and returns the smaller of the two. [3]
+--- scheme
+1 | A subroutine called smaller with two parameters |
+1 | Compares the two numbers correctly |
+1 | Returns the smaller number |
+
+### aqa-functions-36 | write-function-triangle | 2 | 3 | code
+Write a subroutine called `triangleArea` that takes the base and the height of a triangle and returns its area (half of base multiplied by height).
+
+Then write a statement that calls the subroutine with the values 10 and 4 and outputs the result. [3]
+--- scheme
+1 | A subroutine with two parameters and a RETURN statement |
+1 | Returns base * height / 2 (or equivalent) |
+1 | Calls the subroutine with 10 and 4 and outputs the result |
+
+### aqa-functions-37 | write-procedure-line | 2 | 3 | code
+Write a subroutine called `printLine` that takes a whole number `n` as a parameter and outputs the character `#` `n` times on a single line. [3]
+--- scheme
+1 | A subroutine called printLine with a parameter |
+1 | A loop that repeats n times |
+1 | Builds up or outputs the characters so that they appear on one line |
+
+### aqa-functions-38 | function-parameters-trace | 2 | 4 | text
+The following algorithm is written in pseudo-code.
+
+```
+SUBROUTINE greeting(title, name)
+  RETURN title + " " + name
+ENDSUBROUTINE
+
+msg ← greeting("Dr", "Patel")
+OUTPUT LEN(msg)
+OUTPUT greeting("Ms", "Lee")
+```
+
+(a) State the names of the parameters of the subroutine. [1]
+
+(b) State the value returned by the first call to the subroutine. [1]
+
+(c) State the first value that is output. [1]
+
+(d) State the second value that is output. [1]
+--- scheme
+1 | (a) title and name |
+1 | (b) Dr Patel |
+1 | (c) 8 |
+1 | (d) Ms Lee |
+
+### aqa-functions-39 | write-function-valid-percent | 2 | 4 | code
+Write a subroutine called `isValidPercent` that takes a whole number as a parameter and returns `TRUE` if it is from 0 to 100 inclusive, or `FALSE` otherwise. [4]
+--- scheme
+1 | A subroutine with one parameter |
+1 | Tests that the number is at least 0 |
+1 | Tests that the number is at most 100 and combines the tests correctly (AND) |
+1 | Returns TRUE and FALSE correctly |
+
+### aqa-functions-40 | function-loop-trace | 2 | 4 | text
+The following algorithm is written in pseudo-code.
+
+```
+SUBROUTINE product(n)
+  total ← 1
+  FOR i ← 1 TO n
+    total ← total * i
+  ENDFOR
+  RETURN total
+ENDSUBROUTINE
+
+OUTPUT product(4)
+OUTPUT product(1)
+```
+
+(a) State the first value that is output. [1]
+
+(b) State the second value that is output. [1]
+
+(c) State the number of times the statement `total ← total * i` is executed when `product(4)` is called. [1]
+
+(d) Describe what the subroutine does. [1]
+--- scheme
+1 | (a) 24 |
+1 | (b) 1 |
+1 | (c) 4 |
+1 | (d) It returns the result of multiplying together the whole numbers from 1 up to n |
+
+### aqa-functions-41 | write-use-function | 2 | 4 | code
+A subroutine `poundsToEuros(p)` already exists. It takes an amount in pounds and returns the amount in euros.
+
+Write an algorithm that asks the user to enter an amount in pounds and outputs the amount in euros, using the subroutine. [4]
+--- scheme
+1 | Inputs the amount and converts it to a number |
+1 | Calls poundsToEuros with the input as the argument |
+1 | Stores or uses the value that is returned |
+1 | Outputs the amount in euros |
+
+### aqa-functions-42 | function-missing-return | 2 | 3 | text
+The following algorithm is written in pseudo-code.
+
+```
+SUBROUTINE addTax(price)
+  total ← price * 1.2
+ENDSUBROUTINE
+
+cost ← addTax(50)
+OUTPUT cost
+```
+
+(a) Explain why this algorithm does not output `60`. [2]
+
+(b) State how the subroutine should be corrected. [1]
+--- scheme
+1 | (a) The subroutine has no RETURN statement |
+1 | (a) So no value is passed back and cost does not receive the total |
+1 | (b) Add RETURN total at the end of the subroutine |
+
+### aqa-functions-43 | write-function-mean | 3 | 5 | code
+Write a subroutine called `mean` that takes a list of numbers as a parameter and returns the mean of the numbers.
+
+Then write code that uses the subroutine to output the mean of a list called `scores`. [5]
+
+You may use pseudo-code or a high-level programming language.
+--- scheme
+1 | A subroutine with a list parameter |
+1 | A loop that adds up all the numbers in the list |
+1 | Divides the total by the number of items (LEN) |
+1 | Returns the mean |
+1 | Calls the subroutine with scores and outputs the returned value |
+
+### aqa-functions-44 | write-valid-percent-function | 3 | 6 | code
+Write a subroutine called `getValidPercent` that keeps asking the user to enter a whole number from 0 to 100 until a valid number is entered, and then returns it.
+
+Then write code that calls the subroutine twice and outputs the total of the two numbers. [6]
+
+You may use pseudo-code or a high-level programming language.
+--- scheme
+1 | A subroutine called getValidPercent with no (or suitable) parameters |
+1 | A loop that continues while the number is not valid |
+1 | Asks for the number again inside the loop (converted to an integer) |
+1 | Returns the valid number |
+1 | Calls the subroutine twice and stores both results |
+1 | Calculates and outputs the total of the two numbers |
+
+### aqa-functions-45 | function-complex-trace | 3 | 5 | text
+The following algorithm is written in pseudo-code.
+
+```
+SUBROUTINE calc(a, b)
+  c ← a + b
+  RETURN c * a
+ENDSUBROUTINE
+
+x ← calc(2, 3)
+y ← calc(x, 1)
+OUTPUT x
+OUTPUT y
+```
+
+(a) State the value of `c` the first time the subroutine runs. [1]
+
+(b) State the value stored in `x`. [1]
+
+(c) State the value returned by `calc(x, 1)`. [1]
+
+(d) State the output of the algorithm. [1]
+
+(e) State the number of parameters the subroutine has. [1]
+--- scheme
+1 | (a) 5 |
+1 | (b) 10 |
+1 | (c) 110 |
+1 | (d) 10 then 110 (on separate lines) |
+1 | (e) 2 |
+
+### aqa-functions-46 | write-function-password | 3 | 5 | code
+Write a subroutine called `strongPassword` that takes a password and a username as parameters. It returns `TRUE` if the password has at least 10 characters **and** is not the same as the username. Otherwise it returns `FALSE`. [5]
+
+You may use pseudo-code or a high-level programming language.
+--- scheme
+1 | A subroutine with two parameters |
+1 | Tests that the password length is at least 10 |
+1 | Tests that the password is not equal to the username |
+1 | Combines the two tests using AND |
+1 | Returns TRUE or FALSE correctly |
+
+### aqa-functions-47 | write-procedure-table | 3 | 5 | code
+Write a subroutine called `printTable` that takes a whole number `n` and outputs the times table for `n` from 1 to 10, one line per multiplication (for example `4 x 1 = 4`).
+
+Then write code that asks the user to enter a whole number and calls the subroutine with that number. [5]
+
+You may use pseudo-code or a high-level programming language.
+--- scheme
+1 | A subroutine with a parameter |
+1 | A loop from 1 to 10 inside the subroutine |
+1 | Outputs a correctly formed line of the table for each value |
+1 | Inputs a number and converts it to an integer in the main program |
+1 | Calls the subroutine with the number entered |
+
+### aqa-functions-48 | subprogram-design-explain | 3 | 6 | text
+A program calculates the weekly wages of the staff in a shop. It inputs the hours worked, works out the basic pay and any overtime, subtracts tax, and outputs a payslip.
+
+Explain why dividing this program into subroutines makes it easier to develop and maintain. [6]
+--- scheme
+1 | Each task (input, basic pay, overtime, tax, output) can be written as its own subroutine |
+1 | Each subroutine can be written and tested separately |
+1 | Errors are easier to find because they can be traced to one subroutine |
+1 | Different programmers can write different subroutines at the same time |
+1 | A subroutine can be reused instead of repeating code (e.g. calling the tax calculation for every member of staff) |
+1 | If something changes (e.g. the tax rate) only one subroutine needs to be edited | Allow: the main program is shorter and easier to read.
+
+### aqa-files-19 | file-open-purpose | 1 | 1 | text
+State what happens when a program **opens** a file. [1]
+--- scheme
+1 | The file is made available so that its contents can be read or written | Allow: the program finds the file and connects to it.
+
+### aqa-files-20 | read-line-purpose | 1 | 1 | text
+State what is meant by **reading a line** from a text file. [1]
+--- scheme
+1 | Getting the next line of text from the file so that the program can use it |
+
+### aqa-files-21 | write-line-purpose | 1 | 1 | text
+State what is meant by **writing a line** to a text file. [1]
+--- scheme
+1 | Adding a line of text from the program to the file |
+
+### aqa-files-22 | end-of-file-meaning | 1 | 1 | text
+A program checks for the **end of the file** while it is reading.
+
+State what this check tells the program. [1]
+--- scheme
+1 | That there is no more data left to read in the file | Allow: the last line has already been read.
+
+### aqa-files-23 | file-write-trace | 1 | 2 | text
+An algorithm carries out these steps.
+
+1. Create a new text file called `log.txt`.
+2. Write the line `Start` to the file.
+3. Write the line `End` to the file.
+4. Close the file.
+
+State the contents of the file `log.txt` after the algorithm has run. [2]
+--- scheme
+1 | Start |
+1 | End | On a separate line, after Start.
+
+### aqa-files-24 | file-read-total-trace | 2 | 3 | text
+The file `scores.txt` contains three lines: `4`, `9` and `6`. An algorithm carries out these steps.
+
+1. Set `total` to 0.
+2. Open the file.
+3. Repeat until the end of the file: read a line, convert it to an integer and add it to `total`.
+4. Close the file.
+5. Output `total`.
+
+(a) State the output of the algorithm. [1]
+
+(b) State the number of times step 3 repeats. [1]
+
+(c) Explain why each line must be converted to an integer. [1]
+--- scheme
+1 | (a) 19 |
+1 | (b) 3 |
+1 | (c) A line read from a file is a string, which must be converted to a number before it can be added |
+
+### aqa-files-25 | write-names-file | 2 | 3 | code
+Write an algorithm that creates a file called `people.txt`, writes the names `Ravi`, `Sam` and `Tia` to it (one name on each line) and then closes the file. [3]
+--- scheme
+1 | Creates (or opens) the file people.txt |
+1 | Writes all three names, each on its own line |
+1 | Closes the file |
+
+### aqa-files-26 | write-read-diary | 2 | 3 | code
+Write an algorithm that reads the file `diary.txt` and outputs every line in it. [3]
+--- scheme
+1 | Opens the file diary.txt |
+1 | A loop that continues until the end of the file, reading and outputting each line |
+1 | Closes the file |
+
+### aqa-files-27 | file-count-short-lines | 2 | 4 | code
+The file `words.txt` contains one word on each line.
+
+Write an algorithm that outputs the number of words in the file that have fewer than 4 characters. [4]
+--- scheme
+1 | Opens the file and reads it until the end of the file |
+1 | Reads each line (word) inside the loop |
+1 | Tests whether the length of the word is less than 4 |
+1 | Counts the matches and outputs the count after the loop |
+
+### aqa-files-28 | file-data-types-read | 2 | 3 | text
+A text file contains one whole number on each line.
+
+(a) State the data type of a line when it is read from the file. [1]
+
+(b) State what the program must do to a line before it can be used in a calculation. [1]
+
+(c) State what would happen if the program tried to convert a line containing the text `abc` to an integer. [1]
+--- scheme
+1 | (a) String |
+1 | (b) Convert it to an integer (cast it) |
+1 | (c) The program would crash / produce an error (it cannot be converted) |
+
+### aqa-files-29 | file-search-name | 2 | 4 | code
+The file `members.txt` contains one name on each line.
+
+Write an algorithm that asks the user to enter a name and outputs `Found` if the name is in the file, or `Not found` if it is not. [4]
+--- scheme
+1 | Inputs the name to search for |
+1 | Opens the file and reads each line until the end |
+1 | Compares each line with the name entered |
+1 | Outputs Found or Not found correctly (Not found only after the whole file has been checked) |
+
+### aqa-files-30 | file-copy-trace | 2 | 4 | text
+The file `a.txt` contains the three lines `red`, `blue` and `green`. An algorithm carries out these steps.
+
+1. Open `a.txt` for reading and create a new file `b.txt`.
+2. Repeat until the end of `a.txt`: read a line and write the line followed by `!` to `b.txt`.
+3. Close both files.
+
+(a) State the contents of `b.txt` after the algorithm has run. [2]
+
+(b) State the number of lines that are read from `a.txt`. [1]
+
+(c) State why both files are closed. [1]
+--- scheme
+1 | (a) red!, blue! and green! (all three words each followed by !) |
+1 | (a) Each word is on its own line, in the same order as the original file |
+1 | (b) 3 |
+1 | (c) To make sure all the data is saved to the file / to release the files so that they can be used by other programs |
+
+### aqa-files-31 | file-open-problems | 2 | 3 | text
+(a) State **two** problems that could stop a program opening a file. [2]
+
+(b) State **one** way a programmer could reduce the chance of the first problem causing the program to crash. [1]
+--- scheme
+1 | (a) The file does not exist (or the name is wrong) |
+1 | (a) The file is already open / locked by another program / the user does not have permission | Allow: the file is corrupted.
+1 | (b) Check that the file exists before opening it / use error handling | Allow: test for the file first.
+
+### aqa-files-32 | file-average-write | 3 | 5 | code
+The file `marks.txt` contains one whole number on each line.
+
+Write an algorithm that reads all of the marks and outputs the mean (average) mark. [5]
+
+You may use pseudo-code or a high-level programming language.
+--- scheme
+1 | Opens the file |
+1 | A loop that reads each line until the end of the file |
+1 | Converts each line to a number |
+1 | Keeps a running total and a count of the lines |
+1 | Divides the total by the count and outputs the result |
+
+### aqa-files-33 | file-lowest-write | 3 | 5 | code
+The file `times.txt` contains one whole number on each line.
+
+Write an algorithm that outputs the lowest number in the file. [5]
+
+You may use pseudo-code or a high-level programming language.
+--- scheme
+1 | Opens the file |
+1 | A loop that reads each line until the end of the file |
+1 | Converts each line to an integer |
+1 | Compares each number with the lowest so far and updates it when smaller |
+1 | Outputs the lowest number and closes the file |
+
+### aqa-files-34 | file-save-read-back | 3 | 6 | code
+Write an algorithm that:
+
+- asks the user to enter four scores, one at a time
+- saves each score on its own line in a file called `scores.txt`
+- then reads the file back and outputs the total of the four scores. [6]
+
+You may use pseudo-code or a high-level programming language.
+--- scheme
+1 | Creates or opens the file for writing |
+1 | A loop that inputs a score four times |
+1 | Writes each score to the file on its own line |
+1 | Closes the file before reading it back |
+1 | Reads each line of the file, converting it to a number, and adds it to a total |
+1 | Outputs the total |
+
+### aqa-files-35 | file-filter-copy | 3 | 5 | code
+The file `fruit.txt` contains the name of one fruit on each line.
+
+Write an algorithm that copies only the fruits that begin with the letter `B` into a new file called `bfruit.txt`. [5]
+
+You may use pseudo-code or a high-level programming language.
+--- scheme
+1 | Opens fruit.txt and creates bfruit.txt |
+1 | A loop that reads each line until the end of fruit.txt |
+1 | Tests whether the first character of the line is "B" |
+1 | Writes only the matching lines to the new file |
+1 | Closes both files |
+
+### aqa-files-36 | file-average-describe | 3 | 5 | text
+An algorithm carries out these steps. The file `temps.txt` contains one temperature, which may have decimal places, on each line.
+
+1. Set `total` and `count` to 0.
+2. Open the file.
+3. Repeat until the end of the file: read a line, convert it to a real number, add it to `total` and add 1 to `count`.
+4. Close the file.
+5. Output `total` divided by `count`.
+
+(a) State the purpose of the algorithm. [1]
+
+(b) State the purpose of the variable `count`. [1]
+
+(c) State why each line is converted to a real number rather than an integer. [1]
+
+(d) State what would happen if the file `temps.txt` were empty. [1]
+
+(e) State why the file is closed. [1]
+--- scheme
+1 | (a) To output the mean (average) of the values stored in the file |
+1 | (b) It counts how many lines (values) have been read |
+1 | (c) The temperatures may contain decimal places |
+1 | (d) The algorithm would try to divide by zero and crash |
+1 | (e) To release the file / make sure it is not left open |
+
+### aqa-searching-sorting-19 | linear-search-definition | 1 | 1 | text
+State what a **linear search** does. [1]
+--- scheme
+1 | It checks each item in the list in turn, from the start, until the item is found or the end is reached |
+
+### aqa-searching-sorting-20 | sorting-definition | 1 | 1 | text
+State what is meant by **sorting** data. [1]
+--- scheme
+1 | Putting data into a particular order (e.g. numerical or alphabetical) |
+
+### aqa-searching-sorting-21 | sort-identify-description | 1 | 2 | text
+Name the sorting algorithm that is described.
+
+(a) It compares pairs of adjacent items, swapping them if they are in the wrong order, and repeats until no swaps are made. [1]
+
+(b) It splits the list into halves, sorts each half and then merges the sorted halves together. [1]
+--- scheme
+1 | (a) Bubble sort |
+1 | (b) Merge sort |
+
+### aqa-searching-sorting-22 | linear-best-case | 1 | 1 | text
+A list contains `[9, 4, 7, 1]`.
+
+State the number of items that are checked when a linear search is used to find the value `9`. [1]
+--- scheme
+1 | 1 | It is the first item in the list.
+
+### aqa-searching-sorting-23 | linear-suitable-case | 1 | 1 | text
+Give **one** situation where a linear search is more suitable than a binary search. [1]
+--- scheme
+1 | Any one of: the list is not sorted / the list is very short / sorting the list first would take longer than searching it |
+
+### aqa-searching-sorting-24 | binary-trace-found | 2 | 3 | text
+A binary search is used to find the value `48` in this sorted list. The first item is at position 0. Use `(low + high) DIV 2` to find the middle position.
+
+| Position | 0 | 1 | 2 | 3 | 4 | 5 | 6 | 7 | 8 |
+|---|---|---|---|---|---|---|---|---|---|
+| Value | 5 | 11 | 16 | 22 | 29 | 35 | 41 | 48 | 60 |
+
+(a) State the first value that is checked. [1]
+
+(b) State the total number of values that are checked, including `48`. [1]
+
+(c) State the number of values a linear search would check to find `48`. [1]
+--- scheme
+1 | (a) 29 | Position (0 + 8) DIV 2 = 4.
+1 | (b) 3 | The values checked are 29, 41 and 48.
+1 | (c) 8 |
+
+### aqa-searching-sorting-25 | bubble-pass-trace | 2 | 3 | text
+A bubble sort is used to sort `[7, 3, 8, 1]` into ascending order.
+
+(a) State the list after the first pass. [1]
+
+(b) State the number of swaps made in the first pass. [1]
+
+(c) State the number of comparisons made in the first pass. [1]
+--- scheme
+1 | (a) [3, 7, 1, 8] |
+1 | (b) 2 |
+1 | (c) 3 |
+
+### aqa-searching-sorting-26 | insertion-sort-steps | 2 | 3 | text
+An insertion sort is used to sort `[9, 4, 6, 2]` into ascending order. The first item is treated as already sorted.
+
+(a) State the list after the second item has been inserted into place. [1]
+
+(b) State the list after the third item has been inserted into place. [1]
+
+(c) State the final sorted list. [1]
+--- scheme
+1 | (a) [4, 9, 6, 2] |
+1 | (b) [4, 6, 9, 2] |
+1 | (c) [2, 4, 6, 9] |
+
+### aqa-searching-sorting-27 | merge-sort-steps | 2 | 3 | text
+A merge sort is used to sort `[7, 2, 6, 3]`.
+
+(a) State the two lists the data is first split into. [1]
+
+(b) State the lists after each pair has been merged. [1]
+
+(c) State the final sorted list. [1]
+--- scheme
+1 | (a) [7, 2] and [6, 3] |
+1 | (b) [2, 7] and [3, 6] |
+1 | (c) [2, 3, 6, 7] |
+
+### aqa-searching-sorting-28 | write-linear-search | 2 | 4 | code
+A list called `names` contains text values and a variable `target` contains the name to find.
+
+Write an algorithm that outputs `Found` if the target is in the list, or `Not found` if it is not. [4]
+--- scheme
+1 | A loop that visits each item of the list |
+1 | Compares each item with the target |
+1 | Outputs Found when there is a match |
+1 | Outputs Not found only after the whole list has been checked without a match |
+
+### aqa-searching-sorting-29 | search-large-list | 2 | 4 | text
+A list contains 500 000 names, sorted in alphabetical order.
+
+(a) State the maximum number of names a linear search could need to check. [1]
+
+(b) State the approximate maximum number of names a binary search would need to check. [1]
+
+(c) State **one** requirement that must be met before a binary search can be used. [1]
+
+(d) Explain which search is better for this list. [1]
+--- scheme
+1 | (a) 500 000 |
+1 | (b) About 19 | Allow any value from 18 to 20.
+1 | (c) The list must be sorted |
+1 | (d) Binary search, because it checks far fewer items by halving the list each time |
+
+### aqa-searching-sorting-30 | bubble-sort-stop | 2 | 3 | text
+(a) State how a bubble sort can tell that a list is fully sorted. [1]
+
+(b) State why a bubble sort is inefficient for a very large list. [1]
+
+(c) State **one** advantage of a bubble sort. [1]
+--- scheme
+1 | (a) A complete pass is made with no swaps |
+1 | (b) It needs many passes and many comparisons / the number of comparisons grows rapidly with the size of the list |
+1 | (c) It is simple to write / understand | Allow: it needs no extra memory.
+
+### aqa-searching-sorting-31 | bubble-descending | 2 | 4 | text
+A bubble sort is used to sort `[3, 8, 1, 6]` into **descending** order. A pair is swapped if the left item is smaller than the right item.
+
+(a) State the list after the first pass. [2]
+
+(b) State the number of swaps made in the first pass. [1]
+
+(c) State the final sorted list. [1]
+--- scheme
+1 | (a) 8 is the first item (or 1 is the last item) | Award 1 mark for a partly correct list.
+1 | (a) [8, 3, 6, 1] |
+1 | (b) 2 |
+1 | (c) [8, 6, 3, 1] |
+
+### aqa-searching-sorting-32 | write-bubble-sort | 3 | 6 | code
+A list called `nums` contains `n` whole numbers.
+
+Write an algorithm to sort the list into ascending order using a bubble sort. [6]
+
+You may use pseudo-code or a high-level programming language.
+--- scheme
+1 | An outer loop that repeats passes through the list |
+1 | An inner loop that visits adjacent pairs of items |
+1 | Compares each pair of adjacent items correctly |
+1 | Swaps the items when they are in the wrong order, using a temporary variable |
+1 | The passes continue until the list is sorted (e.g. n - 1 passes or a swapped flag) |
+1 | The loop limits avoid an index error at the end of the list |
+
+### aqa-searching-sorting-33 | write-binary-search | 3 | 6 | code
+A sorted list called `nums` contains whole numbers and a variable `target` contains the number to find.
+
+Write an algorithm that uses a binary search to output the position of the target, or `Not found` if it is not in the list. [6]
+
+You may use pseudo-code or a high-level programming language.
+--- scheme
+1 | Variables for the low and high positions set to the start and end of the list |
+1 | A loop that continues while low is not greater than high |
+1 | Calculates the middle position using (low + high) DIV 2 |
+1 | Outputs the position when the middle item equals the target |
+1 | Sets high to mid - 1 when the target is smaller |
+1 | Sets low to mid + 1 when the target is larger, and outputs Not found after the loop |
+
+### aqa-searching-sorting-34 | binary-trace-not-found | 3 | 5 | text
+A binary search is used to find `20` in this sorted list. The first item is at position 0. Use `(low + high) DIV 2` to find the middle position.
+
+| Position | 0 | 1 | 2 | 3 | 4 | 5 | 6 |
+|---|---|---|---|---|---|---|---|
+| Value | 3 | 8 | 13 | 19 | 24 | 31 | 47 |
+
+(a) State the first value that is checked. [1]
+
+(b) State the second value that is checked. [1]
+
+(c) State the third value that is checked. [1]
+
+(d) State the result of the search. [1]
+
+(e) Explain why the search stops. [1]
+--- scheme
+1 | (a) 19 |
+1 | (b) 31 |
+1 | (c) 24 |
+1 | (d) Not found |
+1 | (e) There are no items left to check (low is greater than high) |
+
+### aqa-searching-sorting-35 | merge-vs-bubble | 3 | 5 | text
+(a) State the name of the sorting algorithm that works by repeatedly splitting a list in half. [1]
+
+(b) State **one** advantage of this algorithm over a bubble sort for a very large list. [1]
+
+(c) State **one** disadvantage of this algorithm compared with a bubble sort. [1]
+
+(d) State a situation where a bubble sort would be a sensible choice. [1]
+
+(e) State why a list must be sorted before a binary search can be used on it. [1]
+--- scheme
+1 | (a) Merge sort |
+1 | (b) It is much faster / needs far fewer comparisons for large lists |
+1 | (c) It is more complex to write / it needs extra memory to hold the split lists |
+1 | (d) A small list, or a list that is already nearly sorted |
+1 | (e) A binary search relies on being able to discard half of the list by knowing whether the target is higher or lower than the middle item |
+
+### aqa-searching-sorting-36 | write-count-comparisons | 3 | 5 | code
+A list called `nums` contains whole numbers and a variable `target` contains the number to find.
+
+Write an algorithm that uses a linear search and outputs how many items were checked before the target was found. If the target is not in the list, it should output the number of items in the list. [5]
+
+You may use pseudo-code or a high-level programming language.
+--- scheme
+1 | A loop that visits the items in order |
+1 | A counter that is increased for each item checked |
+1 | The loop stops as soon as the target is found |
+1 | Outputs the count when the target is found |
+1 | Outputs the number of items checked (the length of the list) when the target is not found |
+
+### aqa-robust-programs-19 | validation-definition | 1 | 1 | text
+State what is meant by **validation**. [1]
+--- scheme
+1 | Checking that data entered is sensible / meets certain rules before it is accepted | Do not allow: checking the data is correct.
+
+### aqa-robust-programs-20 | presence-check | 1 | 1 | text
+State what a **presence check** does. [1]
+--- scheme
+1 | It checks that some data has been entered (the input has not been left blank) |
+
+### aqa-robust-programs-21 | length-check-name | 1 | 1 | text
+A PIN must contain exactly 4 characters.
+
+Name the type of validation check used to test this. [1]
+--- scheme
+1 | Length check |
+
+### aqa-robust-programs-22 | range-check-values | 1 | 2 | text
+A program asks the user for a quantity. The quantity must be from 1 to 10.
+
+(a) Name the validation check used. [1]
+
+(b) Give **one** value that would be rejected by this check. [1]
+--- scheme
+1 | (a) Range check |
+1 | (b) Any whole number below 1 or above 10 | Do not allow: values inside the range.
+
+### aqa-robust-programs-23 | verification-definition | 1 | 1 | text
+State what is meant by **verification**. [1]
+--- scheme
+1 | Checking that the data entered is the same as the data that was intended (e.g. by entering it twice) |
+
+### aqa-robust-programs-24 | test-data-kind | 1 | 2 | text
+A program accepts a whole number from 1 to 10.
+
+State the type of test data for each of the following.
+
+(a) `5` [1]
+
+(b) `10` [1]
+--- scheme
+1 | (a) Normal (valid) |
+1 | (b) Boundary (extreme) | It is the highest valid value.
+
+### aqa-robust-programs-25 | validation-vs-verification | 2 | 3 | text
+(a) Describe the difference between validation and verification. [2]
+
+(b) Give **one** example of verification. [1]
+--- scheme
+1 | (a) Validation checks that data is sensible / allowed |
+1 | (a) Verification checks that the data entered matches what was intended |
+1 | (b) Any one of: entering a password or email twice / checking back with the user (e.g. "Is this correct?") |
+
+### aqa-robust-programs-26 | error-type-identify | 2 | 3 | text
+State the type of error in each of the following.
+
+(a) An `IF` statement is written without its `ENDIF`, so the program will not run. [1]
+
+(b) A program meant to accept ages of 18 or over uses `age > 18`, so 18-year-olds are refused. [1]
+
+(c) A program tries to read item 10 of a list that has only 5 items and crashes while it is running. [1]
+--- scheme
+1 | (a) Syntax error |
+1 | (b) Logic error |
+1 | (c) Runtime error |
+
+### aqa-robust-programs-27 | trace-table-purpose | 2 | 4 | text
+The following algorithm is written in pseudo-code.
+
+```
+x ← 4
+y ← 0
+WHILE x > 1
+  y ← y + x
+  x ← x - 1
+ENDWHILE
+```
+
+(a) State the final value of `y`. [1]
+
+(b) State the final value of `x`. [1]
+
+(c) State the number of times the loop runs. [1]
+
+(d) State the purpose of a trace table. [1]
+--- scheme
+1 | (a) 9 | y goes 4, 7, 9.
+1 | (b) 1 |
+1 | (c) 3 |
+1 | (d) To record the values of variables line by line as an algorithm runs so errors can be found | Allow: to test an algorithm by hand.
+
+### aqa-robust-programs-28 | authentication-methods | 2 | 3 | text
+Give **three** different ways a system can check (authenticate) that a user is who they say they are. [3]
+--- scheme
+3 | Any three of: password / PIN / biometrics (e.g. fingerprint or face) / two-factor authentication / security token or card / security questions | 1 mark per different method, up to 3. Do not allow: the same method in different words.
+
+### aqa-robust-programs-29 | maintainability-rewrite | 2 | 4 | text
+The following algorithm is written in pseudo-code.
+
+```
+a ← STRING_TO_INT(USERINPUT)
+b ← a * 0.15
+c ← a - b
+OUTPUT c
+```
+
+Describe **four** changes that would make this code easier to maintain. [4]
+--- scheme
+1 | Use meaningful identifiers (e.g. price, discount, total) instead of a, b and c |
+1 | Use a constant for the discount rate 0.15 |
+1 | Add comments to explain what the code does |
+1 | Use a clearer prompt before the input / use indentation and white space | Allow: split the code into subroutines.
+
+### aqa-robust-programs-30 | test-data-day | 2 | 4 | text
+A program accepts the day of a month as a whole number from 1 to 31.
+
+(a) Give an example of **normal** test data. [1]
+
+(b) Give an example of **boundary** test data. [1]
+
+(c) Give an example of **erroneous** test data. [1]
+
+(d) Explain why boundary data is used in testing. [1]
+--- scheme
+1 | (a) Any whole number from 2 to 30 |
+1 | (b) 1 or 31 (or 0 or 32 as the values just outside) |
+1 | (c) Any value that is not a valid day, such as 32, -5 or "Monday" |
+1 | (d) Mistakes are most likely at the edges of a range (e.g. using > instead of >=) |
+
+### aqa-robust-programs-31 | iterative-vs-final-testing | 2 | 3 | text
+Describe the difference between **iterative testing** and **final (terminal) testing**. [3]
+--- scheme
+1 | Iterative testing is done repeatedly while the program is being developed |
+1 | It tests each part (module) as it is written so errors are found early |
+1 | Final testing is done at the end on the complete program to check it meets the requirements |
+
+### aqa-robust-programs-32 | email-validation | 2 | 4 | text
+A form asks a new user to enter an email address.
+
+(a) State **two** different validation checks that could be applied to the email address. [2]
+
+(b) For each check, give an example of an input that would be rejected. [2]
+--- scheme
+1 | (a) Presence check |
+1 | (a) Format check (e.g. it must contain an @ symbol) |
+1 | (b) An empty input is rejected by the presence check |
+1 | (b) An input with no @ symbol (e.g. "sam.example.com") is rejected by the format check | Allow other correct checks, e.g. a length check, with a matching example.
+
+### aqa-robust-programs-33 | write-pin-set | 3 | 5 | code
+Write an algorithm that asks the user to enter a new PIN. The PIN must have exactly 4 characters and must not be `0000`. The algorithm must keep asking until a valid PIN is entered, and then output `PIN set`. [5]
+
+You may use pseudo-code or a high-level programming language.
+--- scheme
+1 | Inputs a PIN |
+1 | A loop that continues while the PIN is invalid |
+1 | Tests that the length is exactly 4 |
+1 | Tests that the PIN is not "0000" and combines the tests correctly |
+1 | Asks again inside the loop and outputs PIN set after the loop |
+
+### aqa-robust-programs-34 | find-logic-error | 3 | 5 | text
+An algorithm should output the total of the whole numbers from 1 to `n`.
+
+```
+n ← STRING_TO_INT(USERINPUT)
+total ← 5
+FOR i ← 1 TO n - 1
+  total ← total + i
+ENDFOR
+OUTPUT total
+```
+
+(a) State the output when the user enters `4`. [1]
+
+(b) State the output the algorithm should give when the user enters `4`. [1]
+
+(c) Identify **two** errors in the algorithm. [2]
+
+(d) State the type of error. [1]
+--- scheme
+1 | (a) 11 | total starts at 5 and 1 + 2 + 3 is added.
+1 | (b) 10 |
+1 | (c) total should start at 0 (not 5) |
+1 | (c) The loop should run to n (not n - 1) |
+1 | (d) Logic error |
+
+### aqa-robust-programs-35 | write-test-plan | 3 | 6 | text
+A program accepts a whole number of items from 1 to 10 and outputs `Valid` if it is in that range, or `Invalid` if it is not.
+
+Complete a test plan by giving test data and the expected result for each of the following.
+
+(a) A normal test. [2]
+
+(b) A boundary test. [2]
+
+(c) An erroneous test. [2]
+--- scheme
+1 | (a) Test data inside the range, e.g. 5 |
+1 | (a) Expected result: Valid |
+1 | (b) Test data on the edge of the range, e.g. 1 or 10 (or the value just outside, 0 or 11) |
+1 | (b) Correct expected result for that data (Valid for 1 or 10, Invalid for 0 or 11) |
+1 | (c) Test data that is the wrong type or out of range, e.g. "abc" or 50 |
+1 | (c) Expected result: Invalid (or an error message / rejected) |
+
+### aqa-robust-programs-36 | validation-limits | 3 | 5 | text
+(a) Explain why validation does not guarantee that the data entered is correct. Use an example in your answer. [3]
+
+(b) Describe **one** way verification can help to reduce errors in the data entered. [2]
+--- scheme
+1 | (a) Validation only checks that data follows the rules (is reasonable) |
+1 | (a) Data can pass the checks and still be wrong |
+1 | (a) A suitable example, e.g. entering a year of birth as 1985 instead of 1958 passes a range check |
+1 | (b) The user is asked to enter the data twice / confirm it |
+1 | (b) The program compares the two entries and rejects them if they do not match |
+
+### aqa-databases-19 | foreign-key-definition | 1 | 1 | text
+State what is meant by a **foreign key** in a relational database. [1]
+--- scheme
+1 | A field in one table that is the primary key of another table, used to link the two tables together |
+
+### aqa-databases-20 | record-field-terms | 1 | 2 | text
+A table called `Pets` has the fields `PetID`, `Name` and `Type`. Each pet has one row in the table.
+
+State the name given to each of the following.
+
+(a) A single row of the table, holding all the data about one pet. [1]
+
+(b) A single column of the table, such as `Name`. [1]
+--- scheme
+1 | (a) Record |
+1 | (b) Field |
+
+### aqa-databases-21 | sql-from-keyword | 1 | 1 | text
+State the SQL keyword used to say which table the data is being selected from. [1]
+--- scheme
+1 | FROM |
+
+### aqa-databases-22 | sql-like-wildcard | 1 | 1 | text
+An SQL statement contains the condition `WHERE Name LIKE 'A%'`.
+
+State what the `%` symbol represents in this condition. [1]
+--- scheme
+1 | Any number of characters (including none) | Allow: any characters can follow the letter A.
+
+### aqa-databases-23 | sql-insert-keyword | 1 | 1 | text
+State the SQL command used to add a new record to a table. [1]
+--- scheme
+1 | INSERT INTO |
+
+### aqa-databases-24 | field-type-choice | 1 | 2 | text
+A database stores data about the books in a library.
+
+State the most appropriate data type for each field.
+
+(a) The number of pages in a book. [1]
+
+(b) Whether a book is currently on loan (yes or no). [1]
+--- scheme
+1 | (a) Integer |
+1 | (b) Boolean |
+
+### aqa-databases-25 | sql-select-where | 2 | 3 | text
+Use the `Cars` table below to answer this question.
+
+| CarID | Make | Colour | Price |
+|---|---|---|---|
+| 1 | Ford | Red | 4500 |
+| 2 | Audi | Blue | 9000 |
+| 3 | Fiat | Red | 2500 |
+| 4 | Kia | Green | 6000 |
+
+(a) State the data output by this SQL statement. [2]
+
+```
+SELECT Make FROM Cars WHERE Colour = 'Red'
+```
+
+(b) State the data output by this SQL statement. [1]
+
+```
+SELECT Make FROM Cars WHERE Price > 5000
+```
+--- scheme
+1 | (a) Ford |
+1 | (a) Fiat | The rows are output in table order and no other makes are output.
+1 | (b) Audi and Kia (both needed) |
+
+### aqa-databases-26 | sql-write-select | 2 | 3 | code
+Use the `Students` table below to answer this question.
+
+| StudentID | Name | Year | Form |
+|---|---|---|---|
+| 1 | Asha | 11 | 11A |
+| 2 | Ben | 10 | 10C |
+| 3 | Chloe | 11 | 11B |
+| 4 | Dan | 9 | 9A |
+
+Write an SQL statement to display the `Name` and `Year` of every student who is in Year 11. [3]
+--- scheme
+1 | SELECT Name, Year |
+1 | FROM Students |
+1 | WHERE Year = 11 | Allow: Year = '11' with quotation marks.
+
+### aqa-databases-27 | sql-order-by | 2 | 3 | code
+Use the `Songs` table below to answer this question.
+
+| SongID | Title | Artist | Length |
+|---|---|---|---|
+| 1 | Sunrise | Mia | 210 |
+| 2 | Midnight | Leo | 185 |
+| 3 | Highway | Mia | 240 |
+
+(a) Write an SQL statement to display all the fields of every song. [2]
+
+(b) Write the extra clause that is added to the end of the statement in (a) so that the songs are listed with the shortest `Length` first. [1]
+--- scheme
+1 | (a) SELECT * |
+1 | (a) FROM Songs |
+1 | (b) ORDER BY Length | Allow: ORDER BY Length ASC.
+
+### aqa-databases-28 | sql-insert-write | 2 | 3 | code
+Use the `Pets` table below to answer this question.
+
+| PetID | Name | Type | Age |
+|---|---|---|---|
+| 1 | Rex | Dog | 5 |
+| 2 | Kiki | Cat | 7 |
+
+Write an SQL statement to add a new pet with `PetID` 7, `Name` Milo, `Type` Cat and `Age` 3. [3]
+--- scheme
+1 | INSERT INTO Pets |
+1 | VALUES (7, 'Milo', 'Cat', 3) | Allow the field names to be listed before VALUES.
+1 | Text values are in quotation marks and the number values are not |
+
+### aqa-databases-29 | sql-update-write | 2 | 3 | code
+Use the `Cars` table below to answer this question.
+
+| CarID | Make | Colour | Price |
+|---|---|---|---|
+| 1 | Ford | Red | 4500 |
+| 2 | Audi | Blue | 9000 |
+| 3 | Fiat | Red | 2500 |
+
+Write an SQL statement to change the `Price` of the car with `CarID` 3 to 2800. [3]
+--- scheme
+1 | UPDATE Cars |
+1 | SET Price = 2800 |
+1 | WHERE CarID = 3 |
+
+### aqa-databases-30 | sql-delete-write | 2 | 3 | code
+Use the `Cars` table below to answer this question.
+
+| CarID | Make | Colour | Price |
+|---|---|---|---|
+| 1 | Ford | Red | 4500 |
+| 2 | Audi | Blue | 9000 |
+| 3 | Fiat | Red | 2500 |
+| 4 | Kia | Green | 6000 |
+
+(a) Write an SQL statement to delete every car that is green. [2]
+
+(b) State what would happen if the `WHERE` clause was left out of the statement in (a). [1]
+--- scheme
+1 | (a) DELETE FROM Cars |
+1 | (a) WHERE Colour = 'Green' |
+1 | (b) Every record in the table would be deleted |
+
+### aqa-databases-31 | sql-like-write | 2 | 3 | code
+Use the `Books` table below to answer this question.
+
+| BookID | Title | Genre |
+|---|---|---|
+| 1 | The Hobbit | Fantasy |
+| 2 | Holes | Fiction |
+| 3 | The Giver | Fantasy |
+
+Write an SQL statement to display the `Title` of every book whose title begins with `The`. [3]
+--- scheme
+1 | SELECT Title |
+1 | FROM Books |
+1 | WHERE Title LIKE 'The%' |
+
+### aqa-databases-32 | primary-key-choice | 2 | 4 | text
+A table called `Orders` has the fields `OrderID`, `CustomerName`, `Item` and `Quantity`.
+
+(a) State which field is the most suitable primary key. [1]
+
+(b) Explain why it is suitable. [1]
+
+(c) Explain why `CustomerName` is **not** a suitable primary key. [1]
+
+(d) State what is meant by a **primary key**. [1]
+--- scheme
+1 | (a) OrderID |
+1 | (b) Each order has a different (unique) value |
+1 | (c) Two orders could be placed by customers with the same name / a customer could place more than one order |
+1 | (d) A field that uniquely identifies each record in a table |
+
+### aqa-databases-33 | sql-multi-condition | 3 | 5 | code
+Use the `Members` table below to answer this question.
+
+| MemberID | Name | Age | Town | Fee |
+|---|---|---|---|---|
+| 1 | Ana | 17 | Leeds | 10 |
+| 2 | Bo | 25 | Leeds | 20 |
+| 3 | Cy | 31 | York | 20 |
+| 4 | Di | 19 | Leeds | 20 |
+
+Write an SQL statement to display the `Name` and `Fee` of every member who lives in `Leeds` and is aged 18 or over, in alphabetical order of `Name`. [5]
+--- scheme
+1 | SELECT Name, Fee |
+1 | FROM Members |
+1 | WHERE Town = 'Leeds' |
+1 | AND Age >= 18 |
+1 | ORDER BY Name |
+
+### aqa-databases-34 | normalisation-split | 3 | 5 | text
+A school stores every book loan in a single table with the fields `LoanID`, `StudentName`, `BookTitle`, `Author` and `AuthorCountry`. The same author's details are typed in again for every loan of one of their books.
+
+Explain why splitting the data into two linked tables would improve the database. [5]
+--- scheme
+1 | The author's details are repeated many times (redundant data) in the single table |
+1 | If the details change they must be changed in every record, so they can become inconsistent / out of step |
+1 | The data can be split into a table of books or authors and a table of loans |
+1 | The tables are linked using a key (a primary key in one table and a foreign key in the other) |
+1 | Each author's details are stored once, which saves storage and makes updates easier and more accurate |
+
+### aqa-databases-35 | sql-trace-extended | 3 | 5 | text
+Use the `Pets` table below to answer this question.
+
+| PetID | Name | Type | Age |
+|---|---|---|---|
+| 1 | Milo | Cat | 3 |
+| 2 | Rex | Dog | 5 |
+| 3 | Kiki | Cat | 7 |
+| 4 | Bella | Dog | 2 |
+| 5 | Coco | Rabbit | 1 |
+
+(a) State the data output by this SQL statement. [1]
+
+```
+SELECT Name FROM Pets WHERE Type = 'Cat' AND Age > 4
+```
+
+(b) State the data output by this SQL statement. [2]
+
+```
+SELECT Name FROM Pets WHERE Type = 'Dog' OR Age < 2
+```
+
+(c) State the data output by this SQL statement, in the order it is output. [2]
+
+```
+SELECT Name FROM Pets ORDER BY Age
+```
+--- scheme
+1 | (a) Kiki |
+1 | (b) Rex and Bella (the dogs) |
+1 | (b) Coco (the only pet under 2 that is not a dog) |
+1 | (c) Coco, Bella, Milo (youngest first) |
+1 | (c) Rex, Kiki (the last two in order) |
+
+### aqa-databases-36 | database-design-explain | 3 | 5 | text
+A school uses two linked tables.
+
+`Students` (`StudentID`, `Name`, `FormID`)
+
+`Forms` (`FormID`, `Tutor`, `Room`)
+
+(a) State the primary key of each table. [2]
+
+(b) State the foreign key in the `Students` table. [1]
+
+(c) Explain how the two tables are linked. [1]
+
+(d) State **one** benefit of using two tables instead of one. [1]
+--- scheme
+1 | (a) StudentID is the primary key of Students |
+1 | (a) FormID is the primary key of Forms |
+1 | (b) FormID |
+1 | (c) The FormID in Students matches the FormID in Forms, so each student can be linked to their form's tutor and room |
+1 | (d) Any one of: the tutor and room are stored once per form instead of once per student / less repeated data / easier to update |

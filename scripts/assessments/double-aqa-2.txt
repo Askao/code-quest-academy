@@ -1,0 +1,786 @@
+### aqa-iteration-25 | iteration-definition | 1 | 1 | text
+State what is meant by **iteration** in programming. [1]
+--- scheme
+1 | Repeating a block of code (a loop) | Allow: code that is run more than once.
+
+### aqa-iteration-26 | for-loop-count | 1 | 1 | text
+The following algorithm is written in pseudo-code.
+
+```
+FOR i ← 1 TO 4
+  OUTPUT "Go"
+ENDFOR
+```
+
+State the number of times `Go` is output. [1]
+--- scheme
+1 | 4 |
+
+### aqa-iteration-27 | while-check-time | 1 | 1 | text
+State **when** the condition of a `WHILE` loop is checked. [1]
+--- scheme
+1 | Before each iteration / before the code inside the loop is run (at the start) | Do not allow: at the end of the loop.
+
+### aqa-iteration-28 | repeat-until-minimum | 1 | 1 | text
+State the minimum number of times the code inside a `REPEAT ... UNTIL` loop will run. [1]
+--- scheme
+1 | 1 (once) | The condition is checked at the end, after the code has run.
+
+### aqa-iteration-29 | infinite-loop | 1 | 1 | text
+State what is meant by an **infinite loop**. [1]
+--- scheme
+1 | A loop that never stops because its condition never becomes false (or never becomes true for a REPEAT ... UNTIL) |
+
+### aqa-iteration-30 | loop-counter-values | 1 | 2 | text
+The following algorithm is written in pseudo-code.
+
+```
+FOR i ← 2 TO 5
+  OUTPUT i
+ENDFOR
+```
+
+State the values that are output. [2]
+--- scheme
+1 | 2, 3 and 4 are output | Award 1 mark for any three of the four values in order.
+1 | All four values in order (2 3 4 5), one per line |
+
+### aqa-iteration-31 | step-values-down | 1 | 2 | text
+The following algorithm is written in pseudo-code.
+
+```
+FOR i ← 20 TO 0 STEP -10
+  OUTPUT i
+ENDFOR
+```
+
+State the values that are output. [2]
+--- scheme
+1 | 20 and 10 | Award 1 mark for 20 and 10 only.
+1 | 20, 10 and 0 in that order |
+
+### aqa-iteration-32 | loop-benefit | 1 | 1 | text
+Give **one** reason why a programmer would use a loop instead of writing the same statement 50 times. [1]
+--- scheme
+1 | Any one of: the algorithm is shorter / easier to read / easier to change (change it once) / less chance of mistakes |
+
+### aqa-iteration-33 | while-trace-multiply | 2 | 3 | text
+The following algorithm is written in pseudo-code.
+
+```
+n ← 2
+WHILE n < 30
+  n ← n * 2
+ENDWHILE
+OUTPUT n
+```
+
+(a) State the number of times the statement `n ← n * 2` is executed. [1]
+
+(b) State the output of the algorithm. [1]
+
+(c) Explain why the output is greater than 30. [1]
+--- scheme
+1 | (a) 4 | n goes 2, 4, 8, 16, 32.
+1 | (b) 32 |
+1 | (c) The condition is only checked before each iteration - when n is 16 the loop runs once more, making n 32 | Allow: the loop only stops after n has already passed 30.
+
+### aqa-iteration-34 | repeat-until-trace | 2 | 3 | text
+The following algorithm is written in pseudo-code.
+
+```
+count ← 0
+REPEAT
+  count ← count + 3
+UNTIL count >= 10
+OUTPUT count
+```
+
+(a) State the number of times the loop runs. [1]
+
+(b) State the output of the algorithm. [1]
+
+(c) State **one** difference between a `REPEAT ... UNTIL` loop and a `WHILE` loop. [1]
+--- scheme
+1 | (a) 4 | count goes 3, 6, 9, 12.
+1 | (b) 12 |
+1 | (c) REPEAT ... UNTIL checks its condition at the end (runs at least once) / WHILE checks at the start (may never run) |
+
+### aqa-iteration-35 | multiples-total-trace | 2 | 3 | text
+The following algorithm is written in pseudo-code.
+
+```
+total ← 0
+FOR i ← 1 TO 4
+  total ← total + i * 3
+ENDFOR
+OUTPUT total
+```
+
+(a) State the value of `total` after the second iteration. [1]
+
+(b) State the output of the algorithm. [1]
+
+(c) State the number of times the statement `total ← total + i * 3` is executed. [1]
+--- scheme
+1 | (a) 9 | 3 + 6.
+1 | (b) 30 |
+1 | (c) 4 |
+
+### aqa-iteration-36 | sentinel-trace | 2 | 3 | text
+A user enters the values `5`, `8`, `3` and `0`, one at a time, when this algorithm is run.
+
+```
+total ← 0
+num ← STRING_TO_INT(USERINPUT)
+WHILE num ≠ 0
+  total ← total + num
+  num ← STRING_TO_INT(USERINPUT)
+ENDWHILE
+OUTPUT total
+```
+
+(a) State the output of the algorithm. [1]
+
+(b) State the purpose of the value `0`. [1]
+
+(c) State the number of times the user is asked to enter a number. [1]
+--- scheme
+1 | (a) 16 |
+1 | (b) It is a sentinel value that tells the algorithm to stop looping | It is not added to the total.
+1 | (c) 4 |
+
+### aqa-iteration-37 | write-countdown-launch | 2 | 3 | code
+Write an algorithm that outputs the numbers from 5 down to 1, one number per line, and then outputs `Blast off`. [3]
+--- scheme
+1 | Uses a loop that counts down from 5 to 1 (STEP -1 or an equivalent subtraction) |
+1 | Outputs each value inside the loop |
+1 | Outputs Blast off once, after the loop has finished |
+
+### aqa-iteration-38 | write-times-table | 2 | 4 | code
+Write an algorithm that asks the user to enter a whole number and outputs its times table from 1 to 10, for example `4 x 1 = 4` up to `4 x 10 = 40`. [4]
+--- scheme
+1 | Inputs the number and converts it to an integer |
+1 | Uses a loop that runs from 1 to 10 |
+1 | Multiplies the number by the loop counter |
+1 | Outputs a line for each multiplication inside the loop |
+
+### aqa-iteration-39 | validate-range-loop | 2 | 4 | code
+Write an algorithm that asks the user to enter a whole number between 0 and 50. The algorithm must keep asking until a valid number is entered, and then output `Accepted`. [4]
+--- scheme
+1 | Inputs a number (before or inside the loop) |
+1 | Uses a loop whose condition tests for a number that is out of range |
+1 | Asks for the number again inside the loop |
+1 | Outputs Accepted after the loop has finished |
+
+### aqa-iteration-40 | loop-smallest | 2 | 4 | code
+Write an algorithm that asks the user to enter four whole numbers, one at a time, and then outputs the smallest number entered. [4]
+--- scheme
+1 | A loop that repeats four times, with the input and conversion inside it |
+1 | A variable to store the smallest number is set up before or at the start of the loop |
+1 | Compares each new number with the smallest so far and updates it when it is smaller |
+1 | Outputs the smallest number after the loop |
+
+### aqa-iteration-41 | loop-off-by-one | 2 | 3 | text
+A programmer wants an algorithm to output the numbers 1 to 10.
+
+```
+FOR i ← 1 TO 9
+  OUTPUT i
+ENDFOR
+```
+
+(a) Explain why the algorithm does not meet the requirement. [2]
+
+(b) State how the algorithm should be corrected. [1]
+--- scheme
+1 | (a) The loop stops when i is 9 / the loop runs only 9 times |
+1 | (a) The number 10 is never output |
+1 | (b) Change the loop to FOR i ← 1 TO 10 |
+
+### aqa-iteration-42 | nested-pattern-trace | 2 | 4 | text
+The following algorithm is written in pseudo-code.
+
+```
+FOR row ← 1 TO 3
+  line ← ""
+  FOR col ← 1 TO 4 - row
+    line ← line + "#"
+  ENDFOR
+  OUTPUT line
+ENDFOR
+```
+
+(a) State the output of the algorithm. [3]
+
+(b) State the total number of times the statement `line ← line + "#"` is executed. [1]
+--- scheme
+1 | (a) ### on the first line |
+1 | (a) ## on the second line |
+1 | (a) # on the third line |
+1 | (b) 6 | 3 + 2 + 1.
+
+### aqa-iteration-43 | write-sum-until-sentinel | 3 | 5 | code
+Write an algorithm that repeatedly asks the user to enter a whole number. The algorithm stops when the user enters `999`. It then outputs the total of the numbers entered and how many numbers were entered (not counting the `999`). [5]
+
+You may use pseudo-code or a high-level programming language.
+--- scheme
+1 | A loop that repeats until 999 is entered |
+1 | Inputs a number (converted to an integer) each time round the loop |
+1 | Adds each number to a running total (without adding the 999) |
+1 | Counts the numbers entered |
+1 | Outputs both the total and the count after the loop |
+
+### aqa-iteration-44 | write-prime-check | 3 | 6 | code
+Write an algorithm that asks the user to enter a whole number greater than 1 and outputs `Prime` if it is a prime number, or `Not prime` if it is not.
+
+A prime number can only be divided exactly by 1 and itself. [6]
+
+You may use pseudo-code or a high-level programming language.
+--- scheme
+1 | Inputs the number and converts it to an integer |
+1 | A loop that tries possible divisors from 2 up to (at most) the number minus 1 |
+1 | Tests whether the number divides exactly by the divisor using MOD |
+1 | Records that a divisor has been found (e.g. a flag) or stops the loop |
+1 | Outputs Not prime when a divisor was found |
+1 | Outputs Prime otherwise | Allow: the logic of the final test must be correct for numbers such as 2, 9 and 13.
+
+### aqa-iteration-45 | tripling-trace-table | 3 | 5 | text
+The following algorithm is written in pseudo-code.
+
+```
+x ← 3
+y ← 0
+WHILE x < 50
+  y ← y + 1
+  x ← x * 3
+ENDWHILE
+OUTPUT x
+OUTPUT y
+```
+
+(a) State the number of times the loop runs. [1]
+
+(b) State the value of `y` after the second time the loop has run. [1]
+
+(c) State the first value that is output. [1]
+
+(d) State the second value that is output. [1]
+
+(e) Explain why the value of `x` is not 50 when the loop ends. [1]
+--- scheme
+1 | (a) 3 | x goes 3, 9, 27, 81.
+1 | (b) 2 |
+1 | (c) 81 |
+1 | (d) 3 |
+1 | (e) x triples each time, so it jumps from 27 to 81 and never equals 50 / the condition is checked before the loop runs again |
+
+### aqa-iteration-46 | loop-multiples-total | 3 | 5 | code
+Write an algorithm that outputs all the multiples of 5 from 5 to 50, one per line, and then outputs the total of all of these numbers. [5]
+
+You may use pseudo-code or a high-level programming language.
+--- scheme
+1 | A loop that covers the numbers 5 to 50 |
+1 | Selects only the multiples of 5 (e.g. step 5, or MOD 5 = 0) |
+1 | Outputs each multiple inside the loop |
+1 | Adds each multiple to a running total |
+1 | Outputs the total after the loop has finished |
+
+### aqa-iteration-47 | write-three-tries | 3 | 5 | code
+The password for a system is `Maple8`.
+
+Write an algorithm that gives the user up to three attempts to enter the password. If it is correct the algorithm outputs `Welcome` and stops asking. If all three attempts are wrong it outputs `Locked`. [5]
+
+You may use pseudo-code or a high-level programming language.
+--- scheme
+1 | A loop that gives at most three attempts |
+1 | Inputs a password on each attempt |
+1 | Compares the input with "Maple8" |
+1 | Outputs Welcome and stops asking when the password is correct |
+1 | Outputs Locked only after three wrong attempts |
+
+### aqa-iteration-48 | write-digit-sum | 3 | 6 | code
+Write an algorithm that asks the user to enter a positive whole number and outputs the sum of its digits. For example, `385` gives `16`. [6]
+
+You may use pseudo-code or a high-level programming language.
+--- scheme
+1 | Inputs the number and converts it to an integer |
+1 | A loop that continues while the number is greater than 0 |
+1 | Finds the last digit using MOD 10 |
+1 | Adds the digit to a running total |
+1 | Removes the last digit using DIV 10 |
+1 | Outputs the total after the loop |
+
+### aqa-lists-19 | array-first-index | 1 | 1 | text
+State the index of the first item in an array. [1]
+--- scheme
+1 | 0 | Allow: zero.
+
+### aqa-lists-20 | list-access-item | 1 | 1 | text
+The following algorithm is written in pseudo-code.
+
+```
+names ← ["Ada", "Ben", "Cleo"]
+OUTPUT names[1]
+```
+
+State the output of this algorithm. [1]
+--- scheme
+1 | Ben | The first item is at index 0.
+
+### aqa-lists-21 | list-length-value | 1 | 1 | text
+The following algorithm is written in pseudo-code.
+
+```
+nums ← [5, 8, 2, 9, 1]
+OUTPUT LEN(nums)
+```
+
+State the output of this algorithm. [1]
+--- scheme
+1 | 5 |
+
+### aqa-lists-22 | array-benefit | 1 | 1 | text
+A program stores 40 test marks.
+
+Give **one** advantage of using an array instead of 40 separate variables. [1]
+--- scheme
+1 | Any one of: the marks can be processed using a loop / less code / one identifier for all the marks / easy to add or search the data |
+
+### aqa-lists-23 | list-change-value | 1 | 1 | text
+The following algorithm is written in pseudo-code.
+
+```
+a ← [1, 2, 3]
+a[0] ← 9
+OUTPUT a
+```
+
+State the output of this algorithm. [1]
+--- scheme
+1 | [9, 2, 3] | Allow: 9, 2, 3.
+
+### aqa-lists-24 | list-append-length | 1 | 2 | text
+The following algorithm is written in pseudo-code.
+
+```
+items ← ["x"]
+APPEND(items, "y")
+APPEND(items, "z")
+OUTPUT LEN(items)
+OUTPUT items[2]
+```
+
+State the output of the algorithm. [2]
+--- scheme
+1 | 3 |
+1 | z |
+
+### aqa-lists-25 | array-sum-trace | 2 | 3 | text
+The following algorithm is written in pseudo-code.
+
+```
+nums ← [5, 2, 8, 1]
+total ← 0
+FOR i ← 0 TO 3
+  total ← total + nums[i]
+ENDFOR
+OUTPUT total
+```
+
+(a) State the output of the algorithm. [1]
+
+(b) State the number of times the statement `total ← total + nums[i]` is executed. [1]
+
+(c) State **one** change needed so that the algorithm works for an array with seven items. [1]
+--- scheme
+1 | (a) 16 |
+1 | (b) 4 |
+1 | (c) Change the loop to run to 6 / use LEN(nums) - 1 as the end of the loop |
+
+### aqa-lists-26 | array-find-position | 2 | 3 | text
+The following algorithm is written in pseudo-code.
+
+```
+names ← ["Ada", "Ben", "Cleo", "Dev"]
+pos ← -1
+FOR i ← 0 TO 3
+  IF names[i] = "Ben" THEN
+    pos ← i
+  ENDIF
+ENDFOR
+OUTPUT pos
+```
+
+(a) State the output of the algorithm. [1]
+
+(b) State the output if `"Ben"` is changed to `"Eve"`. [1]
+
+(c) State why `pos` is set to `-1` at the start. [1]
+--- scheme
+1 | (a) 1 |
+1 | (b) -1 |
+1 | (c) -1 is not a valid index, so it shows that the name was not found |
+
+### aqa-lists-27 | array-largest-trace | 2 | 3 | text
+The following algorithm is written in pseudo-code.
+
+```
+nums ← [4, 15, 9, 15, 6]
+biggest ← nums[0]
+FOR i ← 1 TO 4
+  IF nums[i] > biggest THEN
+    biggest ← nums[i]
+  ENDIF
+ENDFOR
+OUTPUT biggest
+```
+
+(a) State the output of the algorithm. [1]
+
+(b) State the value of `biggest` after the loop has run with `i` equal to 2. [1]
+
+(c) State the number of times the statement `biggest ← nums[i]` is executed. [1]
+--- scheme
+1 | (a) 15 |
+1 | (b) 15 |
+1 | (c) 1 | Only the first 15 is larger than the current biggest value.
+
+### aqa-lists-28 | array-2d-access | 2 | 3 | text
+A 2D array called `grid` is shown. Locations are written `grid[row][column]` and both start at 0.
+
+| | 0 | 1 | 2 |
+|---|---|---|---|
+| **0** | 2 | 4 | 6 |
+| **1** | 8 | 10 | 12 |
+| **2** | 14 | 16 | 18 |
+
+(a) State the value stored in `grid[1][2]`. [1]
+
+(b) State the value stored in `grid[2][0]`. [1]
+
+(c) State the location in the array of the value `10`. [1]
+--- scheme
+1 | (a) 12 |
+1 | (b) 14 |
+1 | (c) grid[1][1] |
+
+### aqa-lists-29 | list-update-trace | 2 | 3 | text
+The following algorithm is written in pseudo-code.
+
+```
+scores ← [10, 20, 30, 40]
+scores[1] ← scores[1] + scores[2]
+OUTPUT scores[1]
+OUTPUT LEN(scores)
+OUTPUT scores[3]
+```
+
+State the output of each of the three `OUTPUT` statements. [3]
+--- scheme
+1 | 50 | scores[1] is 20 + 30.
+1 | 4 | Changing an item does not change the length of the list.
+1 | 40 |
+
+### aqa-lists-30 | write-output-list | 2 | 3 | code
+A list called `colours` has already been created and filled with text values.
+
+Write an algorithm that outputs every item in the list, one per line. [3]
+--- scheme
+1 | A loop that visits every item in the list (e.g. 0 to LEN(colours) - 1) |
+1 | Accesses each item using the loop counter as the index |
+1 | Outputs each item inside the loop |
+
+### aqa-lists-31 | list-count-under | 2 | 4 | code
+A list called `marks` contains whole numbers.
+
+Write an algorithm that counts how many of the marks are less than 40 and outputs the count. [4]
+--- scheme
+1 | Sets a counter to 0 before the loop |
+1 | A loop that visits every item in marks |
+1 | Tests whether each mark is less than 40 |
+1 | Adds 1 to the counter when it is, and outputs the count after the loop |
+
+### aqa-lists-32 | array-words-reverse | 2 | 4 | code
+Write an algorithm that asks the user to enter four words, stores them in an array, and then outputs the words in **reverse** order. [4]
+--- scheme
+1 | Creates an array (or list) to hold four words |
+1 | A loop that inputs a word four times and stores each one |
+1 | A second loop that outputs the items |
+1 | The second loop works backwards (index 3 down to 0) so the output is in reverse order |
+
+### aqa-lists-33 | mean-and-above | 3 | 6 | code
+A list called `temps` contains eight temperatures as whole numbers.
+
+Write an algorithm that calculates the mean (average) temperature and then outputs both the mean and the number of temperatures that are above the mean. [6]
+
+You may use pseudo-code or a high-level programming language.
+--- scheme
+1 | A loop that adds up all the temperatures |
+1 | Calculates the mean by dividing the total by the number of items |
+1 | A second loop that visits every temperature |
+1 | Compares each temperature with the mean |
+1 | Counts the temperatures that are above the mean |
+1 | Outputs the mean and the count |
+
+### aqa-lists-34 | write-search-list | 3 | 5 | code
+A list called `names` contains the names of the students in a class.
+
+Write an algorithm that asks the user to enter a name and outputs `Found at position` followed by the index if the name is in the list, or `Not found` if it is not. [5]
+
+You may use pseudo-code or a high-level programming language.
+--- scheme
+1 | Inputs the name to search for |
+1 | A loop that visits each item in the list |
+1 | Compares each item with the name entered |
+1 | Outputs Found at position and the correct index when there is a match |
+1 | Outputs Not found only if no item matched (not once per non-matching item) |
+
+### aqa-lists-35 | array-modify-trace | 3 | 5 | text
+The following algorithm is written in pseudo-code.
+
+```
+a ← [3, 6, 9, 12]
+FOR i ← 0 TO 3
+  a[i] ← a[i] - i
+ENDFOR
+OUTPUT a
+```
+
+(a) State the value stored in `a[1]` after the loop has finished. [1]
+
+(b) State the value stored in `a[3]` after the loop has finished. [1]
+
+(c) State the output of the algorithm. [1]
+
+(d) State the number of items in the array `a`. [1]
+
+(e) Describe what the loop does to each item in the array. [1]
+--- scheme
+1 | (a) 5 |
+1 | (b) 9 |
+1 | (c) [3, 5, 7, 9] | Allow: 3, 5, 7, 9.
+1 | (d) 4 |
+1 | (e) Subtracts the item's index from the item (each item is reduced by its position) |
+
+### aqa-lists-36 | write-2d-total | 3 | 5 | code
+A 2D array called `scores` has 4 rows and 3 columns and stores whole numbers.
+
+Write an algorithm that outputs the total of all the values in the array. [5]
+
+You may use pseudo-code or a high-level programming language.
+--- scheme
+1 | A loop that visits each row (0 to 3) |
+1 | A second loop inside it that visits each column (0 to 2) |
+1 | Accesses each value using both indexes correctly (e.g. scores[row][col]) |
+1 | Adds each value to a running total that is set to 0 before the loops |
+1 | Outputs the total after both loops have finished |
+
+### aqa-strings-19 | string-length-value | 1 | 1 | text
+State the output of `OUTPUT LEN("keyboard")`. [1]
+--- scheme
+1 | 8 |
+
+### aqa-strings-20 | concat-length | 1 | 1 | text
+State the output of `OUTPUT LEN("ab" + "cde")`. [1]
+--- scheme
+1 | 5 | The strings are joined first to make abcde.
+
+### aqa-strings-21 | substring-start | 1 | 1 | text
+The following algorithm is written in pseudo-code. The first character of a string is at position 0.
+
+```
+word ← "python"
+OUTPUT SUBSTRING(0, 2, word)
+```
+
+State the output of this algorithm. [1]
+--- scheme
+1 | pyt | Characters from position 0 to position 2 inclusive.
+
+### aqa-strings-22 | substring-end | 1 | 1 | text
+The first character of a string is at position 0.
+
+State the output of `OUTPUT SUBSTRING(4, 5, "python")`. [1]
+--- scheme
+1 | on |
+
+### aqa-strings-23 | string-definition | 1 | 1 | text
+State what is meant by a **string**. [1]
+--- scheme
+1 | A sequence (series) of characters | Allow: text made up of letters, numbers and symbols.
+
+### aqa-strings-24 | substring-length | 1 | 2 | text
+The first character of a string is at position 0.
+
+(a) State the output of `OUTPUT SUBSTRING(3, 6, "programming")`. [1]
+
+(b) State the output of `OUTPUT LEN("programming")`. [1]
+--- scheme
+1 | (a) gram | Characters from position 3 to position 6 inclusive.
+1 | (b) 11 |
+
+### aqa-strings-25 | string-functions-trace | 2 | 3 | text
+The following algorithm is written in pseudo-code. The first character of a string is at position 0.
+
+```
+word ← "Binary"
+OUTPUT LEN(word)
+OUTPUT SUBSTRING(0, 2, word)
+OUTPUT SUBSTRING(3, 5, word) + "!"
+```
+
+State the output of each of the three `OUTPUT` statements. [3]
+--- scheme
+1 | 6 |
+1 | Bin |
+1 | ary! |
+
+### aqa-strings-26 | count-letter-trace | 2 | 3 | text
+The following algorithm is written in pseudo-code. The first character of a string is at position 0.
+
+```
+word ← "banana"
+count ← 0
+FOR i ← 0 TO LEN(word) - 1
+  IF SUBSTRING(i, i, word) = "a" THEN
+    count ← count + 1
+  ENDIF
+ENDFOR
+OUTPUT count
+```
+
+(a) State the output of the algorithm. [1]
+
+(b) State the number of times the loop runs. [1]
+
+(c) Explain why the loop ends at `LEN(word) - 1` and not `LEN(word)`. [1]
+--- scheme
+1 | (a) 3 |
+1 | (b) 6 |
+1 | (c) Positions start at 0, so the last character is at position LEN(word) - 1 |
+
+### aqa-strings-27 | character-shift-trace | 2 | 3 | text
+The function `CHAR_TO_CODE` returns the character code of a character and `CODE_TO_CHAR` returns the character for a code. The code for the letter `"C"` is 67.
+
+```
+letter ← "C"
+code ← CHAR_TO_CODE(letter) + 2
+OUTPUT CODE_TO_CHAR(code)
+```
+
+(a) State the value stored in `code`. [1]
+
+(b) State the output of the algorithm. [1]
+
+(c) State the purpose of the function `CODE_TO_CHAR`. [1]
+--- scheme
+1 | (a) 69 |
+1 | (b) E |
+1 | (c) It converts a character code (number) into the character it represents |
+
+### aqa-strings-28 | string-comparison-case | 2 | 3 | text
+(a) State the result of `"Apple" = "apple"`. [1]
+
+(b) State the result of `LEN("cat") = LEN("dog")`. [1]
+
+(c) Explain your answer to (a). [1]
+--- scheme
+1 | (a) FALSE |
+1 | (b) TRUE | Both strings have 3 characters.
+1 | (c) Upper-case and lower-case letters have different character codes, so the strings are not identical | Allow: comparisons are case-sensitive.
+
+### aqa-strings-29 | write-name-info | 2 | 3 | code
+Write an algorithm that asks the user to enter their name, and then outputs the number of characters in the name and the first character of the name. [3]
+--- scheme
+1 | Inputs the name |
+1 | Outputs the length of the name |
+1 | Outputs the first character (e.g. SUBSTRING(0, 0, name)) |
+
+### aqa-strings-30 | write-first-last | 2 | 4 | code
+Write an algorithm that asks the user to enter a word and outputs its first character and its last character. [4]
+--- scheme
+1 | Inputs the word |
+1 | Extracts the first character (e.g. SUBSTRING(0, 0, word)) |
+1 | Extracts the last character (e.g. SUBSTRING(LEN(word) - 1, LEN(word) - 1, word)) |
+1 | Outputs both characters |
+
+### aqa-strings-31 | write-count-letter | 2 | 4 | code
+Write an algorithm that asks the user to enter a sentence and a single letter, and outputs the number of times the letter appears in the sentence. [4]
+--- scheme
+1 | Inputs both the sentence and the letter |
+1 | A loop that visits every character of the sentence |
+1 | Compares each character with the letter |
+1 | Counts the matches and outputs the count after the loop |
+
+### aqa-strings-32 | write-spaces-to-hyphens | 2 | 4 | code
+Write an algorithm that asks the user to enter a sentence and outputs the sentence with every space replaced by a hyphen (`-`). [4]
+--- scheme
+1 | Inputs the sentence |
+1 | A loop that visits every character |
+1 | Adds a hyphen to a new string when the character is a space, and the character itself otherwise |
+1 | Outputs the new string after the loop |
+
+### aqa-strings-33 | write-vowel-count | 3 | 5 | code
+Write an algorithm that asks the user to enter a word and outputs the number of vowels (`a`, `e`, `i`, `o`, `u`) in the word. You can assume the word is in lower case. [5]
+
+You may use pseudo-code or a high-level programming language.
+--- scheme
+1 | Inputs the word |
+1 | A loop that visits every character |
+1 | Tests whether a character is a vowel using at least one correct comparison |
+1 | Tests all five vowels correctly (e.g. using OR) |
+1 | Counts the vowels and outputs the count after the loop |
+
+### aqa-strings-34 | write-letter-shift | 3 | 6 | code
+Write an algorithm that asks the user to enter a word in lower case and outputs the word with every letter replaced by the letter two places later in the alphabet. For example, `cat` becomes `ecv`.
+
+You can assume that the word does not contain the letters `x`, `y` or `z`. The function `CHAR_TO_CODE` returns the character code of a letter and `CODE_TO_CHAR` converts a code back to a character. [6]
+
+You may use pseudo-code or a high-level programming language.
+--- scheme
+1 | Inputs the word |
+1 | A loop that visits every character |
+1 | Uses CHAR_TO_CODE to get the code of each character |
+1 | Adds 2 to the code |
+1 | Uses CODE_TO_CHAR to convert the new code back into a character |
+1 | Builds up a new string and outputs it after the loop |
+
+### aqa-strings-35 | write-word-count | 3 | 5 | code
+Write an algorithm that asks the user to enter a sentence and outputs the number of words in it. You can assume that the words are separated by single spaces and that the sentence does not start or end with a space. [5]
+
+You may use pseudo-code or a high-level programming language.
+--- scheme
+1 | Inputs the sentence |
+1 | A loop that visits every character |
+1 | Tests whether each character is a space |
+1 | Counts the spaces |
+1 | Adds 1 to the number of spaces and outputs the result |
+
+### aqa-strings-36 | string-build-trace | 3 | 5 | text
+The following algorithm is written in pseudo-code. The first character of a string is at position 0.
+
+```
+text ← "tree"
+result ← ""
+FOR i ← 0 TO LEN(text) - 1
+  result ← SUBSTRING(i, i, text) + result
+ENDFOR
+OUTPUT result
+```
+
+(a) State the value of `result` after the first time round the loop. [1]
+
+(b) State the value of `result` after the second time round the loop. [1]
+
+(c) State the output of the algorithm. [1]
+
+(d) State the number of times the loop runs. [1]
+
+(e) Describe what the algorithm does. [1]
+--- scheme
+1 | (a) t |
+1 | (b) rt |
+1 | (c) eert |
+1 | (d) 4 |
+1 | (e) It reverses the string |
