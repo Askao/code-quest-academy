@@ -67,6 +67,8 @@ export type AttemptSummary = {
   xpAwarded: number;
   newBadges: string[];
   newSkillLevel: number;
+  /** True when the student had already passed this challenge before this attempt. */
+  alreadyCompleted: boolean;
 };
 
 /**
@@ -81,19 +83,40 @@ export async function recordAttempt(opts: {
   firstTry: boolean;
 }): Promise<AttemptSummary> {
   const { userId, challenge, outcome, code, mode, firstTry } = opts;
-  const xpAwarded = outcome.passed ? xpForAttempt(challenge.xp, firstTry, mode) : 0;
+  // XP, skill progress and passes are earned once per challenge. Re-solving a
+  // task you've already passed (e.g. pasting the old answer back in) is still
+  // recorded as an attempt, but earns nothing. The database enforces the XP
+  // side too (see 20261002110000_no_xp_for_repeat_passes.sql), so this check
+  // is for the skill/streak logic and the message shown, not the only guard.
+  const { data: priorPass } = await supabase
+    .from("attempts")
+    .select("id")
+    .eq("user_id", userId)
+    .eq("challenge_id", challenge.id)
+    .eq("passed", true)
+    .limit(1);
+  const alreadyCompleted = (priorPass?.length ?? 0) > 0;
 
-  await supabase.from("attempts").insert({
-    user_id: userId,
-    challenge_id: challenge.id,
-    code,
-    passed: outcome.passed,
-    tests_passed: outcome.passedCount,
-    tests_total: outcome.total,
-    duration_ms: outcome.durationMs,
-    xp_awarded: xpAwarded,
-    mode,
-  });
+  let xpAwarded = outcome.passed && !alreadyCompleted ? xpForAttempt(challenge.xp, firstTry, mode) : 0;
+
+  // Use the amount the database actually stored, so a stricter server-side
+  // rule can never be out-voted by the number worked out here.
+  const { data: stored } = await supabase
+    .from("attempts")
+    .insert({
+      user_id: userId,
+      challenge_id: challenge.id,
+      code,
+      passed: outcome.passed,
+      tests_passed: outcome.passedCount,
+      tests_total: outcome.total,
+      duration_ms: outcome.durationMs,
+      xp_awarded: xpAwarded,
+      mode,
+    })
+    .select("xp_awarded")
+    .maybeSingle();
+  if (stored && typeof stored.xp_awarded === "number") xpAwarded = stored.xp_awarded;
 
   // --- adaptive skill level -------------------------------------------------
   const { data: existingSkill } = await supabase
@@ -134,21 +157,25 @@ export async function recordAttempt(opts: {
     : consecutiveFails >= 3
       ? -0.27
       : -0.12;
-  const newSkillLevel = Math.min(5, Math.max(1, Number((current + delta).toFixed(2))));
+  const newSkillLevel = alreadyCompleted
+    ? current
+    : Math.min(5, Math.max(1, Number((current + delta).toFixed(2))));
 
-  await supabase.from("skills").upsert(
-    {
-      user_id: userId,
-      track: challenge.track,
-      topic: challenge.topic,
-      level: newSkillLevel,
-      attempts: (existingSkill?.attempts ?? 0) + 1,
-      passes: (existingSkill?.passes ?? 0) + (outcome.passed ? 1 : 0),
-      consecutive_fails: consecutiveFails,
-      updated_at: new Date().toISOString(),
-    },
-    { onConflict: "user_id,track,topic" },
-  );
+  if (!alreadyCompleted) {
+    await supabase.from("skills").upsert(
+      {
+        user_id: userId,
+        track: challenge.track,
+        topic: challenge.topic,
+        level: newSkillLevel,
+        attempts: (existingSkill?.attempts ?? 0) + 1,
+        passes: (existingSkill?.passes ?? 0) + (outcome.passed ? 1 : 0),
+        consecutive_fails: consecutiveFails,
+        updated_at: new Date().toISOString(),
+      },
+      { onConflict: "user_id,track,topic" },
+    );
+  }
 
   // --- xp + streak ----------------------------------------------------------
   const { data: stats } = await supabase
@@ -202,7 +229,7 @@ export async function recordAttempt(opts: {
     if ((count ?? 0) >= 10) candidates.push("ten_pass");
     if (streak >= 3) candidates.push("streak_3");
     if (streak >= 7) candidates.push("streak_7");
-    if (newSkillLevel >= 5) candidates.push("topic_master");
+    if (newSkillLevel >= 5 && !alreadyCompleted) candidates.push("topic_master");
     if (mode === "boss") candidates.push("boss_slayer");
     if (new Date().getHours() >= 22) candidates.push("night_owl");
 
@@ -212,7 +239,7 @@ export async function recordAttempt(opts: {
     }
   }
 
-  return { xpAwarded, newBadges, newSkillLevel };
+  return { xpAwarded, newBadges, newSkillLevel, alreadyCompleted };
 }
 
 /**
