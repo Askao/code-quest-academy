@@ -142,13 +142,11 @@ function ClassDetail() {
         ids.length
           ? supabase.from("skills").select("*").in("user_id", ids)
           : Promise.resolve({ data: [] }),
+        // Complete per-student totals computed in the database. This used to
+        // be the newest 500 attempts class-wide, which a few students
+        // replaying finished tasks could fill, leaving everyone else at 0%.
         ids.length
-          ? supabase
-              .from("attempts")
-              .select("user_id, passed, created_at")
-              .in("user_id", ids)
-              .order("created_at", { ascending: false })
-              .limit(500)
+          ? sb.rpc("class_attempt_summary", { _class_id: classId })
           : Promise.resolve({ data: [] }),
         supabase
           .from("homework")
@@ -213,19 +211,22 @@ function ClassDetail() {
         const s = (stats.data ?? []).find((x) => x.user_id === p.id);
         const mine = (skills.data ?? []).filter((k) => k.user_id === p.id);
         const avg = mine.length ? mine.reduce((a, b) => a + Number(b.level), 0) / mine.length : 1;
-        const mineAttempts = (attempts.data ?? []).filter((a) => a.user_id === p.id);
-        const accuracy = mineAttempts.length
-          ? Math.round((mineAttempts.filter((a) => a.passed).length / mineAttempts.length) * 100)
-          : 0;
+        const summary = (
+          (attempts.data ?? []) as {
+            user_id: string;
+            attempts: number;
+            passed: number;
+            last_attempt: string | null;
+          }[]
+        ).find((a) => a.user_id === p.id);
+        const accuracy = summary?.attempts ? Math.round((summary.passed / summary.attempts) * 100) : 0;
         // stats.last_active only moves on a passed daily recap (see
         // progress.ts's own comment on why) - it's the right source for the
         // streak, but reused here it made "Last active" look wrong for any
         // student grinding Practice or homework without ever doing a recap.
-        // attempts is already ordered newest-first, so its first row for
-        // this student (if any, within the 500 fetched) is their true most
-        // recent Test click across every mode. Falls back to last_active for
-        // the rare case a very active class's fetch cap missed it.
-        const lastActive = mineAttempts[0]?.created_at ?? s?.last_active ?? null;
+        // summary.last_attempt is their newest Test click across every mode.
+        // Falls back to last_active for a student with no attempts at all.
+        const lastActive = summary?.last_attempt ?? s?.last_active ?? null;
         // Automatic struggling detection: three fails in a row on any topic
         // (see consecutive_fails in src/lib/progress.ts) - surfaced here
         // instead of relying on a student to self-report being stuck.
@@ -315,9 +316,8 @@ function ClassDetail() {
       );
 
       // Homework completion: which of a homework's challenges has each
-      // student actually passed. The `attempts` fetch above is capped at
-      // 500 rows class-wide for the accuracy view, so it isn't reliable for
-      // this — fetch passed attempts for exactly the challenges set as
+      // student actually passed. The attempt summary above only has per-student
+      // totals, so it can't answer this — fetch passed attempts for exactly the challenges set as
       // homework instead.
       const homeworkChallengeIds = Array.from(
         new Set([
