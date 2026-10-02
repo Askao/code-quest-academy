@@ -44,11 +44,9 @@ function Locker() {
           .from("duels")
           .select("id", { count: "exact", head: true })
           .eq("winner_id", uid),
-        sb
-          .from("attempts")
-          .select("id", { count: "exact", head: true })
-          .eq("user_id", uid)
-          .eq("passed", true),
+        // Distinct challenges, not attempt rows: replaying a task you've
+        // already passed must not count towards Century.
+        sb.rpc("my_passed_challenge_count"),
       ]);
       return {
         selectedAvatar: profile.data?.selected_avatar ?? null,
@@ -56,7 +54,7 @@ function Locker() {
         xp: stats.data?.xp ?? 0,
         bestStreak: stats.data?.best_streak ?? 0,
         duelWins: duelWins.count ?? 0,
-        passedCount: passed.count ?? 0,
+        passedCount: typeof passed.data === "number" ? passed.data : 0,
       };
     },
   });
