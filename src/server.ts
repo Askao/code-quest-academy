@@ -3,7 +3,7 @@ import "./lib/error-capture";
 import { consumeLastCapturedError } from "./lib/error-capture";
 import { renderErrorPage } from "./lib/error-page";
 import { AUTH_EMAIL_HOOK_PATH, handleAuthEmailHook } from "./lib/auth-email-hook.server";
-import { REPORTS_HOOK_PATH, handleSendFortnightlyReports } from "./lib/reports.server";
+import { WEEKLY_REPORTS_PATH, handleSendWeeklyReports } from "./lib/weekly-reports.server";
 import {
   HOMEWORK_NOTIFY_PATH,
   HOMEWORK_REMINDERS_PATH,
@@ -83,8 +83,8 @@ export default {
         if (pathname === AUTH_EMAIL_HOOK_PATH) {
           return await handleAuthEmailHook(request);
         }
-        if (pathname === REPORTS_HOOK_PATH) {
-          return await handleSendFortnightlyReports(request);
+        if (pathname === WEEKLY_REPORTS_PATH) {
+          return await handleSendWeeklyReports(request);
         }
         if (pathname === HOMEWORK_NOTIFY_PATH) {
           return await handleHomeworkNotify(request);

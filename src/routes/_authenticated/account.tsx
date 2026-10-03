@@ -1,9 +1,12 @@
 import { createFileRoute } from "@tanstack/react-router";
-import { useQuery } from "@tanstack/react-query";
+import { useQuery, useQueryClient } from "@tanstack/react-query";
+import { toast } from "sonner";
 import { useAuth } from "@/hooks/useAuth";
 import { supabase } from "@/integrations/supabase/client";
 import { Button } from "@/components/ui/button";
 import { Progress } from "@/components/ui/progress";
+import { Switch } from "@/components/ui/switch";
+import { sb } from "@/lib/assessments-db";
 import { BADGES, levelFromXp, skillLabel, skillPercent, topicLabel } from "@/lib/game";
 
 export const Route = createFileRoute("/_authenticated/account")({
@@ -20,6 +23,25 @@ export const Route = createFileRoute("/_authenticated/account")({
 
 function Account() {
   const { user, fullName, isTeacher, isAdmin } = useAuth();
+  const qc = useQueryClient();
+
+  const { data: weekly } = useQuery({
+    queryKey: ["weekly-reports-setting", user?.id],
+    enabled: !!user,
+    queryFn: async () => {
+      const { data: row } = await sb.from("profiles").select("weekly_reports").eq("id", user!.id).maybeSingle();
+      return row?.weekly_reports !== false;
+    },
+  });
+  const setWeekly = async (on: boolean) => {
+    const { error } = await sb.from("profiles").update({ weekly_reports: on }).eq("id", user!.id);
+    if (error) {
+      toast.error("Couldn't save that. Try again in a moment.");
+      return;
+    }
+    qc.setQueryData(["weekly-reports-setting", user?.id], on);
+    toast.success(on ? "Weekly emails are on." : "Weekly emails are off.");
+  };
 
   const { data } = useQuery({
     queryKey: ["account", user?.id],
@@ -150,6 +172,24 @@ function Account() {
             })}
           </div>
         </div>
+      </section>
+
+      <section className="panel flex flex-wrap items-center justify-between gap-4 p-5">
+        <div className="min-w-0 flex-1">
+          <h2 className="text-lg font-semibold">Weekly email</h2>
+          <p className="text-sm text-muted-foreground">
+            {isTeacher
+              ? "A summary of your classes every Monday morning: who needs a nudge, homework progress and papers to mark."
+              : "A summary of your week every Sunday evening: homework still to do, what you passed and what to do next."}
+          </p>
+        </div>
+        <Switch
+          id="weekly-email"
+          aria-label="Weekly email"
+          checked={weekly ?? true}
+          disabled={weekly === undefined}
+          onCheckedChange={(on) => void setWeekly(on)}
+        />
       </section>
 
       <section className="panel space-y-3 p-5">

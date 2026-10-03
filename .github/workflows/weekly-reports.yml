@@ -1,0 +1,37 @@
+name: Send weekly reports
+
+on:
+  schedule:
+    # Every hour on Sundays and Mondays (UTC). The server decides what is due
+    # from the UK clock - students from Sunday 17:00, teachers from Monday
+    # 07:00 - and records each email as it goes, so running hourly only means
+    # "often enough" and a failed send is retried at the next run.
+    - cron: "0 * * * 0,1"
+  workflow_dispatch:
+    inputs:
+      kind:
+        description: "students or teachers (ignores the clock). Leave empty to follow the clock."
+        required: false
+        default: ""
+      dryRun:
+        description: "Set to 1 to work everything out but send nothing"
+        required: false
+        default: ""
+
+jobs:
+  send-reports:
+    runs-on: ubuntu-latest
+    steps:
+      - name: POST to the weekly reports endpoint
+        run: |
+          query=""
+          if [ -n "${{ inputs.kind }}" ]; then query="kind=${{ inputs.kind }}"; fi
+          if [ -n "${{ inputs.dryRun }}" ]; then query="${query}&dryRun=${{ inputs.dryRun }}"; fi
+          status=$(curl -s -o /tmp/response.txt -w "%{http_code}" \
+            -X POST "https://www.hcodeacademy.co.uk/api/reports/send-weekly?${query}" \
+            -H "Authorization: Bearer ${{ secrets.REPORTS_CRON_SECRET }}")
+          cat /tmp/response.txt
+          if [ "$status" -ge 300 ]; then
+            echo "Request failed with status $status"
+            exit 1
+          fi
