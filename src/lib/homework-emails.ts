@@ -95,12 +95,12 @@ type EmailFields = {
   siteUrl: string;
 };
 
-function firstName(fullName: string): string {
+export function firstName(fullName: string): string {
   const first = fullName.trim().split(/\s+/)[0];
   return first || "there";
 }
 
-function detailRows(rows: [string, string][]): string {
+export function detailRows(rows: [string, string][]): string {
   return `<table style="width: 100%; border-collapse: collapse; border-top: 1px solid #333; border-bottom: 1px solid #333;">
     ${rows
       .map(

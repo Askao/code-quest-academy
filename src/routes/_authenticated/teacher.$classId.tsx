@@ -5,6 +5,7 @@ import { toast } from "sonner";
 import { supabase } from "@/integrations/supabase/client";
 import { sb } from "@/lib/assessments-db";
 import { pagedIn } from "@/lib/paged-in";
+import { HomeworkMessageBox } from "@/components/HomeworkMessageBox";
 import { useAuth } from "@/hooks/useAuth";
 import { Button } from "@/components/ui/button";
 import { Input } from "@/components/ui/input";
@@ -1552,6 +1553,9 @@ function ClassDetail() {
                           each
                           {h.due_at ? ` · due ${new Date(h.due_at).toLocaleDateString("en-GB")}` : ""}
                         </span>
+                        <Button size="sm" variant="secondary" onClick={() => setExpandedHomework(h.id)}>
+                          Message
+                        </Button>
                         <Button size="sm" variant="secondary" onClick={() => exportHomework(h)}>
                           Export
                         </Button>
@@ -1591,6 +1595,15 @@ function ClassDetail() {
                               </Button>
                             </div>
                           ))}
+                        </div>
+                      ) : null}
+                      {isExpanded ? (
+                        <div className="mt-3">
+                          <HomeworkMessageBox
+                            homeworkId={h.id}
+                            everyone={sorted.length}
+                            unfinished={sorted.filter((c) => !(c.total > 0 && c.done === c.total)).length}
+                          />
                         </div>
                       ) : null}
                       {isExpanded && sorted.length > 0 ? (
