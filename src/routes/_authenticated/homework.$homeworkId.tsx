@@ -3,6 +3,7 @@ import { useQuery, useQueryClient } from "@tanstack/react-query";
 import { useState } from "react";
 import { toast } from "sonner";
 import { supabase } from "@/integrations/supabase/client";
+import { sb } from "@/lib/assessments-db";
 import { useAuth } from "@/hooks/useAuth";
 import { Button } from "@/components/ui/button";
 import { Textarea } from "@/components/ui/textarea";
@@ -81,6 +82,20 @@ function HomeworkPage() {
     },
   });
 
+  const { data: messages } = useQuery({
+    queryKey: ["homework-messages", homeworkId],
+    enabled: !!user,
+    queryFn: async () => {
+      const { data: rows } = await sb
+        .from("homework_messages")
+        .select("id, body, created_at")
+        .eq("homework_id", homeworkId)
+        .order("created_at", { ascending: false })
+        .limit(10);
+      return (rows ?? []) as { id: string; body: string; created_at: string }[];
+    },
+  });
+
   if (!data?.hw) return <p className="text-muted-foreground">Loading homework…</p>;
 
   const total = data.items.length;
@@ -119,6 +134,26 @@ function HomeworkPage() {
           {completed}/{total} complete
         </p>
       </div>
+
+      {(messages ?? []).length > 0 ? (
+        <div className="panel space-y-3 p-4">
+          <p className="font-mono text-xs text-muted-foreground">MESSAGES FROM YOUR TEACHER</p>
+          {(messages ?? []).map((m) => (
+            <div key={m.id}>
+              <p className="text-sm whitespace-pre-line">{m.body}</p>
+              <p className="mt-1 text-xs text-muted-foreground">
+                {new Date(m.created_at).toLocaleString("en-GB", {
+                  weekday: "short",
+                  day: "numeric",
+                  month: "short",
+                  hour: "2-digit",
+                  minute: "2-digit",
+                })}
+              </p>
+            </div>
+          ))}
+        </div>
+      ) : null}
 
       {data.hasFailedAttempt ? (
         <div className="panel p-4">

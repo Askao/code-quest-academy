@@ -5,8 +5,10 @@ import { renderErrorPage } from "./lib/error-page";
 import { AUTH_EMAIL_HOOK_PATH, handleAuthEmailHook } from "./lib/auth-email-hook.server";
 import { REPORTS_HOOK_PATH, handleSendFortnightlyReports } from "./lib/reports.server";
 import {
+  HOMEWORK_MESSAGE_PATH,
   HOMEWORK_NOTIFY_PATH,
   HOMEWORK_REMINDERS_PATH,
+  handleHomeworkMessage,
   handleHomeworkNotify,
   handleHomeworkReminders,
 } from "./lib/homework-emails.server";
@@ -91,6 +93,9 @@ export default {
         }
         if (pathname === HOMEWORK_REMINDERS_PATH) {
           return await handleHomeworkReminders(request);
+        }
+        if (pathname === HOMEWORK_MESSAGE_PATH) {
+          return await handleHomeworkMessage(request);
         }
       } catch (error) {
         console.error(error);

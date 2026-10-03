@@ -14,6 +14,7 @@
  * homework_emails before it goes, so a repeat call can't send it twice.
  */
 import { timingSafeEqual } from "node:crypto";
+import type { SupabaseClient } from "@supabase/supabase-js";
 import { sendResendEmail } from "./email-shell";
 import {
   runHourly,
@@ -23,9 +24,17 @@ import {
   type HomeworkRow,
   type RunDeps,
 } from "./homework-emails";
+import {
+  runPendingMessages,
+  sendMessageEmailsFor,
+  type MessageDeps,
+  type MessageRow,
+  type MessageStore,
+} from "./homework-messages";
 
 export const HOMEWORK_NOTIFY_PATH = "/api/homework/notify";
 export const HOMEWORK_REMINDERS_PATH = "/api/homework/reminders";
+export const HOMEWORK_MESSAGE_PATH = "/api/homework/message";
 
 // Resend allows a couple of requests a second; this keeps a full class under it.
 const SEND_GAP_MS = 600;
@@ -49,8 +58,11 @@ const bearer = (request: Request) =>
 
 type HomeworkWithTasks = HomeworkRow & { challenge_ids: string[] | null };
 
-async function realStore(): Promise<EmailStore> {
+async function realStore(): Promise<MessageStore> {
   const { supabaseAdmin } = await import("@/integrations/supabase/client.server");
+  // The message tables are newer than the generated types.
+  // eslint-disable-next-line @typescript-eslint/no-explicit-any
+  const untyped = supabaseAdmin as unknown as SupabaseClient<any, "public", any>;
   const fail = (what: string, message: string): never => {
     throw new Error(`[homework-emails] ${what}: ${message}`);
   };
@@ -150,10 +162,51 @@ async function realStore(): Promise<EmailStore> {
         .eq("student_id", studentId)
         .eq("kind", kind);
     },
+    async messageById(id) {
+      const { data, error } = await untyped
+        .from("homework_messages")
+        .select("id, homework_id, body, audience, created_at, processed_at")
+        .eq("id", id)
+        .maybeSingle();
+      if (error) fail("read message", error.message);
+      return (data as MessageRow | null) ?? null;
+    },
+    async messagesPending(since) {
+      const { data, error } = await untyped
+        .from("homework_messages")
+        .select("id, homework_id, body, audience, created_at, processed_at")
+        .is("processed_at", null)
+        .gte("created_at", since.toISOString())
+        .order("created_at");
+      if (error) fail("read pending messages", error.message);
+      return (data ?? []) as MessageRow[];
+    },
+    async claimMessageEmail(messageId, studentId) {
+      const { error } = await untyped
+        .from("homework_message_emails")
+        .insert({ message_id: messageId, student_id: studentId });
+      if (!error) return true;
+      if (error.code === "23505") return false; // someone else already sent it
+      fail("record message email", error.message);
+      return false;
+    },
+    async releaseMessageEmail(messageId, studentId) {
+      await untyped
+        .from("homework_message_emails")
+        .delete()
+        .eq("message_id", messageId)
+        .eq("student_id", studentId);
+    },
+    async markMessageProcessed(messageId) {
+      await untyped
+        .from("homework_messages")
+        .update({ processed_at: new Date().toISOString() })
+        .eq("id", messageId);
+    },
   };
 }
 
-async function deps(): Promise<RunDeps> {
+async function deps(): Promise<RunDeps & { store: MessageStore }> {
   return {
     store: await realStore(),
     send: sendResendEmail,
@@ -172,7 +225,11 @@ export async function handleHomeworkReminders(request: Request): Promise<Respons
   const provided = bearer(request);
   if (!provided || !safeEqual(provided, secret)) return json({ error: "Unauthorized" }, 401);
 
-  return json(await runHourly(await deps()), 200);
+  const d = await deps();
+  const homework = await runHourly(d);
+  // Messages a teacher sent in the evening, or that only partly went out.
+  const messages = await runPendingMessages(d as MessageDeps);
+  return json({ ...homework, messages }, 200);
 }
 
 export async function handleHomeworkNotify(request: Request): Promise<Response> {
@@ -206,4 +263,39 @@ export async function handleHomeworkNotify(request: Request): Promise<Response> 
   if (teaches.data !== true && admin.data !== true) return json({ error: "Forbidden" }, 403);
 
   return json(await sendSetEmailsFor(hw, d), 200);
+}
+
+export async function handleHomeworkMessage(request: Request): Promise<Response> {
+  const token = bearer(request);
+  if (!token) return json({ error: "Unauthorized" }, 401);
+
+  const { supabaseAdmin } = await import("@/integrations/supabase/client.server");
+  const { data: auth, error: authError } = await supabaseAdmin.auth.getUser(token);
+  const userId = auth?.user?.id;
+  if (authError || !userId) return json({ error: "Unauthorized" }, 401);
+
+  let messageId: unknown;
+  try {
+    messageId = ((await request.json()) as { messageId?: unknown }).messageId;
+  } catch {
+    return json({ error: "Bad request" }, 400);
+  }
+  if (typeof messageId !== "string" || !/^[0-9a-f-]{36}$/i.test(messageId)) {
+    return json({ error: "Bad request" }, 400);
+  }
+
+  const d = await deps();
+  const msg = await d.store.messageById(messageId);
+  if (!msg) return json({ error: "Not found" }, 404);
+  const hw = await d.store.homeworkById(msg.homework_id);
+  if (!hw) return json({ error: "Not found" }, 404);
+
+  // Only someone who teaches the class (or an admin) can trigger the send.
+  const [teaches, admin] = await Promise.all([
+    supabaseAdmin.rpc("is_class_teacher", { _class_id: hw.class_id, _user_id: userId }),
+    supabaseAdmin.rpc("has_role", { _user_id: userId, _role: "admin" }),
+  ]);
+  if (teaches.data !== true && admin.data !== true) return json({ error: "Forbidden" }, 403);
+
+  return json(await sendMessageEmailsFor(msg, d), 200);
 }
