@@ -40,6 +40,8 @@ def __fake_input__(prompt=""):
         __console__.write(str(prompt))
     i = __demo_cursor__[0]
     __demo_cursor__[0] += 1
+    if i >= len(__demo_inputs__) + 20:
+        raise EOFError("The example asked for more input than it was given")
     answer = __demo_inputs__[i] if i < len(__demo_inputs__) else ""
     # Echo the "typed" answer, same as a real terminal would - without this
     # the console would silently skip straight to whatever prints next.
@@ -74,6 +76,8 @@ def __tracer__(frame, event, arg):
     if frame.f_code.co_filename != "<worked_example>":
         return None
     fid = id(frame)
+    if len(__steps__) > 2000:
+        raise __TraceLimit__("This example ran for too many steps to show")
     if event == "line":
         if fid in __pending__:
             __steps__.append({"line": __pending__[fid], "vars": __snapshot_vars__(frame.f_globals), "console": __console__.text})
@@ -83,6 +87,9 @@ def __tracer__(frame, event, arg):
             __steps__.append({"line": __pending__[fid], "vars": __snapshot_vars__(frame.f_globals), "console": __console__.text})
             del __pending__[fid]
     return __tracer__
+
+class __TraceLimit__(Exception):
+    pass
 
 __trace_error__ = None
 __ns__ = {"__name__": "__main__"}

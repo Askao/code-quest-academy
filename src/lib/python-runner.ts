@@ -28,10 +28,14 @@ export type RunOutcome = {
 };
 
 type PyDict = { set: (key: string, value: unknown) => void };
+type PyGuard = { destroy?: () => void };
 
 type Pyodide = {
   runPython: (code: string, options?: { globals?: unknown }) => unknown;
-  runPythonAsync: (code: string, options?: { globals?: unknown }) => Promise<unknown>;
+  runPythonAsync: (
+    code: string,
+    options?: { globals?: unknown; filename?: string },
+  ) => Promise<unknown>;
   setStdout: (options: { batched: (s: string) => void } | { raw: (byte: number) => void }) => void;
   setStderr: (options: { batched: (s: string) => void } | { raw: (byte: number) => void }) => void;
   globals: {
@@ -111,7 +115,7 @@ function cleanTraceback(message: string) {
 // state left for a future run to accidentally inherit.
 const MAKE_TEST_INPUT_SNIPPET = `
 import json as __json__
-def __make_test_input__(lines_json):
+def __make_test_input__(lines_json, state):
     __lines = __json__.loads(lines_json)
     __cursor = [0]
     def input(prompt=""):
@@ -119,9 +123,94 @@ def __make_test_input__(lines_json):
             __value = __lines[__cursor[0]]
             __cursor[0] += 1
             return __value
+        # Past the end of the test's answers a program gets an empty line, so a
+        # slip like reading once too often doesn't crash. But a loop that asks
+        # until it is satisfied would be handed "" for ever.
+        state["over"] += 1
+        if state["over"] > state["max_over"]:
+            state["kill"] = "input"
+            raise EOFError("input")
         return ""
     return input
 `;
+
+// Pyodide runs on the page's own thread, so a student's loop that never
+// finishes freezes the whole tab and nothing outside can interrupt it. Instead
+// a tracer watches every line of the student's own code (nothing else) and
+// raises RunLimit once the program has run too long, printed too much or been
+// refused input too often. RunLimit is a BaseException so "except Exception"
+// can't swallow it, and a flag makes the next line raise it again if a bare
+// "except:" does - which is how a validation loop wrapped in try/except used
+// to survive "no more input" for ever.
+const RUN_SECONDS = 8;
+const MAX_OUTPUT_CHARS = 100_000;
+const MAX_OVER_READS = 100;
+const STUDENT_FILENAME = "<student>";
+// sys.monitoring tool ids 0-2 and 5 belong to debuggers, coverage, profilers and
+// optimisers; 3 and 4 are free. Unlike sys.settrace, a monitoring callback keeps
+// firing after the exception it raised has been caught by the student's code.
+const GUARD_TOOL_ID = 3;
+
+const GUARD_SNIPPET = `
+import sys as __g_sys__, time as __g_time__
+
+class __RunLimit__(BaseException):
+    pass
+
+class __GuardedOut__:
+    def __init__(self, inner, state, limit):
+        self._inner = inner
+        self._state = state
+        self._limit = limit
+    def write(self, s):
+        self._state["chars"] += len(s)
+        if self._state["chars"] > self._limit:
+            self._state["kill"] = "output"
+            raise __RunLimit__("output")
+        return self._inner.write(s)
+    def flush(self):
+        return self._inner.flush()
+    def __getattr__(self, name):
+        return getattr(self._inner, name)
+
+def __guard_start__(seconds, max_chars, max_over):
+    state = {"start": __g_time__.monotonic(), "lines": 0, "chars": 0, "kill": None, "over": 0, "max_over": max_over, "stdout": __g_sys__.stdout}
+    mon = __g_sys__.monitoring
+    def on_line(code, line):
+        if code.co_filename != "${STUDENT_FILENAME}":
+            return
+        if state["kill"]:
+            raise __RunLimit__(state["kill"])
+        state["lines"] += 1
+        if (state["lines"] & 255) == 0 and __g_time__.monotonic() - state["start"] > seconds:
+            state["kill"] = "time"
+            raise __RunLimit__("time")
+    __g_sys__.stdout = __GuardedOut__(__g_sys__.stdout, state, max_chars)
+    mon.use_tool_id(${GUARD_TOOL_ID}, "guard")
+    mon.register_callback(${GUARD_TOOL_ID}, mon.events.LINE, on_line)
+    mon.set_events(${GUARD_TOOL_ID}, mon.events.LINE)
+    return state
+
+def __guard_stop__(state):
+    mon = __g_sys__.monitoring
+    mon.set_events(${GUARD_TOOL_ID}, 0)
+    mon.register_callback(${GUARD_TOOL_ID}, mon.events.LINE, None)
+    mon.free_tool_id(${GUARD_TOOL_ID})
+    __g_sys__.stdout = state["stdout"]
+`;
+
+const LIMIT_MESSAGES: Record<string, string> = {
+  time: "Your program ran for too long and was stopped. Check that your loop changes something each time round, so that it can finish.",
+  output: "Your program printed far too much and was stopped. Check that your loop can finish.",
+  input:
+    "Your program kept asking for more input than it was given and was stopped. Check that your loop stops when it should.",
+};
+
+/** A friendly message if the guard stopped the program, otherwise null. */
+function limitMessage(message: string): string | null {
+  const hit = /__RunLimit__: (\w+)/.exec(message);
+  return hit ? (LIMIT_MESSAGES[hit[1]!] ?? LIMIT_MESSAGES["time"]!) : null;
+}
 
 // Files a program writes stay in the browser's in-memory folder until the page
 // is closed, so without this a second Test click would find the files the first
@@ -152,22 +241,32 @@ export function runOnce(code: string, stdin: string) {
     pyodide.setStdout({ batched: (s) => out.push(s) });
     pyodide.setStderr({ batched: (s) => out.push(s) });
 
+    pyodide.runPython(GUARD_SNIPPET);
     pyodide.runPython(MAKE_TEST_INPUT_SNIPPET);
     const makeInput = pyodide.globals.get("__make_test_input__");
+    const guardStart = pyodide.globals.get("__guard_start__");
+    const guardStop = pyodide.globals.get("__guard_stop__");
     const makeDict = pyodide.globals.get("dict");
     const namespace = makeDict ? (makeDict() as PyDict) : undefined;
+    const guard = guardStart
+      ? (guardStart(RUN_SECONDS, MAX_OUTPUT_CHARS, MAX_OVER_READS) as PyGuard)
+      : undefined;
     if (namespace && makeInput) {
-      namespace.set("input", makeInput(JSON.stringify(inputLines)));
+      namespace.set("input", makeInput(JSON.stringify(inputLines), guard));
     }
 
     try {
-      await pyodide.runPythonAsync(code, namespace ? { globals: namespace } : undefined);
+      await pyodide.runPythonAsync(code, {
+        ...(namespace ? { globals: namespace } : {}),
+        filename: STUDENT_FILENAME,
+      });
       return { output: out.join("\n"), error: undefined as string | undefined };
     } catch (err) {
-      return {
-        output: out.join("\n"),
-        error: cleanTraceback(err instanceof Error ? err.message : String(err)),
-      };
+      const message = err instanceof Error ? err.message : String(err);
+      return { output: out.join("\n"), error: limitMessage(message) ?? cleanTraceback(message) };
+    } finally {
+      if (guard && guardStop) guardStop(guard);
+      guard?.destroy?.();
     }
   });
 }
@@ -187,7 +286,7 @@ const STDIN_EXHAUSTED_MARKER = "__STDIN_EXHAUSTED__";
 
 const MAKE_INTERACTIVE_INPUT_SNIPPET = `
 import json as __json__
-def __make_interactive_input__(known_json, echo):
+def __make_interactive_input__(known_json, echo, state):
     __known = __json__.loads(known_json)
     __cursor = [0]
     def input(prompt=""):
@@ -196,6 +295,10 @@ def __make_interactive_input__(known_json, echo):
             __cursor[0] += 1
             echo(__value)
             return __value
+        # Arm the kill switch as well as raising: a bare "except:" around
+        # input() would swallow the EOFError and ask again for ever, but the
+        # next line of the program then raises RunLimit carrying the marker.
+        state["kill"] = "${STDIN_EXHAUSTED_MARKER}"
         raise EOFError("${STDIN_EXHAUSTED_MARKER}")
     return input
 `;
@@ -239,28 +342,44 @@ export function runInteractive(code: string, answers: string[]): Promise<Interac
       },
     });
 
+    pyodide.runPython(GUARD_SNIPPET);
     pyodide.runPython(MAKE_INTERACTIVE_INPUT_SNIPPET);
     const makeInput = pyodide.globals.get("__make_interactive_input__");
+    const guardStart = pyodide.globals.get("__guard_start__");
+    const guardStop = pyodide.globals.get("__guard_stop__");
     const makeDict = pyodide.globals.get("dict");
     const namespace = makeDict ? (makeDict() as PyDict) : undefined;
+    const guard = guardStart
+      ? (guardStart(RUN_SECONDS, MAX_OUTPUT_CHARS, MAX_OVER_READS) as PyGuard)
+      : undefined;
     if (namespace && makeInput) {
       // A real terminal echoes what you type; our fake stdin doesn't, so
       // without this the typed answer never appears in the console at all
       // and whatever the program prints next looks like it's sharing the
       // prompt's line instead of following the (invisible) answer.
       const echo = (value: string) => out.push(`${value}\n`);
-      namespace.set("input", makeInput(JSON.stringify(answers), echo));
+      namespace.set("input", makeInput(JSON.stringify(answers), echo, guard));
     }
 
     try {
-      await pyodide.runPythonAsync(code, namespace ? { globals: namespace } : undefined);
+      await pyodide.runPythonAsync(code, {
+        ...(namespace ? { globals: namespace } : {}),
+        filename: STUDENT_FILENAME,
+      });
       return { output: out.join(""), waiting: false };
     } catch (err) {
       const message = err instanceof Error ? err.message : String(err);
       if (message.includes(STDIN_EXHAUSTED_MARKER)) {
         return { output: out.join(""), waiting: true };
       }
-      return { output: out.join(""), waiting: false, error: cleanTraceback(message) };
+      return {
+        output: out.join(""),
+        waiting: false,
+        error: limitMessage(message) ?? cleanTraceback(message),
+      };
+    } finally {
+      if (guard && guardStop) guardStop(guard);
+      guard?.destroy?.();
     }
   });
 }
