@@ -6,6 +6,7 @@ import { supabase } from "@/integrations/supabase/client";
 import { useAuth } from "@/hooks/useAuth";
 import { Button } from "@/components/ui/button";
 import { Input } from "@/components/ui/input";
+import { VisitorLocations } from "@/components/VisitorLocations";
 import {
   AlertDialog,
   AlertDialogAction,
@@ -227,6 +228,8 @@ function Admin() {
           </div>
         ))}
       </div>
+
+      <VisitorLocations />
 
       <section className="panel space-y-4 p-5">
         <div>

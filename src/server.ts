@@ -4,6 +4,7 @@ import { consumeLastCapturedError } from "./lib/error-capture";
 import { renderErrorPage } from "./lib/error-page";
 import { AUTH_EMAIL_HOOK_PATH, handleAuthEmailHook } from "./lib/auth-email-hook.server";
 import { WEEKLY_REPORTS_PATH, handleSendWeeklyReports } from "./lib/weekly-reports.server";
+import { noteVisit } from "./lib/visitor-location.server";
 import {
   HOMEWORK_MESSAGE_PATH,
   HOMEWORK_NOTIFY_PATH,
@@ -105,6 +106,8 @@ export default {
         });
       }
     }
+    // Counts where page visits come from (place only, never the IP - see the file).
+    noteVisit(request);
     try {
       const handler = await getServerEntry();
       const response = await handler.fetch(request, env, ctx);
