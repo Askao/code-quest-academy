@@ -242,11 +242,18 @@ function LevelChip({ level }: { level: number | null }) {
     return <span className="text-xs text-muted-foreground">-</span>;
   }
   const rounded = Math.max(1, Math.min(5, Math.round(level)));
-  const opacity = [0, 12, 28, 46, 66, 88][rounded];
+  // --primary is an oklch() colour, so this has to be color-mix(): the old
+  // hsl(var(--primary) / n%) was invalid CSS and left every chip unshaded.
+  // Steps chosen so the text clears 4.5:1 contrast in both themes; level 5
+  // is solid primary with the button text colour, so "confident" stands out.
+  const mix = [0, 12, 24, 36, 50, 100][rounded];
   return (
     <span
       className="mx-auto flex h-5 w-6 items-center justify-center rounded font-mono text-xs font-semibold"
-      style={{ background: `hsl(var(--primary) / ${opacity}%)` }}
+      style={{
+        background: `color-mix(in oklab, var(--primary) ${mix}%, transparent)`,
+        color: rounded === 5 ? "var(--primary-foreground)" : undefined,
+      }}
     >
       {rounded}
     </span>
