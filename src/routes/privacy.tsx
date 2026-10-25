@@ -2,10 +2,9 @@ import { createFileRoute, Link } from "@tanstack/react-router";
 import type { ReactNode } from "react";
 import { ThemeToggle } from "@/components/ThemeToggle";
 
-// Who runs the site. Shown in "Who we are"; leave empty to describe the owner
-// without a name.
-const RUN_BY = "";
-const PRIVACY_EMAIL = "privacy@hcodeacademy.co.uk";
+// Who runs the site, shown in "Who we are", and where privacy questions go.
+const RUN_BY = "Charlie Hughes";
+const PRIVACY_EMAIL = "charlie.hughes0512@gmail.com";
 const LAST_UPDATED = "25 October 2026";
 
 export const Route = createFileRoute("/privacy")({
@@ -183,14 +182,19 @@ function Privacy() {
         <Section title="How long we keep it">
           <p>
             We keep your account and work for as long as your account exists, so your progress is
-            there when you come back. When an account is deleted, its work and progress are deleted
-            with it. If your school stops using H-Code, your teacher can ask us to delete all of its
+            there when you come back. You can delete your account yourself at any time from your
+            Account page, and its work and progress are deleted with it straight away. If you're a
+            teacher, any class you own is passed to its co-teacher if it has one, and otherwise
+            deleted. If your school stops using H-Code, your teacher can ask us to delete all of its
             students' accounts. The daily visitor location counts contain no personal data.
           </p>
         </Section>
 
         <Section title="Your rights">
-          <p>You can ask us, at any time, to:</p>
+          <p>
+            You can delete your account yourself from your Account page. You can also ask us, at any
+            time, to:
+          </p>
           <ul>
             <li>send you a copy of the data we hold about you;</li>
             <li>correct anything that's wrong;</li>
