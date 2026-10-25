@@ -1,11 +1,10 @@
 import { createFileRoute, Link } from "@tanstack/react-router";
 import type { ReactNode } from "react";
 import { ThemeToggle } from "@/components/ThemeToggle";
-import { CONTACT_EMAIL } from "@/lib/contact";
 
 // Who runs the site, shown in "Who we are", and where privacy questions go.
 const RUN_BY = "Charlie Hughes";
-const PRIVACY_EMAIL = CONTACT_EMAIL;
+const PRIVACY_EMAIL = "privacy@hcodeacademy.co.uk";
 const LAST_UPDATED = "25 October 2026";
 
 export const Route = createFileRoute("/privacy")({
