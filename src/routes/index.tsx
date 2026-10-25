@@ -13,7 +13,6 @@ import {
   Link as LinkIcon,
   ListChecks,
   Lock,
-  Server,
   ShieldCheck,
   Sparkles,
   Swords,
@@ -21,6 +20,7 @@ import {
   UserCheck,
 } from "lucide-react";
 import { Button } from "@/components/ui/button";
+import { SiteFooter } from "@/components/SiteFooter";
 import { ThemeToggle } from "@/components/ThemeToggle";
 import { useAuth } from "@/hooks/useAuth";
 import { GCSE_TOPICS, ALEVEL_TOPICS } from "@/lib/game";
@@ -460,7 +460,7 @@ function Landing() {
           <div className="relative">
             <Eyebrow tint="primary">
               <Sparkles className="h-3.5 w-3.5 motion-safe:animate-pulse" strokeWidth={2} />
-              100% free · self-hosted by your department
+              100% free · made by a computer science teacher
             </Eyebrow>
             <h1 className="mt-5 max-w-xl text-4xl font-bold text-balance sm:text-5xl">
               Python practice that{" "}
@@ -500,7 +500,7 @@ function Landing() {
             </div>
             <p className="mt-4 flex items-center gap-1.5 font-mono text-xs text-muted-foreground">
               <ShieldCheck className="h-3.5 w-3.5" strokeWidth={2} />
-              Runs entirely in the browser — nothing executes on your server.
+              Runs entirely in the browser — student code never runs on a server.
             </p>
           </div>
           <div className="relative">
@@ -840,7 +840,7 @@ function Landing() {
             [
               {
                 n: "£0",
-                d: "Free to set up, self-hosted on your own server — no per-seat pricing.",
+                d: "Free for students and schools — no subscription, no per-seat pricing, no adverts.",
                 tint: "primary",
               },
               {
@@ -850,7 +850,7 @@ function Landing() {
               },
               {
                 n: "You",
-                d: "Your department owns the data and the pacing — lessons unlock when you say so.",
+                d: "Your department sets the pacing — lessons unlock when you say so.",
                 tint: "success",
               },
               {
@@ -879,15 +879,15 @@ function Landing() {
             className="pointer-events-none absolute inset-0 -z-10 bg-[radial-gradient(45rem_20rem_at_50%_0%,color-mix(in_oklab,var(--color-primary)_22%,transparent),transparent_65%)]"
           />
           <Eyebrow tint="primary">
-            <Server className="h-3.5 w-3.5" strokeWidth={2} />
-            Self-hosted · your data stays yours
+            <ShieldCheck className="h-3.5 w-3.5" strokeWidth={2} />
+            No adverts · no data selling
           </Eyebrow>
           <h2 className="mx-auto mt-4 max-w-xl text-3xl font-semibold text-balance">
             Free to set up, no strings attached.
           </h2>
           <p className="mx-auto mt-3 max-w-md text-sm text-muted-foreground">
-            No subscription, no per-seat pricing — self-hosted on your own server, so your data
-            stays yours regardless. Set up a class in minutes.
+            No subscription, no per-seat pricing, and student data is never sold or used for
+            adverts. Set up a class in minutes.
           </p>
           <div className="mt-6 flex flex-wrap justify-center gap-3">
             <Button asChild size="lg">
@@ -902,9 +902,7 @@ function Landing() {
         </div>
       </section>
 
-      <footer className="border-t border-border py-8 text-center text-sm text-muted-foreground">
-        H-Code Academy (hcodeacademy.co.uk) — Python practice for computer science students and their teachers.
-      </footer>
+      <SiteFooter />
     </div>
   );
 }

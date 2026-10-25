@@ -415,6 +415,15 @@ function AuthPage() {
               ? "Back to sign in"
               : "New here? Create an account"}
         </button>
+        {mode === "signup" ? (
+          <p className="mt-4 text-center text-xs text-muted-foreground">
+            See what we keep and why in our{" "}
+            <Link to="/privacy" className="underline hover:text-foreground">
+              privacy policy
+            </Link>
+            .
+          </p>
+        ) : null}
         {showAdminNotice ? (
           <p className="mt-4 text-center font-mono text-xs text-muted-foreground">
             The first account created on a fresh install becomes the admin.

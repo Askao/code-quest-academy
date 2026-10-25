@@ -14,6 +14,7 @@ import { Route as AuthenticatedRouteRouteImport } from './routes/_authenticated/
 import { Route as AuthRouteImport } from './routes/auth'
 import { Route as ConfirmEmailRouteImport } from './routes/confirm-email'
 import { Route as IdeRouteImport } from './routes/ide'
+import { Route as PrivacyRouteImport } from './routes/privacy'
 import { Route as AuthenticatedAccountRouteImport } from './routes/_authenticated/account'
 import { Route as AuthenticatedAdminRouteImport } from './routes/_authenticated/admin'
 import { Route as AuthenticatedDashboardRouteImport } from './routes/_authenticated/dashboard'
@@ -56,6 +57,11 @@ const ConfirmEmailRoute = ConfirmEmailRouteImport.update({
 const IdeRoute = IdeRouteImport.update({
   id: '/ide',
   path: '/ide',
+  getParentRoute: () => rootRouteImport,
+} as any)
+const PrivacyRoute = PrivacyRouteImport.update({
+  id: '/privacy',
+  path: '/privacy',
   getParentRoute: () => rootRouteImport,
 } as any)
 const AuthenticatedAccountRoute = AuthenticatedAccountRouteImport.update({
@@ -169,6 +175,7 @@ export interface FileRoutesByFullPath {
   '/auth': typeof AuthRoute
   '/confirm-email': typeof ConfirmEmailRoute
   '/ide': typeof IdeRoute
+  '/privacy': typeof PrivacyRoute
   '/account': typeof AuthenticatedAccountRoute
   '/admin': typeof AuthenticatedAdminRouteWithChildren
   '/dashboard': typeof AuthenticatedDashboardRoute
@@ -194,6 +201,7 @@ export interface FileRoutesByTo {
   '/auth': typeof AuthRoute
   '/confirm-email': typeof ConfirmEmailRoute
   '/ide': typeof IdeRoute
+  '/privacy': typeof PrivacyRoute
   '/account': typeof AuthenticatedAccountRoute
   '/admin': typeof AuthenticatedAdminRouteWithChildren
   '/dashboard': typeof AuthenticatedDashboardRoute
@@ -221,6 +229,7 @@ export interface FileRoutesById {
   '/auth': typeof AuthRoute
   '/confirm-email': typeof ConfirmEmailRoute
   '/ide': typeof IdeRoute
+  '/privacy': typeof PrivacyRoute
   '/_authenticated/account': typeof AuthenticatedAccountRoute
   '/_authenticated/admin': typeof AuthenticatedAdminRouteWithChildren
   '/_authenticated/dashboard': typeof AuthenticatedDashboardRoute
@@ -248,6 +257,7 @@ export interface FileRouteTypes {
     | '/auth'
     | '/confirm-email'
     | '/ide'
+    | '/privacy'
     | '/account'
     | '/admin'
     | '/dashboard'
@@ -273,6 +283,7 @@ export interface FileRouteTypes {
     | '/auth'
     | '/confirm-email'
     | '/ide'
+    | '/privacy'
     | '/account'
     | '/admin'
     | '/dashboard'
@@ -299,6 +310,7 @@ export interface FileRouteTypes {
     | '/auth'
     | '/confirm-email'
     | '/ide'
+    | '/privacy'
     | '/_authenticated/account'
     | '/_authenticated/admin'
     | '/_authenticated/dashboard'
@@ -326,6 +338,7 @@ export interface RootRouteChildren {
   AuthRoute: typeof AuthRoute
   ConfirmEmailRoute: typeof ConfirmEmailRoute
   IdeRoute: typeof IdeRoute
+  PrivacyRoute: typeof PrivacyRoute
   JoinCodeRoute: typeof JoinCodeRoute
 }
 
@@ -364,6 +377,13 @@ declare module '@tanstack/react-router' {
       path: '/ide'
       fullPath: '/ide'
       preLoaderRoute: typeof IdeRouteImport
+      parentRoute: typeof rootRouteImport
+    }
+    '/privacy': {
+      id: '/privacy'
+      path: '/privacy'
+      fullPath: '/privacy'
+      preLoaderRoute: typeof PrivacyRouteImport
       parentRoute: typeof rootRouteImport
     }
     '/_authenticated/account': {
@@ -562,6 +582,7 @@ const rootRouteChildren: RootRouteChildren = {
   AuthRoute: AuthRoute,
   ConfirmEmailRoute: ConfirmEmailRoute,
   IdeRoute: IdeRoute,
+  PrivacyRoute: PrivacyRoute,
   JoinCodeRoute: JoinCodeRoute,
 }
 export const routeTree = rootRouteImport
