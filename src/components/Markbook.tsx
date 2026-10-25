@@ -237,7 +237,7 @@ function MarkbookLegend({ topics }: { topics: { key: string; label: string }[] }
   );
 }
 
-function LevelChip({ level }: { level: number | null }) {
+export function LevelChip({ level }: { level: number | null }) {
   if (level === null) {
     return <span className="text-xs text-muted-foreground">-</span>;
   }
