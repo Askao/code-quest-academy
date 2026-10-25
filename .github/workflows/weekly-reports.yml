@@ -2,11 +2,13 @@ name: Send weekly reports
 
 on:
   schedule:
-    # Every hour on Sundays and Mondays (UTC). The server decides what is due
+    # Every hour, Sunday to Tuesday (UTC). The server decides what is due
     # from the UK clock - students from Sunday 17:00, teachers from Monday
-    # 07:00 - and records each email as it goes, so running hourly only means
-    # "often enough" and a failed send is retried at the next run.
-    - cron: "0 * * * 0,1"
+    # 07:00, each with the following day to catch up on emails held back by
+    # the daily email allowance - and records each email as it goes, so
+    # running hourly only means "often enough" and a failed send is retried
+    # at the next run.
+    - cron: "0 * * * 0,1,2"
   workflow_dispatch:
     inputs:
       kind:

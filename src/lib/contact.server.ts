@@ -65,7 +65,7 @@ export async function handleContact(request: Request): Promise<Response> {
 
   const { subject, html } = contactEmail(check.value);
   const to = process.env["CONTACT_TO"] || CONTACT_EMAIL;
-  const sent = await sendResendEmail(to, subject, html, check.value.email);
+  const sent = await sendResendEmail(to, subject, html, { replyTo: check.value.email });
   if (!sent) {
     return json({ error: "We couldn't send your message just now. Please try again later." }, 502);
   }

@@ -120,12 +120,17 @@ function daysFrom(monday: CalDate): string[] {
   return Array.from({ length: 7 }, (_, i) => isoDate(addDays(monday, i)));
 }
 
-/** Sunday evening: this week so far, Monday 00:00 UK until now. */
+/**
+ * Sunday evening: this week so far, Monday 00:00 UK until now. On Monday (the
+ * catch-up day for reports held back on Sunday) it is still last week, ending
+ * at Sunday midnight, so a late email covers the same week as an on-time one.
+ */
 export function studentWindow(now: Date): ReportWindow {
-  const monday = mondayOf(now);
+  const catchUp = ukParts(now).weekday === 1;
+  const monday = catchUp ? addDays(mondayOf(now), -7) : mondayOf(now);
   return {
     from: ukMidnightUtc(monday),
-    to: now,
+    to: catchUp ? ukMidnightUtc(mondayOf(now)) : now,
     prevFrom: ukMidnightUtc(addDays(monday, -7)),
     weekStart: isoDate(monday),
     days: daysFrom(monday),
@@ -147,13 +152,19 @@ export function teacherWindow(now: Date): ReportWindow {
 
 export type ReportKind = "student" | "teacher";
 
-/** Students are emailed from 17:00 on Sunday and teachers from 07:00 on Monday, never after 21:00. */
-export function reportDue(now: Date): ReportKind | null {
+/**
+ * Which reports to work on now, most important first. Students are emailed
+ * from 17:00 on Sunday and teachers from 07:00 on Monday, never after 21:00.
+ * Each also gets the following day (07:00 to 21:00) to catch up on emails
+ * held back because the day's email allowance ran out (email-quota.ts).
+ */
+export function reportsDue(now: Date): ReportKind[] {
   const p = ukParts(now);
-  if (p.hour >= 21) return null;
-  if (p.weekday === 0 && p.hour >= 17) return "student";
-  if (p.weekday === 1 && p.hour >= 7) return "teacher";
-  return null;
+  if (p.hour >= 21) return [];
+  if (p.weekday === 0 && p.hour >= 17) return ["student"];
+  if (p.weekday === 1 && p.hour >= 7) return ["teacher", "student"];
+  if (p.weekday === 2 && p.hour >= 7) return ["teacher"];
+  return [];
 }
 
 const fmt = (opts: Intl.DateTimeFormatOptions, d: Date) => new Intl.DateTimeFormat("en-GB", { timeZone: TZ, ...opts }).format(d);

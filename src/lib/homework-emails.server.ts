@@ -15,7 +15,7 @@
  */
 import { timingSafeEqual } from "node:crypto";
 import type { SupabaseClient } from "@supabase/supabase-js";
-import { sendResendEmail } from "./email-shell";
+import { bulkEmailAllowed, sendResendEmail } from "./email-shell";
 import {
   runHourly,
   sendSetEmailsFor,
@@ -209,7 +209,8 @@ async function realStore(): Promise<MessageStore> {
 async function deps(): Promise<RunDeps & { store: MessageStore }> {
   return {
     store: await realStore(),
-    send: sendResendEmail,
+    send: (to, subject, html) => sendResendEmail(to, subject, html, { bulk: true }),
+    canSend: bulkEmailAllowed,
     now: new Date(),
     siteUrl: (process.env["SITE_URL"] ?? "https://www.hcodeacademy.co.uk").replace(/\/$/, ""),
     pause: () => new Promise((resolve) => setTimeout(resolve, SEND_GAP_MS)),

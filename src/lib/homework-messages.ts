@@ -102,6 +102,12 @@ async function deliver(msg: MessageRow, deps: MessageDeps, budget: { left: numbe
       complete = false;
       break;
     }
+    if (deps.canSend && !deps.canSend()) {
+      budget.left = 0;
+      result.held = "daily-limit";
+      complete = false;
+      break;
+    }
     const progress = await store.progress(hw, r.studentId);
     if (msg.audience === "unfinished" && !isUnfinished(progress)) {
       result.skipped++;

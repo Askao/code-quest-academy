@@ -1,11 +1,13 @@
 /**
  * POST /api/reports/send-weekly - the weekly student and teacher emails.
  *
- * Called hourly on Sundays and Mondays by GitHub Actions (see
+ * Called hourly on Sundays to Tuesdays by GitHub Actions (see
  * .github/workflows/weekly-reports.yml) with the shared cron secret. Which
  * emails are due is decided here from the UK clock (students from Sunday 17:00,
- * teachers from Monday 07:00, never after 21:00), so the hourly schedule only
- * has to be "often enough" and survives the clocks changing. Each email is
+ * teachers from Monday 07:00, never after 21:00, each with the next day to
+ * catch up on any held back by the daily email allowance - see reportsDue),
+ * so the hourly schedule only has to be "often enough" and survives the
+ * clocks changing. Each email is
  * recorded in weekly_report_log before it goes, so an hourly retry never
  * emails anyone twice, and a failed send is removed so the next run tries again.
  *
@@ -18,12 +20,12 @@
  */
 import { timingSafeEqual } from "node:crypto";
 import type { SupabaseClient } from "@supabase/supabase-js";
-import { sendResendEmail } from "./email-shell";
+import { bulkEmailAllowed, sendResendEmail } from "./email-shell";
 import {
   buildStudentEmail,
   buildTeacherEmail,
   outstandingHomework,
-  reportDue,
+  reportsDue,
   studentReportWanted,
   studentWindow,
   teacherWindow,
@@ -85,10 +87,22 @@ export async function handleSendWeeklyReports(request: Request): Promise<Respons
   const dryRun = params.get("dryRun") === "1";
   const now = new Date();
   const asked = params.get("kind");
-  const kind: ReportKind | null =
-    asked === "students" ? "student" : asked === "teachers" ? "teacher" : reportDue(now);
-  if (!kind) return json({ skipped: "not a report time" }, 200);
+  const kinds: ReportKind[] =
+    asked === "students" ? ["student"] : asked === "teachers" ? ["teacher"] : reportsDue(now);
+  if (kinds.length === 0) return json({ skipped: "not a report time" }, 200);
 
+  const runs = [];
+  for (const kind of kinds) runs.push(await runReport(kind, now, dryRun, siteUrl));
+  return json({ runs }, 200);
+}
+
+/** One kind of weekly email for everyone who should get it, as far as today's allowance goes. */
+async function runReport(
+  kind: ReportKind,
+  now: Date,
+  dryRun: boolean,
+  siteUrl: string,
+): Promise<Record<string, unknown>> {
   const { supabaseAdmin } = await import("@/integrations/supabase/client.server");
   const db = supabaseAdmin as unknown as Db;
   const window = kind === "student" ? studentWindow(now) : teacherWindow(now);
@@ -151,7 +165,9 @@ export async function handleSendWeeklyReports(request: Request): Promise<Respons
       if (samples.length < 5) samples.push(subject);
       return;
     }
-    if (budget <= 0) {
+    // Out of this run's budget, or today's allowance for bulk email is used
+    // (email-quota.ts): a later run, on the catch-up day if need be, sends it.
+    if (budget <= 0 || !bulkEmailAllowed()) {
       counts.heldForNextRun++;
       return;
     }
@@ -168,7 +184,7 @@ export async function handleSendWeeklyReports(request: Request): Promise<Respons
     budget--;
     let ok = false;
     try {
-      ok = await sendResendEmail(to, subject, html);
+      ok = await sendResendEmail(to, subject, html, { bulk: true });
     } catch (e) {
       console.error("[weekly-reports] send threw", e);
     }
@@ -251,8 +267,5 @@ export async function handleSendWeeklyReports(request: Request): Promise<Respons
     }
   }
 
-  return json(
-    { kind, dryRun, weekStart: window.weekStart, from: window.from.toISOString(), to: window.to.toISOString(), ...counts, ...(dryRun ? { sampleSubjects: samples } : {}) },
-    200,
-  );
+  return { kind, dryRun, weekStart: window.weekStart, from: window.from.toISOString(), to: window.to.toISOString(), ...counts, ...(dryRun ? { sampleSubjects: samples } : {}) };
 }

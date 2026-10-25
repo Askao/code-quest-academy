@@ -292,3 +292,18 @@ test("one run never sends more than its cap", async () => {
   assert.equal(next.sent, 4, "the next run carries on where it stopped, without repeating anyone");
   assert.equal(new Set(r.sent.map((s) => s.to)).size, 8);
 });
+
+test("once the day's email allowance is used, the run stops and the rest go on a later run", async () => {
+  const { store, claims } = fakeStore({ homework: [hw()], members: { c1: [ann, ben] } });
+  const r = recorder();
+  let allowed = 1; // room for one more email today
+  const canSend = () => allowed > 0;
+  const send = async (to: string, subject: string) => (allowed--, r.send(to, subject));
+  const today = await sendSetEmailsFor(hw(), { store, send, canSend, now: day, siteUrl: "https://x" });
+  assert.deepEqual([today.sent, today.failed, today.held], [1, 0, "daily-limit"]);
+  assert.equal(claims.size, 1, "only the email that went is recorded");
+  allowed = 100; // the next day
+  const tomorrow = await runHourly({ store, send, canSend, now: new Date(day.getTime() + 20 * 3_600_000), siteUrl: "https://x" });
+  assert.equal(tomorrow.sent, 1);
+  assert.deepEqual(r.sent.map((s) => s.to).sort(), ["ann@x.test", "ben@x.test"]);
+});

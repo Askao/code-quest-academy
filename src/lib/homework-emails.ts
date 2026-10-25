@@ -198,9 +198,19 @@ export type RunDeps = {
   pause?: () => Promise<void>;
   /** Most emails one run will send; the rest wait for the next run. */
   maxEmails?: number;
+  /**
+   * False once today's allowance for bulk email is used (email-quota.ts).
+   * The run then stops; what's left is sent by a run on a later day.
+   */
+  canSend?: () => boolean;
 };
 
-export type RunResult = { sent: number; failed: number; skipped: number; held?: "quiet-hours" };
+export type RunResult = {
+  sent: number;
+  failed: number;
+  skipped: number;
+  held?: "quiet-hours" | "daily-limit";
+};
 
 const DEFAULT_MAX_EMAILS = 150;
 
@@ -220,6 +230,11 @@ async function sendToClass(
   for (const r of recipients) {
     if (done.has(r.studentId)) continue;
     if (budget.left <= 0) return;
+    if (deps.canSend && !deps.canSend()) {
+      budget.left = 0;
+      result.held = "daily-limit";
+      return;
+    }
 
     const base = {
       studentName: r.name,

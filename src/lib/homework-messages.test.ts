@@ -222,3 +222,20 @@ test("message text is trimmed, required and limited to 1000 characters", () => {
   assert.equal(validateMessageBody("x".repeat(1000)).ok, true);
   assert.equal(validateMessageBody("x".repeat(1001)).ok, false);
 });
+
+test("a message held back by the daily email allowance isn't marked done, so it finishes later", async () => {
+  const { store, processed } = fakeStore({ pending: [msg("all")] });
+  const sent: string[] = [];
+  let allowed = 2;
+  const limited = { ...deps(store, { sent }), canSend: () => allowed > 0 };
+  const send = limited.send;
+  limited.send = async (to, s, h) => (allowed--, send(to, s, h));
+  const r = await sendMessageEmailsFor(msg("all"), limited);
+  assert.equal(r.held, "daily-limit");
+  assert.equal(sent.length, 2);
+  assert.ok(!processed.has("m1"));
+  allowed = 100;
+  await runPendingMessages(limited);
+  assert.equal(sent.length, 3);
+  assert.ok(processed.has("m1"));
+});
