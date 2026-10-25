@@ -59,3 +59,9 @@ Admin → **Visitor locations** shows roughly where the site is opened from (cit
 - The database file (~60 MB download, ~130 MB in memory) is fetched into the temp directory on first use and refreshed every 30 days. The server needs outbound access to `download.db-ip.com`.
 - `GEOIP_DB_PATH=/path/to/file.mmdb` uses a file you supply instead (DB-IP or MaxMind GeoLite2-City format).
 - `VISITOR_LOCATIONS=off` turns it off completely.
+
+## Daily email allowance
+
+Resend's free plan sends 100 emails a day, then refuses everything until the next day (midnight UTC), including sign-up confirmations and password resets, which can't be retried. So bulk email (homework, homework messages, weekly reports) stops once 70 have gone out in a day, leaving the rest for account emails. Anything held back is sent on a later run: homework emails within two days of being set, and weekly reports on the following day (students on Monday, teachers on Tuesday). A "1 day left" reminder that can't go before the deadline is skipped.
+
+- `RESEND_BULK_DAILY_LIMIT` changes the 70. On a paid Resend plan there is no daily cap, so nothing is held back.

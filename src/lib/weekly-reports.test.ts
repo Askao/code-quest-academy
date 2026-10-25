@@ -5,7 +5,7 @@ import {
   buildTeacherEmail,
   newCosmetics,
   outstandingHomework,
-  reportDue,
+  reportsDue,
   shortName,
   studentReportWanted,
   studentSubject,
@@ -60,14 +60,31 @@ test("the week the clocks go back is a week and an hour long, not off by one", (
 });
 
 test("students are emailed from Sunday 5pm, teachers from Monday 7am, nothing after 9pm", () => {
-  assert.equal(reportDue(at("2026-10-04T15:59:00Z")), null); // Sunday 16:59 BST
-  assert.equal(reportDue(at("2026-10-04T16:00:00Z")), "student");
-  assert.equal(reportDue(at("2026-10-04T19:59:00Z")), "student"); // 20:59 BST
-  assert.equal(reportDue(at("2026-10-04T20:00:00Z")), null); // 21:00 BST
-  assert.equal(reportDue(at("2026-10-05T05:59:00Z")), null); // Monday 06:59 BST
-  assert.equal(reportDue(at("2026-10-05T06:00:00Z")), "teacher");
-  assert.equal(reportDue(at("2026-10-06T10:00:00Z")), null);
-  assert.equal(reportDue(at("2026-12-06T17:00:00Z")), "student"); // Sunday 17:00 GMT
+  assert.deepEqual(reportsDue(at("2026-10-04T15:59:00Z")), []); // Sunday 16:59 BST
+  assert.deepEqual(reportsDue(at("2026-10-04T16:00:00Z")), ["student"]);
+  assert.deepEqual(reportsDue(at("2026-10-04T19:59:00Z")), ["student"]); // 20:59 BST
+  assert.deepEqual(reportsDue(at("2026-10-04T20:00:00Z")), []); // 21:00 BST
+  assert.deepEqual(reportsDue(at("2026-10-05T05:59:00Z")), []); // Monday 06:59 BST
+  assert.deepEqual(reportsDue(at("2026-12-06T17:00:00Z")), ["student"]); // Sunday 17:00 GMT
+});
+
+test("each report gets the next day to catch up, teachers first on Monday", () => {
+  assert.deepEqual(reportsDue(at("2026-10-05T06:00:00Z")), ["teacher", "student"]); // Monday 07:00 BST
+  assert.deepEqual(reportsDue(at("2026-10-06T10:00:00Z")), ["teacher"]); // Tuesday 11:00 BST
+  assert.deepEqual(reportsDue(at("2026-10-06T20:00:00Z")), []); // Tuesday 21:00 BST
+  assert.deepEqual(reportsDue(at("2026-10-07T10:00:00Z")), []); // Wednesday
+});
+
+test("a student report caught up on Monday covers the same week as Sunday's", () => {
+  const sunday = studentWindow(at("2026-10-04T16:00:00Z"));
+  const monday = studentWindow(at("2026-10-05T09:00:00Z"));
+  assert.equal(monday.weekStart, sunday.weekStart);
+  assert.equal(monday.from.toISOString(), sunday.from.toISOString());
+  assert.equal(monday.to.toISOString(), "2026-10-04T23:00:00.000Z"); // Sunday midnight BST
+});
+
+test("a teacher report caught up on Tuesday covers the same week as Monday's", () => {
+  assert.equal(teacherWindow(at("2026-10-06T09:00:00Z")).weekStart, teacherWindow(at("2026-10-05T06:00:00Z")).weekStart);
 });
 
 // ---- fixtures --------------------------------------------------------------

@@ -3,6 +3,13 @@
  * HTML escaping, and sending through the Resend HTTP API (outbound SMTP is
  * blocked from this Railway environment - see auth-email-hook.server.ts).
  */
+import {
+  bulkAllowed,
+  bulkDailyLimit,
+  freshQuota,
+  noteResponse,
+  type QuotaState,
+} from "./email-quota.ts";
 
 /** For anything a person typed (names, homework titles) that ends up inside email HTML. */
 export function escapeHtml(text: string): string {
@@ -32,19 +39,63 @@ export function ctaButton(href: string, label: string): string {
   </p>`;
 }
 
-export async function sendResendEmail(to: string, subject: string, html: string): Promise<boolean> {
+let quota: QuotaState = freshQuota(new Date());
+
+/**
+ * Whether bulk email (homework, messages, weekly reports) may go out now.
+ * False once today's sends reach the bulk limit - see email-quota.ts.
+ */
+export function bulkEmailAllowed(): boolean {
+  return bulkAllowed(quota, new Date(), bulkDailyLimit());
+}
+
+export type SendOptions = {
+  replyTo?: string;
+  /**
+   * Bulk email is held back (not sent, returns false) once today's allowance
+   * for it is used, so account emails always have room. Callers already
+   * retry a failed send on their next run.
+   */
+  bulk?: boolean;
+};
+
+export async function sendResendEmail(
+  to: string,
+  subject: string,
+  html: string,
+  options: SendOptions = {},
+): Promise<boolean> {
   const resendKey = process.env["RESEND_API_KEY"];
   if (!resendKey) {
     console.error("[email] Missing RESEND_API_KEY");
     return false;
   }
+  if (options.bulk && !bulkEmailAllowed()) return false;
   const res = await fetch("https://api.resend.com/emails", {
     method: "POST",
     headers: { Authorization: `Bearer ${resendKey}`, "content-type": "application/json" },
-    body: JSON.stringify({ from: "H-Code <noreply@hcodeacademy.co.uk>", to, subject, html }),
+    body: JSON.stringify({
+      from: "H-Code <noreply@hcodeacademy.co.uk>",
+      to,
+      subject,
+      html,
+      ...(options.replyTo ? { reply_to: options.replyTo } : {}),
+    }),
   });
+  let errorName: string | null = null;
   if (!res.ok) {
-    console.error("[email] Resend send failed:", res.status, await res.text());
+    const text = await res.text();
+    try {
+      errorName = (JSON.parse(text) as { name?: string }).name ?? null;
+    } catch {
+      errorName = null;
+    }
+    console.error("[email] Resend send failed:", res.status, text);
   }
+  quota = noteResponse(quota, new Date(), {
+    status: res.status,
+    quotaHeader: res.headers.get("x-resend-daily-quota"),
+    errorName,
+  });
   return res.ok;
 }

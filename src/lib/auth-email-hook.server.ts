@@ -1,4 +1,5 @@
 import { createHmac, timingSafeEqual } from "node:crypto";
+import { sendResendEmail } from "./email-shell";
 
 /**
  * Handles GoTrue's "Send Email" auth hook (GOTRUE_HOOK_SEND_EMAIL_*), called
@@ -191,18 +192,10 @@ export async function handleAuthEmailHook(request: Request): Promise<Response> {
   const copy = copyFor(email_data.email_action_type);
   const html = renderEmailHtml(link, user.user_metadata?.full_name, copy);
 
-  const res = await fetch("https://api.resend.com/emails", {
-    method: "POST",
-    headers: { Authorization: `Bearer ${resendKey}`, "content-type": "application/json" },
-    body: JSON.stringify({
-      from: "H-Code <noreply@hcodeacademy.co.uk>",
-      to: user.email,
-      subject: copy.subject,
-      html,
-    }),
-  });
-  if (!res.ok) {
-    console.error("[auth-email-hook] Resend send failed:", res.status, await res.text());
+  // Not bulk: account emails always go, using the allowance bulk email
+  // leaves free (email-quota.ts), and count towards today's total.
+  if (!(await sendResendEmail(user.email, copy.subject, html))) {
+    console.error("[auth-email-hook] Resend send failed for", email_data.email_action_type);
     return jsonResponse({ error: "Email send failed" }, 500);
   }
   return jsonResponse({}, 200);
