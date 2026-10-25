@@ -1,10 +1,11 @@
 import { createFileRoute, Link } from "@tanstack/react-router";
 import type { ReactNode } from "react";
 import { ThemeToggle } from "@/components/ThemeToggle";
+import { CONTACT_EMAIL } from "@/lib/contact";
 
 // Who runs the site, shown in "Who we are", and where privacy questions go.
 const RUN_BY = "Charlie Hughes";
-const PRIVACY_EMAIL = "noreply@hcodeacademy.co.uk";
+const PRIVACY_EMAIL = CONTACT_EMAIL;
 const LAST_UPDATED = "25 October 2026";
 
 export const Route = createFileRoute("/privacy")({
@@ -89,6 +90,10 @@ function Privacy() {
           <p>
             <strong>Emails we've sent you</strong> (homework notices and weekly reports), so nobody
             gets the same email twice.
+          </p>
+          <p>
+            <strong>Contact form messages:</strong> if you use the Contact us form, your name, email
+            address and message are emailed to us so we can reply. They aren't saved on the site.
           </p>
           <p>
             <strong>Rough visitor locations:</strong> when anyone opens a page, our server works out

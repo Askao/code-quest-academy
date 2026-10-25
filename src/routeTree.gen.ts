@@ -13,6 +13,7 @@ import { Route as IndexRouteImport } from './routes/index'
 import { Route as AuthenticatedRouteRouteImport } from './routes/_authenticated/route'
 import { Route as AuthRouteImport } from './routes/auth'
 import { Route as ConfirmEmailRouteImport } from './routes/confirm-email'
+import { Route as ContactRouteImport } from './routes/contact'
 import { Route as IdeRouteImport } from './routes/ide'
 import { Route as PrivacyRouteImport } from './routes/privacy'
 import { Route as AuthenticatedAccountRouteImport } from './routes/_authenticated/account'
@@ -52,6 +53,11 @@ const AuthRoute = AuthRouteImport.update({
 const ConfirmEmailRoute = ConfirmEmailRouteImport.update({
   id: '/confirm-email',
   path: '/confirm-email',
+  getParentRoute: () => rootRouteImport,
+} as any)
+const ContactRoute = ContactRouteImport.update({
+  id: '/contact',
+  path: '/contact',
   getParentRoute: () => rootRouteImport,
 } as any)
 const IdeRoute = IdeRouteImport.update({
@@ -174,6 +180,7 @@ export interface FileRoutesByFullPath {
   '/': typeof IndexRoute
   '/auth': typeof AuthRoute
   '/confirm-email': typeof ConfirmEmailRoute
+  '/contact': typeof ContactRoute
   '/ide': typeof IdeRoute
   '/privacy': typeof PrivacyRoute
   '/account': typeof AuthenticatedAccountRoute
@@ -200,6 +207,7 @@ export interface FileRoutesByTo {
   '/': typeof IndexRoute
   '/auth': typeof AuthRoute
   '/confirm-email': typeof ConfirmEmailRoute
+  '/contact': typeof ContactRoute
   '/ide': typeof IdeRoute
   '/privacy': typeof PrivacyRoute
   '/account': typeof AuthenticatedAccountRoute
@@ -228,6 +236,7 @@ export interface FileRoutesById {
   '/_authenticated': typeof AuthenticatedRouteRouteWithChildren
   '/auth': typeof AuthRoute
   '/confirm-email': typeof ConfirmEmailRoute
+  '/contact': typeof ContactRoute
   '/ide': typeof IdeRoute
   '/privacy': typeof PrivacyRoute
   '/_authenticated/account': typeof AuthenticatedAccountRoute
@@ -256,6 +265,7 @@ export interface FileRouteTypes {
     | '/'
     | '/auth'
     | '/confirm-email'
+    | '/contact'
     | '/ide'
     | '/privacy'
     | '/account'
@@ -282,6 +292,7 @@ export interface FileRouteTypes {
     | '/'
     | '/auth'
     | '/confirm-email'
+    | '/contact'
     | '/ide'
     | '/privacy'
     | '/account'
@@ -309,6 +320,7 @@ export interface FileRouteTypes {
     | '/_authenticated'
     | '/auth'
     | '/confirm-email'
+    | '/contact'
     | '/ide'
     | '/privacy'
     | '/_authenticated/account'
@@ -337,6 +349,7 @@ export interface RootRouteChildren {
   AuthenticatedRouteRoute: typeof AuthenticatedRouteRouteWithChildren
   AuthRoute: typeof AuthRoute
   ConfirmEmailRoute: typeof ConfirmEmailRoute
+  ContactRoute: typeof ContactRoute
   IdeRoute: typeof IdeRoute
   PrivacyRoute: typeof PrivacyRoute
   JoinCodeRoute: typeof JoinCodeRoute
@@ -370,6 +383,13 @@ declare module '@tanstack/react-router' {
       path: '/confirm-email'
       fullPath: '/confirm-email'
       preLoaderRoute: typeof ConfirmEmailRouteImport
+      parentRoute: typeof rootRouteImport
+    }
+    '/contact': {
+      id: '/contact'
+      path: '/contact'
+      fullPath: '/contact'
+      preLoaderRoute: typeof ContactRouteImport
       parentRoute: typeof rootRouteImport
     }
     '/ide': {
@@ -581,6 +601,7 @@ const rootRouteChildren: RootRouteChildren = {
   AuthenticatedRouteRoute: AuthenticatedRouteRouteWithChildren,
   AuthRoute: AuthRoute,
   ConfirmEmailRoute: ConfirmEmailRoute,
+  ContactRoute: ContactRoute,
   IdeRoute: IdeRoute,
   PrivacyRoute: PrivacyRoute,
   JoinCodeRoute: JoinCodeRoute,

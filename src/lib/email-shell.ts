@@ -32,7 +32,12 @@ export function ctaButton(href: string, label: string): string {
   </p>`;
 }
 
-export async function sendResendEmail(to: string, subject: string, html: string): Promise<boolean> {
+export async function sendResendEmail(
+  to: string,
+  subject: string,
+  html: string,
+  replyTo?: string,
+): Promise<boolean> {
   const resendKey = process.env["RESEND_API_KEY"];
   if (!resendKey) {
     console.error("[email] Missing RESEND_API_KEY");
@@ -41,7 +46,13 @@ export async function sendResendEmail(to: string, subject: string, html: string)
   const res = await fetch("https://api.resend.com/emails", {
     method: "POST",
     headers: { Authorization: `Bearer ${resendKey}`, "content-type": "application/json" },
-    body: JSON.stringify({ from: "H-Code <noreply@hcodeacademy.co.uk>", to, subject, html }),
+    body: JSON.stringify({
+      from: "H-Code <noreply@hcodeacademy.co.uk>",
+      to,
+      subject,
+      html,
+      ...(replyTo ? { reply_to: replyTo } : {}),
+    }),
   });
   if (!res.ok) {
     console.error("[email] Resend send failed:", res.status, await res.text());

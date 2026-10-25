@@ -5,6 +5,7 @@ import { renderErrorPage } from "./lib/error-page";
 import { AUTH_EMAIL_HOOK_PATH, handleAuthEmailHook } from "./lib/auth-email-hook.server";
 import { WEEKLY_REPORTS_PATH, handleSendWeeklyReports } from "./lib/weekly-reports.server";
 import { noteVisit } from "./lib/visitor-location.server";
+import { CONTACT_PATH, handleContact } from "./lib/contact.server";
 import {
   HOMEWORK_MESSAGE_PATH,
   HOMEWORK_NOTIFY_PATH,
@@ -97,6 +98,9 @@ export default {
         }
         if (pathname === HOMEWORK_MESSAGE_PATH) {
           return await handleHomeworkMessage(request);
+        }
+        if (pathname === CONTACT_PATH) {
+          return await handleContact(request);
         }
       } catch (error) {
         console.error(error);
