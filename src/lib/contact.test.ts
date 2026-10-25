@@ -39,3 +39,11 @@ test("survives junk input", () => {
   assert.equal(checkContact(null).ok, false);
   assert.equal(checkContact({ email: 42 }).ok, false);
 });
+
+test("the email escapes what people typed and falls back when there's no name", async () => {
+  const { contactEmail } = await import("./contact-email.ts");
+  const e = contactEmail({ ...good, name: "", message: "<script>alert(1)</script>" } as never);
+  assert.ok(!e.html.includes("<script>"));
+  assert.ok(e.html.includes("&lt;script&gt;"));
+  assert.equal(e.subject, "Contact form: Teacher - Someone");
+});

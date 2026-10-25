@@ -10,7 +10,8 @@
  */
 import { createHash } from "node:crypto";
 import { CONTACT_EMAIL, CONTACT_PATH, checkContact } from "./contact";
-import { escapeHtml, sendResendEmail, shellHtml } from "./email-shell";
+import { contactEmail } from "./contact-email";
+import { sendResendEmail } from "./email-shell";
 import { clientIp } from "./visitor-location";
 
 export { CONTACT_PATH };
@@ -62,21 +63,9 @@ export async function handleContact(request: Request): Promise<Response> {
     return json({ error: "You've sent a few messages already. Please try again in an hour." }, 429);
   }
 
-  const { name, email, role, message } = check.value;
-  const who = name || "Someone";
-  const html = shellHtml(`
-    <h1 style="font-size: 20px; margin: 0 0 16px;">New message from the contact form</h1>
-    <p style="margin: 0 0 4px;"><strong>From:</strong> ${escapeHtml(who)} &lt;${escapeHtml(email)}&gt;</p>
-    <p style="margin: 0 0 16px;"><strong>Who they are:</strong> ${escapeHtml(role)}</p>
-    <div style="white-space: pre-wrap; background: #1a1a1d; border-radius: 6px; padding: 16px; line-height: 1.5;">${escapeHtml(message)}</div>
-    <p style="margin: 16px 0 0; color: #999; font-size: 13px;">Press Reply to answer them directly.</p>`);
+  const { subject, html } = contactEmail(check.value);
   const to = process.env["CONTACT_TO"] || CONTACT_EMAIL;
-  const sent = await sendResendEmail(
-    to,
-    `Contact form: ${role} - ${who}`.slice(0, 120),
-    html,
-    email,
-  );
+  const sent = await sendResendEmail(to, subject, html, check.value.email);
   if (!sent) {
     return json({ error: "We couldn't send your message just now. Please try again later." }, 502);
   }
