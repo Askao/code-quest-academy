@@ -21,6 +21,7 @@ import {
   UserCheck,
 } from "lucide-react";
 import { Button } from "@/components/ui/button";
+import { SiteFooter } from "@/components/SiteFooter";
 import { ThemeToggle } from "@/components/ThemeToggle";
 import { useAuth } from "@/hooks/useAuth";
 import { GCSE_TOPICS, ALEVEL_TOPICS } from "@/lib/game";
@@ -902,9 +903,7 @@ function Landing() {
         </div>
       </section>
 
-      <footer className="border-t border-border py-8 text-center text-sm text-muted-foreground">
-        H-Code Academy (hcodeacademy.co.uk) — Python practice for computer science students and their teachers.
-      </footer>
+      <SiteFooter />
     </div>
   );
 }

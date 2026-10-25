@@ -5,6 +5,7 @@ import { supabase } from "@/integrations/supabase/client";
 import { useAuth } from "@/hooks/useAuth";
 import { useFillMissingHomework } from "@/hooks/useFillMissingHomework";
 import { Button } from "@/components/ui/button";
+import { SiteFooter } from "@/components/SiteFooter";
 import { ThemeToggle } from "@/components/ThemeToggle";
 
 function NavLink({ to, children, onClick }: { to: string; children: ReactNode; onClick?: () => void }) {
@@ -132,6 +133,7 @@ export function AppShell({ children }: { children: ReactNode }) {
         ) : null}
       </header>
       <main className="mx-auto max-w-6xl px-4 py-8">{children}</main>
+      <SiteFooter />
     </div>
   );
 }
