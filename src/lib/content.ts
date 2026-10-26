@@ -17,6 +17,7 @@ import selection from "@/content/gcse-selection.json";
 import sequencing from "@/content/gcse-sequencing.json";
 import strings from "@/content/gcse-strings.json";
 import databases from "@/content/gcse-databases.json";
+import alevelProgrammingTechniques from "@/content/alevel-programming-techniques.json";
 import { GCSE_TOPICS, topicsFor, type Board, type TrackKey } from "@/lib/game";
 
 export type LessonContent = {
@@ -132,6 +133,9 @@ const RAW = [
   robustPrograms,
   databases,
   capstone,
+  // A level, in ALEVEL_TOPICS order (game.ts). Authored and checked with
+  // scripts/alevel/build.mjs.
+  alevelProgrammingTechniques,
 ] as unknown as RawTopic[];
 
 export const LESSONS: LessonContent[] = RAW.flatMap((t) =>

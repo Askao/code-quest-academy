@@ -63,14 +63,113 @@ export const GCSE_TOPICS = [
   },
 ] as const;
 
+/**
+ * A level topics, in teaching order, covering the programming-heavy parts of
+ * OCR H446 and AQA 7517. A level students also get every GCSE topic as
+ * "foundations" (see pathTopicsFor) - these are what's on top.
+ *
+ * - `boardTag`: content only one board examines (OCR's web technologies;
+ *   AQA's functional programming and theory of computation). A level has no
+ *   board setting, so this is a label for teachers, not a filter.
+ * - `review`: authored but not yet proofread by a teacher. Teachers and
+ *   admins see it (marked "In review"); students don't, and it can't be set
+ *   as homework, until the flag is removed. CLAUDE.md: new task content must
+ *   be checked for plain clarity by a human before it reaches students.
+ */
 export const ALEVEL_TOPICS = [
-  { key: "recursion", label: "Recursion", blurb: "Base cases and recursive calls" },
-  { key: "oop", label: "Object-oriented", blurb: "Classes, objects, inheritance" },
-  { key: "algorithms", label: "Algorithms", blurb: "Sorting and searching" },
-  { key: "data structures", label: "Data structures", blurb: "Stacks, queues and more" },
+  {
+    key: "programming-techniques",
+    label: "Programming techniques",
+    blurb: "Scope, passing by value and by reference, and exceptions",
+    review: true,
+  },
+  {
+    key: "oop",
+    label: "Object-oriented programming",
+    blurb: "Classes, encapsulation, inheritance and polymorphism",
+    review: true,
+  },
+  {
+    key: "recursion",
+    label: "Recursion",
+    blurb: "Base cases, the call stack and recursive algorithms",
+    review: true,
+  },
+  {
+    key: "data-structures",
+    label: "Data structures",
+    blurb: "Stacks, queues, linked lists and hash tables",
+    review: true,
+  },
+  {
+    key: "trees-graphs",
+    label: "Trees & graphs",
+    blurb: "Binary search trees, traversals and graph searches",
+    review: true,
+  },
+  {
+    key: "algorithms",
+    label: "Algorithms",
+    blurb: "Big O, merge sort, quicksort, Dijkstra and A*",
+    review: true,
+  },
+  {
+    key: "alevel-sql",
+    label: "SQL & databases",
+    blurb: "Joins, grouping, nested queries and changing data",
+    review: true,
+  },
+  {
+    key: "web",
+    label: "Web technologies",
+    blurb: "HTML, CSS and JavaScript",
+    boardTag: "OCR",
+    review: true,
+  },
+  {
+    key: "functional",
+    label: "Functional programming",
+    blurb: "Functions as values, map, filter and fold",
+    boardTag: "AQA",
+    review: true,
+  },
+  {
+    key: "theory",
+    label: "Theory of computation",
+    blurb: "Regular expressions, state machines and Turing machines",
+    boardTag: "AQA",
+    review: true,
+  },
 ] as const;
 
 export type TrackKey = "gcse" | "alevel";
+
+type AnyTopic = (typeof GCSE_TOPICS)[number] | (typeof ALEVEL_TOPICS)[number];
+const ALL_TOPICS: readonly AnyTopic[] = [...GCSE_TOPICS, ...ALEVEL_TOPICS];
+
+/** True while a topic is waiting for a teacher to proofread it (see ALEVEL_TOPICS). */
+export function isTopicInReview(topic: string): boolean {
+  const t = ALL_TOPICS.find((x) => x.key === topic);
+  return !!t && "review" in t && t.review === true;
+}
+
+/** "OCR" or "AQA" for A level content only one board examines, otherwise null. */
+export function topicBoardTag(topic: string): "OCR" | "AQA" | null {
+  const t = ALL_TOPICS.find((x) => x.key === topic);
+  return t && "boardTag" in t ? t.boardTag : null;
+}
+
+/** Which track a topic's own content (lessons, tasks, skill rows) belongs to. */
+export function trackOfTopic(topic: string): TrackKey {
+  return ALEVEL_TOPICS.some((t) => t.key === topic) ? "alevel" : "gcse";
+}
+
+/** The language a topic's tasks are written in, which decides the editor and how they're marked. */
+export function topicLanguage(topic: string): "python" | "sql" | "web" {
+  if (topic === "databases" || topic === "alevel-sql") return "sql";
+  if (topic === "web") return "web";
+  return "python";
+}
 
 /** `board` only matters for GCSE topics tagged with a `boards` allow-list
  * (currently just "databases") - everything else is common to both boards,
@@ -83,6 +182,14 @@ export function topicsFor(track: TrackKey, board?: Board) {
   return GCSE_TOPICS.filter(
     (t) => !("boards" in t) || (t.boards as readonly Board[]).includes(board),
   );
+}
+
+/**
+ * topicsFor without anything still in review - what can be shown to
+ * students, set as homework or counted in a markbook.
+ */
+export function liveTopicsFor(track: TrackKey, board?: Board) {
+  return topicsFor(track, board).filter((t) => !isTopicInReview(t.key));
 }
 
 export function topicLabel(topic: string) {
