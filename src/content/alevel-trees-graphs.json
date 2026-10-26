@@ -1,0 +1,1032 @@
+{
+  "track": "alevel",
+  "topic": "trees-graphs",
+  "lessons": [
+    {
+      "slug": "alevel-trees-graphs-1",
+      "title": "Binary search trees",
+      "summary": "Trees where everything smaller goes left and everything bigger goes right, so searching halves the work at each step.",
+      "notes": "A **tree** is a set of **nodes** joined by **edges**, with one **root** at the top and no cycles. A node's children hang below it; a node with no children is a **leaf**.\n\nIn a **binary tree** each node has at most two children: a **left** and a **right**. A **binary search tree (BST)** keeps them in order:\n\n- everything in a node's **left** subtree is **smaller** than it;\n- everything in its **right** subtree is **bigger** (or equal).\n\n```\n        8\n      /   \\\n     3     10\n    / \\      \\\n   1   6      14\n```\n\n---\n\n**Inserting**: start at the root. Go left if the new value is smaller, right if not, until you reach an empty space, and put the new node there.\n\n**Searching** works the same way: at each node you know which side the value must be on, so you skip the whole other half. A balanced tree with a million values needs only about 20 comparisons.\n\n```python\nclass Node:\n    def __init__(self, value):\n        self.value = value\n        self.left = None\n        self.right = None\n\ndef insert(root, value):\n    if root is None:\n        return Node(value)\n    if value < root.value:\n        root.left = insert(root.left, value)\n    else:\n        root.right = insert(root.right, value)\n    return root\n```\n\nThe shape depends on the order values are inserted. Inserting 1, 2, 3, 4 in order gives a long thin chain, which is no faster to search than a list.",
+      "worked_example": "class Node:\n    def __init__(self, value):\n        self.value = value\n        self.left = None\n        self.right = None\n\ndef insert(root, value):\n    if root is None:\n        return Node(value)\n    if value < root.value:\n        root.left = insert(root.left, value)\n    else:\n        root.right = insert(root.right, value)\n    return root\n\nroot = None\nfor v in [8, 3, 10, 1, 6, 14]:\n    root = insert(root, v)\nprint(root.value, root.left.value, root.right.value)\nprint(root.left.right.value)",
+      "worked_example_note": "8 becomes the root. 3 is smaller so it goes left; 10 goes right; 1 goes left of 3; 6 is smaller than 8 but bigger than 3, so it goes to 3's right."
+    },
+    {
+      "slug": "alevel-trees-graphs-2",
+      "title": "Tree traversals",
+      "summary": "Visiting every node: pre-order, in-order, post-order and breadth-first, and what each is used for.",
+      "notes": "To **traverse** a tree is to visit every node once. The three **depth-first** traversals differ only in *when* the node itself is visited compared with its subtrees:\n\n- **Pre-order**: node, then left subtree, then right subtree. Used to copy a tree.\n- **In-order**: left subtree, then node, then right subtree. On a BST this visits the values in **sorted order**.\n- **Post-order**: left subtree, then right subtree, then node. Used to delete a tree, and to evaluate an expression tree.\n\n```python\ndef in_order(node):\n    if node is not None:\n        in_order(node.left)\n        print(node.value)\n        in_order(node.right)\n```\n\n```\n        8\n      /   \\\n     3     10          Pre-order:  8 3 1 6 10 14\n    / \\      \\         In-order:   1 3 6 8 10 14\n   1   6      14       Post-order: 1 6 3 14 10 8\n```\n\n---\n\nA **breadth-first** traversal (level order) visits the root, then everything one level down, then the next level, and so on: 8 3 10 1 6 14. It uses a **queue**: take a node from the front, visit it, and add its children to the back.\n\n**Expression trees** store a calculation: operators in the branches, numbers in the leaves. An in-order traversal (with brackets) gives the normal (infix) expression; a post-order traversal gives reverse Polish.",
+      "worked_example": "class Node:\n    def __init__(self, value):\n        self.value = value\n        self.left = None\n        self.right = None\n\ndef insert(root, value):\n    if root is None:\n        return Node(value)\n    if value < root.value:\n        root.left = insert(root.left, value)\n    else:\n        root.right = insert(root.right, value)\n    return root\n\ndef pre_order(node, out):\n    if node is not None:\n        out.append(node.value)\n        pre_order(node.left, out)\n        pre_order(node.right, out)\n\nroot = None\nfor v in [8, 3, 10, 1, 6, 14]:\n    root = insert(root, v)\nresult = []\npre_order(root, result)\nprint(result)",
+      "worked_example_note": "Pre-order records each node before going into its subtrees, so the root comes first and each subtree's root comes before its children."
+    },
+    {
+      "slug": "alevel-trees-graphs-3",
+      "title": "Representing graphs",
+      "summary": "Vertices and edges, directed and weighted graphs, and storing them as an adjacency matrix or list.",
+      "notes": "A **graph** is a set of **vertices** (nodes) joined by **edges** (arcs). Graphs model anything with connections: road maps, social networks, the internet, computer networks.\n\n- In an **undirected** graph, an edge goes both ways (a friendship).\n- In a **directed** graph, each edge has a direction (one-way streets, following someone).\n- In a **weighted** graph, each edge has a value, such as a distance, time or cost.\n\nUnlike a tree, a graph can have cycles and needn't have a root.\n\n---\n\nTwo ways to store a graph:\n\n**Adjacency matrix**: a grid with a row and a column for each vertex. The cell at row A, column B holds 1 (or the weight) if there's an edge from A to B, and 0 if not. An undirected graph's matrix is symmetrical about its diagonal.\n\n**Adjacency list**: for each vertex, a list of the vertices it connects to. In Python, a dictionary of lists:\n\n```python\ngraph = {\"A\": [\"B\", \"C\"], \"B\": [\"A\"], \"C\": [\"A\"]}\n```\n\nA matrix makes checking \"is there an edge from A to B?\" instant, but uses space for every possible edge. A list only stores edges that exist, so it suits **sparse** graphs (few edges), while a matrix suits **dense** ones.\n\nThe **degree** of a vertex is the number of edges connected to it.",
+      "worked_example": "edges = [(\"A\", \"B\"), (\"A\", \"C\"), (\"B\", \"C\"), (\"C\", \"D\")]\ngraph = {}\nfor a, b in edges:\n    graph.setdefault(a, []).append(b)\n    graph.setdefault(b, []).append(a)\nfor vertex in sorted(graph):\n    print(vertex, graph[vertex])",
+      "worked_example_note": "Each undirected edge is added in both directions. setdefault creates an empty list the first time a vertex is seen."
+    },
+    {
+      "slug": "alevel-trees-graphs-4",
+      "title": "Breadth-first and depth-first search",
+      "summary": "Exploring a graph one level at a time with a queue, or one path at a time with a stack.",
+      "notes": "Two ways to visit every vertex you can reach from a starting vertex:\n\n**Breadth-first search (BFS)** explores in rings: first every neighbour of the start, then every neighbour of those, and so on. It uses a **queue**:\n\n```python\nvisited = [start]\nqueue = [start]\nwhile queue:\n    v = queue.pop(0)\n    for n in graph[v]:\n        if n not in visited:\n            visited.append(n)\n            queue.append(n)\n```\n\nBecause it explores level by level, BFS finds the **shortest path** (fewest edges) in an unweighted graph.\n\n---\n\n**Depth-first search (DFS)** follows one path as far as it can, then **backtracks** to the last vertex with an unexplored neighbour. It uses a **stack**, or recursion (which uses the call stack):\n\n```python\ndef dfs(v, visited):\n    visited.append(v)\n    for n in graph[v]:\n        if n not in visited:\n            dfs(n, visited)\n```\n\nDFS is used to solve mazes, check whether a graph is connected, and find cycles.\n\nIn both, the **visited** list stops a vertex being explored twice, which would otherwise loop forever round a cycle. In these tasks, neighbours are always looked at in **alphabetical order**, so the visiting order is fixed.",
+      "worked_example": "graph = {\"A\": [\"B\", \"C\"], \"B\": [\"A\", \"D\"], \"C\": [\"A\", \"D\"], \"D\": [\"B\", \"C\"]}\nvisited = [\"A\"]\nqueue = [\"A\"]\nwhile queue:\n    v = queue.pop(0)\n    for n in graph[v]:\n        if n not in visited:\n            visited.append(n)\n            queue.append(n)\nprint(visited)",
+      "worked_example_note": "A's neighbours B and C are visited first, then D (a neighbour of B). D is only added once, because the visited list already holds it when C is explored."
+    }
+  ],
+  "quiz": [
+    {
+      "lessonSlug": "alevel-trees-graphs-1",
+      "question": "In a binary search tree, where are the values smaller than a node?",
+      "options": [
+        "In its left subtree",
+        "In its right subtree",
+        "Above it",
+        "Anywhere"
+      ],
+      "answer": "In its left subtree",
+      "explanation": "Smaller values go left and bigger ones go right, at every node."
+    },
+    {
+      "lessonSlug": "alevel-trees-graphs-1",
+      "question": "Insert 5, 2, 8, 1 into an empty BST. What is the left child of 2?",
+      "options": [
+        "1",
+        "8",
+        "5",
+        "It has none"
+      ],
+      "answer": "1",
+      "explanation": "5 is the root; 2 goes left of 5; 8 goes right; 1 is smaller than 5 and smaller than 2, so it is 2's left child."
+    },
+    {
+      "lessonSlug": "alevel-trees-graphs-1",
+      "question": "Why can inserting values in sorted order make a BST slow to search?",
+      "options": [
+        "Every node goes on the same side, making a long chain",
+        "Sorted values can't be inserted",
+        "The root changes every time",
+        "It makes the tree too wide"
+      ],
+      "answer": "Every node goes on the same side, making a long chain",
+      "explanation": "1, 2, 3, 4 each go to the right of the last, so searching has to visit every node, like a list."
+    },
+    {
+      "lessonSlug": "alevel-trees-graphs-2",
+      "question": "Which traversal visits the values of a binary search tree in ascending order?",
+      "options": [
+        "In-order",
+        "Pre-order",
+        "Post-order",
+        "Breadth-first"
+      ],
+      "answer": "In-order",
+      "explanation": "Left subtree (smaller), node, right subtree (bigger), at every level, gives sorted order."
+    },
+    {
+      "lessonSlug": "alevel-trees-graphs-2",
+      "question": "In post-order, when is a node visited?",
+      "options": [
+        "After both of its subtrees",
+        "Before both of its subtrees",
+        "Between its left and right subtrees",
+        "Level by level"
+      ],
+      "answer": "After both of its subtrees",
+      "explanation": "Post-order is left, right, then node, which is why the root comes last."
+    },
+    {
+      "lessonSlug": "alevel-trees-graphs-2",
+      "question": "Which data structure does a breadth-first traversal use?",
+      "options": [
+        "A queue",
+        "A stack",
+        "A hash table",
+        "A linked list only"
+      ],
+      "answer": "A queue",
+      "explanation": "Children join the back of the queue, so all of one level is visited before the next."
+    },
+    {
+      "lessonSlug": "alevel-trees-graphs-3",
+      "question": "When does an adjacency list use much less memory than an adjacency matrix?",
+      "options": [
+        "When the graph is sparse, with few edges",
+        "When the graph is dense, with many edges",
+        "When the graph is directed",
+        "Never"
+      ],
+      "answer": "When the graph is sparse, with few edges",
+      "explanation": "A matrix always stores a cell for every possible edge; a list only stores the edges that exist."
+    },
+    {
+      "lessonSlug": "alevel-trees-graphs-3",
+      "question": "What does a weighted graph have that an unweighted graph doesn't?",
+      "options": [
+        "A value on each edge",
+        "Arrows on its edges",
+        "A root",
+        "No cycles"
+      ],
+      "answer": "A value on each edge",
+      "explanation": "The weight is usually a distance, time or cost."
+    },
+    {
+      "lessonSlug": "alevel-trees-graphs-3",
+      "question": "Why is an undirected graph's adjacency matrix symmetrical?",
+      "options": [
+        "Every edge from A to B is also an edge from B to A",
+        "Every vertex connects to itself",
+        "It has the same number of rows as columns",
+        "Its weights are all 1"
+      ],
+      "answer": "Every edge from A to B is also an edge from B to A",
+      "explanation": "So the cell at row A, column B always matches the cell at row B, column A."
+    },
+    {
+      "lessonSlug": "alevel-trees-graphs-4",
+      "question": "Which search finds the route with the fewest edges in an unweighted graph?",
+      "options": [
+        "Breadth-first search",
+        "Depth-first search",
+        "Both always do",
+        "Neither"
+      ],
+      "answer": "Breadth-first search",
+      "explanation": "BFS reaches every vertex one edge away before any two edges away, so the first time it reaches a vertex is by a shortest route."
+    },
+    {
+      "lessonSlug": "alevel-trees-graphs-4",
+      "question": "Which data structure does depth-first search use?",
+      "options": [
+        "A stack (or recursion)",
+        "A queue",
+        "A hash table",
+        "A priority queue"
+      ],
+      "answer": "A stack (or recursion)",
+      "explanation": "DFS goes deep and backtracks: last in, first out."
+    },
+    {
+      "lessonSlug": "alevel-trees-graphs-4",
+      "question": "Why do both searches keep a visited list?",
+      "options": [
+        "So no vertex is explored twice, which could loop forever round a cycle",
+        "To sort the vertices",
+        "To count the edges",
+        "To find the start vertex"
+      ],
+      "answer": "So no vertex is explored twice, which could loop forever round a cycle",
+      "explanation": "Without it, A to B to A to B... would never end."
+    }
+  ],
+  "tasks": [
+    {
+      "slug": "alevel-trees-graphs-t1-01",
+      "lesson": 1,
+      "tier": 1,
+      "difficulty": 3,
+      "xp": 25,
+      "title": "Is it in the tree?",
+      "brief": "The starter code gives you a `Node` class and an `insert` function for a binary search tree.\n\nWrite a function `search(root, value)` that returns `True` if `value` is in the tree. At each node: if it's the value, return `True`; if the value is smaller, search the left subtree; otherwise search the right. An empty subtree (`None`) means it isn't there.\n\nInput a line of whole numbers, insert them in order, then input a number to search for. Print `Found` or `Not found`.",
+      "starter": "class Node:\n    def __init__(self, value):\n        self.value = value\n        self.left = None\n        self.right = None\n\ndef insert(root, value):\n    if root is None:\n        return Node(value)\n    if value < root.value:\n        root.left = insert(root.left, value)\n    else:\n        root.right = insert(root.right, value)\n    return root\n\ndef search(root, value):\n    pass\n",
+      "hints": [
+        "Base cases: root is None returns False; root.value == value returns True.",
+        "Then return search(root.left, value) or search(root.right, value), depending on which side it must be."
+      ],
+      "tests": [
+        {
+          "stdin": "8 3 10 1 6 14\n6",
+          "expect": "Found"
+        },
+        {
+          "stdin": "8 3 10 1 6 14\n7",
+          "expect": "Not found"
+        },
+        {
+          "stdin": "5\n5",
+          "expect": "Found"
+        },
+        {
+          "stdin": "1 2 3 4 5\n9",
+          "expect": "Not found"
+        }
+      ]
+    },
+    {
+      "slug": "alevel-trees-graphs-t1-02",
+      "lesson": 1,
+      "tier": 2,
+      "difficulty": 3,
+      "xp": 25,
+      "title": "Show the search path",
+      "brief": "Using the starter code's binary search tree, input a line of whole numbers and insert them in order. Then input a number to search for.\n\nPrint every value you **visit** while searching, separated by ` -> `, then on the next line `Found` or `Not found`. Start at the root and go left or right at each node, as a BST search does.\n\nFor example, with `8 3 10 1 6 14` and target `6`, the path is `8 -> 3 -> 6`.",
+      "starter": "class Node:\n    def __init__(self, value):\n        self.value = value\n        self.left = None\n        self.right = None\n\ndef insert(root, value):\n    if root is None:\n        return Node(value)\n    if value < root.value:\n        root.left = insert(root.left, value)\n    else:\n        root.right = insert(root.right, value)\n    return root\n",
+      "hints": [
+        "Use a loop: current = root, and while current is not None, record current.value and move left or right.",
+        "Stop as soon as current.value equals the target."
+      ],
+      "tests": [
+        {
+          "stdin": "8 3 10 1 6 14\n6",
+          "expect": "8 -> 3 -> 6\nFound"
+        },
+        {
+          "stdin": "8 3 10 1 6 14\n13",
+          "expect": "8 -> 10 -> 14\nNot found"
+        },
+        {
+          "stdin": "50 30 70\n50",
+          "expect": "50\nFound"
+        },
+        {
+          "stdin": "4 2 6 1 3 5 7\n1",
+          "expect": "4 -> 2 -> 1\nFound"
+        }
+      ]
+    },
+    {
+      "slug": "alevel-trees-graphs-t1-03",
+      "lesson": 1,
+      "tier": 3,
+      "difficulty": 3,
+      "xp": 30,
+      "title": "Smallest and largest",
+      "brief": "In a binary search tree, the smallest value is found by going left until you can't any more, and the largest by going right.\n\nUsing the starter code, input a line of whole numbers and insert them in order. Print `Smallest: ` and `Largest: ` on two lines. Don't use `min`, `max` or sort the input: walk the tree.",
+      "starter": "class Node:\n    def __init__(self, value):\n        self.value = value\n        self.left = None\n        self.right = None\n\ndef insert(root, value):\n    if root is None:\n        return Node(value)\n    if value < root.value:\n        root.left = insert(root.left, value)\n    else:\n        root.right = insert(root.right, value)\n    return root\n",
+      "hints": [
+        "current = root; while current.left is not None: current = current.left",
+        "Do the same with .right for the largest."
+      ],
+      "tests": [
+        {
+          "stdin": "8 3 10 1 6 14",
+          "expect": "Smallest: 1\nLargest: 14"
+        },
+        {
+          "stdin": "42",
+          "expect": "Smallest: 42\nLargest: 42"
+        },
+        {
+          "stdin": "5 4 3 2 1",
+          "expect": "Smallest: 1\nLargest: 5"
+        },
+        {
+          "stdin": "-3 7 0 -10",
+          "expect": "Smallest: -10\nLargest: 7"
+        }
+      ]
+    },
+    {
+      "slug": "alevel-trees-graphs-t1-04",
+      "lesson": 1,
+      "tier": 3,
+      "difficulty": 4,
+      "xp": 35,
+      "title": "How tall is the tree?",
+      "brief": "The **height** of a tree is the number of nodes on the longest path from the root down to a leaf. An empty tree has height 0, and a tree with just a root has height 1.\n\nWrite a recursive function `height(node)`: 0 for `None`, otherwise 1 plus the larger of the left and right subtrees' heights.\n\nUsing the starter code, input a line of whole numbers, insert them in order, and print the tree's height. (Notice how inserting in sorted order makes it tall.)",
+      "starter": "class Node:\n    def __init__(self, value):\n        self.value = value\n        self.left = None\n        self.right = None\n\ndef insert(root, value):\n    if root is None:\n        return Node(value)\n    if value < root.value:\n        root.left = insert(root.left, value)\n    else:\n        root.right = insert(root.right, value)\n    return root\n\ndef height(node):\n    pass\n",
+      "hints": [
+        "if node is None: return 0",
+        "return 1 + max(height(node.left), height(node.right))"
+      ],
+      "tests": [
+        {
+          "stdin": "8 3 10 1 6 14",
+          "expect": "3"
+        },
+        {
+          "stdin": "1 2 3 4 5",
+          "expect": "5"
+        },
+        {
+          "stdin": "7",
+          "expect": "1"
+        },
+        {
+          "stdin": "4 2 6 1 3 5 7",
+          "expect": "3"
+        }
+      ]
+    },
+    {
+      "slug": "alevel-trees-graphs-t1-stretch",
+      "lesson": 1,
+      "tier": 4,
+      "difficulty": 5,
+      "xp": 45,
+      "stretch": true,
+      "title": "Count in a range, skipping branches",
+      "brief": "Write a recursive function `count_between(node, low, high)` that counts the values in a BST from `low` to `high` inclusive. Make it efficient: a BST lets you skip whole branches.\n\n- If `node` is `None`, the count is 0.\n- If `node.value` is below `low`, nothing in its left subtree can be in range, so only count the right subtree.\n- If `node.value` is above `high`, only count the left subtree.\n- Otherwise count this node plus both subtrees.\n\nAlso count how many nodes the function **visits** (calls with a node that isn't `None`), in a global variable. Input a line of whole numbers to insert, then `low` and `high` on one line. Print the count, then `Visited: ` and the number visited.",
+      "starter": "class Node:\n    def __init__(self, value):\n        self.value = value\n        self.left = None\n        self.right = None\n\ndef insert(root, value):\n    if root is None:\n        return Node(value)\n    if value < root.value:\n        root.left = insert(root.left, value)\n    else:\n        root.right = insert(root.right, value)\n    return root\n",
+      "hints": [
+        "Add 1 to the global visited counter right after the None check.",
+        "The count for a node in range is 1 + count_between(left) + count_between(right)."
+      ],
+      "tests": [
+        {
+          "stdin": "8 3 10 1 6 14 4 7 13\n5 9",
+          "expect": "3\nVisited: 6"
+        },
+        {
+          "stdin": "8 3 10\n100 200",
+          "expect": "0\nVisited: 2"
+        },
+        {
+          "stdin": "5\n5 5",
+          "expect": "1\nVisited: 1"
+        },
+        {
+          "stdin": "50 30 70 20 40 60 80\n25 65",
+          "expect": "4\nVisited: 6"
+        }
+      ]
+    },
+    {
+      "slug": "alevel-trees-graphs-t2-01",
+      "lesson": 2,
+      "tier": 1,
+      "difficulty": 3,
+      "xp": 25,
+      "title": "In-order sorts the tree",
+      "brief": "Write a recursive function `in_order(node, out)` that visits a tree in-order (left subtree, node, right subtree), appending each value to the list `out`.\n\nUsing the starter code's BST, input a line of whole numbers, insert them, then print the in-order traversal separated by spaces. On a BST, this comes out sorted.",
+      "starter": "class Node:\n    def __init__(self, value):\n        self.value = value\n        self.left = None\n        self.right = None\n\ndef insert(root, value):\n    if root is None:\n        return Node(value)\n    if value < root.value:\n        root.left = insert(root.left, value)\n    else:\n        root.right = insert(root.right, value)\n    return root\n\ndef in_order(node, out):\n    pass\n",
+      "hints": [
+        "if node is not None: in_order(node.left, out); out.append(node.value); in_order(node.right, out)",
+        "Call it with an empty list, then join the list's values."
+      ],
+      "tests": [
+        {
+          "stdin": "8 3 10 1 6 14",
+          "expect": "1 3 6 8 10 14"
+        },
+        {
+          "stdin": "5 5 1",
+          "expect": "1 5 5"
+        },
+        {
+          "stdin": "9",
+          "expect": "9"
+        },
+        {
+          "stdin": "3 1 2",
+          "expect": "1 2 3"
+        }
+      ]
+    },
+    {
+      "slug": "alevel-trees-graphs-t2-02",
+      "lesson": 2,
+      "tier": 2,
+      "difficulty": 3,
+      "xp": 30,
+      "title": "Pre-order and post-order",
+      "brief": "Write two recursive functions, `pre_order(node, out)` (node, left, right) and `post_order(node, out)` (left, right, node), each appending values to the list `out`.\n\nUsing the starter code's BST, input a line of whole numbers and insert them. Print `Pre: ` followed by the pre-order traversal, and `Post: ` followed by the post-order traversal, values separated by spaces.\n\nFor example, `8 3 10 1 6 14` prints `Pre: 8 3 1 6 10 14` and `Post: 1 6 3 14 10 8`.",
+      "starter": "class Node:\n    def __init__(self, value):\n        self.value = value\n        self.left = None\n        self.right = None\n\ndef insert(root, value):\n    if root is None:\n        return Node(value)\n    if value < root.value:\n        root.left = insert(root.left, value)\n    else:\n        root.right = insert(root.right, value)\n    return root\n",
+      "hints": [
+        "The only difference between the three traversals is where the append line goes.",
+        "Pre-order appends before the two recursive calls; post-order appends after them."
+      ],
+      "tests": [
+        {
+          "stdin": "8 3 10 1 6 14",
+          "expect": "Pre: 8 3 1 6 10 14\nPost: 1 6 3 14 10 8"
+        },
+        {
+          "stdin": "1 2 3",
+          "expect": "Pre: 1 2 3\nPost: 3 2 1"
+        },
+        {
+          "stdin": "4 2 6 1 3 5 7",
+          "expect": "Pre: 4 2 1 3 6 5 7\nPost: 1 3 2 5 7 6 4"
+        }
+      ]
+    },
+    {
+      "slug": "alevel-trees-graphs-t2-03",
+      "lesson": 2,
+      "tier": 3,
+      "difficulty": 4,
+      "xp": 35,
+      "title": "Level by level",
+      "brief": "A breadth-first traversal visits the tree level by level, left to right. It uses a queue:\n1. put the root in the queue;\n2. while the queue isn't empty: take the front node, record its value, and add its left child and then its right child to the back (if they exist).\n\nUsing the starter code's BST, input a line of whole numbers, insert them, and print the breadth-first order separated by spaces.",
+      "starter": "class Node:\n    def __init__(self, value):\n        self.value = value\n        self.left = None\n        self.right = None\n\ndef insert(root, value):\n    if root is None:\n        return Node(value)\n    if value < root.value:\n        root.left = insert(root.left, value)\n    else:\n        root.right = insert(root.right, value)\n    return root\n",
+      "hints": [
+        "queue = [root], then node = queue.pop(0) inside the loop.",
+        "Only append a child if it is not None."
+      ],
+      "tests": [
+        {
+          "stdin": "8 3 10 1 6 14",
+          "expect": "8 3 10 1 6 14"
+        },
+        {
+          "stdin": "5",
+          "expect": "5"
+        },
+        {
+          "stdin": "4 2 6 1 3 5 7",
+          "expect": "4 2 6 1 3 5 7"
+        },
+        {
+          "stdin": "1 2 3",
+          "expect": "1 2 3"
+        }
+      ]
+    },
+    {
+      "slug": "alevel-trees-graphs-t2-04",
+      "lesson": 2,
+      "tier": 4,
+      "difficulty": 4,
+      "xp": 40,
+      "title": "An expression tree",
+      "brief": "The starter code builds an **expression tree** from a reverse Polish expression: each operator node has the two parts it combines as its left and right children, and numbers are leaves.\n\nWrite two recursive functions:\n- `infix(node)` returns the expression written normally, with every operation in brackets: a leaf is just its number; an operator node is `(` + infix(left) + ` op ` + infix(right) + `)`. This is an in-order traversal.\n- `evaluate(node)` works out the value (a post-order traversal: evaluate both children, then apply the operator). Operators are `+`, `-` and `*`.\n\nPrint the infix expression, then its value. For example, `3 4 + 2 *` prints `((3 + 4) * 2)` then `14`.",
+      "starter": "class Node:\n    def __init__(self, value, left=None, right=None):\n        self.value = value\n        self.left = left\n        self.right = right\n\ndef build(rpn):\n    stack = []\n    for token in rpn.split():\n        if token in \"+-*\":\n            right = stack.pop()\n            left = stack.pop()\n            stack.append(Node(token, left, right))\n        else:\n            stack.append(Node(token))\n    return stack.pop()\n\nroot = build(input())\n",
+      "hints": [
+        "A leaf has no children: if node.left is None: return node.value (as text for infix, as int for evaluate).",
+        "evaluate: a = evaluate(node.left), b = evaluate(node.right), then apply node.value."
+      ],
+      "tests": [
+        {
+          "stdin": "3 4 + 2 *",
+          "expect": "((3 + 4) * 2)\n14"
+        },
+        {
+          "stdin": "5 1 2 + 4 * + 3 -",
+          "expect": "((5 + ((1 + 2) * 4)) - 3)\n14"
+        },
+        {
+          "stdin": "7",
+          "expect": "7\n7"
+        },
+        {
+          "stdin": "10 2 3 * -",
+          "expect": "(10 - (2 * 3))\n4"
+        }
+      ]
+    },
+    {
+      "slug": "alevel-trees-graphs-t2-stretch",
+      "lesson": 2,
+      "tier": 4,
+      "difficulty": 5,
+      "xp": 45,
+      "stretch": true,
+      "title": "Delete from a binary search tree",
+      "brief": "Write a recursive function `delete(node, value)` that removes `value` from a BST and returns the new root of that subtree. Find the node the usual way, then:\n- **no children**: return `None`;\n- **one child**: return that child, so it takes the node's place;\n- **two children**: find the **in-order successor** (the smallest value in the right subtree), copy its value into this node, then delete that value from the right subtree.\n\nIf the value isn't in the tree, nothing changes. Using the starter code, input a line of whole numbers to insert, then a line of values to delete (in order). Print the in-order traversal after all the deletions, separated by spaces, or `(empty)`.",
+      "starter": "class Node:\n    def __init__(self, value):\n        self.value = value\n        self.left = None\n        self.right = None\n\ndef insert(root, value):\n    if root is None:\n        return Node(value)\n    if value < root.value:\n        root.left = insert(root.left, value)\n    else:\n        root.right = insert(root.right, value)\n    return root\n",
+      "hints": [
+        "When the value is smaller than node.value: node.left = delete(node.left, value), and return node.",
+        "For two children: smallest = node.right, then go left until you can't; node.value = smallest.value; node.right = delete(node.right, smallest.value)."
+      ],
+      "tests": [
+        {
+          "stdin": "8 3 10 1 6 14\n3",
+          "expect": "1 6 8 10 14"
+        },
+        {
+          "stdin": "8 3 10 1 6 14\n8 99 1",
+          "expect": "3 6 10 14"
+        },
+        {
+          "stdin": "5\n5",
+          "expect": "(empty)"
+        },
+        {
+          "stdin": "50 30 70 20 40 60 80\n50 30 70",
+          "expect": "20 40 60 80"
+        }
+      ]
+    },
+    {
+      "slug": "alevel-trees-graphs-t3-01",
+      "lesson": 3,
+      "tier": 1,
+      "difficulty": 2,
+      "xp": 25,
+      "title": "Build an adjacency list",
+      "brief": "Input a whole number `n`, then `n` lines, each two vertex names separated by a space, meaning an **undirected** edge between them.\n\nStore the graph as an adjacency list (a dictionary from each vertex to a list of its neighbours). Then print every vertex in alphabetical order as `<vertex>: ` followed by its neighbours in alphabetical order, separated by spaces.",
+      "starter": "",
+      "hints": [
+        "For each edge a b: graph.setdefault(a, []).append(b) and the same the other way round.",
+        "Print with for v in sorted(graph): and \" \".join(sorted(graph[v]))."
+      ],
+      "tests": [
+        {
+          "stdin": "4\nA B\nA C\nB C\nC D",
+          "expect": "A: B C\nB: A C\nC: A B D\nD: C"
+        },
+        {
+          "stdin": "1\nX Y",
+          "expect": "X: Y\nY: X"
+        },
+        {
+          "stdin": "3\nhub a\nhub b\nhub c",
+          "expect": "a: hub\nb: hub\nc: hub\nhub: a b c"
+        }
+      ]
+    },
+    {
+      "slug": "alevel-trees-graphs-t3-02",
+      "lesson": 3,
+      "tier": 2,
+      "difficulty": 3,
+      "xp": 30,
+      "title": "Build an adjacency matrix",
+      "brief": "Input a line of vertex names separated by spaces (this sets their order), then a whole number `n`, then `n` lines each with two vertex names, meaning an **undirected** edge.\n\nBuild the adjacency matrix: a list of lists of 0s, with a 1 in row i, column j (and row j, column i) for each edge. Print the matrix one row per line, with the numbers separated by spaces.",
+      "starter": "",
+      "hints": [
+        "Turn a name into its row number with names.index(name).",
+        "matrix = [[0] * size for i in range(size)] makes separate rows."
+      ],
+      "tests": [
+        {
+          "stdin": "A B C D\n4\nA B\nA C\nB C\nC D",
+          "expect": "0 1 1 0\n1 0 1 0\n1 1 0 1\n0 0 1 0"
+        },
+        {
+          "stdin": "P Q\n0",
+          "expect": "0 0\n0 0"
+        },
+        {
+          "stdin": "X Y Z\n1\nZ X",
+          "expect": "0 0 1\n0 0 0\n1 0 0"
+        }
+      ]
+    },
+    {
+      "slug": "alevel-trees-graphs-t3-03",
+      "lesson": 3,
+      "tier": 2,
+      "difficulty": 3,
+      "xp": 30,
+      "title": "The best-connected vertex",
+      "brief": "Input an undirected graph as a whole number `n` followed by `n` edges (two vertex names per line). The **degree** of a vertex is how many edges touch it.\n\nPrint every vertex in alphabetical order as `<vertex>: <degree>`, then `Most connected: ` followed by the vertex with the highest degree. If several tie, choose the one that comes first alphabetically.",
+      "starter": "",
+      "hints": [
+        "Count with a dictionary: degree[a] = degree.get(a, 0) + 1, and the same for b.",
+        "Looping over sorted vertices and only replacing the best on a strictly higher degree keeps the alphabetical tie-break."
+      ],
+      "tests": [
+        {
+          "stdin": "4\nA B\nA C\nB C\nC D",
+          "expect": "A: 2\nB: 2\nC: 3\nD: 1\nMost connected: C"
+        },
+        {
+          "stdin": "1\nX Y",
+          "expect": "X: 1\nY: 1\nMost connected: X"
+        },
+        {
+          "stdin": "3\nhub a\nhub b\nhub c",
+          "expect": "a: 1\nb: 1\nc: 1\nhub: 3\nMost connected: hub"
+        }
+      ]
+    },
+    {
+      "slug": "alevel-trees-graphs-t3-04",
+      "lesson": 3,
+      "tier": 3,
+      "difficulty": 4,
+      "xp": 35,
+      "title": "The cost of a route",
+      "brief": "A **directed, weighted** graph stores one-way roads with their lengths. Input a whole number `n`, then `n` lines in the form `<from> <to> <weight>` (weights are whole numbers).\n\nStore it as a dictionary of dictionaries, so `graph[\"A\"][\"B\"]` is the weight of the road from A to B. Then input a route: vertex names separated by spaces. Print `Total: ` and the route's total weight, or `No route` if any step along it has no road (remember the roads are one-way).",
+      "starter": "",
+      "hints": [
+        "graph.setdefault(a, {})[b] = weight",
+        "Check each consecutive pair: route[i] to route[i + 1]. Use graph.get(a, {}) so a vertex with no roads out doesn't crash."
+      ],
+      "tests": [
+        {
+          "stdin": "3\nA B 5\nB C 3\nC A 2\nA B C",
+          "expect": "Total: 8"
+        },
+        {
+          "stdin": "3\nA B 5\nB C 3\nC A 2\nB A",
+          "expect": "No route"
+        },
+        {
+          "stdin": "1\nX Y 7\nX",
+          "expect": "Total: 0"
+        },
+        {
+          "stdin": "2\nP Q 1\nQ R 1\nP Q R",
+          "expect": "Total: 2"
+        }
+      ]
+    },
+    {
+      "slug": "alevel-trees-graphs-t3-stretch",
+      "lesson": 3,
+      "tier": 4,
+      "difficulty": 5,
+      "xp": 45,
+      "stretch": true,
+      "title": "Matrix to list",
+      "brief": "Input a line of vertex names, then the adjacency matrix of an undirected graph: one row per line, numbers separated by spaces, in the same order as the names.\n\nPrint the adjacency list (each vertex in the given order, as `<vertex>: ` followed by its neighbours in the matrix's column order). Then print `Edges: ` and the number of edges. Each undirected edge appears twice in the matrix, so count only the cells above the diagonal.",
+      "starter": "",
+      "hints": [
+        "Row i's neighbours are the names[j] where matrix[i][j] == 1.",
+        "Edges: count the cells with j > i that are 1."
+      ],
+      "tests": [
+        {
+          "stdin": "A B C\n0 1 1\n1 0 0\n1 0 0",
+          "expect": "A: B C\nB: A\nC: A\nEdges: 2"
+        },
+        {
+          "stdin": "X Y\n0 0\n0 0",
+          "expect": "X:\nY:\nEdges: 0"
+        },
+        {
+          "stdin": "P Q R S\n0 1 1 1\n1 0 1 0\n1 1 0 0\n1 0 0 0",
+          "expect": "P: Q R S\nQ: P R\nR: P Q\nS: P\nEdges: 4"
+        }
+      ]
+    },
+    {
+      "slug": "alevel-trees-graphs-t4-01",
+      "lesson": 4,
+      "tier": 2,
+      "difficulty": 3,
+      "xp": 30,
+      "title": "Breadth-first order",
+      "brief": "The starter code reads an undirected graph into an adjacency list, with each vertex's neighbours sorted alphabetically.\n\nThen input a start vertex. Print the order a **breadth-first search** visits the vertices, separated by spaces, using a queue and a visited list as in the notes.",
+      "starter": "graph = {}\nfor i in range(int(input())):\n    a, b = input().split()\n    graph.setdefault(a, []).append(b)\n    graph.setdefault(b, []).append(a)\nfor v in graph:\n    graph[v].sort()\n",
+      "hints": [
+        "visited = [start] and queue = [start] to begin.",
+        "Mark a neighbour as visited when you add it to the queue, not when you take it off."
+      ],
+      "tests": [
+        {
+          "stdin": "4\nA B\nA C\nB D\nC D\nA",
+          "expect": "A B C D"
+        },
+        {
+          "stdin": "5\nA B\nA C\nB D\nC E\nD E\nB",
+          "expect": "B A D C E"
+        },
+        {
+          "stdin": "1\nX Y\nY",
+          "expect": "Y X"
+        }
+      ]
+    },
+    {
+      "slug": "alevel-trees-graphs-t4-02",
+      "lesson": 4,
+      "tier": 2,
+      "difficulty": 3,
+      "xp": 30,
+      "title": "Depth-first order",
+      "brief": "Using the starter code's graph (neighbours in alphabetical order), input a start vertex and print the order a recursive **depth-first search** visits the vertices, separated by spaces.\n\nWrite `dfs(v, visited)`: add `v` to `visited`, then for each neighbour in order, if it hasn't been visited, call `dfs` on it.",
+      "starter": "graph = {}\nfor i in range(int(input())):\n    a, b = input().split()\n    graph.setdefault(a, []).append(b)\n    graph.setdefault(b, []).append(a)\nfor v in graph:\n    graph[v].sort()\n",
+      "hints": [
+        "def dfs(v, visited): visited.append(v); for n in graph[v]: if n not in visited: dfs(n, visited)",
+        "Call it with an empty list, then print the list."
+      ],
+      "tests": [
+        {
+          "stdin": "4\nA B\nA C\nB D\nC D\nA",
+          "expect": "A B D C"
+        },
+        {
+          "stdin": "5\nA B\nA C\nB D\nC E\nD E\nB",
+          "expect": "B A C E D"
+        },
+        {
+          "stdin": "3\nA B\nB C\nC A\nC",
+          "expect": "C A B"
+        }
+      ]
+    },
+    {
+      "slug": "alevel-trees-graphs-t4-03",
+      "lesson": 4,
+      "tier": 3,
+      "difficulty": 4,
+      "xp": 35,
+      "title": "Fewest steps",
+      "brief": "Using the starter code's graph, input a start vertex and a target vertex on two lines. Use breadth-first search to find the smallest number of edges between them.\n\nKeep a dictionary `distance` instead of a visited list: `distance[start] = 0`, and when you first reach a neighbour, set its distance to the current vertex's distance + 1. Print `Steps: ` and the distance to the target, or `No route` if it is never reached.",
+      "starter": "graph = {}\nfor i in range(int(input())):\n    a, b = input().split()\n    graph.setdefault(a, []).append(b)\n    graph.setdefault(b, []).append(a)\nfor v in graph:\n    graph[v].sort()\n",
+      "hints": [
+        "A vertex has been visited if it is already a key in distance.",
+        "graph.get(v, []) avoids a crash if the start vertex isn't in any edge."
+      ],
+      "tests": [
+        {
+          "stdin": "5\nA B\nA C\nB D\nC E\nD E\nA\nE",
+          "expect": "Steps: 2"
+        },
+        {
+          "stdin": "2\nA B\nC D\nA\nD",
+          "expect": "No route"
+        },
+        {
+          "stdin": "1\nX Y\nX\nX",
+          "expect": "Steps: 0"
+        },
+        {
+          "stdin": "4\nA B\nB C\nC D\nA D\nA\nC",
+          "expect": "Steps: 2"
+        }
+      ]
+    },
+    {
+      "slug": "alevel-trees-graphs-t4-04",
+      "lesson": 4,
+      "tier": 3,
+      "difficulty": 4,
+      "xp": 35,
+      "title": "How many islands?",
+      "brief": "A graph may be in several separate pieces, called **connected components**. Input a line of every vertex name, then a whole number `n`, then `n` undirected edges.\n\nCount the components: go through the vertices in alphabetical order, and each time you find one that hasn't been visited yet, that's a new component; run a search (BFS or DFS) from it to mark everything it can reach. Print `Components: ` and the count.",
+      "starter": "",
+      "hints": [
+        "Start every vertex with an empty neighbour list, so vertices with no edges still count.",
+        "One visited set is shared across all the searches."
+      ],
+      "tests": [
+        {
+          "stdin": "A B C D E\n2\nA B\nD E",
+          "expect": "Components: 3"
+        },
+        {
+          "stdin": "A B C\n3\nA B\nB C\nC A",
+          "expect": "Components: 1"
+        },
+        {
+          "stdin": "P Q R\n0",
+          "expect": "Components: 3"
+        },
+        {
+          "stdin": "A B C D\n1\nB C",
+          "expect": "Components: 3"
+        }
+      ]
+    },
+    {
+      "slug": "alevel-trees-graphs-t4-stretch",
+      "lesson": 4,
+      "tier": 4,
+      "difficulty": 5,
+      "xp": 45,
+      "stretch": true,
+      "title": "Escape the maze",
+      "brief": "A maze is a grid of `.` (open), `#` (wall), one `S` (start) and one `E` (exit). You can move up, down, left or right onto any square that isn't a wall.\n\nTreat each open square as a vertex and use breadth-first search to find the fewest moves from S to E. Input the number of rows, then each row. Print `Moves: ` and the number of moves, or `No way out`.",
+      "starter": "",
+      "hints": [
+        "Find S first. Then BFS from it, with a distance dictionary keyed by (row, col).",
+        "For each square taken from the queue, try its four neighbours, skipping any outside the grid or a #."
+      ],
+      "tests": [
+        {
+          "stdin": "3\nS.#\n#.#\n#.E",
+          "expect": "Moves: 4"
+        },
+        {
+          "stdin": "3\nS#.\n##.\n..E",
+          "expect": "No way out"
+        },
+        {
+          "stdin": "1\nSE",
+          "expect": "Moves: 1"
+        },
+        {
+          "stdin": "4\nS...\n.##.\n.#E.\n....",
+          "expect": "Moves: 6"
+        }
+      ]
+    }
+  ],
+  "homeworkTasks": [
+    {
+      "slug": "alevel-trees-graphs-hw-01",
+      "lesson": 1,
+      "tier": 2,
+      "difficulty": 3,
+      "xp": 25,
+      "title": "A tree of words",
+      "brief": "Binary search trees work for words too: `<` compares words alphabetically. Using the starter code (which works for any values), input a line of words and insert them in order. Then input a word and print `Found` or `Not found` by searching the tree (not by checking the input list).",
+      "starter": "class Node:\n    def __init__(self, value):\n        self.value = value\n        self.left = None\n        self.right = None\n\ndef insert(root, value):\n    if root is None:\n        return Node(value)\n    if value < root.value:\n        root.left = insert(root.left, value)\n    else:\n        root.right = insert(root.right, value)\n    return root\n",
+      "hints": [
+        "Insert the words as strings: root = insert(root, word).",
+        "Search with a loop that goes left when the target is smaller than the node."
+      ],
+      "tests": [
+        {
+          "stdin": "mango apple pear kiwi\nkiwi",
+          "expect": "Found"
+        },
+        {
+          "stdin": "mango apple pear kiwi\nlime",
+          "expect": "Not found"
+        },
+        {
+          "stdin": "one\none",
+          "expect": "Found"
+        }
+      ]
+    },
+    {
+      "slug": "alevel-trees-graphs-hw-02",
+      "lesson": 1,
+      "tier": 3,
+      "difficulty": 4,
+      "xp": 35,
+      "title": "Count the nodes",
+      "brief": "Write a recursive function `size(node)` that returns how many nodes are in a tree: 0 for `None`, otherwise 1 plus the sizes of both subtrees.\n\nUsing the starter code, input a line of whole numbers, insert them, and print the tree's size. Then input another number, insert it, and print the size again.",
+      "starter": "class Node:\n    def __init__(self, value):\n        self.value = value\n        self.left = None\n        self.right = None\n\ndef insert(root, value):\n    if root is None:\n        return Node(value)\n    if value < root.value:\n        root.left = insert(root.left, value)\n    else:\n        root.right = insert(root.right, value)\n    return root\n",
+      "hints": [
+        "if node is None: return 0",
+        "return 1 + size(node.left) + size(node.right)"
+      ],
+      "tests": [
+        {
+          "stdin": "8 3 10\n5",
+          "expect": "3\n4"
+        },
+        {
+          "stdin": "1\n1",
+          "expect": "1\n2"
+        },
+        {
+          "stdin": "4 2 6 1 3 5 7\n0",
+          "expect": "7\n8"
+        }
+      ]
+    },
+    {
+      "slug": "alevel-trees-graphs-hw-03",
+      "lesson": 2,
+      "tier": 2,
+      "difficulty": 3,
+      "xp": 25,
+      "title": "Count the leaves",
+      "brief": "A leaf is a node with no children. Write a recursive function `leaves(node)` that counts the leaves in a tree.\n\nUsing the starter code, input a line of whole numbers, insert them into a BST, and print the number of leaves.",
+      "starter": "class Node:\n    def __init__(self, value):\n        self.value = value\n        self.left = None\n        self.right = None\n\ndef insert(root, value):\n    if root is None:\n        return Node(value)\n    if value < root.value:\n        root.left = insert(root.left, value)\n    else:\n        root.right = insert(root.right, value)\n    return root\n",
+      "hints": [
+        "None has 0 leaves; a node with neither child is 1 leaf.",
+        "Otherwise return leaves(node.left) + leaves(node.right)."
+      ],
+      "tests": [
+        {
+          "stdin": "8 3 10 1 6 14",
+          "expect": "3"
+        },
+        {
+          "stdin": "1 2 3 4",
+          "expect": "1"
+        },
+        {
+          "stdin": "7",
+          "expect": "1"
+        },
+        {
+          "stdin": "4 2 6 1 3 5 7",
+          "expect": "4"
+        }
+      ]
+    },
+    {
+      "slug": "alevel-trees-graphs-hw-04",
+      "lesson": 2,
+      "tier": 3,
+      "difficulty": 3,
+      "xp": 30,
+      "title": "Tree sort",
+      "brief": "Sort a line of words alphabetically **using a binary search tree**: insert every word, then do an in-order traversal.\n\nUsing the starter code, input a line of words and print them in alphabetical order separated by spaces. Don't use `sorted` or `.sort()`.",
+      "starter": "class Node:\n    def __init__(self, value):\n        self.value = value\n        self.left = None\n        self.right = None\n\ndef insert(root, value):\n    if root is None:\n        return Node(value)\n    if value < root.value:\n        root.left = insert(root.left, value)\n    else:\n        root.right = insert(root.right, value)\n    return root\n",
+      "hints": [
+        "Insert each word into the tree.",
+        "An in-order traversal of a BST visits values in ascending order."
+      ],
+      "tests": [
+        {
+          "stdin": "pear apple mango kiwi",
+          "expect": "apple kiwi mango pear"
+        },
+        {
+          "stdin": "zebra",
+          "expect": "zebra"
+        },
+        {
+          "stdin": "b a b a",
+          "expect": "a a b b"
+        }
+      ]
+    },
+    {
+      "slug": "alevel-trees-graphs-hw-05",
+      "lesson": 3,
+      "tier": 2,
+      "difficulty": 3,
+      "xp": 25,
+      "title": "Followers and following",
+      "brief": "On a social network, `A B` means A follows B: a **directed** edge. Input a whole number `n` and then `n` such lines, then one name.\n\nPrint `Following: ` and how many people that name follows, then `Followers: ` and how many people follow them.",
+      "starter": "",
+      "hints": [
+        "Following is the number of lines where the name is first; followers, where it is second.",
+        "You can count while reading, without storing the whole graph."
+      ],
+      "tests": [
+        {
+          "stdin": "3\nAda Sam\nSam Ada\nLi Ada\nAda",
+          "expect": "Following: 1\nFollowers: 2"
+        },
+        {
+          "stdin": "1\nX Y\nZ",
+          "expect": "Following: 0\nFollowers: 0"
+        },
+        {
+          "stdin": "2\nA B\nA C\nA",
+          "expect": "Following: 2\nFollowers: 0"
+        }
+      ]
+    },
+    {
+      "slug": "alevel-trees-graphs-hw-06",
+      "lesson": 3,
+      "tier": 3,
+      "difficulty": 4,
+      "xp": 35,
+      "title": "Friends of friends",
+      "brief": "Input an undirected friendship graph as a whole number `n` followed by `n` pairs of names, then one name.\n\nPrint, in alphabetical order separated by spaces, everyone who is a friend of one of that person's friends but **isn't** the person themselves or already their friend. Print `Nobody` if there's no one.",
+      "starter": "",
+      "hints": [
+        "Build an adjacency list, then loop over each friend's friends.",
+        "Use a set to collect them, and leave out the person and their direct friends."
+      ],
+      "tests": [
+        {
+          "stdin": "3\nAda Sam\nSam Li\nLi Jo\nAda",
+          "expect": "Li"
+        },
+        {
+          "stdin": "2\nA B\nB C\nB",
+          "expect": "Nobody"
+        },
+        {
+          "stdin": "1\nX Y\nZ",
+          "expect": "Nobody"
+        }
+      ]
+    },
+    {
+      "slug": "alevel-trees-graphs-hw-07",
+      "lesson": 4,
+      "tier": 2,
+      "difficulty": 3,
+      "xp": 30,
+      "title": "Who can I reach?",
+      "brief": "Using the starter code's graph, input a start vertex. Print, in alphabetical order separated by spaces, every **other** vertex that can be reached from it (using either search), or `Nobody`.",
+      "starter": "graph = {}\nfor i in range(int(input())):\n    a, b = input().split()\n    graph.setdefault(a, []).append(b)\n    graph.setdefault(b, []).append(a)\nfor v in graph:\n    graph[v].sort()\n",
+      "hints": [
+        "Run a BFS or DFS from the start and collect everything visited.",
+        "Remove the start itself before printing."
+      ],
+      "tests": [
+        {
+          "stdin": "3\nA B\nB C\nD E\nA",
+          "expect": "B C"
+        },
+        {
+          "stdin": "3\nA B\nB C\nD E\nE",
+          "expect": "D"
+        },
+        {
+          "stdin": "1\nX Y\nZ",
+          "expect": "Nobody"
+        }
+      ]
+    },
+    {
+      "slug": "alevel-trees-graphs-hw-08",
+      "lesson": 4,
+      "tier": 3,
+      "difficulty": 4,
+      "xp": 35,
+      "title": "Depth-first without recursion",
+      "brief": "Depth-first search can use an explicit stack instead of recursion. Using the starter code's graph, input a start vertex and print the depth-first order, separated by spaces, **without** a recursive function.\n\nTo match the recursive order: push the start; then repeatedly pop a vertex, skip it if it's already visited, otherwise visit it and push its unvisited neighbours in **reverse** alphabetical order (so the alphabetically first is popped next).",
+      "starter": "graph = {}\nfor i in range(int(input())):\n    a, b = input().split()\n    graph.setdefault(a, []).append(b)\n    graph.setdefault(b, []).append(a)\nfor v in graph:\n    graph[v].sort()\n",
+      "hints": [
+        "for n in reversed(graph[v]): if n not in visited: stack.append(n)",
+        "Check visited when you pop, because a vertex can be pushed more than once."
+      ],
+      "tests": [
+        {
+          "stdin": "4\nA B\nA C\nB D\nC D\nA",
+          "expect": "A B D C"
+        },
+        {
+          "stdin": "5\nA B\nA C\nB D\nC E\nD E\nB",
+          "expect": "B A C E D"
+        },
+        {
+          "stdin": "3\nA B\nB C\nC A\nC",
+          "expect": "C A B"
+        }
+      ]
+    }
+  ]
+}
