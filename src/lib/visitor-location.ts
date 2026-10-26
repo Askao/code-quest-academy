@@ -1,32 +1,107 @@
 /**
- * Which requests count as a visit, and where the visitor's IP is read from.
- * Pure logic only (no network, no database) so it can be tested; the lookup
- * and recording live in visitor-location.server.ts.
+ * Which visits count, where the visitor's IP is read from, and whether it
+ * belongs to a data centre. Pure logic only (no network, no database) so it
+ * can be tested; the lookup and recording live in visitor-location.server.ts.
  *
- * What gets stored is a daily count per place (country, region, city), never
- * the IP address, the browser, the page or anything tying a visit to an
- * account. See the migration 20261025120000_visitor_locations.sql.
+ * A visit is counted only when the page has loaded in a browser AND someone
+ * has scrolled, tapped, typed or moved the mouse: the browser then posts a
+ * small "beacon" (src/components/VisitBeacon.tsx). Most bots never run the
+ * page's code, and the few that do rarely act like a person, so this alone
+ * removes most of them. Connections from cloud data centres (where bots and
+ * AI crawlers run) are counted separately as "probably bots".
+ *
+ * What gets stored is a daily count per place and per step (homepage, sign-up
+ * page), never the IP address, the browser or anything tying a visit to an
+ * account. See 20261025120000_visitor_locations.sql and
+ * 20261026120000_visitor_bot_filter.sql.
  */
 
-// Crawlers and link-preview fetchers would otherwise swamp the numbers (and
-// put Mountain View at the top of the list).
+export const VISIT_PATH = "/api/visit";
+
+// Crawlers and link-preview fetchers that say what they are.
 const BOT_UA =
   /bot|crawl|spider|slurp|preview|facebookexternalhit|embedly|headless|lighthouse|curl|wget|python-requests|httpclient|go-http-client|okhttp|monitor|uptime/i;
 
-/** True only for a real browser loading a page: not assets, API calls, bots or prefetches. */
-export function isPageVisit(method: string, pathname: string, headers: Headers): boolean {
-  if (method !== "GET") return false;
-  if (pathname.startsWith("/api/") || pathname.startsWith("/_")) return false;
-  // Files with an extension (/assets/x.js, /favicon.ico, /robots.txt) are never pages.
-  if (/\.[a-z0-9]+$/i.test(pathname)) return false;
-  const dest = headers.get("sec-fetch-dest");
-  if (dest !== null && dest !== "document") return false;
-  if (dest === null && !(headers.get("accept") ?? "").includes("text/html")) return false;
-  const purpose = headers.get("sec-purpose") ?? headers.get("purpose") ?? "";
-  if (purpose.includes("prefetch")) return false;
+/** The steps towards an account that are counted, beyond the visit itself. */
+export type VisitStep = "home" | "signup" | "other";
+
+/** Which step a page is: the homepage, the sign-up form, or anything else. */
+export function visitStep(pathname: string, search: Record<string, unknown>): VisitStep {
+  if (pathname === "/") return "home";
+  if (pathname === "/auth" && search["mode"] === "signup") return "signup";
+  return "other";
+}
+
+/** Reads the step a beacon claims, defaulting to "other" for anything unexpected. */
+export function parseStep(body: unknown): VisitStep {
+  const page = (body as { page?: unknown } | null)?.page;
+  return page === "home" || page === "signup" ? page : "other";
+}
+
+/** True for a beacon posted by this site's own pages from a browser that isn't a declared bot. */
+export function isBeacon(method: string, headers: Headers, siteHost: string): boolean {
+  if (method !== "POST") return false;
+  const origin = headers.get("origin");
+  let originHost = "";
+  try {
+    originHost = origin ? new URL(origin).host : "";
+  } catch {
+    originHost = "";
+  }
+  if (!originHost || (originHost !== siteHost && originHost !== headers.get("host"))) return false;
   const ua = headers.get("user-agent") ?? "";
-  if (!ua || BOT_UA.test(ua)) return false;
-  return true;
+  return ua !== "" && !BOT_UA.test(ua);
+}
+
+// Networks of the cloud and hosting companies bots and AI crawlers run on.
+// Deliberately NOT listed: Cloudflare, Akamai and Fastly, because iPhone users
+// with iCloud Private Relay (and Cloudflare WARP) browse through them, and
+// mobile and home broadband providers, obviously.
+const DATACENTRE_ASNS = new Set([
+  16509,
+  14618,
+  8987, // Amazon / AWS
+  15169,
+  396982,
+  19527, // Google, Google Cloud
+  8075,
+  8068,
+  8069, // Microsoft / Azure
+  14061, // DigitalOcean
+  16276, // OVH
+  24940,
+  213230, // Hetzner
+  63949, // Linode (Akamai Connected Cloud)
+  20473, // Vultr (Choopa)
+  31898, // Oracle Cloud
+  45102,
+  37963, // Alibaba
+  132203,
+  45090, // Tencent
+  51167, // Contabo
+  12876, // Scaleway
+  60781,
+  28753,
+  59253,
+  7203,
+  30633, // Leaseweb
+  36352, // ColoCrossing
+  62567,
+  8100, // Digital Ocean / QuadraNet
+  136907,
+  55990, // Huawei Cloud
+  398324,
+  398101, // Censys, GoDaddy hosting
+  32934, // Meta (facebookexternalhit fetchers)
+]);
+
+const DATACENTRE_NAMES =
+  /amazon|\baws\b|google cloud|google llc|microsoft|azure|digitalocean|ovh|hetzner|linode|vultr|choopa|oracle|alibaba|tencent|contabo|scaleway|leaseweb|colocrossing|hosting|datacenter|data center|server|vps|cloud computing/i;
+
+/** True when the connection comes from a cloud or hosting network rather than a home, school or phone. */
+export function isDatacentre(asn: number | undefined, org: string | undefined): boolean {
+  if (asn !== undefined && DATACENTRE_ASNS.has(asn)) return true;
+  return org !== undefined && DATACENTRE_NAMES.test(org);
 }
 
 /**

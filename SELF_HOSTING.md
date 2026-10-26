@@ -52,12 +52,14 @@ Insert into `public.challenges` (`slug`, `title`, `brief`, `track`, `topic`, `di
 
 Billing is not wired up. The clean hooks for it are `app_settings` (feature flags) and a future `subscriptions` table keyed by `profiles.id`; gate features in `src/lib/game.ts` and the route guards.
 
-## Visitor locations
+## Visitors
 
-Admin → **Visitor locations** shows roughly where the site is opened from (city, region, country), counting each person once a day. The server looks the visitor's IP up in a location database file on its own disk ([DB-IP IP to City Lite](https://db-ip.com/db/download/ip-to-city-lite), CC BY 4.0), so IPs are never sent to a third-party service, and only the place and a count are saved (`visitor_locations` table) — no IPs, names, accounts or pages.
+Admin → **Visitors** shows roughly where the site is opened from (city, region, country), split into "probably people" and "probably bots", and how many people reached the homepage, then the sign-up form, then made an account. Each person counts once a day.
 
-- The database file (~60 MB download, ~130 MB in memory) is fetched into the temp directory on first use and refreshed every 30 days. The server needs outbound access to `download.db-ip.com`.
-- `GEOIP_DB_PATH=/path/to/file.mmdb` uses a file you supply instead (DB-IP or MaxMind GeoLite2-City format).
+A visit is only counted once the page has run in a browser and someone has scrolled, tapped, typed or moved the mouse (the browser then posts to `/api/visit`); declared bots are ignored, and connections from cloud data centres are counted as "probably bots". The server looks the IP up in files on its own disk ([DB-IP IP to City Lite and IP to ASN Lite](https://db-ip.com/db/lite.php), CC BY 4.0), so IPs are never sent to a third-party service, and only counts are saved (`visitor_locations` and `visit_steps`): no IPs, names, accounts or browsers.
+
+- The files (~64 MB download, ~140 MB in memory) are fetched into the temp directory on first use and refreshed every 30 days. The server needs outbound access to `download.db-ip.com`.
+- `GEOIP_DB_PATH` and `GEOIP_ASN_DB_PATH` use files you supply instead (DB-IP, or MaxMind GeoLite2-City and GeoLite2-ASN format).
 - `VISITOR_LOCATIONS=off` turns it off completely.
 
 ## Daily email allowance

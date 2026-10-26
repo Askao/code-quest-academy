@@ -5,7 +5,7 @@ import { ThemeToggle } from "@/components/ThemeToggle";
 // Who runs the site, shown in "Who we are", and where privacy questions go.
 const RUN_BY = "Charlie Hughes";
 const PRIVACY_EMAIL = "privacy@hcodeacademy.co.uk";
-const LAST_UPDATED = "25 October 2026";
+const LAST_UPDATED = "26 October 2026";
 
 export const Route = createFileRoute("/privacy")({
   head: () => ({
@@ -95,11 +95,12 @@ function Privacy() {
             address and message are emailed to us so we can reply. They aren't saved on the site.
           </p>
           <p>
-            <strong>Rough visitor locations:</strong> when anyone opens a page, our server works out
-            roughly which town and country the connection comes from, using a location database on
-            our own server. We keep only a daily count per place (for example "Leeds: 12 visits").
-            We don't keep the IP address, and the count can't be traced back to any person or
-            account.
+            <strong>Rough visitor numbers:</strong> once you scroll, tap or type on a page, your
+            browser tells our server it was visited, and whether it was the homepage or the sign-up
+            page. Using files on our own server, it works out roughly which town and country the
+            connection comes from, and whether it comes from a cloud data centre (which usually
+            means a bot). We keep only daily counts (for example "Leeds: 12 visits"). We don't keep
+            the IP address, and the counts can't be traced back to any person or account.
           </p>
           <p>
             We don't ask for dates of birth, addresses, phone numbers or photos, and we never show
@@ -178,8 +179,8 @@ function Privacy() {
           <p>
             We don't use advertising or tracking cookies. Your browser stores only what the site
             needs: your sign-in session, your light/dark theme choice, an unsaved draft in the IDE,
-            and the state of a game you're in the middle of. The visitor location count doesn't use
-            cookies.
+            and the state of a game you're in the middle of. The visitor count doesn't use cookies
+            or store anything in your browser.
           </p>
         </Section>
 
