@@ -1,0 +1,1264 @@
+{
+  "track": "alevel",
+  "topic": "data-structures",
+  "lessons": [
+    {
+      "slug": "alevel-data-structures-1",
+      "title": "Stacks",
+      "summary": "Last in, first out: push, pop and peek, and what stacks are used for.",
+      "notes": "A **stack** is a **last in, first out (LIFO)** structure: the last item added is the first one taken off, like a pile of plates.\n\nIts operations:\n- **push(item)**: add an item to the top;\n- **pop()**: remove and return the top item;\n- **peek()** (or top): return the top item without removing it;\n- **is_empty()**, and, for a stack with a fixed size, **is_full()**.\n\nPopping an empty stack is a **stack underflow**; pushing onto a full one is a **stack overflow**.\n\n---\n\nIn an exam, a stack is often an **array** with a **top pointer** holding the position of the top item (-1 when empty):\n\n```python\nclass Stack:\n    def __init__(self, size):\n        self.items = [None] * size\n        self.top = -1\n\n    def push(self, item):\n        if self.top == len(self.items) - 1:\n            return False               # full: overflow\n        self.top += 1\n        self.items[self.top] = item\n        return True\n\n    def pop(self):\n        if self.top == -1:\n            return None                # empty: underflow\n        item = self.items[self.top]\n        self.top -= 1\n        return item\n```\n\nStacks are used for undo in editors, the back button in a browser, the call stack, checking brackets match, and evaluating expressions in **reverse Polish notation** (`3 4 +` means 3 + 4).",
+      "worked_example": "stack = []\nfor word in [\"one\", \"two\", \"three\"]:\n    stack.append(word)       # push\nprint(stack.pop())           # pop\nprint(stack[-1])             # peek",
+      "worked_example_note": "A Python list makes a quick stack: append pushes onto the end and pop takes from the end, so the end of the list is the top."
+    },
+    {
+      "slug": "alevel-data-structures-2",
+      "title": "Queues: linear and circular",
+      "summary": "First in, first out, and how a circular queue reuses the space at the front of its array.",
+      "notes": "A **queue** is **first in, first out (FIFO)**: items join at the **rear** and leave from the **front**, like people waiting at a till.\n\nIts operations:\n- **enqueue(item)**: add to the rear;\n- **dequeue()**: remove and return the front item;\n- **is_empty()** and, for a fixed size, **is_full()**.\n\n---\n\n**Linear queue in an array.** Keep a **front** pointer and a **rear** pointer. Enqueue moves the rear pointer forward; dequeue moves the front pointer forward. The problem: once the rear reaches the end of the array, nothing more can join, even if items have left from the front and there is free space there.\n\n**Circular queue.** When a pointer reaches the end of the array it wraps round to position 0, so the freed space is reused. The wrap-around uses `%`:\n\n```python\nrear = (rear + 1) % capacity\nfront = (front + 1) % capacity\n```\n\nKeep a count of the items too, so you can tell full (count == capacity) from empty (count == 0). Circular queues are used for keyboard buffers, streaming audio and anywhere a fixed block of memory is reused over and over.",
+      "worked_example": "capacity = 3\nitems = [None] * capacity\nfront, rear, count = 0, -1, 0\n\nfor name in [\"Ann\", \"Bob\"]:\n    rear = (rear + 1) % capacity\n    items[rear] = name\n    count += 1\n\nprint(items[front])               # dequeue Ann\nfront = (front + 1) % capacity\ncount -= 1\n\nrear = (rear + 1) % capacity      # wraps round to 2, then 0\nitems[rear] = \"Cy\"\ncount += 1\nprint(front, rear, count)",
+      "worked_example_note": "After Ann leaves, the front pointer moves on to 1. New items keep moving the rear pointer forward, and % sends it back to 0 at the end of the array."
+    },
+    {
+      "slug": "alevel-data-structures-3",
+      "title": "Priority queues",
+      "summary": "Queues where the most urgent item is served first, whenever it arrived.",
+      "notes": "In a **priority queue** each item has a **priority**, and the item with the highest priority leaves first. Items with the **same** priority leave in the order they joined, like a normal queue.\n\nExamples: a hospital A&E (the most urgent patient is seen first), a printer that prints short jobs first, an operating system choosing which process to run next.\n\nOne simple way to build one is to keep the list **in priority order** all the time. Enqueue finds the right place and inserts there; dequeue just takes the front:\n\n```python\ndef enqueue(queue, item, priority):\n    i = 0\n    # walk past everything with priority >= this one,\n    # so equal priorities stay first-come, first-served\n    while i < len(queue) and queue[i][1] >= priority:\n        i += 1\n    queue.insert(i, (item, priority))\n```\n\n---\n\nAdding an item this way takes longer as the queue grows (it may look at every item), but removing is instant. Python's `heapq` module stores a priority queue as a **heap**, which makes both adding and removing fast. It always gives back the *smallest* item first, so it suits \"lowest number is most urgent\" priorities.",
+      "worked_example": "queue = []\n\ndef enqueue(item, priority):\n    i = 0\n    while i < len(queue) and queue[i][1] >= priority:\n        i += 1\n    queue.insert(i, (item, priority))\n\nenqueue(\"Sprained wrist\", 2)\nenqueue(\"Broken leg\", 4)\nenqueue(\"Cut finger\", 2)\nfor patient, priority in queue:\n    print(priority, patient)",
+      "worked_example_note": "Broken leg has the highest priority so it goes to the front. The two priority-2 patients stay in the order they arrived."
+    },
+    {
+      "slug": "alevel-data-structures-4",
+      "title": "Linked lists",
+      "summary": "Nodes joined by pointers: traversing, adding and removing without moving everything else.",
+      "notes": "A **linked list** stores items in **nodes**. Each node holds its data and a **pointer** to the next node. A **start** (or head) pointer points at the first node, and the last node's pointer is null (`None`).\n\n```\nstart -> [ \"Ann\" | -]-> [ \"Bob\" | -]-> [ \"Cy\" | None ]\n```\n\n```python\nclass Node:\n    def __init__(self, data):\n        self.data = data\n        self.next = None\n```\n\n**Traversing**: start at `start` and follow `next` until you reach `None`:\n\n```python\ncurrent = start\nwhile current is not None:\n    print(current.data)\n    current = current.next\n```\n\n---\n\nThe advantage over an array is that adding or removing an item only changes a couple of pointers; nothing has to be shuffled along. To insert `new` after node `a`: `new.next = a.next`, then `a.next = new`. To delete the node after `a`: `a.next = a.next.next`.\n\nThe disadvantage: you can't jump straight to the 100th item, so finding one means traversing from the start. A linked list is a **dynamic** structure (it grows and shrinks as needed); a plain array is **static** (fixed size). In exams, a linked list is sometimes stored in arrays, with a second array holding each item's next pointer and a **free pointer** to the next unused slot.",
+      "worked_example": "class Node:\n    def __init__(self, data):\n        self.data = data\n        self.next = None\n\nstart = Node(\"Ann\")\nstart.next = Node(\"Cy\")\nnew = Node(\"Bob\")\nnew.next = start.next      # Bob points at Cy\nstart.next = new           # Ann points at Bob\n\ncurrent = start\nwhile current is not None:\n    print(current.data)\n    current = current.next",
+      "worked_example_note": "Bob is inserted between Ann and Cy by changing two pointers. The order of those two lines matters: set new.next first, or the link to Cy would be lost."
+    },
+    {
+      "slug": "alevel-data-structures-5",
+      "title": "Hash tables and dictionaries",
+      "summary": "Storing items where a hash function says they go, and what to do when two want the same place.",
+      "notes": "A **hash table** stores items in an array, using a **hash function** to work out which position (bucket) each key goes in. To find a key later, you hash it again and look straight there, so a lookup takes about the same time however big the table is.\n\nA simple hash function for text adds up the character codes and takes the remainder when divided by the table size:\n\n```python\ndef hash_key(key, size):\n    return sum(ord(ch) for ch in key) % size\n```\n\n---\n\nA **collision** happens when two keys hash to the same position. Two ways to handle it:\n\n- **Linear probing** (open addressing): if the position is taken, try the next one, then the next, wrapping round to 0 at the end, until a free one is found. Searching works the same way: start at the hashed position and step along until you find the key or an empty slot.\n- **Chaining**: each position holds a list, and every key that hashes there goes in that list.\n\nThe **load factor** is how full the table is (items ÷ size). As it rises, collisions get more common and lookups slow down, so the table is **rehashed**: a bigger table is made and every item is inserted into it again.\n\nA **dictionary** is a collection of key–value pairs, where each key is unique. Python's `dict` is built on a hash table, which is why looking up `scores[\"Ada\"]` is fast.",
+      "worked_example": "def hash_key(key, size):\n    return sum(ord(ch) for ch in key) % size\n\nfor name in [\"cat\", \"act\", \"dog\"]:\n    print(name, hash_key(name, 7))",
+      "worked_example_note": "cat and act contain the same letters, so their codes add up to the same total and they collide at the same position. dog lands somewhere else."
+    }
+  ],
+  "quiz": [
+    {
+      "lessonSlug": "alevel-data-structures-1",
+      "question": "Push A, push B, push C, pop, push D, pop. Which item is now on top?",
+      "options": [
+        "B",
+        "A",
+        "C",
+        "D"
+      ],
+      "answer": "B",
+      "explanation": "After the pushes the stack is A B C; pop removes C, push D gives A B D, pop removes D, leaving B on top."
+    },
+    {
+      "lessonSlug": "alevel-data-structures-1",
+      "question": "What is a stack underflow?",
+      "options": [
+        "Trying to pop from an empty stack",
+        "Trying to push onto a full stack",
+        "A stack with one item",
+        "Peeking at the top item"
+      ],
+      "answer": "Trying to pop from an empty stack",
+      "explanation": "Underflow is removing from an empty stack; overflow is adding to a full one."
+    },
+    {
+      "lessonSlug": "alevel-data-structures-1",
+      "question": "In an array-based stack, what does the top pointer hold when the stack is empty?",
+      "options": [
+        "-1",
+        "0",
+        "The array's length",
+        "None of the above"
+      ],
+      "answer": "-1",
+      "explanation": "The top pointer is the position of the top item, so with no items it is -1. The first push moves it to 0."
+    },
+    {
+      "lessonSlug": "alevel-data-structures-2",
+      "question": "Enqueue A, enqueue B, enqueue C, dequeue, enqueue D. Which item is at the front?",
+      "options": [
+        "B",
+        "A",
+        "C",
+        "D"
+      ],
+      "answer": "B",
+      "explanation": "A joined first and leaves first; B is next in line."
+    },
+    {
+      "lessonSlug": "alevel-data-structures-2",
+      "question": "What problem does a circular queue solve?",
+      "options": [
+        "A linear queue can't reuse space freed at the front of its array",
+        "A linear queue can't hold strings",
+        "A linear queue is last in, first out",
+        "A linear queue can't be empty"
+      ],
+      "answer": "A linear queue can't reuse space freed at the front of its array",
+      "explanation": "In a circular queue the pointers wrap round, so freed spaces at the start of the array are used again."
+    },
+    {
+      "lessonSlug": "alevel-data-structures-2",
+      "question": "A circular queue has capacity 5 and the rear pointer is 4. Where does the next item go?",
+      "options": [
+        "Position 0",
+        "Position 5",
+        "Position 4",
+        "Nowhere: it's full"
+      ],
+      "answer": "Position 0",
+      "explanation": "(4 + 1) % 5 = 0, so the rear wraps round to the start (as long as the queue isn't full)."
+    },
+    {
+      "lessonSlug": "alevel-data-structures-3",
+      "question": "In a priority queue, which item is dequeued first?",
+      "options": [
+        "The one with the highest priority",
+        "The one that joined first",
+        "The one that joined last",
+        "A random one"
+      ],
+      "answer": "The one with the highest priority",
+      "explanation": "Priority decides first; arrival order only matters between items with the same priority."
+    },
+    {
+      "lessonSlug": "alevel-data-structures-3",
+      "question": "Two items have the same priority. Which leaves first?",
+      "options": [
+        "The one that joined first",
+        "The one that joined last",
+        "Either",
+        "Neither"
+      ],
+      "answer": "The one that joined first",
+      "explanation": "Equal priorities behave like a normal queue: first in, first out."
+    },
+    {
+      "lessonSlug": "alevel-data-structures-3",
+      "question": "Python's heapq always gives back which item first?",
+      "options": [
+        "The smallest",
+        "The largest",
+        "The newest",
+        "The oldest"
+      ],
+      "answer": "The smallest",
+      "explanation": "heapq is a min-heap, so the smallest value comes out first."
+    },
+    {
+      "lessonSlug": "alevel-data-structures-4",
+      "question": "What does each node in a linked list hold?",
+      "options": [
+        "Its data and a pointer to the next node",
+        "Only its data",
+        "Its position number",
+        "A copy of the whole list"
+      ],
+      "answer": "Its data and a pointer to the next node",
+      "explanation": "The pointers chain the nodes together; the last one points to None."
+    },
+    {
+      "lessonSlug": "alevel-data-structures-4",
+      "question": "Why is inserting into a linked list quicker than inserting into the middle of an array?",
+      "options": [
+        "Only pointers change; no items have to be moved along",
+        "Linked lists are always sorted",
+        "Arrays can't have items inserted at all",
+        "Linked lists use less memory per item"
+      ],
+      "answer": "Only pointers change; no items have to be moved along",
+      "explanation": "An array has to shift every later item along to make room. A linked list just relinks two pointers."
+    },
+    {
+      "lessonSlug": "alevel-data-structures-4",
+      "question": "How do you reach the fifth item of a linked list?",
+      "options": [
+        "Follow the pointers from the start through the first four nodes",
+        "Jump straight to position 4",
+        "Follow the pointers backwards from the end",
+        "You can't"
+      ],
+      "answer": "Follow the pointers from the start through the first four nodes",
+      "explanation": "There's no direct access by position: you have to traverse from the start pointer."
+    },
+    {
+      "lessonSlug": "alevel-data-structures-5",
+      "question": "What is a collision in a hash table?",
+      "options": [
+        "Two keys hashing to the same position",
+        "A key that isn't in the table",
+        "A table that is completely full",
+        "Two identical values"
+      ],
+      "answer": "Two keys hashing to the same position",
+      "explanation": "Collisions are dealt with by linear probing or chaining."
+    },
+    {
+      "lessonSlug": "alevel-data-structures-5",
+      "question": "With linear probing, a key hashes to position 3 but 3 is taken. Where does it try next?",
+      "options": [
+        "Position 4",
+        "Position 0",
+        "Position 2",
+        "A random position"
+      ],
+      "answer": "Position 4",
+      "explanation": "Linear probing steps along one position at a time, wrapping round to 0 at the end."
+    },
+    {
+      "lessonSlug": "alevel-data-structures-5",
+      "question": "Why is a hash table rehashed into a bigger table?",
+      "options": [
+        "A high load factor makes collisions common, which slows lookups",
+        "To sort the keys",
+        "Because keys can only be used once",
+        "To delete old items"
+      ],
+      "answer": "A high load factor makes collisions common, which slows lookups",
+      "explanation": "A bigger table lowers the load factor, so fewer keys collide."
+    }
+  ],
+  "tasks": [
+    {
+      "slug": "alevel-data-structures-t1-01",
+      "lesson": 1,
+      "tier": 1,
+      "difficulty": 2,
+      "xp": 20,
+      "title": "Push, pop and peek",
+      "brief": "Write a class `Stack` that stores items in a list, with `push(item)`, `pop()`, `peek()` and `is_empty()`. `pop` and `peek` should return `None` if the stack is empty.\n\nRead commands until `end`:\n- `push <word>` pushes the word;\n- `pop` prints the item it removes, or `Empty`;\n- `peek` prints the top item, or `Empty`.",
+      "starter": "class Stack:\n    pass\n",
+      "hints": [
+        "Use self.items = [] in the constructor; the end of the list is the top.",
+        "pop and peek should check is_empty() first and return None if so."
+      ],
+      "tests": [
+        {
+          "stdin": "push a\npush b\npeek\npop\npop\npop\nend",
+          "expect": "b\nb\na\nEmpty"
+        },
+        {
+          "stdin": "pop\nend",
+          "expect": "Empty"
+        },
+        {
+          "stdin": "push x\npush y\npush z\npop\npeek\nend",
+          "expect": "z\ny"
+        }
+      ]
+    },
+    {
+      "slug": "alevel-data-structures-t1-02",
+      "lesson": 1,
+      "tier": 2,
+      "difficulty": 2,
+      "xp": 20,
+      "title": "Reverse with a stack",
+      "brief": "Input a line of words separated by spaces. Push each word onto a stack, then pop them all off, so they come out in reverse order. Print the words separated by spaces.\n\nUse a list as the stack, with `append` and `pop` only (no slicing or `reverse`). For example, `to be or not` prints `not or be to`.",
+      "starter": "",
+      "hints": [
+        "Push every word first, then pop in a while loop until the stack is empty.",
+        "Collect the popped words in a second list and join it at the end."
+      ],
+      "tests": [
+        {
+          "stdin": "to be or not",
+          "expect": "not or be to"
+        },
+        {
+          "stdin": "single",
+          "expect": "single"
+        },
+        {
+          "stdin": "a b c d e",
+          "expect": "e d c b a"
+        }
+      ]
+    },
+    {
+      "slug": "alevel-data-structures-t1-03",
+      "lesson": 1,
+      "tier": 3,
+      "difficulty": 3,
+      "xp": 30,
+      "title": "Do the brackets match?",
+      "brief": "A compiler uses a stack to check that brackets match. Input a line containing any characters, including the brackets `( ) [ ] { }`. Print `Balanced` if every bracket is closed by the matching kind in the right order, otherwise `Not balanced`.\n\nThe method: go through the characters. Push each opening bracket. For each closing bracket, the stack must not be empty and the top must be the matching opening bracket; pop it. At the end the stack must be empty.\n\nFor example, `(a[1] + {b})` is balanced, and `(]` is not.",
+      "starter": "",
+      "hints": [
+        "A dictionary helps: pairs = {\")\": \"(\", \"]\": \"[\", \"}\": \"{\"}.",
+        "Stop as soon as a closing bracket doesn't match: that's already Not balanced."
+      ],
+      "tests": [
+        {
+          "stdin": "(a[1] + {b})",
+          "expect": "Balanced"
+        },
+        {
+          "stdin": "(]",
+          "expect": "Not balanced"
+        },
+        {
+          "stdin": "((x)",
+          "expect": "Not balanced"
+        },
+        {
+          "stdin": "no brackets",
+          "expect": "Balanced"
+        },
+        {
+          "stdin": "{[()()]}",
+          "expect": "Balanced"
+        },
+        {
+          "stdin": "())(",
+          "expect": "Not balanced"
+        }
+      ]
+    },
+    {
+      "slug": "alevel-data-structures-t1-04",
+      "lesson": 1,
+      "tier": 3,
+      "difficulty": 4,
+      "xp": 35,
+      "title": "An array stack with a top pointer",
+      "brief": "Write the exam-style stack: a class `Stack` whose constructor takes a size, makes a list of that many `None`s, and sets a `top` pointer to -1. Write `push(item)` and `pop()` that move the pointer, without using `append` or the list's own `pop`:\n- push onto a full stack prints `Stack full` and changes nothing;\n- pop from an empty stack prints `Stack empty`; otherwise it prints the popped item.\n\nInput the size, then commands until `end` (`push <word>` or `pop`). Finally print `Top: ` followed by the top pointer.",
+      "starter": "class Stack:\n    def __init__(self, size):\n        self.items = [None] * size\n        self.top = -1\n",
+      "hints": [
+        "The stack is full when self.top == len(self.items) - 1.",
+        "push: self.top += 1 then self.items[self.top] = item. pop: read self.items[self.top], then self.top -= 1."
+      ],
+      "tests": [
+        {
+          "stdin": "2\npush a\npush b\npush c\npop\nend",
+          "expect": "Stack full\nb\nTop: 0"
+        },
+        {
+          "stdin": "3\npop\nend",
+          "expect": "Stack empty\nTop: -1"
+        },
+        {
+          "stdin": "1\npush x\npop\npush y\nend",
+          "expect": "x\nTop: 0"
+        }
+      ]
+    },
+    {
+      "slug": "alevel-data-structures-t1-stretch",
+      "lesson": 1,
+      "tier": 4,
+      "difficulty": 5,
+      "xp": 45,
+      "stretch": true,
+      "title": "Reverse Polish calculator",
+      "brief": "In **reverse Polish notation** (RPN) the operator comes after its two numbers: `3 4 +` means 3 + 4, and `3 4 + 2 *` means (3 + 4) × 2. No brackets are ever needed.\n\nIt is evaluated with a stack. Go through the tokens left to right:\n- a number: push it;\n- an operator (`+`, `-`, `*` or `/`): pop the top item (the **second** number), pop again (the **first** number), work out first ⟨operator⟩ second, and push the result. `/` divides and rounds down (use `//`).\n\nAt the end the answer is the only item left. Input an RPN expression with tokens separated by spaces (all numbers are whole) and print the answer.",
+      "starter": "",
+      "hints": [
+        "Order matters for - and /: the first item popped is the right-hand number.",
+        "Check whether a token is an operator with if token in \"+-*/\", and otherwise push int(token)."
+      ],
+      "tests": [
+        {
+          "stdin": "3 4 + 2 *",
+          "expect": "14"
+        },
+        {
+          "stdin": "10 2 -",
+          "expect": "8"
+        },
+        {
+          "stdin": "5 1 2 + 4 * + 3 -",
+          "expect": "14"
+        },
+        {
+          "stdin": "20 6 /",
+          "expect": "3"
+        },
+        {
+          "stdin": "7",
+          "expect": "7"
+        }
+      ]
+    },
+    {
+      "slug": "alevel-data-structures-t2-01",
+      "lesson": 2,
+      "tier": 1,
+      "difficulty": 2,
+      "xp": 20,
+      "title": "The queue at the till",
+      "brief": "Write a class `Queue` that stores items in a list, with `enqueue(item)`, `dequeue()` (returning `None` if empty) and `is_empty()`.\n\nRead commands until `end`:\n- `join <name>` adds the name to the queue;\n- `serve` prints the name served, or `Nobody waiting`.\n\nFinally print `Still waiting: ` followed by the names left, front first, separated by `, `, or `Still waiting: nobody`.",
+      "starter": "class Queue:\n    pass\n",
+      "hints": [
+        "enqueue appends to the end; dequeue removes from the front with self.items.pop(0).",
+        "Check is_empty() before dequeuing."
+      ],
+      "tests": [
+        {
+          "stdin": "join Ann\njoin Bob\nserve\njoin Cy\nend",
+          "expect": "Ann\nStill waiting: Bob, Cy"
+        },
+        {
+          "stdin": "serve\nend",
+          "expect": "Nobody waiting\nStill waiting: nobody"
+        },
+        {
+          "stdin": "join A\nserve\nserve\nend",
+          "expect": "A\nNobody waiting\nStill waiting: nobody"
+        }
+      ]
+    },
+    {
+      "slug": "alevel-data-structures-t2-02",
+      "lesson": 2,
+      "tier": 3,
+      "difficulty": 4,
+      "xp": 35,
+      "title": "A circular queue",
+      "brief": "Write a class `CircularQueue` whose constructor takes a capacity and sets up a list of that many `None`s, `front = 0`, `rear = -1` and `count = 0`.\n\n- `enqueue(item)`: if `count` equals the capacity, print `Queue full`. Otherwise move `rear` on by one, wrapping with `%`, store the item there, and add 1 to `count`.\n- `dequeue()`: if `count` is 0, print `Queue empty`. Otherwise print the item at `front`, move `front` on by one (wrapping), and take 1 from `count`.\n\nInput the capacity, then commands until `end` (`add <word>` or `remove`). Finally print `Front: f Rear: r Count: c` with the three values.",
+      "starter": "",
+      "hints": [
+        "self.rear = (self.rear + 1) % len(self.items)",
+        "Use count, not the pointers, to decide whether the queue is full or empty."
+      ],
+      "tests": [
+        {
+          "stdin": "3\nadd a\nadd b\nadd c\nadd d\nremove\nadd d\nend",
+          "expect": "Queue full\na\nFront: 1 Rear: 0 Count: 3"
+        },
+        {
+          "stdin": "2\nremove\nend",
+          "expect": "Queue empty\nFront: 0 Rear: -1 Count: 0"
+        },
+        {
+          "stdin": "2\nadd x\nremove\nadd y\nremove\nadd z\nend",
+          "expect": "x\ny\nFront: 0 Rear: 0 Count: 1"
+        }
+      ]
+    },
+    {
+      "slug": "alevel-data-structures-t2-03",
+      "lesson": 2,
+      "tier": 3,
+      "difficulty": 4,
+      "xp": 35,
+      "title": "Pass the parcel",
+      "brief": "Children sit in a circle and pass a parcel. A queue models the circle: passing the parcel means taking the child at the front and putting them at the back.\n\nInput a line of names separated by spaces, then a whole number `k`. Repeat until one child is left:\n- pass the parcel `k` times (each pass moves the front child to the back);\n- the child now at the front is out: remove them and print their name.\n\nThen print `Winner: ` and the last child's name.",
+      "starter": "",
+      "hints": [
+        "One pass: queue.append(queue.pop(0)).",
+        "Loop while len(queue) > 1: do k passes, then pop(0) and print it."
+      ],
+      "tests": [
+        {
+          "stdin": "Ann Bob Cy Di\n1",
+          "expect": "Bob\nDi\nCy\nWinner: Ann"
+        },
+        {
+          "stdin": "Ann Bob Cy\n0",
+          "expect": "Ann\nBob\nWinner: Cy"
+        },
+        {
+          "stdin": "A B C D E\n2",
+          "expect": "C\nA\nE\nB\nWinner: D"
+        },
+        {
+          "stdin": "Solo\n3",
+          "expect": "Winner: Solo"
+        }
+      ]
+    },
+    {
+      "slug": "alevel-data-structures-t2-04",
+      "lesson": 2,
+      "tier": 4,
+      "difficulty": 4,
+      "xp": 40,
+      "title": "A queue made from two stacks",
+      "brief": "A queue can be built from two stacks, `inbox` and `outbox`:\n- **enqueue**: push onto `inbox`;\n- **dequeue**: if `outbox` is empty, pop everything off `inbox` and push it onto `outbox` (which reverses the order). Then pop from `outbox`.\n\nWrite a class `TwoStackQueue` that works this way, using lists with only `append` and `pop()` (no `pop(0)`). Read commands until `end`: `add <word>` or `remove`. For `remove`, print the item, or `Empty`.",
+      "starter": "",
+      "hints": [
+        "Only move items from inbox to outbox when outbox is empty, otherwise the order breaks.",
+        "while self.inbox: self.outbox.append(self.inbox.pop())"
+      ],
+      "tests": [
+        {
+          "stdin": "add a\nadd b\nremove\nadd c\nremove\nremove\nremove\nend",
+          "expect": "a\nb\nc\nEmpty"
+        },
+        {
+          "stdin": "remove\nend",
+          "expect": "Empty"
+        },
+        {
+          "stdin": "add x\nadd y\nadd z\nremove\nend",
+          "expect": "x"
+        }
+      ]
+    },
+    {
+      "slug": "alevel-data-structures-t2-stretch",
+      "lesson": 2,
+      "tier": 4,
+      "difficulty": 5,
+      "xp": 45,
+      "stretch": true,
+      "title": "Rolling average",
+      "brief": "A sensor keeps only its last 3 readings in a circular buffer: a list of size 3 and a pointer to the next slot to write. Each new reading overwrites the oldest one once the buffer is full.\n\nInput a line of whole-number readings separated by spaces. After each reading is stored, print the average of the readings currently held (1, 2 or 3 of them), rounded to 1 decimal place.\n\nFor example, `10 20 30 40` prints `10.0`, `15.0`, `20.0`, `30.0` (the last one is the average of 20, 30 and 40).",
+      "starter": "",
+      "hints": [
+        "Write each reading at buffer[pointer], then pointer = (pointer + 1) % 3.",
+        "Keep a count of how many readings are held, up to 3, so the first averages only use the slots filled so far."
+      ],
+      "tests": [
+        {
+          "stdin": "10 20 30 40",
+          "expect": "10.0\n15.0\n20.0\n30.0"
+        },
+        {
+          "stdin": "5",
+          "expect": "5.0"
+        },
+        {
+          "stdin": "1 2 3 4 5 6",
+          "expect": "1.0\n1.5\n2.0\n3.0\n4.0\n5.0"
+        },
+        {
+          "stdin": "9 9 9 0",
+          "expect": "9.0\n9.0\n9.0\n6.0"
+        }
+      ]
+    },
+    {
+      "slug": "alevel-data-structures-t3-01",
+      "lesson": 3,
+      "tier": 2,
+      "difficulty": 3,
+      "xp": 25,
+      "title": "Accident and emergency",
+      "brief": "Write a class `PriorityQueue` that keeps a list of `(name, priority)` pairs in order, highest priority first, with equal priorities in arrival order. It has `enqueue(name, priority)` and `dequeue()`, which returns the front name or `None` if empty.\n\nRead commands until `end`:\n- `arrive <name> <priority>` (priority is a whole number; bigger is more urgent);\n- `see` prints the name of the next patient, or `Nobody waiting`.",
+      "starter": "class PriorityQueue:\n    pass\n",
+      "hints": [
+        "In enqueue, walk forward past every item whose priority is >= the new one, then insert.",
+        "dequeue returns self.items.pop(0)[0], the front item's name."
+      ],
+      "tests": [
+        {
+          "stdin": "arrive Ann 2\narrive Bob 5\narrive Cy 2\nsee\nsee\nsee\nsee\nend",
+          "expect": "Bob\nAnn\nCy\nNobody waiting"
+        },
+        {
+          "stdin": "see\nend",
+          "expect": "Nobody waiting"
+        },
+        {
+          "stdin": "arrive A 1\narrive B 1\narrive C 3\nsee\narrive D 3\nsee\nsee\nend",
+          "expect": "C\nD\nA"
+        }
+      ]
+    },
+    {
+      "slug": "alevel-data-structures-t3-02",
+      "lesson": 3,
+      "tier": 2,
+      "difficulty": 3,
+      "xp": 25,
+      "title": "Print the shortest jobs first",
+      "brief": "A printer serves the job with the **fewest pages** first; jobs with the same number of pages print in the order they arrived.\n\nInput a whole number `n`, then `n` lines, each a job name and a number of pages. Using a priority queue (you can use the class from the last task with a small change, or `heapq`), print the jobs in the order they will be printed, one per line, as `<name> (<pages>)`.",
+      "starter": "",
+      "hints": [
+        "Here a smaller number is more urgent, so walk past every item whose pages is <= the new one.",
+        "With heapq, push (pages, arrival_number, name) so ties are broken by arrival order."
+      ],
+      "tests": [
+        {
+          "stdin": "3\nessay 12\nmemo 1\nposter 1",
+          "expect": "memo (1)\nposter (1)\nessay (12)"
+        },
+        {
+          "stdin": "1\nreport 40",
+          "expect": "report (40)"
+        },
+        {
+          "stdin": "4\na 5\nb 3\nc 5\nd 4",
+          "expect": "b (3)\nd (4)\na (5)\nc (5)"
+        }
+      ]
+    },
+    {
+      "slug": "alevel-data-structures-t3-03",
+      "lesson": 3,
+      "tier": 3,
+      "difficulty": 4,
+      "xp": 35,
+      "title": "Using heapq",
+      "brief": "Python's `heapq` module keeps a list as a heap, so the smallest item can always be taken off quickly with `heapq.heappop`.\n\nInput a line of whole numbers separated by spaces, then a whole number `k`. Push every number onto a heap with `heapq.heappush`, then pop the `k` smallest and print them separated by spaces (smallest first). If there are fewer than `k` numbers, print them all.",
+      "starter": "import heapq\n",
+      "hints": [
+        "Start with heap = [] and call heapq.heappush(heap, number) for each number.",
+        "Pop min(k, len(heap)) times."
+      ],
+      "tests": [
+        {
+          "stdin": "9 4 7 1 8\n3",
+          "expect": "1 4 7"
+        },
+        {
+          "stdin": "5 5 2\n1",
+          "expect": "2"
+        },
+        {
+          "stdin": "3 1\n5",
+          "expect": "1 3"
+        },
+        {
+          "stdin": "-1 -7 0 2\n2",
+          "expect": "-7 -1"
+        }
+      ]
+    },
+    {
+      "slug": "alevel-data-structures-t3-04",
+      "lesson": 3,
+      "tier": 3,
+      "difficulty": 4,
+      "xp": 35,
+      "title": "Peek, size and empty",
+      "brief": "Extend a priority queue with the full set of operations. Write a class with:\n- `enqueue(item, priority)` (bigger priority is more urgent; ties first-come, first-served);\n- `dequeue()` returning the front item, or `None`;\n- `peek()` returning the front item without removing it, or `None`;\n- `size()` and `is_empty()`.\n\nRead commands until `end`: `add <item> <priority>`, `take`, `peek`, `size`. `take` and `peek` print the item or `Empty`; `size` prints the number of items.",
+      "starter": "",
+      "hints": [
+        "peek looks at self.items[0] but doesn't pop it.",
+        "size returns len(self.items)."
+      ],
+      "tests": [
+        {
+          "stdin": "add a 1\nadd b 9\npeek\nsize\ntake\ntake\ntake\nsize\nend",
+          "expect": "b\n2\nb\na\nEmpty\n0"
+        },
+        {
+          "stdin": "peek\nsize\nend",
+          "expect": "Empty\n0"
+        },
+        {
+          "stdin": "add x 2\nadd y 2\ntake\npeek\nend",
+          "expect": "x\ny"
+        }
+      ]
+    },
+    {
+      "slug": "alevel-data-structures-t3-stretch",
+      "lesson": 3,
+      "tier": 4,
+      "difficulty": 5,
+      "xp": 45,
+      "stretch": true,
+      "title": "Minute by minute",
+      "brief": "A help desk deals with one call per minute. Each call has a priority (bigger is more urgent) and the minute it arrives.\n\nInput a whole number `n`, then `n` lines, each `<name> <arrival minute> <priority>`, in order of arrival. The desk starts at minute 0. Each minute, of the calls that have **arrived by then** and are still waiting, it answers the one with the highest priority (ties: earliest arrival). If nobody is waiting that minute, nothing happens and the clock moves on.\n\nFor each call answered, print `Minute <m>: <name>`.",
+      "starter": "",
+      "hints": [
+        "Loop minute by minute until every call is answered. Each minute, move any newly arrived calls into a priority queue.",
+        "Keep the priority queue ordered by priority, highest first, with ties in arrival order."
+      ],
+      "tests": [
+        {
+          "stdin": "3\nAnn 0 1\nBob 0 3\nCy 1 5",
+          "expect": "Minute 0: Bob\nMinute 1: Cy\nMinute 2: Ann"
+        },
+        {
+          "stdin": "2\nLate 3 1\nLater 4 9",
+          "expect": "Minute 3: Late\nMinute 4: Later"
+        },
+        {
+          "stdin": "4\nA 0 2\nB 0 2\nC 0 2\nD 2 9",
+          "expect": "Minute 0: A\nMinute 1: B\nMinute 2: D\nMinute 3: C"
+        }
+      ]
+    },
+    {
+      "slug": "alevel-data-structures-t4-01",
+      "lesson": 4,
+      "tier": 1,
+      "difficulty": 2,
+      "xp": 20,
+      "title": "Add to the front",
+      "brief": "Write a class `Node` with `data` and `next` (starting as `None`).\n\nInput a line of words separated by spaces. Starting from an empty list (`start = None`), add each word to the **front** of the linked list: make a new node, point it at the current start, and make it the new start.\n\nThen traverse the list from `start` and print the words joined by ` -> `. For example, `a b c` prints `c -> b -> a`.",
+      "starter": "class Node:\n    def __init__(self, data):\n        self.data = data\n        self.next = None\n\nstart = None\n",
+      "hints": [
+        "node = Node(word); node.next = start; start = node",
+        "Collect the words while traversing, then print \" -> \".join(words)."
+      ],
+      "tests": [
+        {
+          "stdin": "a b c",
+          "expect": "c -> b -> a"
+        },
+        {
+          "stdin": "only",
+          "expect": "only"
+        },
+        {
+          "stdin": "1 2 3 4 5",
+          "expect": "5 -> 4 -> 3 -> 2 -> 1"
+        }
+      ]
+    },
+    {
+      "slug": "alevel-data-structures-t4-02",
+      "lesson": 4,
+      "tier": 2,
+      "difficulty": 3,
+      "xp": 25,
+      "title": "Append and count",
+      "brief": "Write a class `LinkedList` with a `start` pointer, and these methods:\n- `append(data)`: adds a new node at the **end** (traverse to the last node, then link the new node after it; if the list is empty, the new node becomes `start`);\n- `length()`: counts the nodes by traversing;\n- `show()`: returns the items joined by ` -> `, or `(empty)`.\n\nInput a line of words separated by spaces (it may be empty), append each, then print `show()` and `Length: ` with the length on the next line. Don't use a Python list to store the items.",
+      "starter": "",
+      "hints": [
+        "To find the end: current = self.start, then while current.next is not None: current = current.next.",
+        "length counts how many times the traversal loop runs."
+      ],
+      "tests": [
+        {
+          "stdin": "a b c",
+          "expect": "a -> b -> c\nLength: 3"
+        },
+        {
+          "expect": "(empty)\nLength: 0"
+        },
+        {
+          "stdin": "x",
+          "expect": "x\nLength: 1"
+        }
+      ]
+    },
+    {
+      "slug": "alevel-data-structures-t4-03",
+      "lesson": 4,
+      "tier": 3,
+      "difficulty": 4,
+      "xp": 35,
+      "title": "Keep it in order",
+      "brief": "Write a function `insert_in_order(start, value)` that puts `value` into a linked list of numbers that is already in ascending order, keeping it in order, and returns the (possibly new) start node.\n\n- If the list is empty, or `value` is smaller than the first item, the new node becomes the start.\n- Otherwise traverse until the next node is `None` or bigger than `value`, and insert the new node there.\n\nInput a line of whole numbers in any order. Insert each one, then print the list joined by ` -> `.",
+      "starter": "class Node:\n    def __init__(self, data):\n        self.data = data\n        self.next = None\n",
+      "hints": [
+        "Insert after current: node.next = current.next, then current.next = node.",
+        "Equal values: put the new one after the existing one by stopping only when the next value is strictly bigger."
+      ],
+      "tests": [
+        {
+          "stdin": "5 2 8 1",
+          "expect": "1 -> 2 -> 5 -> 8"
+        },
+        {
+          "stdin": "3",
+          "expect": "3"
+        },
+        {
+          "stdin": "4 4 1 9 0",
+          "expect": "0 -> 1 -> 4 -> 4 -> 9"
+        },
+        {
+          "stdin": "10 9 8 7",
+          "expect": "7 -> 8 -> 9 -> 10"
+        }
+      ]
+    },
+    {
+      "slug": "alevel-data-structures-t4-04",
+      "lesson": 4,
+      "tier": 3,
+      "difficulty": 4,
+      "xp": 35,
+      "title": "Delete a node",
+      "brief": "Build a linked list from a line of words (in the same order). Then read words to delete, one per line, until `end`.\n\nTo delete a word, find the **first** node holding it and unlink it: if it's the start node, move `start` on to the next node; otherwise make the node before it point past it. If the word isn't there, print `<word> not found`.\n\nAfter `end`, print the list joined by ` -> `, or `(empty)`.",
+      "starter": "",
+      "hints": [
+        "Keep two pointers while traversing: previous and current.",
+        "Unlink with previous.next = current.next."
+      ],
+      "tests": [
+        {
+          "stdin": "a b c d\nb\nz\na\nend",
+          "expect": "z not found\nc -> d"
+        },
+        {
+          "stdin": "x\nx\nend",
+          "expect": "(empty)"
+        },
+        {
+          "stdin": "p q p\np\nend",
+          "expect": "q -> p"
+        }
+      ]
+    },
+    {
+      "slug": "alevel-data-structures-t4-stretch",
+      "lesson": 4,
+      "tier": 4,
+      "difficulty": 5,
+      "xp": 45,
+      "stretch": true,
+      "title": "Reverse the pointers",
+      "brief": "Build a linked list from a line of words, in order. Then reverse it **in place**: don't make any new nodes and don't use a Python list. Walk along the list, turning each node's `next` pointer round to point at the node before it.\n\nUse three pointers: `previous` (starts `None`), `current` (starts at `start`) and `following`. At each step: save `following = current.next`, point `current.next` back at `previous`, then move `previous` and `current` one step on. At the end, `previous` is the new start.\n\nPrint the reversed list joined by ` -> `.",
+      "starter": "",
+      "hints": [
+        "Save current.next before you overwrite it, or you lose the rest of the list.",
+        "The loop runs while current is not None."
+      ],
+      "tests": [
+        {
+          "stdin": "a b c d",
+          "expect": "d -> c -> b -> a"
+        },
+        {
+          "stdin": "solo",
+          "expect": "solo"
+        },
+        {
+          "stdin": "1 2",
+          "expect": "2 -> 1"
+        }
+      ]
+    },
+    {
+      "slug": "alevel-data-structures-t5-01",
+      "lesson": 5,
+      "tier": 1,
+      "difficulty": 2,
+      "xp": 20,
+      "title": "A hash function",
+      "brief": "Write a function `hash_key(key, size)` that adds up the character codes of every character in `key` (using `ord`) and returns the total modulo `size`.\n\nInput the table size, then a line of keys separated by spaces. Print each key and its hash value as `<key>: <hash>`, one per line.\n\nFor example, with size 7, `cat` prints `cat: 4`, because the codes of c, a and t are 99 + 97 + 116 = 312, and 312 % 7 = 4.",
+      "starter": "def hash_key(key, size):\n    pass\n",
+      "hints": [
+        "total = 0, then add ord(ch) for each character.",
+        "return total % size"
+      ],
+      "tests": [
+        {
+          "stdin": "7\ncat act dog",
+          "expect": "cat: 4\nact: 4\ndog: 6"
+        },
+        {
+          "stdin": "10\na b",
+          "expect": "a: 7\nb: 8"
+        },
+        {
+          "stdin": "13\nhello world",
+          "expect": "hello: 12\nworld: 6"
+        }
+      ]
+    },
+    {
+      "slug": "alevel-data-structures-t5-02",
+      "lesson": 5,
+      "tier": 3,
+      "difficulty": 3,
+      "xp": 30,
+      "title": "Linear probing",
+      "brief": "Make a hash table: a list of `size` slots, all `None`. Insert keys using the hash function from the last task (sum of character codes, mod size). If a key's slot is taken, step to the next slot, wrapping round to 0 after the last, until you find an empty one. (There will always be enough space.)\n\nInput the size, then a line of keys separated by spaces. Insert them in order, then print every slot on its own line as `<slot>: <key>`, using `-` for an empty slot.",
+      "starter": "",
+      "hints": [
+        "position = hash; while table[position] is not None: position = (position + 1) % size",
+        "Print every slot with for i in range(size)."
+      ],
+      "tests": [
+        {
+          "stdin": "7\ncat act dog",
+          "expect": "0: -\n1: -\n2: -\n3: -\n4: cat\n5: act\n6: dog"
+        },
+        {
+          "stdin": "5\nab ba",
+          "expect": "0: ab\n1: ba\n2: -\n3: -\n4: -"
+        },
+        {
+          "stdin": "4\nz y x w",
+          "expect": "0: x\n1: y\n2: z\n3: w"
+        }
+      ]
+    },
+    {
+      "slug": "alevel-data-structures-t5-03",
+      "lesson": 5,
+      "tier": 3,
+      "difficulty": 3,
+      "xp": 30,
+      "title": "Chaining",
+      "brief": "Make a hash table where every slot holds a list (chaining). Each key is added to the end of the list in the slot it hashes to (sum of character codes, mod size).\n\nInput the size, then a line of keys separated by spaces. Insert them in order, then print every slot as `<slot>: ` followed by its keys separated by `, ` (nothing after the colon for an empty slot).",
+      "starter": "",
+      "hints": [
+        "table = [[] for i in range(size)] makes a separate list for each slot.",
+        "table[hash_key(key, size)].append(key)"
+      ],
+      "tests": [
+        {
+          "stdin": "7\ncat act dog",
+          "expect": "0:\n1:\n2:\n3:\n4: cat, act\n5:\n6: dog"
+        },
+        {
+          "stdin": "3\na b c d",
+          "expect": "0: c\n1: a, d\n2: b"
+        },
+        {
+          "stdin": "5\nhi ih hello",
+          "expect": "0:\n1:\n2: hello\n3:\n4: hi, ih"
+        }
+      ]
+    },
+    {
+      "slug": "alevel-data-structures-t5-04",
+      "lesson": 5,
+      "tier": 4,
+      "difficulty": 4,
+      "xp": 35,
+      "title": "Searching with probes",
+      "brief": "Build a linear-probing hash table as in the earlier task: input the size and a line of keys to insert. Then input one key to search for.\n\nSearch the same way you insert: start at the key's hash position and check each slot in turn, wrapping round. Stop when you find the key, reach an empty slot, or have checked every slot. Count each slot you look at as one probe.\n\nPrint `Found at <slot> after <n> probes`, or `Not found after <n> probes`.",
+      "starter": "",
+      "hints": [
+        "Loop at most size times, adding 1 to probes each time you look at a slot.",
+        "An empty slot (None) means the key can't be further along, so stop there."
+      ],
+      "tests": [
+        {
+          "stdin": "7\ncat act dog\nact",
+          "expect": "Found at 5 after 2 probes"
+        },
+        {
+          "stdin": "7\ncat act dog\ncow",
+          "expect": "Not found after 1 probes"
+        },
+        {
+          "stdin": "3\na b c\nd",
+          "expect": "Not found after 3 probes"
+        },
+        {
+          "stdin": "5\nab ba\nab",
+          "expect": "Found at 0 after 1 probes"
+        }
+      ]
+    },
+    {
+      "slug": "alevel-data-structures-t5-stretch",
+      "lesson": 5,
+      "tier": 4,
+      "difficulty": 5,
+      "xp": 45,
+      "stretch": true,
+      "title": "Rehash when it fills up",
+      "brief": "A hash table starts with 4 slots and uses linear probing (sum of character codes, mod size). Before inserting each key, check the load factor it **would** have after the insert: (items + 1) ÷ size. If that is more than 0.7, first **rehash**: make a new table of double the size and re-insert every existing key into it, in the order they appear in the old table (slot 0 first), then insert the new key. Print `Rehashed to <size>` each time.\n\nInput a line of keys separated by spaces and insert them in order. Finally print each slot as `<slot>: <key>` (`-` for empty).",
+      "starter": "",
+      "hints": [
+        "Keep a count of items. Rehash when (count + 1) / size > 0.7.",
+        "Write an insert(table, key) function so rehashing and normal inserts use the same code."
+      ],
+      "tests": [
+        {
+          "stdin": "a b c d",
+          "expect": "Rehashed to 8\n0: -\n1: a\n2: b\n3: c\n4: d\n5: -\n6: -\n7: -"
+        },
+        {
+          "stdin": "x",
+          "expect": "0: x\n1: -\n2: -\n3: -"
+        },
+        {
+          "stdin": "one two three four five six seven",
+          "expect": "Rehashed to 8\nRehashed to 16\n0: -\n1: seven\n2: one\n3: -\n4: six\n5: -\n6: -\n7: -\n8: three\n9: -\n10: two\n11: five\n12: four\n13: -\n14: -\n15: -"
+        }
+      ]
+    }
+  ],
+  "homeworkTasks": [
+    {
+      "slug": "alevel-data-structures-hw-01",
+      "lesson": 1,
+      "tier": 2,
+      "difficulty": 3,
+      "xp": 25,
+      "title": "Undo",
+      "brief": "A simple editor keeps a list of words typed so far, and a stack so it can undo.\n\nRead commands until `end`:\n- `type <word>` adds the word to the end of the text and pushes it onto the stack;\n- `undo` pops the most recent word off the stack and removes it from the end of the text. If there is nothing to undo, it does nothing.\n\nPrint the final text, words separated by spaces, or `(empty)` if there's nothing left.",
+      "starter": "",
+      "hints": [
+        "The text and the stack can both be lists. Undo pops from both.",
+        "Check the stack isn't empty before undoing."
+      ],
+      "tests": [
+        {
+          "stdin": "type hello\ntype there\nundo\ntype world\nend",
+          "expect": "hello world"
+        },
+        {
+          "stdin": "undo\nend",
+          "expect": "(empty)"
+        },
+        {
+          "stdin": "type a\nundo\nundo\nend",
+          "expect": "(empty)"
+        }
+      ]
+    },
+    {
+      "slug": "alevel-data-structures-hw-02",
+      "lesson": 1,
+      "tier": 3,
+      "difficulty": 3,
+      "xp": 25,
+      "title": "Binary with a stack",
+      "brief": "To turn a whole number into binary, keep dividing by 2 and push each remainder onto a stack. The remainders come out backwards, so popping them all gives the binary digits in the right order.\n\nInput a whole number (0 or more) and print it in binary using a stack. Don't use `bin` or `format`. 0 prints `0`.",
+      "starter": "",
+      "hints": [
+        "while n > 0: push n % 2, then n = n // 2.",
+        "Then pop every item into a string. Handle 0 separately."
+      ],
+      "tests": [
+        {
+          "stdin": "10",
+          "expect": "1010"
+        },
+        {
+          "stdin": "0",
+          "expect": "0"
+        },
+        {
+          "stdin": "255",
+          "expect": "11111111"
+        },
+        {
+          "stdin": "1",
+          "expect": "1"
+        }
+      ]
+    },
+    {
+      "slug": "alevel-data-structures-hw-03",
+      "lesson": 2,
+      "tier": 2,
+      "difficulty": 3,
+      "xp": 25,
+      "title": "Two tills",
+      "brief": "A shop has one queue and two tills. Input a line of customer names separated by spaces, in the order they joined. Customers are served in order, alternating: the first goes to till 1, the second to till 2, the third to till 1, and so on.\n\nUse a queue (a list you remove from the front of). Print `Till 1: ` and `Till 2: ` on two lines, each followed by its customers separated by spaces (or nothing if a till served no one).",
+      "starter": "",
+      "hints": [
+        "Dequeue with pop(0) inside a while loop, and keep a counter to alternate the tills.",
+        "Keep a list for each till and join it at the end."
+      ],
+      "tests": [
+        {
+          "stdin": "Ann Bob Cy Di Ed",
+          "expect": "Till 1: Ann Cy Ed\nTill 2: Bob Di"
+        },
+        {
+          "stdin": "Solo",
+          "expect": "Till 1: Solo\nTill 2:"
+        },
+        {
+          "stdin": "A B",
+          "expect": "Till 1: A\nTill 2: B"
+        }
+      ]
+    },
+    {
+      "slug": "alevel-data-structures-hw-04",
+      "lesson": 2,
+      "tier": 3,
+      "difficulty": 3,
+      "xp": 25,
+      "title": "Reverse a queue",
+      "brief": "Input a line of words, which form a queue (first word at the front). Reverse the queue using a stack: dequeue every item and push it onto the stack, then pop every item off the stack and enqueue it again.\n\nPrint the queue, front first, separated by spaces. Use `pop(0)` to dequeue, `append` to enqueue and push, and `pop()` to pop.",
+      "starter": "",
+      "hints": [
+        "while queue: stack.append(queue.pop(0))",
+        "while stack: queue.append(stack.pop())"
+      ],
+      "tests": [
+        {
+          "stdin": "one two three",
+          "expect": "three two one"
+        },
+        {
+          "stdin": "solo",
+          "expect": "solo"
+        },
+        {
+          "stdin": "a b c d",
+          "expect": "d c b a"
+        }
+      ]
+    },
+    {
+      "slug": "alevel-data-structures-hw-05",
+      "lesson": 3,
+      "tier": 2,
+      "difficulty": 3,
+      "xp": 25,
+      "title": "Boarding the plane",
+      "brief": "Passengers board by group: group 1 first, then group 2, and so on. Within a group, they board in the order they arrived at the gate.\n\nInput a whole number `n`, then `n` lines each with a name and a group number. Print the boarding order, one name per line, using a priority queue where a **smaller** group number is more urgent.",
+      "starter": "",
+      "hints": [
+        "Insert each passenger after everyone whose group is <= theirs.",
+        "Then print the names from front to back."
+      ],
+      "tests": [
+        {
+          "stdin": "4\nAnn 3\nBob 1\nCy 3\nDi 2",
+          "expect": "Bob\nDi\nAnn\nCy"
+        },
+        {
+          "stdin": "1\nSolo 5",
+          "expect": "Solo"
+        },
+        {
+          "stdin": "3\nA 2\nB 2\nC 1",
+          "expect": "C\nA\nB"
+        }
+      ]
+    },
+    {
+      "slug": "alevel-data-structures-hw-06",
+      "lesson": 3,
+      "tier": 3,
+      "difficulty": 4,
+      "xp": 35,
+      "title": "Homework planner",
+      "brief": "Input a whole number `n`, then `n` lines in the form `<subject> <days until due>`. Using `heapq`, print the subjects in the order to do them: soonest deadline first, and for equal deadlines, the order they were input.\n\nPush tuples of `(days, position, subject)` so that equal days are separated by input position.",
+      "starter": "import heapq\n",
+      "hints": [
+        "heapq compares tuples item by item, so (days, position, subject) sorts by days, then position.",
+        "Pop until the heap is empty and print each subject."
+      ],
+      "tests": [
+        {
+          "stdin": "3\nmaths 4\nart 1\ncs 4",
+          "expect": "art\nmaths\ncs"
+        },
+        {
+          "stdin": "2\nhistory 0\nfrench 0",
+          "expect": "history\nfrench"
+        },
+        {
+          "stdin": "1\nbiology 7",
+          "expect": "biology"
+        }
+      ]
+    },
+    {
+      "slug": "alevel-data-structures-hw-07",
+      "lesson": 4,
+      "tier": 2,
+      "difficulty": 3,
+      "xp": 25,
+      "title": "Is it in the list?",
+      "brief": "Build a linked list from a line of words, in order. Then input a word to search for. Traverse the list and print `Found at position <p>` (counting from 1) for the first node holding that word, or `Not found`.",
+      "starter": "",
+      "hints": [
+        "Keep a position counter that goes up by 1 each time you move to the next node.",
+        "Stop as soon as you find it."
+      ],
+      "tests": [
+        {
+          "stdin": "red green blue\nblue",
+          "expect": "Found at position 3"
+        },
+        {
+          "stdin": "red green blue\npink",
+          "expect": "Not found"
+        },
+        {
+          "stdin": "a a\na",
+          "expect": "Found at position 1"
+        }
+      ]
+    },
+    {
+      "slug": "alevel-data-structures-hw-08",
+      "lesson": 4,
+      "tier": 3,
+      "difficulty": 4,
+      "xp": 35,
+      "title": "Remove repeats",
+      "brief": "Build a linked list from a line of whole numbers that are already in ascending order (repeats allowed). Remove every repeated value so each number appears once, by relinking pointers: when a node's next node holds the same value, make the node point past it.\n\nPrint the list joined by ` -> `.",
+      "starter": "",
+      "hints": [
+        "while current.next is not None: if current.next.data == current.data, skip it; otherwise move on.",
+        "Only move current forward when the next value is different."
+      ],
+      "tests": [
+        {
+          "stdin": "1 1 2 3 3 3 4",
+          "expect": "1 -> 2 -> 3 -> 4"
+        },
+        {
+          "stdin": "5",
+          "expect": "5"
+        },
+        {
+          "stdin": "2 2 2",
+          "expect": "2"
+        }
+      ]
+    },
+    {
+      "slug": "alevel-data-structures-hw-09",
+      "lesson": 5,
+      "tier": 2,
+      "difficulty": 2,
+      "xp": 20,
+      "title": "Word counts with a dictionary",
+      "brief": "Input a line of words. Use a dictionary to count how often each word appears, then print each word and its count as `<word>: <count>`, in **alphabetical order** of the words.",
+      "starter": "",
+      "hints": [
+        "counts[word] = counts.get(word, 0) + 1",
+        "Loop over sorted(counts) to print in alphabetical order."
+      ],
+      "tests": [
+        {
+          "stdin": "the cat and the hat",
+          "expect": "and: 1\ncat: 1\nhat: 1\nthe: 2"
+        },
+        {
+          "stdin": "solo",
+          "expect": "solo: 1"
+        },
+        {
+          "stdin": "b a b a b",
+          "expect": "a: 2\nb: 3"
+        }
+      ]
+    },
+    {
+      "slug": "alevel-data-structures-hw-10",
+      "lesson": 5,
+      "tier": 3,
+      "difficulty": 4,
+      "xp": 35,
+      "title": "Find a pair that adds up",
+      "brief": "Input a line of whole numbers, then a target. Find the first pair of numbers (at different positions) that add up to the target, scanning from the left: for each number, check whether its partner (target − number) has already been seen.\n\nUse a dictionary that maps each number seen so far to its position, so each check is a single lookup. Print the two positions (counting from 0, earlier one first) separated by a space, or `No pair`.",
+      "starter": "",
+      "hints": [
+        "For each position i and number x: if target - x is in seen, you've found the pair (seen[target - x], i).",
+        "Otherwise store seen[x] = i, but only if x isn't already there, so the earliest position is kept."
+      ],
+      "tests": [
+        {
+          "stdin": "2 7 11 15\n9",
+          "expect": "0 1"
+        },
+        {
+          "stdin": "1 2 3\n7",
+          "expect": "No pair"
+        },
+        {
+          "stdin": "3 3\n6",
+          "expect": "0 1"
+        },
+        {
+          "stdin": "5 1 4 1\n2",
+          "expect": "1 3"
+        }
+      ]
+    }
+  ]
+}

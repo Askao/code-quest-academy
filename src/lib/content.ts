@@ -20,6 +20,7 @@ import databases from "@/content/gcse-databases.json";
 import alevelProgrammingTechniques from "@/content/alevel-programming-techniques.json";
 import alevelOop from "@/content/alevel-oop.json";
 import alevelRecursion from "@/content/alevel-recursion.json";
+import alevelDataStructures from "@/content/alevel-data-structures.json";
 import { GCSE_TOPICS, isTopicInReview, topicsFor, type Board, type TrackKey } from "@/lib/game";
 
 export type LessonContent = {
@@ -140,6 +141,7 @@ const RAW = [
   alevelProgrammingTechniques,
   alevelOop,
   alevelRecursion,
+  alevelDataStructures,
 ] as unknown as RawTopic[];
 
 export const LESSONS: LessonContent[] = RAW.flatMap((t) =>
