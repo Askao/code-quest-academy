@@ -8,17 +8,14 @@ import { Button } from "@/components/ui/button";
 import { shuffle } from "@/lib/utils";
 import { LessonNotes } from "@/components/LessonNotes";
 import { WorkedExampleTrace } from "@/components/WorkedExampleTrace";
-import { topicLabel, type Board } from "@/lib/game";
+import { topicLabel } from "@/lib/game";
 import {
   getLesson,
-  isLessonAssigned,
-  isLessonComplete,
-  isTopicComplete,
+  lessonAccess,
   lessonsForTopic,
   QUIZZES,
   quizForLesson,
   tasksForLesson,
-  topicsWithLessons,
   type QuizQuestion,
 } from "@/lib/content";
 
@@ -332,14 +329,7 @@ function LessonPage() {
   });
   const classIds = memberships.map((m) => m.class_id);
   const enrolled = classIds.length > 0;
-  // Same "any AQA class -> show AQA content" rule as the dashboard and
-  // /learn index, so a databases lesson isn't in this page's gating
-  // sequence for a student whose class(es) are all OCR.
-  const gcseBoard: Board = memberships.some(
-    (m) => m.classes?.track === "gcse" && m.classes?.board === "aqa",
-  )
-    ? "aqa"
-    : "ocr";
+  const alevelStudent = memberships.some((m) => m.classes?.track === "alevel");
 
   const { data: assignedSlugs = new Set<string>() } = useQuery({
     queryKey: ["assigned-lesson-slugs", classIds],
@@ -384,36 +374,30 @@ function LessonPage() {
   const [recapPassed, setRecapPassed] = useState(false);
   useEffect(() => setRecapPassed(false), [lesson.slug]);
 
-  const topicOrder = topicsWithLessons(lesson.track, gcseBoard);
-  // topicOrder's elements are typed as the literal GCSE_TOPICS/ALEVEL_TOPICS
-  // union (from game.ts's `as const` lists); lesson.topic is deliberately
-  // loose (it comes straight off the JSON content), so indexOf needs a cast
-  // here rather than tightening TaskContent/Lesson's topic type everywhere.
-  const topicIndex = topicOrder.indexOf(lesson.topic as (typeof topicOrder)[number]);
-  const previousTopicComplete =
-    topicIndex <= 0 ||
-    isTopicComplete(lesson.track, topicOrder[topicIndex - 1]!, passed, quizPassed);
-  const previousSibling = siblings.find((l) => l.order === lesson.order - 1);
-  const previousLessonComplete =
-    !previousSibling || isLessonComplete(previousSibling.slug, passed, quizPassed);
-  // Enrolled: assignment alone decides access, both ways - it can open a
-  // lesson before earlier ones are done, and (unlike the mastery gate) can
-  // still hold one back that's otherwise ready. Everyone else keeps the
-  // original in-order gate. See isLessonAssigned's doc comment.
-  const masteryLocked = !previousTopicComplete || !previousLessonComplete;
-  const notAssigned = enrolled && !isLessonAssigned(lesson.slug, assignedSlugs);
-  const locked = !isTeacher && (enrolled ? notAssigned : masteryLocked);
+  const access = lessonAccess(lesson, {
+    isTeacher,
+    enrolled,
+    alevelStudent,
+    assignedSlugs,
+    passedTaskSlugs: passed,
+    quizPassedLessonSlugs: quizPassed,
+  });
+  const locked = !access.open;
 
   if (locked) {
     return (
       <div className="panel p-6">
         <p className="font-medium">🔒 This lesson is locked.</p>
         <p className="mt-2 text-sm text-muted-foreground">
-          {enrolled
-            ? "Your teacher hasn't set this lesson yet."
-            : !previousTopicComplete
-              ? `Finish ${topicLabel(topicOrder[topicIndex - 1]!)} first.`
-              : `Finish "${previousSibling?.title}" first.`}
+          {access.open
+            ? null
+            : access.reason === "review"
+              ? "This lesson isn't available yet."
+              : access.reason === "not-assigned"
+                ? "Your teacher hasn't set this lesson yet."
+                : access.reason === "previous-topic"
+                  ? `Finish ${topicLabel(access.after ?? "")} first.`
+                  : `Finish "${access.after}" first.`}
         </p>
         <Button asChild className="mt-4">
           <Link to="/learn">Back to lessons</Link>

@@ -18,7 +18,7 @@ import sequencing from "@/content/gcse-sequencing.json";
 import strings from "@/content/gcse-strings.json";
 import databases from "@/content/gcse-databases.json";
 import alevelProgrammingTechniques from "@/content/alevel-programming-techniques.json";
-import { GCSE_TOPICS, topicsFor, type Board, type TrackKey } from "@/lib/game";
+import { GCSE_TOPICS, isTopicInReview, topicsFor, type Board, type TrackKey } from "@/lib/game";
 
 export type LessonContent = {
   slug: string;
@@ -372,6 +372,57 @@ export function completedTaskSlugs(
  */
 export function isLessonAssigned(lessonSlug: string, assignedSlugs: Set<string>): boolean {
   return assignedSlugs.has(lessonSlug);
+}
+
+/** Who is looking at a lesson, for deciding whether it is open to them. */
+export type LessonViewer = {
+  isTeacher: boolean;
+  /** In at least one class (lessons then open by teacher assignment). */
+  enrolled: boolean;
+  /** In at least one A level class: every GCSE lesson is then open as foundations. */
+  alevelStudent: boolean;
+  assignedSlugs: Set<string>;
+  passedTaskSlugs: Set<string>;
+  quizPassedLessonSlugs: Set<string>;
+};
+
+export type LessonAccess =
+  | { open: true }
+  | { open: false; reason: "review" | "not-assigned" | "previous-lesson" | "previous-topic"; after?: string };
+
+/**
+ * Whether a lesson is open to this viewer, and if not, why. The one place
+ * the Lessons page and each lesson page both ask, so they never disagree.
+ *
+ * - Teachers and admins: everything, including topics still in review.
+ * - Everyone else: nothing from a topic in review (see ALEVEL_TOPICS).
+ * - A level students: every GCSE lesson, as foundations.
+ * - Students in a class: lessons their teacher has set.
+ * - Students in no class: in order, each lesson after the one before and
+ *   each topic after the one before it (topics in review don't count).
+ */
+export function lessonAccess(lesson: LessonContent, viewer: LessonViewer): LessonAccess {
+  if (viewer.isTeacher) return { open: true };
+  if (isTopicInReview(lesson.topic)) return { open: false, reason: "review" };
+  if (lesson.track === "gcse" && viewer.alevelStudent) return { open: true };
+  if (viewer.enrolled) {
+    return isLessonAssigned(lesson.slug, viewer.assignedSlugs)
+      ? { open: true }
+      : { open: false, reason: "not-assigned" };
+  }
+  const { passedTaskSlugs: passed, quizPassedLessonSlugs: quiz } = viewer;
+  const order = topicsWithLessons(lesson.track).filter((t) => !isTopicInReview(t));
+  const i = order.indexOf(lesson.topic as (typeof order)[number]);
+  if (i > 0 && !isTopicComplete(lesson.track, order[i - 1]!, passed, quiz)) {
+    return { open: false, reason: "previous-topic", after: order[i - 1]! };
+  }
+  const previous = lessonsForTopic(lesson.track, lesson.topic).find(
+    (l) => l.order === lesson.order - 1,
+  );
+  if (previous && !isLessonComplete(previous.slug, passed, quiz)) {
+    return { open: false, reason: "previous-lesson", after: previous.title };
+  }
+  return { open: true };
 }
 
 /** Merge repository content over a database challenge row. */

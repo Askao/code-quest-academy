@@ -26,7 +26,8 @@ import {
   levelFromXp,
   skillPercent,
   topicLabel,
-  topicsFor,
+  isTopicInReview,
+  liveTopicsFor,
   type Board,
   type TrackKey,
 } from "@/lib/game";
@@ -247,7 +248,7 @@ function ClassDetail() {
         const passedSlugs = passedTaskSlugsByUser.get(p.id) ?? new Set<string>();
         const practiceByTopic: Record<string, { done: number; total: number }> = {};
         const projectsByTopic: Record<string, { done: number; total: number }> = {};
-        for (const t of topicsFor(trackLocal, boardLocal)) {
+        for (const t of liveTopicsFor(trackLocal, boardLocal)) {
           const pool = corePracticeTasksForTopic(trackLocal, t.key);
           practiceByTopic[t.key] = {
             done: pool.filter((task) => passedSlugs.has(task.slug)).length,
@@ -441,7 +442,7 @@ function ClassDetail() {
   // re-teach next needs the other lens: "how is the class doing on this
   // topic". Computed client-side from the same skills rows already fetched
   // above, so it costs nothing extra to query.
-  const topicSummary = topicsFor(track, board).map((t) => {
+  const topicSummary = liveTopicsFor(track, board).map((t) => {
     const levels = (data?.students ?? [])
       .map((s) => s.skills.find((k) => k.topic === t.key && k.track === track))
       .filter((k): k is NonNullable<typeof k> => !!k);
@@ -869,7 +870,7 @@ function ClassDetail() {
 
   const exportRoster = () => {
     const students = data?.students ?? [];
-    const topics = topicsFor(track, board);
+    const topics = liveTopicsFor(track, board);
     const rows = [
       [
         "Name",
@@ -1149,7 +1150,7 @@ function ClassDetail() {
                             </div>
                           )}
                           <div className="grid gap-3 sm:grid-cols-2 lg:grid-cols-3">
-                            {topicsFor(track, board).map((t) => {
+                            {liveTopicsFor(track, board).map((t) => {
                               const lvl = Number(
                                 s.skills.find((k) => k.topic === t.key && k.track === track)
                                   ?.level ?? 1,
@@ -1239,7 +1240,9 @@ function ClassDetail() {
                 regardless.
               </p>
             </div>
-            {topicsWithLessons(track, board).map((t) => {
+            {topicsWithLessons(track, board)
+              .filter((t) => !isTopicInReview(t))
+              .map((t) => {
               const lessons = lessonsForTopic(track, t);
               const allowedCount = lessons.filter((l) => assignedBySlug.has(l.slug)).length;
               return (
@@ -1450,7 +1453,7 @@ function ClassDetail() {
                       />
                       All topics
                     </label>
-                {topicsFor(track, board).map((t) => {
+                {liveTopicsFor(track, board).map((t) => {
                   const checked = selectedTopics.includes(t.key);
                   return (
                     <label

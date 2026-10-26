@@ -7,7 +7,7 @@ import type { EditorView } from "@codemirror/view";
 import { supabase } from "@/integrations/supabase/client";
 import { useAuth } from "@/hooks/useAuth";
 import { Button } from "@/components/ui/button";
-import { BADGES, topicLabel, type TrackKey } from "@/lib/game";
+import { BADGES, topicLabel, topicLanguage, type TrackKey } from "@/lib/game";
 import {
   checkSyntax,
   getPyodide,
@@ -67,11 +67,10 @@ export const Route = createFileRoute("/_authenticated/play/$slug")({
   component: Play,
 });
 
-// The one topic that runs SQL instead of Python (AQA's databases content -
-// see game.ts). Everything else on the site is Python, so this is the only
-// place that needs to know the difference.
+// Topics whose tasks are SQL rather than Python (GCSE AQA databases and A
+// level SQL) - see topicLanguage in game.ts.
 function isSqlTopic(topic: string) {
-  return topic === "databases";
+  return topicLanguage(topic) === "sql";
 }
 
 function readBoss(): BossState | null {

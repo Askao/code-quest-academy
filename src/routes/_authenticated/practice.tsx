@@ -9,6 +9,7 @@ import { Progress } from "@/components/ui/progress";
 import { shuffle } from "@/lib/utils";
 import { pickChallenge, pickRecapChallenge, resetProgress } from "@/lib/progress";
 import {
+  isTopicInReview,
   skillLabel,
   skillPercent,
   topicLabel,
@@ -24,6 +25,7 @@ import {
   practiceTasksForTopic,
   projectsForTopic,
   QUIZZES,
+  tasksForLesson,
   tasksInGroup,
 } from "@/lib/content";
 
@@ -178,14 +180,13 @@ function Practice() {
     return relevant.reduce((sum, s) => sum + Number(s.level), 0) / relevant.length;
   };
 
-  // GCSE topics stay locked in Practice until at least one of their lessons
-  // is complete - practising unfamiliar wording/content is exactly what
-  // confused students. A-level has no lesson content yet, so it's exempt.
-  // Admins/teachers skip this entirely so they can review any topic without
-  // needing to fake their way through lessons first.
+  // Topics stay locked in Practice until at least one of their lessons is
+  // complete - practising unfamiliar wording/content is exactly what
+  // confused students. A topic with no lessons (the older A level practice
+  // tasks) is open. Admins/teachers skip this entirely so they can review
+  // any topic without needing to fake their way through lessons first.
   const topicUnlocked = (topic: string) => {
     if (isTeacher) return true;
-    if (track !== "gcse") return true;
     const lessons = lessonsForTopic(track, topic);
     return (
       lessons.length === 0 ||
@@ -211,7 +212,8 @@ function Practice() {
   // out of this grid, "Surprise me" and boss battles entirely, even though
   // their lessons are still reachable normally through /learn.
   const practiceTopics = topicsFor(track, board).filter(
-    (t) => !("practiceExcluded" in t && t.practiceExcluded),
+    (t) =>
+      !("practiceExcluded" in t && t.practiceExcluded) && (isTeacher || !isTopicInReview(t.key)),
   );
 
   // Practice draws from each topic's dedicated practice-task pool, not the
@@ -223,14 +225,18 @@ function Practice() {
   // needs no further slug restriction - only the topic-less "mixed" battle
   // (which spans every unlocked topic at once) needs one, to keep it from
   // reaching into a topic the student hasn't even started.
-  const mixedPracticeSlugs =
-    track === "gcse"
-      ? new Set(
-          practiceTopics
-            .filter((t) => topicUnlocked(t.key))
-            .flatMap((t) => practiceTasksForTopic(track, t.key).map((p) => p.slug)),
-        )
-      : undefined;
+  const mixedPracticeSlugs = new Set(
+    practiceTopics
+      .filter((t) => topicUnlocked(t.key))
+      .flatMap((t) => [
+        ...practiceTasksForTopic(track, t.key).map((p) => p.slug),
+        // A level topics have no separate practice pool yet, so their lesson
+        // tasks stand in (the same fallback pickChallenge makes per topic).
+        ...(practiceTasksForTopic(track, t.key).length === 0
+          ? lessonsForTopic(track, t.key).flatMap((l) => tasksForLesson(l.slug).map((x) => x.slug))
+          : []),
+      ]),
+  );
 
   const start = async (topic: string | undefined, mode: "practice" | "boss") => {
     // Mixed boss battles (no single topic) pull from every topic they've
@@ -243,7 +249,7 @@ function Practice() {
       level,
       excludeIds: data?.recent ?? [],
       practiceOnly: true,
-      ...(!topic && mixedPracticeSlugs && !isTeacher ? { onlySlugs: mixedPracticeSlugs } : {}),
+      ...(!topic && !isTeacher ? { onlySlugs: mixedPracticeSlugs } : {}),
     });
     if (!challenge) {
       toast.error(
@@ -302,7 +308,12 @@ function Practice() {
     if (!user) return;
     setResetting(true);
     const slugs = practiceTasksForTopic(track, topicKey).map((p) => p.slug);
-    const result = await resetProgress({ userId: user.id, track, topic: topicKey, taskSlugs: slugs });
+    const result = await resetProgress({
+      userId: user.id,
+      track,
+      topic: topicKey,
+      taskSlugs: slugs,
+    });
     setResetting(false);
     setConfirmingReset(null);
     if (!result.ok) {
@@ -671,7 +682,8 @@ function Practice() {
                             {item.parts.map((p, i) => {
                               const done = data?.passedSlugs.has(p.slug) ?? false;
                               const priorDone =
-                                i === 0 || (data?.passedSlugs.has(item.parts[i - 1]!.slug) ?? false);
+                                i === 0 ||
+                                (data?.passedSlugs.has(item.parts[i - 1]!.slug) ?? false);
                               const locked = !done && !priorDone;
                               const partLabel = p.title.split(" — ")[1] ?? p.title;
                               return (
@@ -693,7 +705,11 @@ function Practice() {
                                       Locked
                                     </Button>
                                   ) : (
-                                    <Button asChild size="sm" variant={done ? "secondary" : "default"}>
+                                    <Button
+                                      asChild
+                                      size="sm"
+                                      variant={done ? "secondary" : "default"}
+                                    >
                                       <Link
                                         to="/play/$slug"
                                         params={{ slug: p.slug }}

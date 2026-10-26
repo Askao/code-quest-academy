@@ -2,7 +2,7 @@ import { useMemo, useState } from "react";
 import { useClassAssessmentData } from "@/components/ClassReport";
 import { EMPTY_REPORT_DATA, studentReport, type ReportHomework, type ReportStudent } from "@/lib/class-report";
 import { downloadCsv } from "@/lib/csv";
-import { topicLabel, topicsFor, type Board, type TrackKey } from "@/lib/game";
+import { liveTopicsFor, topicLabel, type Board, type TrackKey } from "@/lib/game";
 import { strugglingTooltip } from "@/lib/flags";
 
 /**
@@ -29,7 +29,7 @@ export function Markbook({
   const [sortWeakest, setSortWeakest] = useState(false);
   const now = useMemo(() => new Date(), []);
 
-  const topics = useMemo(() => topicsFor(track, board), [track, board]);
+  const topics = useMemo(() => liveTopicsFor(track, board), [track, board]);
 
   const rows = useMemo(() => {
     return students.map((s) => {

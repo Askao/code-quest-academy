@@ -24,7 +24,7 @@ import {
   skillLabel,
   skillPercent,
   topicLabel,
-  topicsFor,
+  liveTopicsFor,
   type Board,
 } from "@/lib/game";
 
@@ -228,7 +228,7 @@ function Dashboard() {
   let topicsWithPool = 0;
   const completedProjects: { title: string; topicLabel: string }[] = [];
   for (const trk of tracks) {
-    for (const t of topicsFor(trk, trk === "gcse" ? gcseBoard : undefined)) {
+    for (const t of liveTopicsFor(trk, trk === "gcse" ? gcseBoard : undefined)) {
       const pool = corePracticeTasksForTopic(trk, t.key);
       if (pool.length > 0) {
         topicsWithPool += 1;
@@ -465,7 +465,7 @@ function Dashboard() {
                 {track === "gcse" ? `GCSE · ${gcseBoard.toUpperCase()}` : "A LEVEL"}
               </p>
               <div className="grid gap-3 sm:grid-cols-2 lg:grid-cols-3">
-                {topicsFor(track, gcseBoard).map((t) => {
+                {liveTopicsFor(track, gcseBoard).map((t) => {
                   const skill = data?.skills.find((s) => s.topic === t.key && s.track === track);
                   const lvl = Number(skill?.level ?? 1);
                   return (
