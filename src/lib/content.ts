@@ -19,6 +19,7 @@ import strings from "@/content/gcse-strings.json";
 import databases from "@/content/gcse-databases.json";
 import alevelProgrammingTechniques from "@/content/alevel-programming-techniques.json";
 import alevelOop from "@/content/alevel-oop.json";
+import alevelRecursion from "@/content/alevel-recursion.json";
 import { GCSE_TOPICS, isTopicInReview, topicsFor, type Board, type TrackKey } from "@/lib/game";
 
 export type LessonContent = {
@@ -138,6 +139,7 @@ const RAW = [
   // scripts/alevel/build.mjs.
   alevelProgrammingTechniques,
   alevelOop,
+  alevelRecursion,
 ] as unknown as RawTopic[];
 
 export const LESSONS: LessonContent[] = RAW.flatMap((t) =>
