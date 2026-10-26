@@ -1,0 +1,1284 @@
+{
+  "track": "alevel",
+  "topic": "algorithms",
+  "lessons": [
+    {
+      "slug": "alevel-algorithms-1",
+      "title": "Big O notation",
+      "summary": "Describing how an algorithm's time grows as its input grows, and comparing algorithms fairly.",
+      "notes": "**Big O notation** describes how the time an algorithm takes (or the memory it uses) grows as the size of its input, `n`, grows. It ignores the details of a particular computer and keeps only the part that matters most for big inputs.\n\n| Big O | Name | Example |\n|---|---|---|\n| O(1) | constant | looking up an item by its position in an array |\n| O(log n) | logarithmic | binary search: halving the data each step |\n| O(n) | linear | linear search: looking at every item once |\n| O(n log n) | linearithmic | merge sort |\n| O(n²) | polynomial (quadratic) | bubble sort, comparing every pair |\n| O(2ⁿ) | exponential | trying every subset of the items |\n\n---\n\nTo work out an algorithm's Big O, count how many times its main step runs:\n- one loop over the data: O(n);\n- a loop inside a loop, both over the data: O(n²);\n- halving what's left each time: O(log n).\n\nKeep only the fastest-growing term and drop constants: `3n² + 5n + 2` is O(n²).\n\nAlgorithms can also have a **best case** and a **worst case**. Linear search is O(1) at best (the item is first) and O(n) at worst (last, or missing). Exam questions usually mean the worst case.\n\n**Space complexity** is the same idea for memory. Merge sort needs O(n) extra memory; bubble sort needs O(1).",
+      "worked_example": "import math\n\nfor n in [10, 1000, 1000000]:\n    print(n, round(math.log2(n)), n * n)",
+      "worked_example_note": "For a million items, a logarithmic algorithm does about 20 steps while a quadratic one does a million million. That gap is why Big O matters more than the speed of the computer."
+    },
+    {
+      "slug": "alevel-algorithms-2",
+      "title": "Merge sort",
+      "summary": "Divide and conquer: split the list in half, sort each half, then merge them back together.",
+      "notes": "**Merge sort** is a **divide and conquer** algorithm:\n1. **Divide**: split the list into two halves.\n2. **Conquer**: sort each half, by merge sorting it (recursion). A list of 0 or 1 items is already sorted: the base case.\n3. **Combine**: **merge** the two sorted halves into one sorted list.\n\nThe merge step walks along both halves at once, always taking the smaller front item:\n\n```python\ndef merge(left, right):\n    result = []\n    i = j = 0\n    while i < len(left) and j < len(right):\n        if left[i] <= right[j]:\n            result.append(left[i])\n            i += 1\n        else:\n            result.append(right[j])\n            j += 1\n    return result + left[i:] + right[j:]   # whatever is left over\n```\n\n---\n\n**Complexity**: the list can be halved about log₂ n times, and each level of halving does O(n) work merging, so merge sort is **O(n log n)** in every case, best and worst. That is far quicker than bubble sort's O(n²) for large lists.\n\nThe cost is **memory**: it builds new lists while merging, so it needs O(n) extra space.\n\nUsing `<=` in the merge keeps equal items in their original order, which makes merge sort **stable**. That matters when sorting records by one field after another.",
+      "worked_example": "def merge(left, right):\n    result = []\n    i = j = 0\n    while i < len(left) and j < len(right):\n        if left[i] <= right[j]:\n            result.append(left[i])\n            i += 1\n        else:\n            result.append(right[j])\n            j += 1\n    return result + left[i:] + right[j:]\n\nprint(merge([1, 4, 9], [2, 3, 10, 12]))",
+      "worked_example_note": "Each step compares the front of each list and takes the smaller. When one list runs out, the rest of the other is already in order, so it's added on the end."
+    },
+    {
+      "slug": "alevel-algorithms-3",
+      "title": "Quicksort",
+      "summary": "Choose a pivot, split the list around it, and sort each side: fast on average, slow at its worst.",
+      "notes": "**Quicksort** is another divide and conquer sort:\n1. Choose an item as the **pivot**.\n2. **Partition**: put every other item into one of two lists: those **smaller** than the pivot and those **greater than or equal** to it.\n3. Quicksort each of those lists (recursion), and join them back together: smaller, pivot, greater.\n\nA list of 0 or 1 items is already sorted: the base case.\n\n```python\ndef quicksort(items):\n    if len(items) <= 1:\n        return items\n    pivot = items[0]\n    smaller = [x for x in items[1:] if x < pivot]\n    larger = [x for x in items[1:] if x >= pivot]\n    return quicksort(smaller) + [pivot] + quicksort(larger)\n```\n\nIn these tasks the pivot is always the **first** item, so the results are predictable.\n\n---\n\n**Complexity**: on average the pivot splits the list roughly in half, giving **O(n log n)**, and quicksort is usually faster than merge sort in practice. But if the pivot is always the smallest or largest item (for example, the first item of an already-sorted list), each partition only removes one item and quicksort becomes **O(n²)**. Choosing the pivot at random, or the middle of three items, makes that unlikely.\n\nQuicksort can also be done **in place**, swapping items within the original list, so it needs little extra memory.",
+      "worked_example": "def quicksort(items):\n    if len(items) <= 1:\n        return items\n    pivot = items[0]\n    smaller = [x for x in items[1:] if x < pivot]\n    larger = [x for x in items[1:] if x >= pivot]\n    return quicksort(smaller) + [pivot] + quicksort(larger)\n\nprint(quicksort([33, 10, 55, 71, 29, 3]))",
+      "worked_example_note": "33 is the first pivot: 10, 29 and 3 go to the smaller side, 55 and 71 to the larger. Each side is then quicksorted the same way."
+    },
+    {
+      "slug": "alevel-algorithms-4",
+      "title": "Dijkstra's shortest path",
+      "summary": "Finding the shortest route from one vertex to every other in a weighted graph.",
+      "notes": "**Dijkstra's algorithm** finds the shortest distance from a start vertex to every other vertex in a weighted graph whose weights are not negative.\n\n1. Give the start a distance of 0 and every other vertex a distance of **infinity**. Nothing is **visited** yet.\n2. Choose the **unvisited** vertex with the **smallest** distance. Mark it visited: its distance is now final.\n3. For each of its neighbours, work out: (this vertex's distance) + (edge weight). If that is smaller than the neighbour's current distance, update the neighbour's distance and record this vertex as its **previous** vertex.\n4. Repeat from step 2 until every reachable vertex is visited.\n\nTo get the actual route to a vertex, follow the **previous** vertices backwards from it to the start, then reverse.\n\n---\n\nIt works because once the closest unvisited vertex is chosen, no later route could reach it more cheaply: every other route would have to go through a vertex that is already further away.\n\nIn these tasks, when two unvisited vertices tie for the smallest distance, choose the one that comes first **alphabetically**. A **priority queue** of (distance, vertex) makes choosing the smallest fast in a large graph.\n\nDijkstra is used for satnav routes, network routing (finding the quickest path for data) and games.",
+      "worked_example": "graph = {}\nfor i in range(int(input())):\n    a, b, w = input().split()\n    graph.setdefault(a, {})[b] = int(w)\n    graph.setdefault(b, {})[a] = int(w)\n\nINF = float(\"inf\")\ndistance = {v: INF for v in graph}\ndistance[\"A\"] = 0\nvisited = set()\nwhile len(visited) < len(graph):\n    current = min((v for v in graph if v not in visited), key=lambda v: (distance[v], v))\n    if distance[current] == INF:\n        break\n    visited.add(current)\n    for n, w in graph[current].items():\n        if distance[current] + w < distance[n]:\n            distance[n] = distance[current] + w\nprint(distance)",
+      "worked_example_note": "B's distance starts as 4 (straight from A), but once C is visited, the route A, C, B costs 1 + 2 = 3, so B's distance is updated before B is chosen.",
+      "worked_example_demo_input": [
+        "4",
+        "A B 4",
+        "A C 1",
+        "C B 2",
+        "B D 5"
+      ]
+    },
+    {
+      "slug": "alevel-algorithms-5",
+      "title": "A* search (OCR)",
+      "summary": "Dijkstra plus a sensible guess of the distance left, so it heads towards the goal instead of searching everywhere.",
+      "notes": "*This lesson is on the OCR specification. AQA doesn't examine A*.*\n\nDijkstra's algorithm spreads out in every direction from the start. **A\\*** (A star) finds a shortest path to **one goal** more quickly by also using a **heuristic**: an estimate of how far each vertex is from the goal.\n\nFor each vertex A* keeps:\n- **g**: the actual distance from the start so far (just like Dijkstra);\n- **h**: the heuristic's estimate of the distance from it to the goal;\n- **f = g + h**: the estimated length of the whole route through it.\n\nAt each step it visits the open vertex with the **smallest f**, instead of the smallest g. It stops as soon as the goal is chosen.\n\n---\n\nOn a grid where you can move up, down, left and right, a good heuristic is the **Manhattan distance**: the number of rows plus the number of columns between the square and the goal, ignoring walls.\n\n```python\ndef h(r, c, goal_r, goal_c):\n    return abs(r - goal_r) + abs(c - goal_c)\n```\n\nA heuristic must never **overestimate** the real distance (it must be **admissible**); then A* is still guaranteed to find a shortest path. A heuristic of 0 everywhere turns A* back into Dijkstra. The better the heuristic, the fewer vertices A* has to look at.\n\nIn these tasks, when two open vertices tie on f, choose the one with the smaller h, then the one first alphabetically (or the smaller row, then column).",
+      "worked_example": "def manhattan(r, c, gr, gc):\n    return abs(r - gr) + abs(c - gc)\n\ngoal = (4, 4)\nfor square in [(0, 0), (2, 3), (4, 4)]:\n    print(square, manhattan(square[0], square[1], goal[0], goal[1]))",
+      "worked_example_note": "The Manhattan distance counts how many moves you'd need with no walls in the way, so it never overestimates: it's admissible."
+    }
+  ],
+  "quiz": [
+    {
+      "lessonSlug": "alevel-algorithms-1",
+      "question": "What is the Big O of binary search?",
+      "options": [
+        "O(log n)",
+        "O(n)",
+        "O(1)",
+        "O(n²)"
+      ],
+      "answer": "O(log n)",
+      "explanation": "Each step halves the part still to be searched, so doubling n adds only one more step."
+    },
+    {
+      "lessonSlug": "alevel-algorithms-1",
+      "question": "An algorithm takes 4n² + 10n + 7 steps. What is its Big O?",
+      "options": [
+        "O(n²)",
+        "O(4n²)",
+        "O(n)",
+        "O(n² + n)"
+      ],
+      "answer": "O(n²)",
+      "explanation": "Keep the fastest-growing term and drop the constant in front of it."
+    },
+    {
+      "lessonSlug": "alevel-algorithms-1",
+      "question": "A loop over n items contains another loop over the same n items. What is its Big O?",
+      "options": [
+        "O(n²)",
+        "O(2n)",
+        "O(n)",
+        "O(log n)"
+      ],
+      "answer": "O(n²)",
+      "explanation": "The inner loop runs n times for each of the outer loop's n repeats: n × n."
+    },
+    {
+      "lessonSlug": "alevel-algorithms-2",
+      "question": "What is the Big O time complexity of merge sort?",
+      "options": [
+        "O(n log n)",
+        "O(n²)",
+        "O(n)",
+        "O(log n)"
+      ],
+      "answer": "O(n log n)",
+      "explanation": "About log₂ n levels of splitting, each with O(n) merging work."
+    },
+    {
+      "lessonSlug": "alevel-algorithms-2",
+      "question": "What is the base case of a recursive merge sort?",
+      "options": [
+        "A list of 0 or 1 items, which is already sorted",
+        "A list of two items",
+        "A list that is already sorted",
+        "The merge step"
+      ],
+      "answer": "A list of 0 or 1 items, which is already sorted",
+      "explanation": "Lists keep being halved until they are this small, then the merges build them back up."
+    },
+    {
+      "lessonSlug": "alevel-algorithms-2",
+      "question": "What is merge sort's main disadvantage compared with bubble sort?",
+      "options": [
+        "It needs extra memory for the lists it builds",
+        "It is slower on large lists",
+        "It only sorts numbers",
+        "It isn't stable"
+      ],
+      "answer": "It needs extra memory for the lists it builds",
+      "explanation": "Merging builds new lists, so it uses O(n) extra space; bubble sort works in place."
+    },
+    {
+      "lessonSlug": "alevel-algorithms-3",
+      "question": "What is quicksort's worst-case time complexity?",
+      "options": [
+        "O(n²)",
+        "O(n log n)",
+        "O(n)",
+        "O(log n)"
+      ],
+      "answer": "O(n²)",
+      "explanation": "If every pivot is the smallest or largest item, each partition only removes one item."
+    },
+    {
+      "lessonSlug": "alevel-algorithms-3",
+      "question": "With the first item as the pivot, which input causes quicksort's worst case?",
+      "options": [
+        "A list that is already sorted",
+        "A list in random order",
+        "A list of different numbers",
+        "A list with an even number of items"
+      ],
+      "answer": "A list that is already sorted",
+      "explanation": "The first item is then always the smallest, so the 'smaller' side is always empty."
+    },
+    {
+      "lessonSlug": "alevel-algorithms-3",
+      "question": "Pivot 20, items 35 5 20 8. Which items go in the 'smaller' list?",
+      "options": [
+        "5 8",
+        "5 8 20",
+        "35",
+        "35 20"
+      ],
+      "answer": "5 8",
+      "explanation": "Only items strictly less than the pivot go to the smaller side; the other 20 goes with the larger ones."
+    },
+    {
+      "lessonSlug": "alevel-algorithms-4",
+      "question": "At each step, which vertex does Dijkstra's algorithm visit next?",
+      "options": [
+        "The unvisited vertex with the smallest distance so far",
+        "The vertex with the most edges",
+        "The vertex nearest the end",
+        "The next vertex alphabetically"
+      ],
+      "answer": "The unvisited vertex with the smallest distance so far",
+      "explanation": "Its distance can't be improved any more, so it becomes final."
+    },
+    {
+      "lessonSlug": "alevel-algorithms-4",
+      "question": "What distance does every vertex except the start begin with?",
+      "options": [
+        "Infinity",
+        "0",
+        "1",
+        "Its number of edges"
+      ],
+      "answer": "Infinity",
+      "explanation": "No route to it is known yet; any real route will be smaller."
+    },
+    {
+      "lessonSlug": "alevel-algorithms-4",
+      "question": "Why does Dijkstra's algorithm need weights that aren't negative?",
+      "options": [
+        "A negative edge could make a visited vertex's 'final' distance wrong",
+        "Negative numbers can't be stored",
+        "It only works on unweighted graphs",
+        "Negative edges make the graph directed"
+      ],
+      "answer": "A negative edge could make a visited vertex's 'final' distance wrong",
+      "explanation": "The algorithm assumes adding an edge never makes a route shorter."
+    },
+    {
+      "lessonSlug": "alevel-algorithms-5",
+      "question": "In A*, what is f?",
+      "options": [
+        "g + h: the distance so far plus the estimated distance left",
+        "The number of vertices visited",
+        "The heuristic on its own",
+        "The final route's length"
+      ],
+      "answer": "g + h: the distance so far plus the estimated distance left",
+      "explanation": "A* always visits the open vertex with the smallest f."
+    },
+    {
+      "lessonSlug": "alevel-algorithms-5",
+      "question": "What does it mean for a heuristic to be admissible?",
+      "options": [
+        "It never overestimates the real distance to the goal",
+        "It is always exactly right",
+        "It is always 0",
+        "It only works on grids"
+      ],
+      "answer": "It never overestimates the real distance to the goal",
+      "explanation": "With an admissible heuristic, A* still finds a shortest path."
+    },
+    {
+      "lessonSlug": "alevel-algorithms-5",
+      "question": "If the heuristic is 0 for every vertex, A* behaves like which algorithm?",
+      "options": [
+        "Dijkstra's algorithm",
+        "Breadth-first search",
+        "Binary search",
+        "Merge sort"
+      ],
+      "answer": "Dijkstra's algorithm",
+      "explanation": "f is then just g, so A* picks the smallest distance so far, exactly as Dijkstra does."
+    }
+  ],
+  "tasks": [
+    {
+      "slug": "alevel-algorithms-t1-01",
+      "lesson": 1,
+      "tier": 1,
+      "difficulty": 2,
+      "xp": 20,
+      "title": "Count the comparisons: linear search",
+      "brief": "Input a line of whole numbers, then a target. Do a linear search, counting each time you compare an item with the target.\n\nPrint `Found at <position>` (positions count from 0) or `Not found`, then `Comparisons: <c>` on the next line.\n\nTry a target at the start and one that's missing to see the best and worst cases.",
+      "starter": "",
+      "hints": [
+        "Add 1 to the count before each comparison, inside the loop.",
+        "Stop as soon as you find it."
+      ],
+      "tests": [
+        {
+          "stdin": "4 8 15 16 23 42\n4",
+          "expect": "Found at 0\nComparisons: 1"
+        },
+        {
+          "stdin": "4 8 15 16 23 42\n42",
+          "expect": "Found at 5\nComparisons: 6"
+        },
+        {
+          "stdin": "4 8 15 16 23 42\n7",
+          "expect": "Not found\nComparisons: 6"
+        },
+        {
+          "stdin": "9\n9",
+          "expect": "Found at 0\nComparisons: 1"
+        }
+      ]
+    },
+    {
+      "slug": "alevel-algorithms-t1-02",
+      "lesson": 1,
+      "tier": 2,
+      "difficulty": 3,
+      "xp": 25,
+      "title": "Count the comparisons: binary search",
+      "brief": "Input a line of whole numbers in ascending order, then a target. Do an iterative binary search (`low`, `high`, `mid = (low + high) // 2`), counting one comparison each time you look at `items[mid]`.\n\nPrint `Found at <position>` or `Not found`, then `Comparisons: <c>` on the next line. Compare the counts with linear search on the same list.",
+      "starter": "",
+      "hints": [
+        "Loop while low <= high, adding 1 to the count each time round.",
+        "If items[mid] < target, low = mid + 1; if bigger, high = mid - 1."
+      ],
+      "tests": [
+        {
+          "stdin": "4 8 15 16 23 42\n4",
+          "expect": "Found at 0\nComparisons: 2"
+        },
+        {
+          "stdin": "4 8 15 16 23 42\n42",
+          "expect": "Found at 5\nComparisons: 3"
+        },
+        {
+          "stdin": "4 8 15 16 23 42\n7",
+          "expect": "Not found\nComparisons: 3"
+        },
+        {
+          "stdin": "1 2 3 4 5 6 7 8 9 10 11 12 13 14 15\n15",
+          "expect": "Found at 14\nComparisons: 4"
+        }
+      ]
+    },
+    {
+      "slug": "alevel-algorithms-t1-03",
+      "lesson": 1,
+      "tier": 2,
+      "difficulty": 3,
+      "xp": 25,
+      "title": "How fast do they grow?",
+      "brief": "Input a whole number `n` (1 or more). Print how many steps each kind of algorithm would take for that `n`, one per line, in this format:\n\n```\nO(1): 1\nO(log n): <log2 n, rounded to 1 decimal place>\nO(n): <n>\nO(n log n): <n × log2 n, rounded to 1 decimal place>\nO(n^2): <n squared>\nO(2^n): <2 to the power n>\n```\n\nUse `math.log2`. Try 10, then 30, and notice which lines explode.",
+      "starter": "import math\n",
+      "hints": [
+        "round(math.log2(n), 1) and round(n * math.log2(n), 1)",
+        "2 ** n for the exponential line."
+      ],
+      "tests": [
+        {
+          "stdin": "10",
+          "expect": "O(1): 1\nO(log n): 3.3\nO(n): 10\nO(n log n): 33.2\nO(n^2): 100\nO(2^n): 1024"
+        },
+        {
+          "stdin": "1",
+          "expect": "O(1): 1\nO(log n): 0.0\nO(n): 1\nO(n log n): 0.0\nO(n^2): 1\nO(2^n): 2"
+        },
+        {
+          "stdin": "30",
+          "expect": "O(1): 1\nO(log n): 4.9\nO(n): 30\nO(n log n): 147.2\nO(n^2): 900\nO(2^n): 1073741824"
+        }
+      ]
+    },
+    {
+      "slug": "alevel-algorithms-t1-04",
+      "lesson": 1,
+      "tier": 3,
+      "difficulty": 4,
+      "xp": 35,
+      "title": "Every pair: O(n²)",
+      "brief": "Input a line of whole numbers, then a target. Using two nested loops, check **every pair** of different positions (`i` before `j`) and count how many pairs add up to the target. Also count every pair you check.\n\nPrint `Pairs: <p>` and then `Checked: <c>`. For `n` numbers, the checked count is always n(n − 1) / 2: that's what makes this O(n²).",
+      "starter": "",
+      "hints": [
+        "for i in range(len(items)): for j in range(i + 1, len(items)):",
+        "Add 1 to checked every time the inner loop runs."
+      ],
+      "tests": [
+        {
+          "stdin": "1 2 3 4 5\n6",
+          "expect": "Pairs: 2\nChecked: 10"
+        },
+        {
+          "stdin": "5\n10",
+          "expect": "Pairs: 0\nChecked: 0"
+        },
+        {
+          "stdin": "2 2 2 2\n4",
+          "expect": "Pairs: 6\nChecked: 6"
+        },
+        {
+          "stdin": "10 -10 0\n0",
+          "expect": "Pairs: 1\nChecked: 3"
+        }
+      ]
+    },
+    {
+      "slug": "alevel-algorithms-t1-stretch",
+      "lesson": 1,
+      "tier": 4,
+      "difficulty": 5,
+      "xp": 45,
+      "stretch": true,
+      "title": "From O(n²) to O(n)",
+      "brief": "If the list is **sorted**, a pair that adds up to a target can be found in O(n) with two pointers: `left` at the start, `right` at the end.\n- If the two items add up to the target, you've found it.\n- If the sum is too small, move `left` one place right.\n- If it's too big, move `right` one place left.\n- Stop when they meet.\n\nInput a line of whole numbers in ascending order, then a target. Count each sum you check. Print `<a> + <b>` (the two items, smaller first) and then `Checked: <c>`, or `No pair` and then `Checked: <c>`.",
+      "starter": "",
+      "hints": [
+        "Loop while left < right.",
+        "Each time round the loop, add 1 to checked before comparing."
+      ],
+      "tests": [
+        {
+          "stdin": "1 3 4 6 8 11\n10",
+          "expect": "4 + 6\nChecked: 5"
+        },
+        {
+          "stdin": "1 2 3\n100",
+          "expect": "No pair\nChecked: 2"
+        },
+        {
+          "stdin": "2 7 11 15\n9",
+          "expect": "2 + 7\nChecked: 3"
+        },
+        {
+          "stdin": "5\n10",
+          "expect": "No pair\nChecked: 0"
+        }
+      ]
+    },
+    {
+      "slug": "alevel-algorithms-t2-01",
+      "lesson": 2,
+      "tier": 2,
+      "difficulty": 3,
+      "xp": 25,
+      "title": "Merge two sorted lists",
+      "brief": "Write a function `merge(left, right)` that takes two lists that are each already in ascending order and returns one list with all their items in ascending order. Walk along both lists with two positions, always taking the smaller front item. Don't use `sorted` or `.sort()`.\n\nInput two lines of whole numbers (each already in order; either may be empty) and print the merged list separated by spaces.",
+      "starter": "def merge(left, right):\n    pass\n",
+      "hints": [
+        "while i < len(left) and j < len(right): compare left[i] and right[j].",
+        "When the loop ends, add whatever is left: result + left[i:] + right[j:]."
+      ],
+      "tests": [
+        {
+          "stdin": "1 4 9\n2 3 10 12",
+          "expect": "1 2 3 4 9 10 12"
+        },
+        {
+          "stdin": "\n5 6",
+          "expect": "5 6"
+        },
+        {
+          "stdin": "3 3\n3",
+          "expect": "3 3 3"
+        },
+        {
+          "stdin": "-5 0\n-10 20",
+          "expect": "-10 -5 0 20"
+        }
+      ]
+    },
+    {
+      "slug": "alevel-algorithms-t2-02",
+      "lesson": 2,
+      "tier": 3,
+      "difficulty": 3,
+      "xp": 30,
+      "title": "Merge sort",
+      "brief": "Write a recursive function `merge_sort(items)` that returns a sorted copy of a list:\n- if the list has 0 or 1 items, return it;\n- otherwise split it at `mid = len(items) // 2`, merge sort each half, and merge the results.\n\nInclude your `merge` function from the last task. Input a line of whole numbers and print them sorted, separated by spaces. Don't use `sorted` or `.sort()`.",
+      "starter": "",
+      "hints": [
+        "left = merge_sort(items[:mid]) and right = merge_sort(items[mid:]).",
+        "return merge(left, right)"
+      ],
+      "tests": [
+        {
+          "stdin": "38 27 43 3 9 82 10",
+          "expect": "3 9 10 27 38 43 82"
+        },
+        {
+          "stdin": "5",
+          "expect": "5"
+        },
+        {
+          "stdin": "2 1",
+          "expect": "1 2"
+        },
+        {
+          "stdin": "4 4 1 9 0 -3",
+          "expect": "-3 0 1 4 4 9"
+        }
+      ]
+    },
+    {
+      "slug": "alevel-algorithms-t2-03",
+      "lesson": 2,
+      "tier": 3,
+      "difficulty": 4,
+      "xp": 35,
+      "title": "Watch it merge",
+      "brief": "Change your merge sort so that every time it merges two lists, it prints the merged result (items separated by spaces) before returning it. Split at `mid = len(items) // 2` and sort the left half before the right half.\n\nInput a line of whole numbers. The printed lines show the order the merges happen in, from the smallest pieces up to the whole sorted list (which is the last line).",
+      "starter": "",
+      "hints": [
+        "Store the merged list in a variable, print it, then return it.",
+        "Lists of 0 or 1 items are returned without printing: no merge happened."
+      ],
+      "tests": [
+        {
+          "stdin": "38 27 43 3",
+          "expect": "27 38\n3 43\n3 27 38 43"
+        },
+        {
+          "stdin": "5 1 4 2 3",
+          "expect": "1 5\n2 3\n2 3 4\n1 2 3 4 5"
+        },
+        {
+          "stdin": "2 1",
+          "expect": "1 2"
+        },
+        {
+          "stdin": "9 8 7 6 5 4 3 2",
+          "expect": "8 9\n6 7\n6 7 8 9\n4 5\n2 3\n2 3 4 5\n2 3 4 5 6 7 8 9"
+        }
+      ]
+    },
+    {
+      "slug": "alevel-algorithms-t2-04",
+      "lesson": 2,
+      "tier": 4,
+      "difficulty": 4,
+      "xp": 40,
+      "title": "Stable sorting of records",
+      "brief": "Merge sort is **stable**: items that compare equal stay in their original order. That lets you sort records by one field without scrambling ties.\n\nInput a whole number `n`, then `n` lines each with a name and a score. Sort the students by score, **highest first**, using your own merge sort (no `sorted` or `.sort()`). Students with equal scores must stay in the order they were input. Print each as `<name> <score>`.",
+      "starter": "",
+      "hints": [
+        "Store (name, score) pairs, and compare the scores in merge.",
+        "For highest first, take from left when left[i][1] >= right[j][1]. The = keeps it stable."
+      ],
+      "tests": [
+        {
+          "stdin": "4\nAda 70\nSam 85\nLi 70\nJo 90",
+          "expect": "Jo 90\nSam 85\nAda 70\nLi 70"
+        },
+        {
+          "stdin": "1\nSolo 1",
+          "expect": "Solo 1"
+        },
+        {
+          "stdin": "3\nA 5\nB 5\nC 5",
+          "expect": "A 5\nB 5\nC 5"
+        }
+      ]
+    },
+    {
+      "slug": "alevel-algorithms-t2-stretch",
+      "lesson": 2,
+      "tier": 4,
+      "difficulty": 5,
+      "xp": 45,
+      "stretch": true,
+      "title": "Count merge sort's comparisons",
+      "brief": "Count how many comparisons merge sort makes: add 1 each time the `merge` loop compares a left item with a right item.\n\nInput a line of whole numbers. Sort them with your merge sort (split at `len(items) // 2`). Print the sorted list separated by spaces, then `Comparisons: <c>`. Compare the number with the (n − 1)² comparisons of a plain bubble sort on the same list.",
+      "starter": "",
+      "hints": [
+        "Use a global counter, increased inside the while loop of merge.",
+        "Comparisons stop as soon as one half runs out, so the count depends on the order of the input."
+      ],
+      "tests": [
+        {
+          "stdin": "38 27 43 3 9 82 10",
+          "expect": "3 9 10 27 38 43 82\nComparisons: 13"
+        },
+        {
+          "stdin": "1 2 3 4 5 6 7 8",
+          "expect": "1 2 3 4 5 6 7 8\nComparisons: 12"
+        },
+        {
+          "stdin": "8 7 6 5 4 3 2 1",
+          "expect": "1 2 3 4 5 6 7 8\nComparisons: 12"
+        },
+        {
+          "stdin": "7",
+          "expect": "7\nComparisons: 0"
+        }
+      ]
+    },
+    {
+      "slug": "alevel-algorithms-t3-01",
+      "lesson": 3,
+      "tier": 2,
+      "difficulty": 3,
+      "xp": 25,
+      "title": "Partition around a pivot",
+      "brief": "Input a line of whole numbers. Use the **first** number as the pivot. Partition the rest into items **smaller** than the pivot and items **greater than or equal** to it, keeping each list in its original order.\n\nPrint three lines: `Smaller: `, `Pivot: ` and `Larger: `, each followed by its items separated by spaces (nothing after the colon if a list is empty).",
+      "starter": "",
+      "hints": [
+        "pivot = items[0], then loop over items[1:].",
+        "Use < for smaller and >= for larger, so equal items go to the larger side."
+      ],
+      "tests": [
+        {
+          "stdin": "33 10 55 71 29 3",
+          "expect": "Smaller: 10 29 3\nPivot: 33\nLarger: 55 71"
+        },
+        {
+          "stdin": "5",
+          "expect": "Smaller:\nPivot: 5\nLarger:"
+        },
+        {
+          "stdin": "20 35 5 20 8",
+          "expect": "Smaller: 5 8\nPivot: 20\nLarger: 35 20"
+        },
+        {
+          "stdin": "1 2 3",
+          "expect": "Smaller:\nPivot: 1\nLarger: 2 3"
+        }
+      ]
+    },
+    {
+      "slug": "alevel-algorithms-t3-02",
+      "lesson": 3,
+      "tier": 3,
+      "difficulty": 3,
+      "xp": 30,
+      "title": "Quicksort",
+      "brief": "Write a recursive function `quicksort(items)` that returns a sorted copy of a list, using the **first** item as the pivot, as in the notes: lists of 0 or 1 items are returned as they are; otherwise partition into smaller and greater-or-equal, quicksort both, and join them with the pivot in the middle.\n\nInput a line of whole numbers and print them sorted, separated by spaces. Don't use `sorted` or `.sort()`.",
+      "starter": "def quicksort(items):\n    pass\n",
+      "hints": [
+        "return quicksort(smaller) + [pivot] + quicksort(larger)",
+        "Check the base case first: if len(items) <= 1: return items."
+      ],
+      "tests": [
+        {
+          "stdin": "33 10 55 71 29 3",
+          "expect": "3 10 29 33 55 71"
+        },
+        {
+          "stdin": "5",
+          "expect": "5"
+        },
+        {
+          "stdin": "4 4 1 9 0 -3",
+          "expect": "-3 0 1 4 4 9"
+        },
+        {
+          "stdin": "2 1",
+          "expect": "1 2"
+        }
+      ]
+    },
+    {
+      "slug": "alevel-algorithms-t3-03",
+      "lesson": 3,
+      "tier": 3,
+      "difficulty": 4,
+      "xp": 35,
+      "title": "Which pivots were chosen?",
+      "brief": "Change your quicksort so that each time it chooses a pivot (on a list of 2 or more items), it prints `Pivot <p> splits <smaller> | <larger>`, with each side's items separated by spaces. Sort the smaller side before the larger side.\n\nInput a line of whole numbers. After all the pivot lines, print `Sorted: ` and the sorted list.\n\nFor example, the first line for `33 10 55 71 29 3` is `Pivot 33 splits 10 29 3 | 55 71`.",
+      "starter": "",
+      "hints": [
+        "Print straight after partitioning, before the recursive calls.",
+        "Lists of 0 or 1 items return without printing."
+      ],
+      "tests": [
+        {
+          "stdin": "33 10 55 71 29 3",
+          "expect": "Pivot 33 splits 10 29 3 | 55 71\nPivot 10 splits 3 | 29\nPivot 55 splits  | 71\nSorted: 3 10 29 33 55 71"
+        },
+        {
+          "stdin": "2 1",
+          "expect": "Pivot 2 splits 1 |\nSorted: 1 2"
+        },
+        {
+          "stdin": "5 3 8 1",
+          "expect": "Pivot 5 splits 3 1 | 8\nPivot 3 splits 1 |\nSorted: 1 3 5 8"
+        }
+      ]
+    },
+    {
+      "slug": "alevel-algorithms-t3-04",
+      "lesson": 3,
+      "tier": 4,
+      "difficulty": 4,
+      "xp": 40,
+      "title": "Quicksort's best and worst",
+      "brief": "Count quicksort's comparisons: each item compared with the pivot during a partition counts as one (so partitioning a list of `k` items costs `k − 1`). Use the first item as the pivot.\n\nInput a line of whole numbers. Print the sorted list separated by spaces, then `Comparisons: <c>`. Then try an already-sorted list of the same length: it should cost far more, n(n − 1) / 2.",
+      "starter": "",
+      "hints": [
+        "Add len(items) - 1 to a global counter each time you partition.",
+        "Count once per partition, not twice for the two list comprehensions."
+      ],
+      "tests": [
+        {
+          "stdin": "4 2 6 1 3 5 7",
+          "expect": "1 2 3 4 5 6 7\nComparisons: 10"
+        },
+        {
+          "stdin": "1 2 3 4 5 6 7",
+          "expect": "1 2 3 4 5 6 7\nComparisons: 21"
+        },
+        {
+          "stdin": "7 6 5 4 3 2 1",
+          "expect": "1 2 3 4 5 6 7\nComparisons: 21"
+        },
+        {
+          "stdin": "9",
+          "expect": "9\nComparisons: 0"
+        }
+      ]
+    },
+    {
+      "slug": "alevel-algorithms-t3-stretch",
+      "lesson": 3,
+      "tier": 4,
+      "difficulty": 5,
+      "xp": 45,
+      "stretch": true,
+      "title": "Quicksort in place",
+      "brief": "Quicksort can sort a list without making new lists, using the **Lomuto** partition. To partition the part of the list from `low` to `high`:\n- the pivot is the **last** item, `items[high]`;\n- keep a position `i`, starting at `low`. For each `j` from `low` to `high − 1`: if `items[j]` is smaller than the pivot, swap `items[i]` and `items[j]`, then add 1 to `i`;\n- finally swap `items[i]` with `items[high]`. The pivot is now at `i`, in its final place.\n\nThen quicksort `low` to `i − 1` and `i + 1` to `high`. Stop when `low >= high`.\n\nInput a line of whole numbers. After **each** partition, print the whole list separated by spaces. Finally print `Sorted: ` and the list.",
+      "starter": "",
+      "hints": [
+        "Write partition(items, low, high), which returns i, and quicksort(items, low, high).",
+        "Call quicksort(items, 0, len(items) - 1) once; it changes the list itself."
+      ],
+      "tests": [
+        {
+          "stdin": "5 2 9 1 6",
+          "expect": "5 2 1 6 9\n1 2 5 6 9\n1 2 5 6 9\nSorted: 1 2 5 6 9"
+        },
+        {
+          "stdin": "3 1 2",
+          "expect": "1 2 3\nSorted: 1 2 3"
+        },
+        {
+          "stdin": "1 2 3 4",
+          "expect": "1 2 3 4\n1 2 3 4\n1 2 3 4\nSorted: 1 2 3 4"
+        }
+      ]
+    },
+    {
+      "slug": "alevel-algorithms-t4-01",
+      "lesson": 4,
+      "tier": 2,
+      "difficulty": 4,
+      "xp": 35,
+      "title": "Shortest distances",
+      "brief": "The starter code reads an **undirected** weighted graph: a whole number `n`, then `n` lines `<vertex> <vertex> <weight>`. `graph[\"A\"][\"B\"]` is the weight between A and B.\n\nInput a start vertex. Use Dijkstra's algorithm (from the notes; ties go to the alphabetically first vertex) to find the shortest distance to every vertex. Print every vertex in alphabetical order as `<vertex>: <distance>`.",
+      "starter": "graph = {}\nfor i in range(int(input())):\n    a, b, w = input().split()\n    graph.setdefault(a, {})[b] = int(w)\n    graph.setdefault(b, {})[a] = int(w)\n",
+      "hints": [
+        "distance = {v: float(\"inf\") for v in graph}, then distance[start] = 0.",
+        "min(unvisited, key=lambda v: (distance[v], v)) picks the smallest distance, ties alphabetical."
+      ],
+      "tests": [
+        {
+          "stdin": "4\nA B 4\nA C 1\nC B 2\nB D 5\nA",
+          "expect": "A: 0\nB: 3\nC: 1\nD: 8"
+        },
+        {
+          "stdin": "5\nA B 7\nA C 9\nA F 14\nB C 10\nC F 2\nF",
+          "expect": "A: 11\nB: 12\nC: 2\nF: 0"
+        },
+        {
+          "stdin": "1\nX Y 3\nY",
+          "expect": "X: 3\nY: 0"
+        }
+      ]
+    },
+    {
+      "slug": "alevel-algorithms-t4-02",
+      "lesson": 4,
+      "tier": 3,
+      "difficulty": 4,
+      "xp": 40,
+      "title": "The route itself",
+      "brief": "Using the starter code's graph, input a start vertex and an end vertex. Run Dijkstra's algorithm, and whenever you update a vertex's distance, also record its `previous` vertex.\n\nThen rebuild the route by following `previous` from the end back to the start, and reverse it. Print the route joined by ` -> `, then `Distance: ` and its length. If the end can't be reached, print `No route`.",
+      "starter": "graph = {}\nfor i in range(int(input())):\n    a, b, w = input().split()\n    graph.setdefault(a, {})[b] = int(w)\n    graph.setdefault(b, {})[a] = int(w)\n",
+      "hints": [
+        "previous[n] = current, at the same moment you update distance[n].",
+        "Build the route: v = end; while v != start: route.append(v); v = previous[v]. Then add start and reverse."
+      ],
+      "tests": [
+        {
+          "stdin": "4\nA B 4\nA C 1\nC B 2\nB D 5\nA\nD",
+          "expect": "A -> C -> B -> D\nDistance: 8"
+        },
+        {
+          "stdin": "5\nA B 7\nA C 9\nA F 14\nB C 10\nC F 2\nA\nF",
+          "expect": "A -> C -> F\nDistance: 11"
+        },
+        {
+          "stdin": "2\nA B 1\nC D 1\nA\nD",
+          "expect": "No route"
+        }
+      ]
+    },
+    {
+      "slug": "alevel-algorithms-t4-03",
+      "lesson": 4,
+      "tier": 3,
+      "difficulty": 4,
+      "xp": 40,
+      "title": "The order vertices are finalised",
+      "brief": "Exam questions often ask you to show the order Dijkstra's algorithm visits the vertices. Using the starter code's graph, input a start vertex. Run Dijkstra (ties alphabetical) and, each time a vertex is chosen and marked visited, print `<vertex> <distance>`.\n\nUnreachable vertices are never chosen, so they aren't printed.",
+      "starter": "graph = {}\nfor i in range(int(input())):\n    a, b, w = input().split()\n    graph.setdefault(a, {})[b] = int(w)\n    graph.setdefault(b, {})[a] = int(w)\n",
+      "hints": [
+        "Print straight after adding current to visited.",
+        "Stop when the smallest remaining distance is infinity."
+      ],
+      "tests": [
+        {
+          "stdin": "4\nA B 4\nA C 1\nC B 2\nB D 5\nA",
+          "expect": "A 0\nC 1\nB 3\nD 8"
+        },
+        {
+          "stdin": "6\nA B 2\nA C 5\nB C 1\nB D 7\nC D 2\nD E 1\nA",
+          "expect": "A 0\nB 2\nC 3\nD 5\nE 6"
+        },
+        {
+          "stdin": "2\nA B 1\nC D 1\nC",
+          "expect": "C 0\nD 1"
+        }
+      ]
+    },
+    {
+      "slug": "alevel-algorithms-t4-04",
+      "lesson": 4,
+      "tier": 3,
+      "difficulty": 4,
+      "xp": 40,
+      "title": "One-way streets",
+      "brief": "Dijkstra works on directed graphs too. Input a whole number `n`, then `n` lines `<from> <to> <weight>`, each a **one-way** road. Then input a start vertex.\n\nBuild the graph so every vertex mentioned appears (even one with no roads out). Run Dijkstra (ties alphabetical) and print every vertex alphabetically as `<vertex>: <distance>`, writing `unreachable` for any that can't be reached.",
+      "starter": "",
+      "hints": [
+        "graph.setdefault(a, {})[b] = w, and graph.setdefault(b, {}) so b appears even with no roads out.",
+        "Print \"unreachable\" when the distance is still infinity."
+      ],
+      "tests": [
+        {
+          "stdin": "3\nA B 5\nB C 3\nC A 1\nB",
+          "expect": "A: 4\nB: 0\nC: 3"
+        },
+        {
+          "stdin": "3\nA B 5\nB C 3\nA C 10\nA",
+          "expect": "A: 0\nB: 5\nC: 8"
+        },
+        {
+          "stdin": "2\nA B 1\nC B 1\nA",
+          "expect": "A: 0\nB: 1\nC: unreachable"
+        }
+      ]
+    },
+    {
+      "slug": "alevel-algorithms-t4-stretch",
+      "lesson": 4,
+      "tier": 4,
+      "difficulty": 5,
+      "xp": 45,
+      "stretch": true,
+      "title": "Cheapest path across a grid",
+      "brief": "Each square of a grid has a cost to step onto it. You start on the top-left square (its cost counts) and want to reach the bottom-right square as cheaply as possible, moving up, down, left or right.\n\nTreat each square as a vertex, and stepping onto a square as an edge weighted by that square's cost. Use Dijkstra with `heapq` as the priority queue: push `(distance, row, col)` and pop the smallest.\n\nInput the number of rows, then each row of single-digit costs with no spaces (like `131`). Print the cheapest total cost.",
+      "starter": "import heapq\n",
+      "hints": [
+        "Start with heap = [(grid[0][0], 0, 0)] and best = {(0, 0): grid[0][0]}.",
+        "When you pop a square whose distance is bigger than best for it, skip it: a cheaper route was already found."
+      ],
+      "tests": [
+        {
+          "stdin": "3\n131\n151\n111",
+          "expect": "5"
+        },
+        {
+          "stdin": "1\n7",
+          "expect": "7"
+        },
+        {
+          "stdin": "3\n199\n119\n911",
+          "expect": "5"
+        },
+        {
+          "stdin": "2\n12\n34",
+          "expect": "7"
+        }
+      ]
+    },
+    {
+      "slug": "alevel-algorithms-t5-01",
+      "lesson": 5,
+      "tier": 1,
+      "difficulty": 3,
+      "xp": 25,
+      "title": "Manhattan distance",
+      "brief": "Write a function `manhattan(r, c, goal_r, goal_c)` that returns the number of rows plus the number of columns between square (r, c) and the goal square.\n\nInput the goal as `row col` on one line. Then input a whole number `n` and `n` squares, each `row col`. For each square print `h = <value>`.",
+      "starter": "def manhattan(r, c, goal_r, goal_c):\n    pass\n",
+      "hints": [
+        "abs(r - goal_r) + abs(c - goal_c)",
+        "Split each input line into two whole numbers."
+      ],
+      "tests": [
+        {
+          "stdin": "4 4\n3\n0 0\n2 3\n4 4",
+          "expect": "h = 8\nh = 3\nh = 0"
+        },
+        {
+          "stdin": "0 0\n1\n5 2",
+          "expect": "h = 7"
+        },
+        {
+          "stdin": "2 2\n2\n2 0\n0 2",
+          "expect": "h = 2\nh = 2"
+        }
+      ]
+    },
+    {
+      "slug": "alevel-algorithms-t5-02",
+      "lesson": 5,
+      "tier": 3,
+      "difficulty": 4,
+      "xp": 40,
+      "title": "A* on a graph",
+      "brief": "Input an undirected weighted graph: a whole number `n`, then `n` lines `<vertex> <vertex> <weight>`. Then input the heuristic: a whole number `k` and `k` lines `<vertex> <h>`. Finally input the start and the goal on two lines.\n\nRun A*: keep `g` (like Dijkstra's distance, starting at infinity, 0 for the start) and a set of visited vertices. Each step, choose the unvisited vertex with a finite `g` and the smallest `f = g + h` (ties: smaller `h`, then alphabetical). Stop when the goal is chosen. Update neighbours just as Dijkstra does, recording `previous`.\n\nPrint the route joined by ` -> ` and then `Cost: <g of goal>`.",
+      "starter": "",
+      "hints": [
+        "Candidates are vertices not visited with g[v] < infinity.",
+        "Choose with min(candidates, key=lambda v: (g[v] + h[v], h[v], v))."
+      ],
+      "tests": [
+        {
+          "stdin": "5\nS A 2\nS B 4\nA C 5\nB C 1\nC G 3\n5\nS 6\nA 6\nB 3\nC 3\nG 0\nS\nG",
+          "expect": "S -> B -> C -> G\nCost: 8"
+        },
+        {
+          "stdin": "1\nX Y 9\n2\nX 9\nY 0\nX\nY",
+          "expect": "X -> Y\nCost: 9"
+        },
+        {
+          "stdin": "4\nA B 1\nB D 1\nA C 1\nC D 5\n4\nA 2\nB 1\nC 1\nD 0\nA\nD",
+          "expect": "A -> B -> D\nCost: 2"
+        }
+      ]
+    },
+    {
+      "slug": "alevel-algorithms-t5-03",
+      "lesson": 5,
+      "tier": 3,
+      "difficulty": 4,
+      "xp": 40,
+      "title": "A* through a maze",
+      "brief": "A grid is made of `.` (open) and `#` (wall), with `S` and `G` (goal) on open squares. Moves are up, down, left or right, each costing 1.\n\nUse A* with the Manhattan distance to G as `h`. Keep `g` for each square found so far; each step choose the open (found but not yet visited) square with the smallest `f = g + h`, ties broken by smaller `h`, then smaller row, then smaller column. Stop when G is chosen.\n\nInput the number of rows, then each row. Print `Moves: <g of G>`, or `No path` if G can't be reached.",
+      "starter": "",
+      "hints": [
+        "g = {start: 0}; the open squares are those in g but not visited.",
+        "min(open_squares, key=lambda s: (g[s] + h(s), h(s), s[0], s[1]))"
+      ],
+      "tests": [
+        {
+          "stdin": "3\nS..\n.#.\n..G",
+          "expect": "Moves: 4"
+        },
+        {
+          "stdin": "3\nS#G\n.#.\n...",
+          "expect": "Moves: 6"
+        },
+        {
+          "stdin": "2\nS#\n#G",
+          "expect": "No path"
+        },
+        {
+          "stdin": "1\nSG",
+          "expect": "Moves: 1"
+        }
+      ]
+    },
+    {
+      "slug": "alevel-algorithms-t5-04",
+      "lesson": 5,
+      "tier": 4,
+      "difficulty": 5,
+      "xp": 45,
+      "title": "How much work does the heuristic save?",
+      "brief": "Run the same grid search twice and compare how many squares each **visits** (marks as visited, including the goal):\n- once with A* using the Manhattan distance;\n- once with `h = 0` everywhere, which is Dijkstra.\n\nUse the same rules as the last task (ties: smaller `h`, then row, then column). Input the grid as before (it will always have a path). Print `A*: <visited>`, then `Dijkstra: <visited>`, then `Moves: <moves>` (both find the same length).",
+      "starter": "",
+      "hints": [
+        "Write one function search(grid, use_heuristic) that returns (visited count, moves).",
+        "Count the goal as visited when it is chosen."
+      ],
+      "tests": [
+        {
+          "stdin": "5\nS....\n.....\n.....\n.....\n....G",
+          "expect": "A*: 9\nDijkstra: 25\nMoves: 8"
+        },
+        {
+          "stdin": "3\nS.#\n..#\n..G",
+          "expect": "A*: 5\nDijkstra: 7\nMoves: 4"
+        },
+        {
+          "stdin": "1\nS...G",
+          "expect": "A*: 5\nDijkstra: 5\nMoves: 4"
+        }
+      ]
+    },
+    {
+      "slug": "alevel-algorithms-t5-stretch",
+      "lesson": 5,
+      "tier": 4,
+      "difficulty": 5,
+      "xp": 45,
+      "stretch": true,
+      "title": "Draw the path",
+      "brief": "Extend A* through a maze (same rules as before) to record each square's `previous` square whenever its `g` is updated. When G is chosen, follow `previous` back to S and mark every square **between** them with `*` (leave S and G as they are).\n\nInput the grid as before (it will always have a path). Print the grid with the path drawn on it, then `Moves: <moves>`.",
+      "starter": "",
+      "hints": [
+        "Store the grid as a list of lists so squares can be changed.",
+        "Walk back: s = previous[goal]; while s != start: mark it, then s = previous[s]."
+      ],
+      "tests": [
+        {
+          "stdin": "3\nS..\n##.\nG..",
+          "expect": "S**\n##*\nG**\nMoves: 6"
+        },
+        {
+          "stdin": "3\nS.#\n..#\n..G",
+          "expect": "S*#\n.*#\n.*G\nMoves: 4"
+        },
+        {
+          "stdin": "1\nSG",
+          "expect": "SG\nMoves: 1"
+        }
+      ]
+    }
+  ],
+  "homeworkTasks": [
+    {
+      "slug": "alevel-algorithms-hw-01",
+      "lesson": 1,
+      "tier": 2,
+      "difficulty": 3,
+      "xp": 25,
+      "title": "Bubble sort's comparisons and swaps",
+      "brief": "Input a line of whole numbers. Sort them with a plain bubble sort: `n − 1` passes, and in each pass compare every neighbouring pair from the start to the end, swapping if they're in the wrong order. (Don't stop early.)\n\nCount every comparison and every swap. Print the sorted list separated by spaces, then `Comparisons: <c>` and `Swaps: <s>`.",
+      "starter": "",
+      "hints": [
+        "for p in range(n - 1): for i in range(n - 1): compare items[i] and items[i + 1].",
+        "Comparisons will always be (n − 1)²; swaps depends on how unsorted the list was."
+      ],
+      "tests": [
+        {
+          "stdin": "5 1 4 2 8",
+          "expect": "1 2 4 5 8\nComparisons: 16\nSwaps: 4"
+        },
+        {
+          "stdin": "1 2 3",
+          "expect": "1 2 3\nComparisons: 4\nSwaps: 0"
+        },
+        {
+          "stdin": "3 2 1",
+          "expect": "1 2 3\nComparisons: 4\nSwaps: 3"
+        }
+      ]
+    },
+    {
+      "slug": "alevel-algorithms-hw-02",
+      "lesson": 1,
+      "tier": 3,
+      "difficulty": 3,
+      "xp": 30,
+      "title": "Worst-case binary search",
+      "brief": "In the worst case, binary search on `n` items needs `floor(log2 n) + 1` comparisons.\n\nInput a whole number `n` (1 or more). Make the list `[1, 2, ..., n]` and do a binary search for a value that **isn't** there and is bigger than everything (`n + 1`), counting comparisons. Print `Counted: <c>` and `Formula: <f>` on two lines, where `f` is `math.floor(math.log2(n)) + 1`.",
+      "starter": "import math\n",
+      "hints": [
+        "Use the same binary search loop as in the lesson, counting each time round.",
+        "The two numbers should always match."
+      ],
+      "tests": [
+        {
+          "stdin": "8",
+          "expect": "Counted: 4\nFormula: 4"
+        },
+        {
+          "stdin": "1",
+          "expect": "Counted: 1\nFormula: 1"
+        },
+        {
+          "stdin": "1000",
+          "expect": "Counted: 10\nFormula: 10"
+        },
+        {
+          "stdin": "15",
+          "expect": "Counted: 4\nFormula: 4"
+        }
+      ]
+    },
+    {
+      "slug": "alevel-algorithms-hw-03",
+      "lesson": 2,
+      "tier": 3,
+      "difficulty": 3,
+      "xp": 30,
+      "title": "Merge sort for words",
+      "brief": "Input a line of words. Sort them alphabetically using your own merge sort (no `sorted` or `.sort()`), and print them separated by spaces. The same code works for words, because `<=` compares strings alphabetically.",
+      "starter": "",
+      "hints": [
+        "Reuse merge and merge_sort from the lesson unchanged.",
+        "Capital letters sort before lower-case ones, so keep the input lower case."
+      ],
+      "tests": [
+        {
+          "stdin": "pear apple mango kiwi",
+          "expect": "apple kiwi mango pear"
+        },
+        {
+          "stdin": "zebra",
+          "expect": "zebra"
+        },
+        {
+          "stdin": "b a c a",
+          "expect": "a a b c"
+        }
+      ]
+    },
+    {
+      "slug": "alevel-algorithms-hw-04",
+      "lesson": 2,
+      "tier": 3,
+      "difficulty": 4,
+      "xp": 35,
+      "title": "Merge three lists",
+      "brief": "Three classes have each sorted their test scores in ascending order. Input three lines of whole numbers (each in order; any may be empty). Using your `merge` function twice, combine them into one ascending list and print it separated by spaces.",
+      "starter": "",
+      "hints": [
+        "merge(merge(a, b), c)",
+        "No need for merge sort: the inputs are already sorted."
+      ],
+      "tests": [
+        {
+          "stdin": "1 5 9\n2 6\n3 4 10",
+          "expect": "1 2 3 4 5 6 9 10"
+        },
+        {
+          "stdin": "\n\n7",
+          "expect": "7"
+        },
+        {
+          "stdin": "5 5\n5\n1 9",
+          "expect": "1 5 5 5 9"
+        }
+      ]
+    },
+    {
+      "slug": "alevel-algorithms-hw-05",
+      "lesson": 3,
+      "tier": 3,
+      "difficulty": 3,
+      "xp": 30,
+      "title": "Biggest first",
+      "brief": "Input a line of whole numbers. Sort them into **descending** order using your own quicksort with the first item as the pivot (no `sorted` or `.sort()`), and print them separated by spaces.\n\nOnly the partition needs to change: put the **greater** items on the first side.",
+      "starter": "",
+      "hints": [
+        "Split into larger (x > pivot) and smaller_or_equal (x <= pivot).",
+        "return quicksort(larger) + [pivot] + quicksort(smaller_or_equal)"
+      ],
+      "tests": [
+        {
+          "stdin": "3 9 1 7",
+          "expect": "9 7 3 1"
+        },
+        {
+          "stdin": "4",
+          "expect": "4"
+        },
+        {
+          "stdin": "5 5 2 8",
+          "expect": "8 5 5 2"
+        }
+      ]
+    },
+    {
+      "slug": "alevel-algorithms-hw-06",
+      "lesson": 3,
+      "tier": 4,
+      "difficulty": 4,
+      "xp": 40,
+      "title": "The k-th smallest",
+      "brief": "To find the k-th smallest item, you don't need to sort everything. **Quickselect** partitions around the first item (smaller / greater-or-equal, as in quicksort), then looks only in the side that must contain the answer:\n- if `k` is at most the size of the smaller side, find the k-th smallest in the smaller side;\n- if `k` is exactly one more than that size, the pivot is the answer;\n- otherwise find the (k − size of smaller − 1)-th smallest in the larger side.\n\nInput a line of whole numbers and then `k` (1 means the smallest). Print the k-th smallest.",
+      "starter": "",
+      "hints": [
+        "Write a recursive select(items, k).",
+        "Only one recursive call is made each time, which is why it's quicker than a full sort on average."
+      ],
+      "tests": [
+        {
+          "stdin": "7 2 9 4 1\n2",
+          "expect": "2"
+        },
+        {
+          "stdin": "7 2 9 4 1\n5",
+          "expect": "9"
+        },
+        {
+          "stdin": "5\n1",
+          "expect": "5"
+        },
+        {
+          "stdin": "3 3 1\n3",
+          "expect": "3"
+        }
+      ]
+    },
+    {
+      "slug": "alevel-algorithms-hw-07",
+      "lesson": 4,
+      "tier": 3,
+      "difficulty": 4,
+      "xp": 40,
+      "title": "Quickest journey",
+      "brief": "A train network's journey times (in minutes) are given as undirected edges. Input a whole number `n`, then `n` lines `<station> <station> <minutes>`, then a start station and a destination on two lines.\n\nUse Dijkstra's algorithm to print `<minutes> minutes` for the quickest journey, or `No route`.",
+      "starter": "",
+      "hints": [
+        "Build an undirected weighted graph as a dictionary of dictionaries.",
+        "You can stop as soon as the destination is chosen as the current vertex."
+      ],
+      "tests": [
+        {
+          "stdin": "3\nLeeds York 25\nYork Hull 45\nLeeds Hull 80\nLeeds\nHull",
+          "expect": "70 minutes"
+        },
+        {
+          "stdin": "1\nA B 5\nB\nA",
+          "expect": "5 minutes"
+        },
+        {
+          "stdin": "2\nA B 1\nC D 1\nA\nD",
+          "expect": "No route"
+        }
+      ]
+    },
+    {
+      "slug": "alevel-algorithms-hw-08",
+      "lesson": 4,
+      "tier": 3,
+      "difficulty": 4,
+      "xp": 40,
+      "title": "Within reach",
+      "brief": "Input an undirected weighted graph (a whole number `n`, then `n` lines `<vertex> <vertex> <weight>`), then a start vertex, then a maximum distance.\n\nUse Dijkstra's algorithm to find every **other** vertex whose shortest distance from the start is at most the maximum. Print them alphabetically separated by spaces, or `None`.",
+      "starter": "",
+      "hints": [
+        "Run Dijkstra as usual, then filter the distances.",
+        "Leave out the start vertex itself."
+      ],
+      "tests": [
+        {
+          "stdin": "4\nA B 4\nA C 1\nC B 2\nB D 5\nA\n3",
+          "expect": "B C"
+        },
+        {
+          "stdin": "4\nA B 4\nA C 1\nC B 2\nB D 5\nD\n1",
+          "expect": "None"
+        },
+        {
+          "stdin": "2\nX Y 2\nY Z 2\nY\n2",
+          "expect": "X Z"
+        }
+      ]
+    },
+    {
+      "slug": "alevel-algorithms-hw-09",
+      "lesson": 5,
+      "tier": 3,
+      "difficulty": 3,
+      "xp": 30,
+      "title": "Is the heuristic admissible?",
+      "brief": "A heuristic is admissible if it never overestimates the real shortest distance to the goal.\n\nInput a whole number `n`, then `n` lines `<vertex> <h> <real>`, where `h` is the heuristic's estimate and `real` is the true shortest distance to the goal. Print `Admissible` if every estimate is at most the real distance; otherwise print `Overestimates at ` followed by each vertex where it overestimates, in input order, separated by spaces.",
+      "starter": "",
+      "hints": [
+        "Collect the vertices where h > real.",
+        "An empty list means the heuristic is admissible."
+      ],
+      "tests": [
+        {
+          "stdin": "3\nA 4 5\nB 2 2\nC 0 0",
+          "expect": "Admissible"
+        },
+        {
+          "stdin": "2\nA 7 5\nB 3 1",
+          "expect": "Overestimates at A B"
+        },
+        {
+          "stdin": "1\nG 0 0",
+          "expect": "Admissible"
+        }
+      ]
+    },
+    {
+      "slug": "alevel-algorithms-hw-10",
+      "lesson": 5,
+      "tier": 3,
+      "difficulty": 4,
+      "xp": 35,
+      "title": "Which vertex next?",
+      "brief": "Partway through an A* search, the open vertices have these values. Input a whole number `n`, then `n` lines `<vertex> <g> <h>`.\n\nPrint each vertex with its `f` value as `<vertex>: f = <f>`, in input order. Then print `Next: ` and the vertex A* would choose: smallest `f`, ties broken by smaller `h`, then alphabetical.",
+      "starter": "",
+      "hints": [
+        "f = g + h for each vertex.",
+        "Build a tuple (f, h, name) for each vertex: min() of the tuples breaks ties in exactly that order."
+      ],
+      "tests": [
+        {
+          "stdin": "3\nA 2 6\nB 4 3\nC 5 3",
+          "expect": "A: f = 8\nB: f = 7\nC: f = 8\nNext: B"
+        },
+        {
+          "stdin": "2\nX 1 1\nY 0 2",
+          "expect": "X: f = 2\nY: f = 2\nNext: X"
+        },
+        {
+          "stdin": "1\nG 9 0",
+          "expect": "G: f = 9\nNext: G"
+        }
+      ]
+    }
+  ]
+}

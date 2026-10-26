@@ -22,6 +22,7 @@ import alevelOop from "@/content/alevel-oop.json";
 import alevelRecursion from "@/content/alevel-recursion.json";
 import alevelDataStructures from "@/content/alevel-data-structures.json";
 import alevelTreesGraphs from "@/content/alevel-trees-graphs.json";
+import alevelAlgorithms from "@/content/alevel-algorithms.json";
 import { GCSE_TOPICS, isTopicInReview, topicsFor, type Board, type TrackKey } from "@/lib/game";
 
 export type LessonContent = {
@@ -144,6 +145,7 @@ const RAW = [
   alevelRecursion,
   alevelDataStructures,
   alevelTreesGraphs,
+  alevelAlgorithms,
 ] as unknown as RawTopic[];
 
 export const LESSONS: LessonContent[] = RAW.flatMap((t) =>
