@@ -32,7 +32,8 @@ for v in graph:
 export const lessons = [
   {
     title: "Binary search trees",
-    summary: "Trees where everything smaller goes left and everything bigger goes right, so searching halves the work at each step.",
+    summary:
+      "Trees where everything smaller goes left and everything bigger goes right, so searching halves the work at each step.",
     notes: `
 A **tree** is a set of **nodes** joined by **edges**, with one **root** at the top and no cycles. A node's children hang below it; a node with no children is a **leaf**.
 
@@ -93,7 +94,8 @@ print(root.left.right.value)`,
         question: "Insert 5, 2, 8, 1 into an empty BST. What is the left child of 2?",
         options: ["1", "8", "5", "It has none"],
         answer: "1",
-        explanation: "5 is the root; 2 goes left of 5; 8 goes right; 1 is smaller than 5 and smaller than 2, so it is 2's left child.",
+        explanation:
+          "5 is the root; 2 goes left of 5; 8 goes right; 1 is smaller than 5 and smaller than 2, so it is 2's left child.",
       },
       {
         question: "Why can inserting values in sorted order make a BST slow to search?",
@@ -104,7 +106,8 @@ print(root.left.right.value)`,
           "It makes the tree too wide",
         ],
         answer: "Every node goes on the same side, making a long chain",
-        explanation: "1, 2, 3, 4 each go to the right of the last, so searching has to visit every node, like a list.",
+        explanation:
+          "1, 2, 3, 4 each go to the right of the last, so searching has to visit every node, like a list.",
       },
     ],
     tasks: [
@@ -270,7 +273,12 @@ for x in input().split():
 low, high = [int(x) for x in input().split()]
 print(count_between(root, low, high))
 print("Visited: " + str(visited))`,
-        inputs: ["8 3 10 1 6 14 4 7 13\n5 9", "8 3 10\n100 200", "5\n5 5", "50 30 70 20 40 60 80\n25 65"],
+        inputs: [
+          "8 3 10 1 6 14 4 7 13\n5 9",
+          "8 3 10\n100 200",
+          "5\n5 5",
+          "50 30 70 20 40 60 80\n25 65",
+        ],
       },
     ],
     homework: [
@@ -307,10 +315,7 @@ Write a recursive function \`size(node)\` that returns how many nodes are in a t
 
 Using the starter code, input a line of whole numbers, insert them, and print the tree's size. Then input another number, insert it, and print the size again.`,
         starter: NODE,
-        hints: [
-          "if node is None: return 0",
-          "return 1 + size(node.left) + size(node.right)",
-        ],
+        hints: ["if node is None: return 0", "return 1 + size(node.left) + size(node.right)"],
         solution: `${NODE}
 def size(node):
     if node is None:
@@ -329,7 +334,8 @@ print(size(root))`,
   },
   {
     title: "Tree traversals",
-    summary: "Visiting every node: pre-order, in-order, post-order and breadth-first, and what each is used for.",
+    summary:
+      "Visiting every node: pre-order, in-order, post-order and breadth-first, and what each is used for.",
     notes: `
 To **traverse** a tree is to visit every node once. The three **depth-first** traversals differ only in *when* the node itself is visited compared with its subtrees:
 
@@ -379,7 +385,8 @@ print(result)`,
         question: "Which traversal visits the values of a binary search tree in ascending order?",
         options: ["In-order", "Pre-order", "Post-order", "Breadth-first"],
         answer: "In-order",
-        explanation: "Left subtree (smaller), node, right subtree (bigger), at every level, gives sorted order.",
+        explanation:
+          "Left subtree (smaller), node, right subtree (bigger), at every level, gives sorted order.",
       },
       {
         question: "In post-order, when is a node visited?",
@@ -396,7 +403,8 @@ print(result)`,
         question: "Which data structure does a breadth-first traversal use?",
         options: ["A queue", "A stack", "A hash table", "A linked list only"],
         answer: "A queue",
-        explanation: "Children join the back of the queue, so all of one level is visited before the next.",
+        explanation:
+          "Children join the back of the queue, so all of one level is visited before the next.",
       },
     ],
     tasks: [
@@ -627,7 +635,12 @@ for x in input().split():
 result = []
 in_order(root, result)
 print(" ".join(result) if result else "(empty)")`,
-        inputs: ["8 3 10 1 6 14\n3", "8 3 10 1 6 14\n8 99 1", "5\n5", "50 30 70 20 40 60 80\n50 30 70"],
+        inputs: [
+          "8 3 10 1 6 14\n3",
+          "8 3 10 1 6 14\n8 99 1",
+          "5\n5",
+          "50 30 70 20 40 60 80\n50 30 70",
+        ],
       },
     ],
     homework: [
@@ -692,7 +705,8 @@ print(" ".join(result))`,
   },
   {
     title: "Representing graphs",
-    summary: "Vertices and edges, directed and weighted graphs, and storing them as an adjacency matrix or list.",
+    summary:
+      "Vertices and edges, directed and weighted graphs, and storing them as an adjacency matrix or list.",
     notes: `
 A **graph** is a set of **vertices** (nodes) joined by **edges** (arcs). Graphs model anything with connections: road maps, social networks, the internet, computer networks.
 
@@ -737,7 +751,8 @@ for vertex in sorted(graph):
           "Never",
         ],
         answer: "When the graph is sparse, with few edges",
-        explanation: "A matrix always stores a cell for every possible edge; a list only stores the edges that exist.",
+        explanation:
+          "A matrix always stores a cell for every possible edge; a list only stores the edges that exist.",
       },
       {
         question: "What does a weighted graph have that an unweighted graph doesn't?",
@@ -770,7 +785,7 @@ Store the graph as an adjacency list (a dictionary from each vertex to a list of
         starter: "",
         hints: [
           "For each edge a b: graph.setdefault(a, []).append(b) and the same the other way round.",
-          "Print with for v in sorted(graph): and \" \".join(sorted(graph[v])).",
+          'Print with for v in sorted(graph): and " ".join(sorted(graph[v])).',
         ],
         solution: `graph = {}
 for i in range(int(input())):
@@ -863,7 +878,12 @@ for i in range(len(route) - 1):
         break
     total = total + roads[route[i + 1]]
 print("Total: " + str(total) if ok else "No route")`,
-        inputs: ["3\nA B 5\nB C 3\nC A 2\nA B C", "3\nA B 5\nB C 3\nC A 2\nB A", "1\nX Y 7\nX", "2\nP Q 1\nQ R 1\nP Q R"],
+        inputs: [
+          "3\nA B 5\nB C 3\nC A 2\nA B C",
+          "3\nA B 5\nB C 3\nC A 2\nB A",
+          "1\nX Y 7\nX",
+          "2\nP Q 1\nQ R 1\nP Q R",
+        ],
       },
       {
         tier: 4,
@@ -890,7 +910,11 @@ for i in range(len(names)):
         if matrix[i][j] == 1:
             edges = edges + 1
 print("Edges: " + str(edges))`,
-        inputs: ["A B C\n0 1 1\n1 0 0\n1 0 0", "X Y\n0 0\n0 0", "P Q R S\n0 1 1 1\n1 0 1 0\n1 1 0 0\n1 0 0 0"],
+        inputs: [
+          "A B C\n0 1 1\n1 0 0\n1 0 0",
+          "X Y\n0 0\n0 0",
+          "P Q R S\n0 1 1 1\n1 0 1 0\n1 1 0 0\n1 0 0 0",
+        ],
       },
     ],
     homework: [
@@ -951,7 +975,8 @@ print(" ".join(sorted(suggest)) if suggest else "Nobody")`,
   },
   {
     title: "Breadth-first and depth-first search",
-    summary: "Exploring a graph one level at a time with a queue, or one path at a time with a stack.",
+    summary:
+      "Exploring a graph one level at a time with a queue, or one path at a time with a stack.",
     notes: `
 Two ways to visit every vertex you can reach from a starting vertex:
 
@@ -1003,7 +1028,8 @@ print(visited)`,
         question: "Which search finds the route with the fewest edges in an unweighted graph?",
         options: ["Breadth-first search", "Depth-first search", "Both always do", "Neither"],
         answer: "Breadth-first search",
-        explanation: "BFS reaches every vertex one edge away before any two edges away, so the first time it reaches a vertex is by a shortest route.",
+        explanation:
+          "BFS reaches every vertex one edge away before any two edges away, so the first time it reaches a vertex is by a shortest route.",
       },
       {
         question: "Which data structure does depth-first search use?",
@@ -1075,7 +1101,11 @@ def dfs(v, visited):
 order = []
 dfs(input(), order)
 print(" ".join(order))`,
-        inputs: ["4\nA B\nA C\nB D\nC D\nA", "5\nA B\nA C\nB D\nC E\nD E\nB", "3\nA B\nB C\nC A\nC"],
+        inputs: [
+          "4\nA B\nA C\nB D\nC D\nA",
+          "5\nA B\nA C\nB D\nC E\nD E\nB",
+          "3\nA B\nB C\nC A\nC",
+        ],
       },
       {
         tier: 3,
@@ -1103,7 +1133,12 @@ while queue:
             distance[n] = distance[v] + 1
             queue.append(n)
 print("Steps: " + str(distance[target]) if target in distance else "No route")`,
-        inputs: ["5\nA B\nA C\nB D\nC E\nD E\nA\nE", "2\nA B\nC D\nA\nD", "1\nX Y\nX\nX", "4\nA B\nB C\nC D\nA D\nA\nC"],
+        inputs: [
+          "5\nA B\nA C\nB D\nC E\nD E\nA\nE",
+          "2\nA B\nC D\nA\nD",
+          "1\nX Y\nX\nX",
+          "4\nA B\nB C\nC D\nA D\nA\nC",
+        ],
       },
       {
         tier: 3,
@@ -1139,7 +1174,12 @@ for v in sorted(names):
                     visited.add(n)
                     stack.append(n)
 print("Components: " + str(count))`,
-        inputs: ["A B C D E\n2\nA B\nD E", "A B C\n3\nA B\nB C\nC A", "P Q R\n0", "A B C D\n1\nB C"],
+        inputs: [
+          "A B C D E\n2\nA B\nD E",
+          "A B C\n3\nA B\nB C\nC A",
+          "P Q R\n0",
+          "A B C D\n1\nB C",
+        ],
       },
       {
         tier: 4,
@@ -1234,7 +1274,11 @@ while stack:
         if n not in visited:
             stack.append(n)
 print(" ".join(visited))`,
-        inputs: ["4\nA B\nA C\nB D\nC D\nA", "5\nA B\nA C\nB D\nC E\nD E\nB", "3\nA B\nB C\nC A\nC"],
+        inputs: [
+          "4\nA B\nA C\nB D\nC D\nA",
+          "5\nA B\nA C\nB D\nC E\nD E\nB",
+          "3\nA B\nB C\nC A\nC",
+        ],
       },
     ],
   },

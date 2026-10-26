@@ -57,7 +57,8 @@ print(stack[-1])             # peek`,
         question: "Push A, push B, push C, pop, push D, pop. Which item is now on top?",
         options: ["B", "A", "C", "D"],
         answer: "B",
-        explanation: "After the pushes the stack is A B C; pop removes C, push D gives A B D, pop removes D, leaving B on top.",
+        explanation:
+          "After the pushes the stack is A B C; pop removes C, push D gives A B D, pop removes D, leaving B on top.",
       },
       {
         question: "What is a stack underflow?",
@@ -71,10 +72,12 @@ print(stack[-1])             # peek`,
         explanation: "Underflow is removing from an empty stack; overflow is adding to a full one.",
       },
       {
-        question: "In an array-based stack, what does the top pointer hold when the stack is empty?",
+        question:
+          "In an array-based stack, what does the top pointer hold when the stack is empty?",
         options: ["-1", "0", "The array's length", "None of the above"],
         answer: "-1",
-        explanation: "The top pointer is the position of the top item, so with no items it is -1. The first push moves it to 0.",
+        explanation:
+          "The top pointer is the position of the top item, so with no items it is -1. The first push moves it to 0.",
       },
     ],
     tasks: [
@@ -124,7 +127,11 @@ while line != "end":
         result = s.pop() if line == "pop" else s.peek()
         print("Empty" if result is None else result)
     line = input()`,
-        inputs: ["push a\npush b\npeek\npop\npop\npop\nend", "pop\nend", "push x\npush y\npush z\npop\npeek\nend"],
+        inputs: [
+          "push a\npush b\npeek\npop\npop\npop\nend",
+          "pop\nend",
+          "push x\npush y\npush z\npop\npeek\nend",
+        ],
       },
       {
         tier: 2,
@@ -162,7 +169,7 @@ The method: go through the characters. Push each opening bracket. For each closi
 For example, \`(a[1] + {b})\` is balanced, and \`(]\` is not.`,
         starter: "",
         hints: [
-          "A dictionary helps: pairs = {\")\": \"(\", \"]\": \"[\", \"}\": \"{\"}.",
+          'A dictionary helps: pairs = {")": "(", "]": "[", "}": "{"}.',
           "Stop as soon as a closing bracket doesn't match: that's already Not balanced.",
         ],
         solution: `pairs = {")": "(", "]": "[", "}": "{"}
@@ -192,7 +199,8 @@ Write the exam-style stack: a class \`Stack\` whose constructor takes a size, ma
 - pop from an empty stack prints \`Stack empty\`; otherwise it prints the popped item.
 
 Input the size, then commands until \`end\` (\`push <word>\` or \`pop\`). Finally print \`Top: \` followed by the top pointer.`,
-        starter: "class Stack:\n    def __init__(self, size):\n        self.items = [None] * size\n        self.top = -1\n",
+        starter:
+          "class Stack:\n    def __init__(self, size):\n        self.items = [None] * size\n        self.top = -1\n",
         hints: [
           "The stack is full when self.top == len(self.items) - 1.",
           "push: self.top += 1 then self.items[self.top] = item. pop: read self.items[self.top], then self.top -= 1.",
@@ -225,7 +233,11 @@ while line != "end":
         s.push(line.split()[1])
     line = input()
 print("Top: " + str(s.top))`,
-        inputs: ["2\npush a\npush b\npush c\npop\nend", "3\npop\nend", "1\npush x\npop\npush y\nend"],
+        inputs: [
+          "2\npush a\npush b\npush c\npop\nend",
+          "3\npop\nend",
+          "1\npush x\npop\npush y\nend",
+        ],
       },
       {
         tier: 4,
@@ -244,7 +256,7 @@ At the end the answer is the only item left. Input an RPN expression with tokens
         starter: "",
         hints: [
           "Order matters for - and /: the first item popped is the right-hand number.",
-          "Check whether a token is an operator with if token in \"+-*/\", and otherwise push int(token).",
+          'Check whether a token is an operator with if token in "+-*/", and otherwise push int(token).',
         ],
         solution: `stack = []
 for token in input().split():
@@ -298,7 +310,11 @@ while line != "end":
         stack.append(word)
     line = input()
 print(" ".join(text) if text else "(empty)")`,
-        inputs: ["type hello\ntype there\nundo\ntype world\nend", "undo\nend", "type a\nundo\nundo\nend"],
+        inputs: [
+          "type hello\ntype there\nundo\ntype world\nend",
+          "undo\nend",
+          "type a\nundo\nundo\nend",
+        ],
       },
       {
         tier: 3,
@@ -332,7 +348,8 @@ else:
   },
   {
     title: "Queues: linear and circular",
-    summary: "First in, first out, and how a circular queue reuses the space at the front of its array.",
+    summary:
+      "First in, first out, and how a circular queue reuses the space at the front of its array.",
     notes: `
 A **queue** is **first in, first out (FIFO)**: items join at the **rear** and leave from the **front**, like people waiting at a till.
 
@@ -375,7 +392,8 @@ print(front, rear, count)`,
       "After Ann leaves, the front pointer moves on to 1. New items keep moving the rear pointer forward, and % sends it back to 0 at the end of the array.",
     quiz: [
       {
-        question: "Enqueue A, enqueue B, enqueue C, dequeue, enqueue D. Which item is at the front?",
+        question:
+          "Enqueue A, enqueue B, enqueue C, dequeue, enqueue D. Which item is at the front?",
         options: ["B", "A", "C", "D"],
         answer: "B",
         explanation: "A joined first and leaves first; B is next in line.",
@@ -389,13 +407,16 @@ print(front, rear, count)`,
           "A linear queue can't be empty",
         ],
         answer: "A linear queue can't reuse space freed at the front of its array",
-        explanation: "In a circular queue the pointers wrap round, so freed spaces at the start of the array are used again.",
+        explanation:
+          "In a circular queue the pointers wrap round, so freed spaces at the start of the array are used again.",
       },
       {
-        question: "A circular queue has capacity 5 and the rear pointer is 4. Where does the next item go?",
+        question:
+          "A circular queue has capacity 5 and the rear pointer is 4. Where does the next item go?",
         options: ["Position 0", "Position 5", "Position 4", "Nowhere: it's full"],
         answer: "Position 0",
-        explanation: "(4 + 1) % 5 = 0, so the rear wraps round to the start (as long as the queue isn't full).",
+        explanation:
+          "(4 + 1) % 5 = 0, so the rear wraps round to the start (as long as the queue isn't full).",
       },
     ],
     tasks: [
@@ -442,7 +463,11 @@ while line != "end":
         q.enqueue(line.split()[1])
     line = input()
 print("Still waiting: " + (", ".join(q.items) if q.items else "nobody"))`,
-        inputs: ["join Ann\njoin Bob\nserve\njoin Cy\nend", "serve\nend", "join A\nserve\nserve\nend"],
+        inputs: [
+          "join Ann\njoin Bob\nserve\njoin Cy\nend",
+          "serve\nend",
+          "join A\nserve\nserve\nend",
+        ],
       },
       {
         tier: 3,
@@ -567,7 +592,11 @@ while line != "end":
     else:
         q.enqueue(line.split()[1])
     line = input()`,
-        inputs: ["add a\nadd b\nremove\nadd c\nremove\nremove\nremove\nend", "remove\nend", "add x\nadd y\nadd z\nremove\nend"],
+        inputs: [
+          "add a\nadd b\nremove\nadd c\nremove\nremove\nremove\nend",
+          "remove\nend",
+          "add x\nadd y\nadd z\nremove\nend",
+        ],
       },
       {
         tier: 4,
@@ -697,7 +726,8 @@ for patient, priority in queue:
           "A random one",
         ],
         answer: "The one with the highest priority",
-        explanation: "Priority decides first; arrival order only matters between items with the same priority.",
+        explanation:
+          "Priority decides first; arrival order only matters between items with the same priority.",
       },
       {
         question: "Two items have the same priority. Which leaves first?",
@@ -826,10 +856,7 @@ Extend a priority queue with the full set of operations. Write a class with:
 
 Read commands until \`end\`: \`add <item> <priority>\`, \`take\`, \`peek\`, \`size\`. \`take\` and \`peek\` print the item or \`Empty\`; \`size\` prints the number of items.`,
         starter: "",
-        hints: [
-          "peek looks at self.items[0] but doesn't pop it.",
-          "size returns len(self.items).",
-        ],
+        hints: ["peek looks at self.items[0] but doesn't pop it.", "size returns len(self.items)."],
         solution: `class PriorityQueue:
     def __init__(self):
         self.items = []
@@ -864,7 +891,11 @@ while line != "end":
         item = pq.dequeue() if p[0] == "take" else pq.peek()
         print("Empty" if item is None else item)
     line = input()`,
-        inputs: ["add a 1\nadd b 9\npeek\nsize\ntake\ntake\ntake\nsize\nend", "peek\nsize\nend", "add x 2\nadd y 2\ntake\npeek\nend"],
+        inputs: [
+          "add a 1\nadd b 9\npeek\nsize\ntake\ntake\ntake\nsize\nend",
+          "peek\nsize\nend",
+          "add x 2\nadd y 2\ntake\npeek\nend",
+        ],
       },
       {
         tier: 4,
@@ -903,7 +934,11 @@ while answered < len(calls):
         print("Minute " + str(minute) + ": " + waiting.pop(0)[0])
         answered = answered + 1
     minute = minute + 1`,
-        inputs: ["3\nAnn 0 1\nBob 0 3\nCy 1 5", "2\nLate 3 1\nLater 4 9", "4\nA 0 2\nB 0 2\nC 0 2\nD 2 9"],
+        inputs: [
+          "3\nAnn 0 1\nBob 0 3\nCy 1 5",
+          "2\nLate 3 1\nLater 4 9",
+          "4\nA 0 2\nB 0 2\nC 0 2\nD 2 9",
+        ],
       },
     ],
     homework: [
@@ -961,7 +996,8 @@ while heap:
   },
   {
     title: "Linked lists",
-    summary: "Nodes joined by pointers: traversing, adding and removing without moving everything else.",
+    summary:
+      "Nodes joined by pointers: traversing, adding and removing without moving everything else.",
     notes: `
 A **linked list** stores items in **nodes**. Each node holds its data and a **pointer** to the next node. A **start** (or head) pointer points at the first node, and the last node's pointer is null (\`None\`).
 
@@ -1021,7 +1057,8 @@ while current is not None:
         explanation: "The pointers chain the nodes together; the last one points to None.",
       },
       {
-        question: "Why is inserting into a linked list quicker than inserting into the middle of an array?",
+        question:
+          "Why is inserting into a linked list quicker than inserting into the middle of an array?",
         options: [
           "Only pointers change; no items have to be moved along",
           "Linked lists are always sorted",
@@ -1029,7 +1066,8 @@ while current is not None:
           "Linked lists use less memory per item",
         ],
         answer: "Only pointers change; no items have to be moved along",
-        explanation: "An array has to shift every later item along to make room. A linked list just relinks two pointers.",
+        explanation:
+          "An array has to shift every later item along to make room. A linked list just relinks two pointers.",
       },
       {
         question: "How do you reach the fifth item of a linked list?",
@@ -1040,7 +1078,8 @@ while current is not None:
           "You can't",
         ],
         answer: "Follow the pointers from the start through the first four nodes",
-        explanation: "There's no direct access by position: you have to traverse from the start pointer.",
+        explanation:
+          "There's no direct access by position: you have to traverse from the start pointer.",
       },
     ],
     tasks: [
@@ -1055,10 +1094,11 @@ Write a class \`Node\` with \`data\` and \`next\` (starting as \`None\`).
 Input a line of words separated by spaces. Starting from an empty list (\`start = None\`), add each word to the **front** of the linked list: make a new node, point it at the current start, and make it the new start.
 
 Then traverse the list from \`start\` and print the words joined by \` -> \`. For example, \`a b c\` prints \`c -> b -> a\`.`,
-        starter: "class Node:\n    def __init__(self, data):\n        self.data = data\n        self.next = None\n\nstart = None\n",
+        starter:
+          "class Node:\n    def __init__(self, data):\n        self.data = data\n        self.next = None\n\nstart = None\n",
         hints: [
           "node = Node(word); node.next = start; start = node",
-          "Collect the words while traversing, then print \" -> \".join(words).",
+          'Collect the words while traversing, then print " -> ".join(words).',
         ],
         solution: `class Node:
     def __init__(self, data):
@@ -1149,7 +1189,8 @@ Write a function \`insert_in_order(start, value)\` that puts \`value\` into a li
 - Otherwise traverse until the next node is \`None\` or bigger than \`value\`, and insert the new node there.
 
 Input a line of whole numbers in any order. Insert each one, then print the list joined by \` -> \`.`,
-        starter: "class Node:\n    def __init__(self, data):\n        self.data = data\n        self.next = None\n",
+        starter:
+          "class Node:\n    def __init__(self, data):\n        self.data = data\n        self.next = None\n",
         hints: [
           "Insert after current: node.next = current.next, then current.next = node.",
           "Equal values: put the new one after the existing one by stopping only when the next value is strictly bigger.",
@@ -1371,7 +1412,8 @@ print(" -> ".join(items))`,
   },
   {
     title: "Hash tables and dictionaries",
-    summary: "Storing items where a hash function says they go, and what to do when two want the same place.",
+    summary:
+      "Storing items where a hash function says they go, and what to do when two want the same place.",
     notes: `
 A **hash table** stores items in an array, using a **hash function** to work out which position (bucket) each key goes in. To find a key later, you hash it again and look straight there, so a lookup takes about the same time however big the table is.
 
@@ -1413,10 +1455,12 @@ for name in ["cat", "act", "dog"]:
         explanation: "Collisions are dealt with by linear probing or chaining.",
       },
       {
-        question: "With linear probing, a key hashes to position 3 but 3 is taken. Where does it try next?",
+        question:
+          "With linear probing, a key hashes to position 3 but 3 is taken. Where does it try next?",
         options: ["Position 4", "Position 0", "Position 2", "A random position"],
         answer: "Position 4",
-        explanation: "Linear probing steps along one position at a time, wrapping round to 0 at the end.",
+        explanation:
+          "Linear probing steps along one position at a time, wrapping round to 0 at the end.",
       },
       {
         question: "Why is a hash table rehashed into a bigger table?",
@@ -1443,10 +1487,7 @@ Input the table size, then a line of keys separated by spaces. Print each key an
 
 For example, with size 7, \`cat\` prints \`cat: 4\`, because the codes of c, a and t are 99 + 97 + 116 = 312, and 312 % 7 = 4.`,
         starter: "def hash_key(key, size):\n    pass\n",
-        hints: [
-          "total = 0, then add ord(ch) for each character.",
-          "return total % size",
-        ],
+        hints: ["total = 0, then add ord(ch) for each character.", "return total % size"],
         solution: `def hash_key(key, size):
     total = 0
     for ch in key:

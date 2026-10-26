@@ -14,7 +14,8 @@ for i in range(int(input())):
 export const lessons = [
   {
     title: "Big O notation",
-    summary: "Describing how an algorithm's time grows as its input grows, and comparing algorithms fairly.",
+    summary:
+      "Describing how an algorithm's time grows as its input grows, and comparing algorithms fairly.",
     notes: `
 **Big O notation** describes how the time an algorithm takes (or the memory it uses) grows as the size of its input, \`n\`, grows. It ignores the details of a particular computer and keeps only the part that matters most for big inputs.
 
@@ -51,7 +52,8 @@ for n in [10, 1000, 1000000]:
         question: "What is the Big O of binary search?",
         options: ["O(log n)", "O(n)", "O(1)", "O(n²)"],
         answer: "O(log n)",
-        explanation: "Each step halves the part still to be searched, so doubling n adds only one more step.",
+        explanation:
+          "Each step halves the part still to be searched, so doubling n adds only one more step.",
       },
       {
         question: "An algorithm takes 4n² + 10n + 7 steps. What is its Big O?",
@@ -60,7 +62,8 @@ for n in [10, 1000, 1000000]:
         explanation: "Keep the fastest-growing term and drop the constant in front of it.",
       },
       {
-        question: "A loop over n items contains another loop over the same n items. What is its Big O?",
+        question:
+          "A loop over n items contains another loop over the same n items. What is its Big O?",
         options: ["O(n²)", "O(2n)", "O(n)", "O(log n)"],
         answer: "O(n²)",
         explanation: "The inner loop runs n times for each of the outer loop's n repeats: n × n.",
@@ -134,7 +137,12 @@ if found == -1:
 else:
     print("Found at " + str(found))
 print("Comparisons: " + str(count))`,
-        inputs: ["4 8 15 16 23 42\n4", "4 8 15 16 23 42\n42", "4 8 15 16 23 42\n7", "1 2 3 4 5 6 7 8 9 10 11 12 13 14 15\n15"],
+        inputs: [
+          "4 8 15 16 23 42\n4",
+          "4 8 15 16 23 42\n42",
+          "4 8 15 16 23 42\n7",
+          "1 2 3 4 5 6 7 8 9 10 11 12 13 14 15\n15",
+        ],
       },
       {
         tier: 2,
@@ -306,7 +314,8 @@ print("Formula: " + str(math.floor(math.log2(n)) + 1))`,
   },
   {
     title: "Merge sort",
-    summary: "Divide and conquer: split the list in half, sort each half, then merge them back together.",
+    summary:
+      "Divide and conquer: split the list in half, sort each half, then merge them back together.",
     notes: `
 **Merge sort** is a **divide and conquer** algorithm:
 1. **Divide**: split the list into two halves.
@@ -368,7 +377,8 @@ print(merge([1, 4, 9], [2, 3, 10, 12]))`,
           "The merge step",
         ],
         answer: "A list of 0 or 1 items, which is already sorted",
-        explanation: "Lists keep being halved until they are this small, then the merges build them back up.",
+        explanation:
+          "Lists keep being halved until they are this small, then the merges build them back up.",
       },
       {
         question: "What is merge sort's main disadvantage compared with bubble sort?",
@@ -379,7 +389,8 @@ print(merge([1, 4, 9], [2, 3, 10, 12]))`,
           "It isn't stable",
         ],
         answer: "It needs extra memory for the lists it builds",
-        explanation: "Merging builds new lists, so it uses O(n) extra space; bubble sort works in place.",
+        explanation:
+          "Merging builds new lists, so it uses O(n) extra space; bubble sort works in place.",
       },
     ],
     tasks: [
@@ -612,10 +623,7 @@ print(" ".join(merge_sort(input().split())))`,
         brief: `
 Three classes have each sorted their test scores in ascending order. Input three lines of whole numbers (each in order; any may be empty). Using your \`merge\` function twice, combine them into one ascending list and print it separated by spaces.`,
         starter: "",
-        hints: [
-          "merge(merge(a, b), c)",
-          "No need for merge sort: the inputs are already sorted.",
-        ],
+        hints: ["merge(merge(a, b), c)", "No need for merge sort: the inputs are already sorted."],
         solution: `def merge(left, right):
     result = []
     i = j = 0
@@ -638,7 +646,8 @@ print(" ".join(str(x) for x in merge(merge(a, b), c)))`,
   },
   {
     title: "Quicksort",
-    summary: "Choose a pivot, split the list around it, and sort each side: fast on average, slow at its worst.",
+    summary:
+      "Choose a pivot, split the list around it, and sort each side: fast on average, slow at its worst.",
     notes: `
 **Quicksort** is another divide and conquer sort:
 1. Choose an item as the **pivot**.
@@ -681,7 +690,8 @@ print(quicksort([33, 10, 55, 71, 29, 3]))`,
         question: "What is quicksort's worst-case time complexity?",
         options: ["O(n²)", "O(n log n)", "O(n)", "O(log n)"],
         answer: "O(n²)",
-        explanation: "If every pivot is the smallest or largest item, each partition only removes one item.",
+        explanation:
+          "If every pivot is the smallest or largest item, each partition only removes one item.",
       },
       {
         question: "With the first item as the pivot, which input causes quicksort's worst case?",
@@ -692,13 +702,15 @@ print(quicksort([33, 10, 55, 71, 29, 3]))`,
           "A list with an even number of items",
         ],
         answer: "A list that is already sorted",
-        explanation: "The first item is then always the smallest, so the 'smaller' side is always empty.",
+        explanation:
+          "The first item is then always the smallest, so the 'smaller' side is always empty.",
       },
       {
         question: "Pivot 20, items 35 5 20 8. Which items go in the 'smaller' list?",
         options: ["5 8", "5 8 20", "35", "35 20"],
         answer: "5 8",
-        explanation: "Only items strictly less than the pivot go to the smaller side; the other 20 goes with the larger ones.",
+        explanation:
+          "Only items strictly less than the pivot go to the smaller side; the other 20 goes with the larger ones.",
       },
     ],
     tasks: [
@@ -993,7 +1005,7 @@ The starter code reads an **undirected** weighted graph: a whole number \`n\`, t
 Input a start vertex. Use Dijkstra's algorithm (from the notes; ties go to the alphabetically first vertex) to find the shortest distance to every vertex. Print every vertex in alphabetical order as \`<vertex>: <distance>\`.`,
         starter: GRAPH,
         hints: [
-          "distance = {v: float(\"inf\") for v in graph}, then distance[start] = 0.",
+          'distance = {v: float("inf") for v in graph}, then distance[start] = 0.',
           "min(unvisited, key=lambda v: (distance[v], v)) picks the smallest distance, ties alphabetical.",
         ],
         solution: `${GRAPH}
@@ -1012,7 +1024,11 @@ while len(visited) < len(graph):
             distance[n] = distance[current] + w
 for v in sorted(graph):
     print(v + ": " + str(distance[v]))`,
-        inputs: ["4\nA B 4\nA C 1\nC B 2\nB D 5\nA", "5\nA B 7\nA C 9\nA F 14\nB C 10\nC F 2\nF", "1\nX Y 3\nY"],
+        inputs: [
+          "4\nA B 4\nA C 1\nC B 2\nB D 5\nA",
+          "5\nA B 7\nA C 9\nA F 14\nB C 10\nC F 2\nF",
+          "1\nX Y 3\nY",
+        ],
       },
       {
         tier: 3,
@@ -1054,7 +1070,11 @@ else:
     route.reverse()
     print(" -> ".join(route))
     print("Distance: " + str(distance[end]))`,
-        inputs: ["4\nA B 4\nA C 1\nC B 2\nB D 5\nA\nD", "5\nA B 7\nA C 9\nA F 14\nB C 10\nC F 2\nA\nF", "2\nA B 1\nC D 1\nA\nD"],
+        inputs: [
+          "4\nA B 4\nA C 1\nC B 2\nB D 5\nA\nD",
+          "5\nA B 7\nA C 9\nA F 14\nB C 10\nC F 2\nA\nF",
+          "2\nA B 1\nC D 1\nA\nD",
+        ],
       },
       {
         tier: 3,
@@ -1085,7 +1105,11 @@ while len(visited) < len(graph):
     for n, w in graph[current].items():
         if distance[current] + w < distance[n]:
             distance[n] = distance[current] + w`,
-        inputs: ["4\nA B 4\nA C 1\nC B 2\nB D 5\nA", "6\nA B 2\nA C 5\nB C 1\nB D 7\nC D 2\nD E 1\nA", "2\nA B 1\nC D 1\nC"],
+        inputs: [
+          "4\nA B 4\nA C 1\nC B 2\nB D 5\nA",
+          "6\nA B 2\nA C 5\nB C 1\nB D 7\nC D 2\nD E 1\nA",
+          "2\nA B 1\nC D 1\nC",
+        ],
       },
       {
         tier: 3,
@@ -1099,7 +1123,7 @@ Build the graph so every vertex mentioned appears (even one with no roads out). 
         starter: "",
         hints: [
           "graph.setdefault(a, {})[b] = w, and graph.setdefault(b, {}) so b appears even with no roads out.",
-          "Print \"unreachable\" when the distance is still infinity.",
+          'Print "unreachable" when the distance is still infinity.',
         ],
         solution: `graph = {}
 for i in range(int(input())):
@@ -1199,7 +1223,11 @@ while len(visited) < len(graph):
         if distance[current] + w < distance[n]:
             distance[n] = distance[current] + w
 print(str(distance[end]) + " minutes" if distance.get(end, INF) != INF else "No route")`,
-        inputs: ["3\nLeeds York 25\nYork Hull 45\nLeeds Hull 80\nLeeds\nHull", "1\nA B 5\nB\nA", "2\nA B 1\nC D 1\nA\nD"],
+        inputs: [
+          "3\nLeeds York 25\nYork Hull 45\nLeeds Hull 80\nLeeds\nHull",
+          "1\nA B 5\nB\nA",
+          "2\nA B 1\nC D 1\nA\nD",
+        ],
       },
       {
         tier: 3,
@@ -1236,13 +1264,18 @@ while len(visited) < len(graph):
             distance[n] = distance[current] + w
 near = sorted(v for v in graph if v != start and distance[v] <= limit)
 print(" ".join(near) if near else "None")`,
-        inputs: ["4\nA B 4\nA C 1\nC B 2\nB D 5\nA\n3", "4\nA B 4\nA C 1\nC B 2\nB D 5\nD\n1", "2\nX Y 2\nY Z 2\nY\n2"],
+        inputs: [
+          "4\nA B 4\nA C 1\nC B 2\nB D 5\nA\n3",
+          "4\nA B 4\nA C 1\nC B 2\nB D 5\nD\n1",
+          "2\nX Y 2\nY Z 2\nY\n2",
+        ],
       },
     ],
   },
   {
     title: "A* search (OCR)",
-    summary: "Dijkstra plus a sensible guess of the distance left, so it heads towards the goal instead of searching everywhere.",
+    summary:
+      "Dijkstra plus a sensible guess of the distance left, so it heads towards the goal instead of searching everywhere.",
     notes: `
 *This lesson is on the OCR specification. AQA doesn't examine A*.*
 
@@ -1303,7 +1336,8 @@ for square in [(0, 0), (2, 3), (4, 4)]:
         question: "If the heuristic is 0 for every vertex, A* behaves like which algorithm?",
         options: ["Dijkstra's algorithm", "Breadth-first search", "Binary search", "Merge sort"],
         answer: "Dijkstra's algorithm",
-        explanation: "f is then just g, so A* picks the smallest distance so far, exactly as Dijkstra does.",
+        explanation:
+          "f is then just g, so A* picks the smallest distance so far, exactly as Dijkstra does.",
       },
     ],
     tasks: [

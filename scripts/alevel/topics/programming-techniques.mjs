@@ -6,7 +6,8 @@ export const topic = "programming-techniques";
 export const lessons = [
   {
     title: "Local and global variables",
-    summary: "Where a variable can be used, the global keyword, and why parameters are usually better.",
+    summary:
+      "Where a variable can be used, the global keyword, and why parameters are usually better.",
     notes: `
 At GCSE you saw that a variable made inside a function only exists while that function runs. At A level you need the proper words for this, and to know when each kind is the right choice.
 
@@ -65,7 +66,8 @@ print(score)`,
           "It must be declared with the global keyword",
         ],
         answer: "It can only be used inside that function",
-        explanation: "A variable made inside a subroutine is local: its scope is that subroutine, and it is gone once the subroutine ends.",
+        explanation:
+          "A variable made inside a subroutine is local: its scope is that subroutine, and it is gone once the subroutine ends.",
       },
       {
         question: "Why do programmers usually avoid global variables?",
@@ -76,10 +78,12 @@ print(score)`,
           "They cannot hold numbers",
         ],
         answer: "Any part of the program can change them, which makes errors hard to trace",
-        explanation: "Because every subroutine can change a global, a wrong value could have come from anywhere. Parameters and return values keep each subroutine self-contained.",
+        explanation:
+          "Because every subroutine can change a global, a wrong value could have come from anywhere. Parameters and return values keep each subroutine self-contained.",
       },
       {
-        question: "count = 0, and a function runs count = count + 1 without the global keyword. What happens?",
+        question:
+          "count = 0, and a function runs count = count + 1 without the global keyword. What happens?",
         options: [
           "An error: Python treats count as a new local variable that has no value yet",
           "The global count becomes 1",
@@ -87,7 +91,8 @@ print(score)`,
           "A new global called count is made",
         ],
         answer: "An error: Python treats count as a new local variable that has no value yet",
-        explanation: "Assigning to count inside the function makes it local, so the count on the right-hand side refers to a local that doesn't exist yet: an UnboundLocalError.",
+        explanation:
+          "Assigning to count inside the function makes it local, so the count on the right-hand side refers to a local that doesn't exist yet: an UnboundLocalError.",
       },
     ],
     tasks: [
@@ -196,7 +201,8 @@ Write two functions:
 The program then reads commands, one per line, until it reads \`end\`. Each command is a word and a whole number, such as \`deposit 50\` or \`withdraw 20\`. Carry out each command, then print the final balance.
 
 For example, deposit 50, withdraw 80, withdraw 20, end prints \`Insufficient funds\` and then \`30\`.`,
-        starter: "balance = 0\n\ndef deposit(amount):\n    pass\n\ndef withdraw(amount):\n    pass\n",
+        starter:
+          "balance = 0\n\ndef deposit(amount):\n    pass\n\ndef withdraw(amount):\n    pass\n",
         hints: [
           "Both functions change balance, so both need `global balance`.",
           "Split each command with .split() to get the word and the number, and loop until the line is end.",
@@ -223,7 +229,11 @@ while line != "end":
         withdraw(int(number))
     line = input()
 print(balance)`,
-        inputs: ["deposit 50\nwithdraw 80\nwithdraw 20\nend", "deposit 10\ndeposit 15\nend", "withdraw 5\nend"],
+        inputs: [
+          "deposit 50\nwithdraw 80\nwithdraw 20\nend",
+          "deposit 10\ndeposit 15\nend",
+          "withdraw 5\nend",
+        ],
       },
       {
         tier: 4,
@@ -321,7 +331,8 @@ print(round(apply_discount(price), 2))`,
   },
   {
     title: "Passing by value and by reference",
-    summary: "What happens to a variable when it is passed to a subroutine, and why lists behave differently.",
+    summary:
+      "What happens to a variable when it is passed to a subroutine, and why lists behave differently.",
     notes: `
 When you call a subroutine, the values you pass in are called **arguments**. There are two ways a language can pass them:
 
@@ -368,21 +379,30 @@ print(marks)`,
     quiz: [
       {
         question: "A parameter is passed by value. What does the subroutine receive?",
-        options: ["A copy of the value", "The original variable", "The variable's name", "Nothing until it is returned"],
+        options: [
+          "A copy of the value",
+          "The original variable",
+          "The variable's name",
+          "Nothing until it is returned",
+        ],
         answer: "A copy of the value",
-        explanation: "By value means a copy is passed, so changes inside the subroutine don't affect the caller's variable.",
+        explanation:
+          "By value means a copy is passed, so changes inside the subroutine don't affect the caller's variable.",
       },
       {
-        question: "def f(a): a.append(4)  —  nums = [1, 2, 3]; f(nums); print(nums). What is printed?",
+        question:
+          "def f(a): a.append(4)  —  nums = [1, 2, 3]; f(nums); print(nums). What is printed?",
         options: ["[1, 2, 3, 4]", "[1, 2, 3]", "[4]", "An error"],
         answer: "[1, 2, 3, 4]",
-        explanation: "Lists can be changed in place, and a and nums are the same list, so append changes nums too.",
+        explanation:
+          "Lists can be changed in place, and a and nums are the same list, so append changes nums too.",
       },
       {
         question: "def f(n): n = n * 10  —  x = 3; f(x); print(x). What is printed?",
         options: ["3", "30", "None", "An error"],
         answer: "3",
-        explanation: "Whole numbers can't be changed in place. n = n * 10 only makes the local name n point at a new number; x is still 3.",
+        explanation:
+          "Whole numbers can't be changed in place. n = n * 10 only makes the local name n point at a new number; x is still 3.",
       },
     ],
     tasks: [
@@ -400,7 +420,7 @@ For example, bread, milk, eggs prints \`bread, milk, eggs\`.`,
         starter: "def add_item(shopping, item):\n    pass\n",
         hints: [
           "shopping.append(item) changes the caller's list, because lists are passed like references.",
-          "Print with \", \".join(shopping).",
+          'Print with ", ".join(shopping).',
         ],
         solution: `def add_item(shopping, item):
     shopping.append(item)
@@ -608,7 +628,7 @@ For example, ada and maths cs prints \`ada\`, \`ADA\`, then \`maths cs checked\`
         starter: "def tidy(name, tags):\n    pass\n",
         hints: [
           "name.upper() makes a new string; return it.",
-          "tags.append(\"checked\") changes the caller's list.",
+          'tags.append("checked") changes the caller\'s list.',
         ],
         solution: `def tidy(name, tags):
     tags.append("checked")
@@ -671,7 +691,7 @@ print(safe_divide(10, 0))`,
       "Dividing by zero raises ZeroDivisionError inside the try, so Python jumps to the except block and the function returns None instead of crashing.",
     quiz: [
       {
-        question: "int(\"seven\") is run inside a try block. What happens next?",
+        question: 'int("seven") is run inside a try block. What happens next?',
         options: [
           "Python jumps to the matching except ValueError block",
           "The program stops with an error",
@@ -679,7 +699,8 @@ print(safe_divide(10, 0))`,
           "The rest of the try block still runs",
         ],
         answer: "Python jumps to the matching except ValueError block",
-        explanation: "int(\"seven\") raises ValueError. Inside try, that sends the program straight to the except block that handles ValueError.",
+        explanation:
+          'int("seven") raises ValueError. Inside try, that sends the program straight to the except block that handles ValueError.',
       },
       {
         question: "When does a finally block run?",
@@ -690,10 +711,11 @@ print(safe_divide(10, 0))`,
           "Only if there is no except block",
         ],
         answer: "Always, whether or not an exception happened",
-        explanation: "finally always runs, which makes it the right place for tidying up, such as closing a file.",
+        explanation:
+          "finally always runs, which makes it the right place for tidying up, such as closing a file.",
       },
       {
-        question: "What does raise ValueError(\"Too big\") do?",
+        question: 'What does raise ValueError("Too big") do?',
         options: [
           "Creates an exception that the caller can catch",
           "Prints Too big and carries on",
@@ -701,7 +723,8 @@ print(safe_divide(10, 0))`,
           "Checks whether a ValueError has happened",
         ],
         answer: "Creates an exception that the caller can catch",
-        explanation: "raise starts an exception. If nothing catches it, the program stops; a caller with try/except ValueError can handle it instead.",
+        explanation:
+          "raise starts an exception. If nothing catches it, the program stops; a caller with try/except ValueError can handle it instead.",
       },
     ],
     tasks: [
@@ -720,7 +743,7 @@ For example, \`21\` prints \`42\`, and \`hello\` prints \`Not a whole number\`.`
         starter: "",
         hints: [
           "Put the int() conversion and the print inside try:.",
-          "Follow it with except ValueError: print(\"Not a whole number\").",
+          'Follow it with except ValueError: print("Not a whole number").',
         ],
         solution: `try:
     n = int(input())
@@ -745,7 +768,7 @@ Use \`float()\` to convert, so decimals are allowed. For example, 7 then 2 print
         starter: "",
         hints: [
           "Use one try block with two except blocks: except ValueError and except ZeroDivisionError.",
-          "float(\"abc\") raises ValueError; 5 / 0 raises ZeroDivisionError.",
+          'float("abc") raises ValueError; 5 / 0 raises ZeroDivisionError.',
         ],
         solution: `try:
     a = float(input())
@@ -800,7 +823,7 @@ The main program inputs a whole number and calls \`check_age\` inside a \`try\` 
 For example, \`17\` prints \`Age set to 17\`, and \`130\` prints \`Age must be between 0 and 120\`.`,
         starter: "def check_age(age):\n    pass\n",
         hints: [
-          "raise ValueError(\"Age must be between 0 and 120\") inside an if.",
+          'raise ValueError("Age must be between 0 and 120") inside an if.',
           "Catch it with except ValueError as e: and print(e) to show the message.",
         ],
         solution: `def check_age(age):
@@ -831,7 +854,7 @@ Input the line. Convert each reading with \`float()\`, skipping any that raise a
 For example, \`20.5,err,19.5,21\` prints \`Average: 20.33\` then \`Skipped: 1\`.`,
         starter: "",
         hints: [
-          "Loop over input().split(\",\"), with a try/except ValueError around each float().",
+          'Loop over input().split(","), with a try/except ValueError around each float().',
           "Keep a list of valid readings and a skipped counter. Only divide if the list isn't empty.",
         ],
         solution: `valid = []
@@ -866,7 +889,7 @@ Input an item name and print its price. Looking up a name that isn't in a dictio
         starter: 'prices = {"pen": 1.2, "pad": 2.5, "ruler": 0.8}\n',
         hints: [
           "Put print(prices[item]) inside try.",
-          "Catch it with except KeyError: print(\"Not sold here\").",
+          'Catch it with except KeyError: print("Not sold here").',
         ],
         solution: `prices = {"pen": 1.2, "pad": 2.5, "ruler": 0.8}
 item = input()

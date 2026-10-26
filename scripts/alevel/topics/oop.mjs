@@ -61,7 +61,8 @@ print(big.area())`,
           "An object is a blueprint; a class is made from it",
         ],
         answer: "A class is a blueprint; an object is one thing made from it",
-        explanation: "The class describes the attributes and methods. Each object (instance) made from it has its own values for those attributes.",
+        explanation:
+          "The class describes the attributes and methods. Each object (instance) made from it has its own values for those attributes.",
       },
       {
         question: "What does the constructor __init__ do?",
@@ -72,7 +73,8 @@ print(big.area())`,
           "Runs only when a method is called",
         ],
         answer: "Runs when an object is made, setting up its attributes",
-        explanation: "Dog(\"Rex\", 3) calls __init__ straight away, which is where self.name and self.age get their values.",
+        explanation:
+          'Dog("Rex", 3) calls __init__ straight away, which is where self.name and self.age get their values.',
       },
       {
         question: "Inside a method, what does self refer to?",
@@ -100,10 +102,11 @@ Write a class \`Dog\` with:
 Then input a name and an age (a whole number), one per line. Make a \`Dog\` object from them and print what its \`describe()\` method returns.
 
 For example, Rex and 3 prints \`Rex is 3 years old\`.`,
-        starter: "class Dog:\n    def __init__(self, name, age):\n        pass\n\n    def describe(self):\n        pass\n",
+        starter:
+          "class Dog:\n    def __init__(self, name, age):\n        pass\n\n    def describe(self):\n        pass\n",
         hints: [
           "In the constructor, store each parameter on the object: self.name = name.",
-          "describe can return self.name + \" is \" + str(self.age) + \" years old\".",
+          'describe can return self.name + " is " + str(self.age) + " years old".',
         ],
         solution: `class Dog:
     def __init__(self, name, age):
@@ -167,7 +170,7 @@ Finally print the owner's name, a colon, a space and the balance. For example, A
         starter: "class BankAccount:\n    pass\n",
         hints: [
           "The constructor sets self.owner = owner and self.balance = 0.",
-          "In the main loop, check what withdraw returns: if not account.withdraw(n): print(\"Refused\").",
+          'In the main loop, check what withdraw returns: if not account.withdraw(n): print("Refused").',
         ],
         solution: `class BankAccount:
     def __init__(self, owner):
@@ -193,7 +196,11 @@ while line != "end":
         print("Refused")
     line = input()
 print(account.owner + ": " + str(account.balance))`,
-        inputs: ["Ada\ndeposit 50\nwithdraw 80\nend", "Sam\ndeposit 20\nwithdraw 5\nwithdraw 15\nend", "Li\nwithdraw 1\nend"],
+        inputs: [
+          "Ada\ndeposit 50\nwithdraw 80\nend",
+          "Sam\ndeposit 20\nwithdraw 5\nwithdraw 15\nend",
+          "Li\nwithdraw 1\nend",
+        ],
       },
       {
         tier: 3,
@@ -254,7 +261,7 @@ For example, \`23:50\` and \`20\` prints \`23:50\` then \`00:10\`.`,
         starter: "",
         hints: [
           "It's easiest to work in total minutes: total = hours * 60 + minutes, add n, then take % (24 * 60).",
-          "f\"{h:02d}:{m:02d}\" writes each number with two digits.",
+          'f"{h:02d}:{m:02d}" writes each number with two digits.',
         ],
         solution: `class Clock:
     def __init__(self, hours, minutes):
@@ -345,7 +352,8 @@ print("b: " + str(b.value))`,
   },
   {
     title: "Encapsulation",
-    summary: "Keeping an object's data private, and only changing it through methods that check it.",
+    summary:
+      "Keeping an object's data private, and only changing it through methods that check it.",
     notes: `
 **Encapsulation** means an object's data is kept inside it, and other code changes it only by calling the object's methods. Those methods can then check every change, so the object can never get into a nonsense state, like a negative balance or a mark of 250.
 
@@ -405,7 +413,8 @@ print(t.get_target())`,
           "Storing objects in a list",
         ],
         answer: "Keeping an object's data inside it, changed only through its methods",
-        explanation: "Encapsulation hides the data, so every change goes through methods that can check it.",
+        explanation:
+          "Encapsulation hides the data, so every change goes through methods that can check it.",
       },
       {
         question: "In Python, how do you make an attribute private?",
@@ -416,7 +425,8 @@ print(t.get_target())`,
           "Write it in capital letters",
         ],
         answer: "Start its name with two underscores, like self.__balance",
-        explanation: "Python has no private keyword. A double-underscore name can't be reached by that name from outside the class.",
+        explanation:
+          "Python has no private keyword. A double-underscore name can't be reached by that name from outside the class.",
       },
       {
         question: "Why use a setter method instead of letting code change an attribute directly?",
@@ -427,7 +437,8 @@ print(t.get_target())`,
           "It stops the object being printed",
         ],
         answer: "The setter can check the new value before accepting it",
-        explanation: "A setter is the one place a value changes, so it can refuse bad values and keep the object valid.",
+        explanation:
+          "A setter is the one place a value changes, so it can refuse bad values and keep the object valid.",
       },
     ],
     tasks: [
@@ -638,7 +649,11 @@ while line != "end":
         item.restock(int(n))
     line = input()
 print(item.report())`,
-        inputs: ["Pens\n10\nsell 4\nsell 7\nrestock 5\nsell 7\nend", "Pads\n0\nsell 1\nend", "Glue\n3\nrestock 2\nend"],
+        inputs: [
+          "Pens\n10\nsell 4\nsell 7\nrestock 5\nsell 7\nend",
+          "Pads\n0\nsell 1\nend",
+          "Glue\n3\nrestock 2\nend",
+        ],
       },
     ],
     homework: [
@@ -784,7 +799,8 @@ print(m.name, m.monthly_pay())`,
           "Car can only use methods it defines itself",
         ],
         answer: "Car inherits Vehicle's attributes and methods",
-        explanation: "The class in brackets is the parent. Car gets everything Vehicle has, and can add or override methods.",
+        explanation:
+          "The class in brackets is the parent. Car gets everything Vehicle has, and can add or override methods.",
       },
       {
         question: "What is overriding?",
@@ -795,7 +811,8 @@ print(m.name, m.monthly_pay())`,
           "Making an attribute private",
         ],
         answer: "A child class giving its own version of a method its parent has",
-        explanation: "When the method is called on the child, the child's version runs instead of the parent's.",
+        explanation:
+          "When the method is called on the child, the child's version runs instead of the parent's.",
       },
       {
         question: "What does super().__init__(name) do inside a child's constructor?",
@@ -806,7 +823,8 @@ print(m.name, m.monthly_pay())`,
           "Copies the child into the parent",
         ],
         answer: "Runs the parent's constructor, so it can set up its attributes",
-        explanation: "super() reaches the parent class, so the shared set-up code isn't written twice.",
+        explanation:
+          "super() reaches the parent class, so the shared set-up code isn't written twice.",
       },
     ],
     tasks: [
@@ -821,7 +839,7 @@ Write a class \`Animal\` with a method \`speak()\` that returns \`...\`.
 Write two child classes of \`Animal\`: \`Dog\`, whose \`speak()\` returns \`Woof\`, and \`Cat\`, whose \`speak()\` returns \`Meow\`.
 
 Input a word. If it is \`dog\`, make a \`Dog\`; if it is \`cat\`, make a \`Cat\`; otherwise make a plain \`Animal\`. Print what the object's \`speak()\` returns.`,
-        starter: "class Animal:\n    def speak(self):\n        return \"...\"\n",
+        starter: 'class Animal:\n    def speak(self):\n        return "..."\n',
         hints: [
           "class Dog(Animal): makes Dog a child of Animal.",
           "Each child class only needs its own speak method.",
@@ -1088,7 +1106,7 @@ Write a child class \`Pupil\` whose constructor takes a \`name\` and a \`form\` 
 Input a name, then a form, one per line. Make a \`Pupil\` and print its introduction. For example, Ada and 12C prints \`Hi, I'm Ada from 12C\`.`,
         starter: "",
         hints: [
-          "Pupil.introduce returns super().introduce() + \" from \" + self.form.",
+          'Pupil.introduce returns super().introduce() + " from " + self.form.',
           "Only the new attribute, form, needs setting in Pupil's constructor after the super() call.",
         ],
         solution: `class Person:
@@ -1113,7 +1131,8 @@ print(Pupil(input(), input()).introduce())`,
   },
   {
     title: "Polymorphism, aggregation and composition",
-    summary: "One method name doing the right thing for each class, and objects that contain other objects.",
+    summary:
+      "One method name doing the right thing for each class, and objects that contain other objects.",
     notes: `
 **Polymorphism** means "many forms": code can call the same method on objects of different classes, and each object runs its own version. The calling code doesn't need to know which class it has.
 
@@ -1168,19 +1187,23 @@ for instrument in band:
           "Making a copy of an object",
         ],
         answer: "Calling the same method on different objects, each running its own version",
-        explanation: "shape.area() works for a Square or a Circle; each class decides what area means for it.",
+        explanation:
+          "shape.area() works for a Square or a Circle; each class decides what area means for it.",
       },
       {
-        question: "A Library creates its own Shelf objects, and they are destroyed with it. Which relationship is this?",
+        question:
+          "A Library creates its own Shelf objects, and they are destroyed with it. Which relationship is this?",
         options: ["Composition", "Aggregation", "Inheritance", "Encapsulation"],
         answer: "Composition",
         explanation: "The shelves belong to the library and don't exist without it: composition.",
       },
       {
-        question: "A Club has Members who were registered separately and stay registered if the club closes. Which relationship is this?",
+        question:
+          "A Club has Members who were registered separately and stay registered if the club closes. Which relationship is this?",
         options: ["Aggregation", "Composition", "Inheritance", "Overriding"],
         answer: "Aggregation",
-        explanation: "The members exist on their own and are only collected by the club: aggregation.",
+        explanation:
+          "The members exist on their own and are only collected by the club: aggregation.",
       },
     ],
     tasks: [
@@ -1195,7 +1218,7 @@ Write three classes, \`Guitar\`, \`Drum\` and \`Piano\`, each with a method \`pl
 Input a line of instrument names separated by spaces, such as \`drum piano drum\`. Make an object for each one and put them all in a list. Then loop through the list and print what each object's \`play()\` returns, one per line.`,
         starter: "",
         hints: [
-          "A dictionary can turn a name into a class: kinds = {\"guitar\": Guitar, \"drum\": Drum, \"piano\": Piano}, then kinds[name]().",
+          'A dictionary can turn a name into a class: kinds = {"guitar": Guitar, "drum": Drum, "piano": Piano}, then kinds[name]().',
           "The final loop should just call instrument.play(), with no if statements.",
         ],
         solution: `class Guitar:
@@ -1232,7 +1255,7 @@ For example, Red, 2, Ada, Sam prints \`Red has 2 players: Ada, Sam\`.`,
         starter: "",
         hints: [
           "Team.add just appends the player object to self.players.",
-          "In summary, build the names with \", \".join(p.name for p in self.players).",
+          'In summary, build the names with ", ".join(p.name for p in self.players).',
         ],
         solution: `class Player:
     def __init__(self, name):
@@ -1270,7 +1293,7 @@ Input a whole number \`n\`, then \`n\` lines in the form \`title;author\`, then 
         starter: "",
         hints: [
           "add_book does self.books.append(Book(title, author)): the Book is made inside the library.",
-          "Split each line with .split(\";\") to get the title and author.",
+          'Split each line with .split(";") to get the title and author.',
         ],
         solution: `class Book:
     def __init__(self, title, author):
@@ -1350,7 +1373,11 @@ for person in staff:
     print(person.name + ": " + str(round(person.pay(), 2)))
     total = total + person.pay()
 print("Total: " + str(round(total, 2)))`,
-        inputs: ["salaried Ann 26000\nhourly Bob 12.5 30\nend", "hourly Cy 10 0\nend", "salaried Di 52000\nsalaried Ed 31200\nend"],
+        inputs: [
+          "salaried Ann 26000\nhourly Bob 12.5 30\nend",
+          "hourly Cy 10 0\nend",
+          "salaried Di 52000\nsalaried Ed 31200\nend",
+        ],
       },
       {
         tier: 4,
@@ -1367,7 +1394,7 @@ A courier prices three kinds of item. Write a parent class \`Item\` with a metho
 Input a whole number \`n\`, then \`n\` lines: \`letter\`, \`parcel <kg>\` or \`fragile <kg>\`. Print each item's cost and then \`Total: <total>\`.`,
         starter: "",
         hints: [
-          "\"Each whole kg over 1\" is int(weight - 1) when the weight is over 1, else 0.",
+          '"Each whole kg over 1" is int(weight - 1) when the weight is over 1, else 0.',
           "FragileParcel.cost returns super().cost() + 4, so the parcel rule is only written once.",
         ],
         solution: `class Item:

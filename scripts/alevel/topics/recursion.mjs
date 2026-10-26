@@ -54,7 +54,8 @@ print(sum_to(5))`,
           "The largest input it can handle",
         ],
         answer: "The case it can answer without calling itself",
-        explanation: "The base case returns an answer directly, which is what stops the chain of calls.",
+        explanation:
+          "The base case returns an answer directly, which is what stops the chain of calls.",
       },
       {
         question: "def f(n): return n * f(n - 1) — what is wrong with this function?",
@@ -65,7 +66,8 @@ print(sum_to(5))`,
           "Functions can't call themselves",
         ],
         answer: "It has no base case, so it never stops",
-        explanation: "Without a base case the calls go on until Python stops the program with a RecursionError.",
+        explanation:
+          "Without a base case the calls go on until Python stops the program with a RecursionError.",
       },
       {
         question: "def f(n): if n == 0: return 0; return 2 + f(n - 1). What is f(3)?",
@@ -88,7 +90,7 @@ The base case is \`n == 0\`: it just prints \`Liftoff!\`. Don't use a loop.
 Input a whole number and call \`countdown\` with it. For example, 3 prints 3, 2, 1, Liftoff!`,
         starter: "def countdown(n):\n    pass\n",
         hints: [
-          "if n == 0: print(\"Liftoff!\"), otherwise print n and then call countdown(n - 1).",
+          'if n == 0: print("Liftoff!"), otherwise print n and then call countdown(n - 1).',
           "The recursive call goes after the print, so the numbers come out largest first.",
         ],
         solution: `def countdown(n):
@@ -114,10 +116,7 @@ Write a recursive function \`power(base, exponent)\` that returns base raised to
 
 Input the base and then the exponent (whole numbers, one per line) and print the result. For example, 2 and 5 prints \`32\`.`,
         starter: "def power(base, exponent):\n    pass\n",
-        hints: [
-          "if exponent == 0: return 1",
-          "Otherwise return base * power(base, exponent - 1).",
-        ],
+        hints: ["if exponent == 0: return 1", "Otherwise return base * power(base, exponent - 1)."],
         solution: `def power(base, exponent):
     if exponent == 0:
         return 1
@@ -139,10 +138,7 @@ Write a recursive function \`digit_sum(n)\` that returns the sum of the digits o
 
 Input a whole number and print its digit sum. For example, 4096 prints \`19\`.`,
         starter: "def digit_sum(n):\n    pass\n",
-        hints: [
-          "if n < 10: return n",
-          "Otherwise return n % 10 + digit_sum(n // 10).",
-        ],
+        hints: ["if n < 10: return n", "Otherwise return n % 10 + digit_sum(n // 10)."],
         solution: `def digit_sum(n):
     if n < 10:
         return n
@@ -165,7 +161,7 @@ Input a word and print it reversed. For example, \`python\` prints \`nohtyp\`.`,
         starter: "def reverse(text):\n    pass\n",
         hints: [
           "text[0] is the first letter and text[1:] is everything after it.",
-          "return reverse(text[1:]) + text[0], with if text == \"\": return \"\" as the base case.",
+          'return reverse(text[1:]) + text[0], with if text == "": return "" as the base case.',
         ],
         solution: `def reverse(text):
     if text == "":
@@ -219,10 +215,7 @@ Write a recursive function \`multiply(a, b)\` that returns a × b for whole numb
 
 Input \`a\` and then \`b\`, one per line, and print the result.`,
         starter: "def multiply(a, b):\n    pass\n",
-        hints: [
-          "if b == 0: return 0",
-          "return a + multiply(a, b - 1)",
-        ],
+        hints: ["if b == 0: return 0", "return a + multiply(a, b - 1)"],
         solution: `def multiply(a, b):
     if b == 0:
         return 0
@@ -244,7 +237,7 @@ Base case: an empty string contains the letter 0 times. General case: look at th
 Input a line of text and then a single letter, and print the count.`,
         starter: "def count(text, letter):\n    pass\n",
         hints: [
-          "if text == \"\": return 0",
+          'if text == "": return 0',
           "(1 if text[0] == letter else 0) + count(text[1:], letter)",
         ],
         solution: `def count(text, letter):
@@ -259,7 +252,8 @@ print(count(input(), input()))`,
   },
   {
     title: "The call stack",
-    summary: "How recursive calls are stored, what happens on the way back up, and recursion versus iteration.",
+    summary:
+      "How recursive calls are stored, what happens on the way back up, and recursion versus iteration.",
     notes: `
 Every time a subroutine is called, the computer pushes a **stack frame** onto the **call stack**. The frame holds that call's parameters, its local variables and the **return address** (where to carry on when it finishes). When the call returns, its frame is popped off.
 
@@ -311,7 +305,8 @@ show(2)`,
           "The global variables",
         ],
         answer: "The call's parameters, local variables and return address",
-        explanation: "Each call gets its own frame, which is why every recursive call has its own copy of n.",
+        explanation:
+          "Each call gets its own frame, which is why every recursive call has its own copy of n.",
       },
       {
         question: "Why can very deep recursion crash a program?",
@@ -322,7 +317,8 @@ show(2)`,
           "Python can't call a function more than once",
         ],
         answer: "Each call adds a stack frame, and the stack runs out of space",
-        explanation: "This is a stack overflow. Python stops it with a RecursionError after about 1000 levels.",
+        explanation:
+          "This is a stack overflow. Python stops it with a RecursionError after about 1000 levels.",
       },
       {
         question: "In show(n) from the notes, why does Up 1 print before Up 2?",
@@ -333,7 +329,8 @@ show(2)`,
           "It doesn't; Up 2 prints first",
         ],
         answer: "Frames come off the stack in the reverse order they went on",
-        explanation: "show(1)'s frame is on top of show(2)'s, so it finishes, and prints Up 1, first.",
+        explanation:
+          "show(1)'s frame is on top of show(2)'s, so it finishes, and prints Up 1, first.",
       },
     ],
     tasks: [
@@ -357,8 +354,8 @@ Up 2
 \`\`\``,
         starter: "def show(n):\n    pass\n",
         hints: [
-          "The print(\"Up\", n) line goes after the recursive call, so it runs on the way back up.",
-          "Use print(\"Down\", n) to get a space between the word and the number.",
+          'The print("Up", n) line goes after the recursive call, so it runs on the way back up.',
+          'Use print("Down", n) to get a space between the word and the number.',
         ],
         solution: `def show(n):
     if n == 0:
@@ -384,10 +381,7 @@ Write a recursive function \`sum_list(items)\` that returns the total of a list 
 
 Input a line of whole numbers separated by spaces (it may be empty) and print their total.`,
         starter: "def sum_list(items):\n    pass\n",
-        hints: [
-          "items[0] is the first item and items[1:] is the rest.",
-          "if not items: return 0",
-        ],
+        hints: ["items[0] is the first item and items[1:] is the rest.", "if not items: return 0"],
         solution: `def sum_list(items):
     if not items:
         return 0
@@ -539,10 +533,7 @@ Write a recursive function \`to_binary(n)\` that returns the binary form of a wh
 
 Input a whole number and print its binary. For example, 10 prints \`1010\`.`,
         starter: "def to_binary(n):\n    pass\n",
-        hints: [
-          "if n < 2: return str(n)",
-          "return to_binary(n // 2) + str(n % 2)",
-        ],
+        hints: ["if n < 2: return str(n)", "return to_binary(n // 2) + str(n % 2)"],
         solution: `def to_binary(n):
     if n < 2:
         return str(n)
@@ -555,7 +546,8 @@ print(to_binary(int(input())))`,
   },
   {
     title: "Recursive algorithms",
-    summary: "Binary search, Euclid's algorithm and other problems that split neatly into smaller copies of themselves.",
+    summary:
+      "Binary search, Euclid's algorithm and other problems that split neatly into smaller copies of themselves.",
     notes: `
 Some algorithms are naturally recursive because each step leaves a smaller copy of the same problem.
 
@@ -591,7 +583,8 @@ print(hcf(48, 18))`,
       "hcf(48, 18) becomes hcf(18, 12), then hcf(12, 6), then hcf(6, 0), the base case, which returns 6.",
     quiz: [
       {
-        question: "In recursive binary search, what is the base case when the target isn't in the list?",
+        question:
+          "In recursive binary search, what is the base case when the target isn't in the list?",
         options: [
           "low becomes greater than high, so there is nothing left to search",
           "The middle item is the target",
@@ -599,7 +592,8 @@ print(hcf(48, 18))`,
           "There isn't one",
         ],
         answer: "low becomes greater than high, so there is nothing left to search",
-        explanation: "Each call narrows the range; when it is empty (low > high) the search returns -1.",
+        explanation:
+          "Each call narrows the range; when it is empty (low > high) the search returns -1.",
       },
       {
         question: "Why does binary search need the list to be sorted?",
@@ -610,7 +604,8 @@ print(hcf(48, 18))`,
           "It doesn't need to be sorted",
         ],
         answer: "So it knows which half the target must be in",
-        explanation: "Comparing with the middle item only tells you which half to search if everything smaller is on one side.",
+        explanation:
+          "Comparing with the middle item only tells you which half to search if everything smaller is on one side.",
       },
       {
         question: "Using Euclid's rule hcf(a, b) = hcf(b, a % b), what is hcf(20, 8)?",
@@ -632,10 +627,7 @@ Write a recursive function \`hcf(a, b)\` that returns the highest common factor 
 
 Input two whole numbers (one per line) and print their HCF. For example, 48 and 18 prints \`6\`.`,
         starter: "def hcf(a, b):\n    pass\n",
-        hints: [
-          "if b == 0: return a",
-          "Otherwise return hcf(b, a % b).",
-        ],
+        hints: ["if b == 0: return a", "Otherwise return hcf(b, a % b)."],
         solution: `def hcf(a, b):
     if b == 0:
         return a
@@ -673,7 +665,13 @@ For example, \`2 5 8 12 16\` and \`12\` prints \`3\`.`,
 items = [int(x) for x in input().split()]
 position = search(items, int(input()), 0, len(items) - 1)
 print("Not found" if position == -1 else position)`,
-        inputs: ["2 5 8 12 16\n12", "2 5 8 12 16\n2", "2 5 8 12 16\n7", "4\n4", "1 3 5 7 9 11 13\n13"],
+        inputs: [
+          "2 5 8 12 16\n12",
+          "2 5 8 12 16\n2",
+          "2 5 8 12 16\n7",
+          "4\n4",
+          "1 3 5 7 9 11 13\n13",
+        ],
       },
       {
         tier: 3,
@@ -686,7 +684,8 @@ A list can contain other lists, which can contain more lists. Write a recursive 
 For each item: if it is itself a list (\`isinstance(item, list)\`), flatten it and add all of its numbers; otherwise add the item.
 
 The starter code reads the input as a Python list for you. Print the flattened numbers separated by spaces. For example, \`[1, [2, [3, 4]], 5]\` prints \`1 2 3 4 5\`.`,
-        starter: "import ast\n\ndef flatten(items):\n    pass\n\ndata = ast.literal_eval(input())\n",
+        starter:
+          "import ast\n\ndef flatten(items):\n    pass\n\ndata = ast.literal_eval(input())\n",
         hints: [
           "Start with result = [] and use result.extend(flatten(item)) for an item that is a list.",
           "For an item that isn't a list, result.append(item).",
@@ -751,7 +750,7 @@ Input the number of rows, then each row as a line of \`.\` and \`#\`, then a sta
         starter: "",
         hints: [
           "Store the grid as a list of lists of characters, so squares can be changed: [list(row) for row in rows].",
-          "After marking grid[r][c] = \"*\", return 1 + fill for each of the four neighbours.",
+          'After marking grid[r][c] = "*", return 1 + fill for each of the four neighbours.',
         ],
         solution: `def fill(grid, r, c):
     if r < 0 or r >= len(grid) or c < 0 or c >= len(grid[0]):

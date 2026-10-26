@@ -1,0 +1,724 @@
+{
+  "track": "alevel",
+  "topic": "alevel-sql",
+  "lessons": [
+    {
+      "slug": "alevel-sql-1",
+      "title": "Joining tables",
+      "summary": "Using primary and foreign keys to combine rows from two or three tables in one query.",
+      "notes": "A **relational database** stores data in several **tables** that are linked together, instead of one huge table full of repeated data.\n\nThe sample database for this topic has three tables:\n- `students` (id, name, year, form)\n- `courses` (id, title, teacher)\n- `enrolments` (student_id, course_id, mark): one row for each student on each course.\n\nEach table's **primary key** (`id`) identifies a row uniquely. `enrolments.student_id` is a **foreign key**: it holds the primary key of a row in another table, which is what links the tables. **Referential integrity** means every foreign key must point at a row that really exists.\n\n---\n\nA **join** combines rows from two tables where the linking columns match:\n\n```sql\nSELECT students.name, enrolments.mark\nFROM students\nINNER JOIN enrolments ON students.id = enrolments.student_id;\n```\n\n- Write `table.column` when the same column name could come from more than one table.\n- Join a third table by adding another `INNER JOIN ... ON ...`.\n- You may also see the older style, which means the same: `FROM students, enrolments WHERE students.id = enrolments.student_id`.\n\nAn **INNER JOIN** only keeps rows that have a match in both tables. A **LEFT JOIN** keeps *every* row of the first table, and fills the other table's columns with `NULL` when there is no match: that's how you find students on no course.\n\nUse `ORDER BY` whenever the order of rows matters; without it, the database may return them in any order.",
+      "worked_example": "SELECT students.name, courses.title, enrolments.mark\nFROM enrolments\nINNER JOIN students ON students.id = enrolments.student_id\nINNER JOIN courses ON courses.id = enrolments.course_id\nWHERE enrolments.mark >= 80\nORDER BY enrolments.mark DESC;",
+      "worked_example_note": "enrolments only holds id numbers. Joining it to students and courses swaps those numbers for the names and titles they point at."
+    },
+    {
+      "slug": "alevel-sql-2",
+      "title": "Grouping and totals",
+      "summary": "COUNT, SUM, AVG, MIN and MAX, with GROUP BY to work out a total for each group and HAVING to filter the groups.",
+      "notes": "**Aggregate functions** work out one value from many rows:\n\n| Function | Gives |\n|---|---|\n| `COUNT(*)` | the number of rows |\n| `SUM(mark)` | the total |\n| `AVG(mark)` | the mean |\n| `MIN(mark)`, `MAX(mark)` | the smallest and largest |\n\n`SELECT AVG(mark) FROM enrolments;` gives one row: the average of every mark. Use `ROUND(AVG(mark), 1)` to round to 1 decimal place.\n\n---\n\n**GROUP BY** splits the rows into groups that share a value, and works out the aggregate for **each group**:\n\n```sql\nSELECT course_id, COUNT(*), AVG(mark)\nFROM enrolments\nGROUP BY course_id;\n```\n\nEvery column in the `SELECT` should either be in the `GROUP BY` or inside an aggregate function.\n\n**WHERE** filters rows *before* they're grouped. **HAVING** filters the groups *afterwards*, so it can use an aggregate:\n\n```sql\nSELECT student_id, COUNT(*) FROM enrolments\nGROUP BY student_id\nHAVING COUNT(*) > 1;\n```\n\n`AS` gives a column a name, which you can then use in `ORDER BY`: `SELECT form, COUNT(*) AS size ... ORDER BY size DESC`.\n\n`COUNT(*)` counts rows, but `COUNT(column)` counts only the rows where that column isn't `NULL`. That matters after a LEFT JOIN.",
+      "worked_example": "SELECT courses.title, COUNT(*) AS students, MAX(enrolments.mark) AS top\nFROM enrolments\nINNER JOIN courses ON courses.id = enrolments.course_id\nGROUP BY courses.title\nORDER BY students DESC, courses.title;",
+      "worked_example_note": "GROUP BY makes one output row per course title. COUNT and MAX are then worked out separately for each course's enrolments."
+    },
+    {
+      "slug": "alevel-sql-3",
+      "title": "Nested queries",
+      "summary": "Putting one SELECT inside another, to compare with an average, test membership with IN, or find the top in each group.",
+      "notes": "A **nested query** (or **subquery**) is a `SELECT` inside another query, in brackets. The inner query runs first and its result is used by the outer one.\n\n**Comparing with a single value**: the subquery must return one value.\n\n```sql\nSELECT student_id, mark FROM enrolments\nWHERE mark > (SELECT AVG(mark) FROM enrolments);\n```\n\n**IN and NOT IN**: the subquery returns a list of values.\n\n```sql\nSELECT name FROM students\nWHERE id IN (SELECT student_id FROM enrolments WHERE course_id = 3);\n```\n\n`NOT IN` finds the rows whose value is *not* in the list.\n\n---\n\nA **correlated subquery** refers to the outer query's row, so it is worked out again for each row. This finds the top mark in each course:\n\n```sql\nSELECT course_id, student_id, mark FROM enrolments AS e\nWHERE mark = (SELECT MAX(mark) FROM enrolments\n              WHERE course_id = e.course_id);\n```\n\nFor each enrolment, the inner query finds the best mark *on that enrolment's course*, and the row is kept only if it is that mark.\n\nA subquery can often be written as a join instead. Use whichever is clearer: subqueries are good for \"more than the average\" and \"not in this list\" questions.",
+      "worked_example": "SELECT name FROM students\nWHERE id NOT IN (SELECT student_id FROM enrolments WHERE course_id = 1)\nORDER BY name;",
+      "worked_example_note": "The inner query lists the ids of everyone on Computer Science (1, 2, 4 and 6). The outer query keeps every student whose id isn't in that list."
+    },
+    {
+      "slug": "alevel-sql-4",
+      "title": "Changing data and creating tables",
+      "summary": "INSERT, UPDATE and DELETE to change the data, and CREATE TABLE to define a new table with keys.",
+      "notes": "**Adding a row**:\n```sql\nINSERT INTO students (id, name, year, form) VALUES (8, 'Hana', 12, 'Hopper');\n```\nYou can leave out the column list if you give a value for every column, in order.\n\n**Changing rows**: `SET` the new values, and `WHERE` says which rows.\n```sql\nUPDATE enrolments SET mark = mark + 5 WHERE course_id = 3;\n```\n\n**Removing rows**:\n```sql\nDELETE FROM enrolments WHERE student_id = 2;\n```\n\n**Always include a WHERE** with UPDATE and DELETE: without one, *every* row in the table is changed or deleted.\n\nTo keep referential integrity, delete the rows that point at a record (its enrolments) before deleting the record itself (the student).\n\n---\n\n**Creating a table** gives each column a name and a data type, and can set keys:\n\n```sql\nCREATE TABLE clubs (\n  id INTEGER PRIMARY KEY,\n  name TEXT NOT NULL,\n  room TEXT\n);\nCREATE TABLE members (\n  student_id INTEGER,\n  club_id INTEGER,\n  PRIMARY KEY (student_id, club_id),\n  FOREIGN KEY (student_id) REFERENCES students(id),\n  FOREIGN KEY (club_id) REFERENCES clubs(id)\n);\n```\n\n- `NOT NULL` means the field must have a value.\n- A primary key made of two columns is a **composite key**: a student can join many clubs, but each club only once.\n- Other data types you'll meet in exams: `VARCHAR(n)` (text of at most n characters), `DATE`, `REAL` or `FLOAT`, `BOOLEAN`.\n- `DROP TABLE clubs;` deletes a whole table.\n\n**In these tasks**, after changing the data, finish with a `SELECT` that shows the result, as each brief describes. The marking checks what that last SELECT shows.",
+      "worked_example": "UPDATE enrolments SET mark = mark + 5 WHERE course_id = 3;\nSELECT student_id, mark FROM enrolments WHERE course_id = 3 ORDER BY student_id;",
+      "worked_example_note": "Both Physics marks go up by 5 (58 becomes 63 and 77 becomes 82). Every other course is untouched because of the WHERE."
+    }
+  ],
+  "quiz": [
+    {
+      "lessonSlug": "alevel-sql-1",
+      "question": "What is a foreign key?",
+      "options": [
+        "A field that holds the primary key of a row in another table",
+        "A field that is unique in its own table",
+        "A key used to encrypt the database",
+        "Any field that is not a number"
+      ],
+      "answer": "A field that holds the primary key of a row in another table",
+      "explanation": "enrolments.student_id holds a students.id: that is what links the two tables."
+    },
+    {
+      "lessonSlug": "alevel-sql-1",
+      "question": "Which join keeps every row of the first table, even when nothing matches in the second?",
+      "options": [
+        "LEFT JOIN",
+        "INNER JOIN",
+        "GROUP BY",
+        "ORDER BY"
+      ],
+      "answer": "LEFT JOIN",
+      "explanation": "Missing values from the second table come back as NULL."
+    },
+    {
+      "lessonSlug": "alevel-sql-1",
+      "question": "What does referential integrity mean?",
+      "options": [
+        "Every foreign key refers to a row that exists",
+        "Every table has the same number of rows",
+        "No field is ever empty",
+        "The data is backed up"
+      ],
+      "answer": "Every foreign key refers to a row that exists",
+      "explanation": "For example, an enrolment can't refer to a student who isn't in the students table."
+    },
+    {
+      "lessonSlug": "alevel-sql-2",
+      "question": "What is the difference between WHERE and HAVING?",
+      "options": [
+        "WHERE filters rows before grouping; HAVING filters groups after",
+        "They are the same",
+        "HAVING filters rows before grouping; WHERE filters groups after",
+        "HAVING can only be used with ORDER BY"
+      ],
+      "answer": "WHERE filters rows before grouping; HAVING filters groups after",
+      "explanation": "So a condition on COUNT(*) or AVG(...) has to go in HAVING."
+    },
+    {
+      "lessonSlug": "alevel-sql-2",
+      "question": "SELECT form, COUNT(*) FROM students GROUP BY form; returns how many rows?",
+      "options": [
+        "One for each different form",
+        "One for each student",
+        "Exactly one",
+        "One for each column"
+      ],
+      "answer": "One for each different form",
+      "explanation": "GROUP BY makes one group, and one result row, per distinct value."
+    },
+    {
+      "lessonSlug": "alevel-sql-2",
+      "question": "After a LEFT JOIN, why might COUNT(enrolments.student_id) differ from COUNT(*)?",
+      "options": [
+        "COUNT(column) doesn't count NULLs",
+        "COUNT(*) skips NULL rows",
+        "COUNT(column) counts distinct values only",
+        "They can never differ"
+      ],
+      "answer": "COUNT(column) doesn't count NULLs",
+      "explanation": "A course with no enrolments still has one row after the LEFT JOIN, but its student_id is NULL."
+    },
+    {
+      "lessonSlug": "alevel-sql-3",
+      "question": "In a nested query, which SELECT is worked out first?",
+      "options": [
+        "The inner one, in brackets",
+        "The outer one",
+        "Whichever is shorter",
+        "They run at the same time"
+      ],
+      "answer": "The inner one, in brackets",
+      "explanation": "Its result is then used by the outer query."
+    },
+    {
+      "lessonSlug": "alevel-sql-3",
+      "question": "WHERE mark > (SELECT AVG(mark) FROM enrolments) keeps which rows?",
+      "options": [
+        "Marks above the average of all marks",
+        "Marks above each student's own average",
+        "The single highest mark",
+        "Every mark"
+      ],
+      "answer": "Marks above the average of all marks",
+      "explanation": "The subquery returns one number: the average of every row in enrolments."
+    },
+    {
+      "lessonSlug": "alevel-sql-3",
+      "question": "What makes a subquery 'correlated'?",
+      "options": [
+        "It refers to a column of the outer query's current row",
+        "It uses GROUP BY",
+        "It returns more than one row",
+        "It is used with IN"
+      ],
+      "answer": "It refers to a column of the outer query's current row",
+      "explanation": "So it is worked out again for each row of the outer query."
+    },
+    {
+      "lessonSlug": "alevel-sql-4",
+      "question": "What happens if you run UPDATE enrolments SET mark = 0; with no WHERE?",
+      "options": [
+        "Every row's mark becomes 0",
+        "Nothing happens",
+        "Only the first row changes",
+        "An error is shown"
+      ],
+      "answer": "Every row's mark becomes 0",
+      "explanation": "Without WHERE, the change applies to every row in the table."
+    },
+    {
+      "lessonSlug": "alevel-sql-4",
+      "question": "Why delete a student's enrolments before deleting the student?",
+      "options": [
+        "So no enrolment is left pointing at a student who doesn't exist",
+        "Because DELETE only works on one table a day",
+        "To make the query faster",
+        "It doesn't matter which order"
+      ],
+      "answer": "So no enrolment is left pointing at a student who doesn't exist",
+      "explanation": "That would break referential integrity."
+    },
+    {
+      "lessonSlug": "alevel-sql-4",
+      "question": "PRIMARY KEY (student_id, club_id) is an example of what?",
+      "options": [
+        "A composite key",
+        "A foreign key",
+        "A secondary index",
+        "A data type"
+      ],
+      "answer": "A composite key",
+      "explanation": "The two fields together identify each row uniquely."
+    }
+  ],
+  "tasks": [
+    {
+      "slug": "alevel-sql-t1-01",
+      "lesson": 1,
+      "tier": 1,
+      "difficulty": 2,
+      "xp": 20,
+      "title": "Computer Science marks",
+      "brief": "Write a query that shows the **name** and **mark** of every student on course 1 (Computer Science), highest mark first.\n\nYou'll need to join `students` to `enrolments`.",
+      "starter": "-- Sample database: students, courses, and enrolments (who takes what)\nCREATE TABLE students (id INTEGER PRIMARY KEY, name TEXT, year INTEGER, form TEXT);\nINSERT INTO students VALUES\n  (1, 'Ada', 12, 'Turing'),\n  (2, 'Ben', 13, 'Hopper'),\n  (3, 'Cara', 12, 'Hopper'),\n  (4, 'Dev', 13, 'Turing'),\n  (5, 'Eve', 12, 'Lovelace'),\n  (6, 'Finn', 13, 'Lovelace'),\n  (7, 'Gus', 12, 'Turing');\n\nCREATE TABLE courses (id INTEGER PRIMARY KEY, title TEXT, teacher TEXT);\nINSERT INTO courses VALUES\n  (1, 'Computer Science', 'Mr Shah'),\n  (2, 'Maths', 'Ms Okafor'),\n  (3, 'Physics', 'Dr Reid'),\n  (4, 'History', 'Mrs Bell'),\n  (5, 'Art', 'Ms Lowe');\n\n-- One row for each student on each course, with their latest test mark.\nCREATE TABLE enrolments (student_id INTEGER, course_id INTEGER, mark INTEGER);\nINSERT INTO enrolments VALUES\n  (1, 1, 82), (1, 2, 74),\n  (2, 1, 65), (2, 3, 58),\n  (3, 2, 91), (3, 3, 77),\n  (4, 1, 70), (4, 2, 55), (4, 4, 68),\n  (5, 4, 88),\n  (6, 1, 45);\n\n-- Write your query below this line:\n",
+      "hints": [
+        "FROM students INNER JOIN enrolments ON students.id = enrolments.student_id",
+        "WHERE enrolments.course_id = 1 ORDER BY enrolments.mark DESC"
+      ],
+      "tests": [
+        {
+          "expect": "Ada, 82\nDev, 70\nBen, 65\nFinn, 45"
+        }
+      ]
+    },
+    {
+      "slug": "alevel-sql-t1-02",
+      "lesson": 1,
+      "tier": 2,
+      "difficulty": 3,
+      "xp": 25,
+      "title": "Names, courses and marks",
+      "brief": "Write a query that shows every enrolment as the student's **name**, the course **title** and the **mark**, ordered by name and then by course title (both A to Z).\n\nJoin all three tables.",
+      "starter": "-- Sample database: students, courses, and enrolments (who takes what)\nCREATE TABLE students (id INTEGER PRIMARY KEY, name TEXT, year INTEGER, form TEXT);\nINSERT INTO students VALUES\n  (1, 'Ada', 12, 'Turing'),\n  (2, 'Ben', 13, 'Hopper'),\n  (3, 'Cara', 12, 'Hopper'),\n  (4, 'Dev', 13, 'Turing'),\n  (5, 'Eve', 12, 'Lovelace'),\n  (6, 'Finn', 13, 'Lovelace'),\n  (7, 'Gus', 12, 'Turing');\n\nCREATE TABLE courses (id INTEGER PRIMARY KEY, title TEXT, teacher TEXT);\nINSERT INTO courses VALUES\n  (1, 'Computer Science', 'Mr Shah'),\n  (2, 'Maths', 'Ms Okafor'),\n  (3, 'Physics', 'Dr Reid'),\n  (4, 'History', 'Mrs Bell'),\n  (5, 'Art', 'Ms Lowe');\n\n-- One row for each student on each course, with their latest test mark.\nCREATE TABLE enrolments (student_id INTEGER, course_id INTEGER, mark INTEGER);\nINSERT INTO enrolments VALUES\n  (1, 1, 82), (1, 2, 74),\n  (2, 1, 65), (2, 3, 58),\n  (3, 2, 91), (3, 3, 77),\n  (4, 1, 70), (4, 2, 55), (4, 4, 68),\n  (5, 4, 88),\n  (6, 1, 45);\n\n-- Write your query below this line:\n",
+      "hints": [
+        "Start FROM enrolments, then join students and courses to it.",
+        "ORDER BY students.name, courses.title"
+      ],
+      "tests": [
+        {
+          "expect": "Ada, Computer Science, 82\nAda, Maths, 74\nBen, Computer Science, 65\nBen, Physics, 58\nCara, Maths, 91\nCara, Physics, 77\nDev, Computer Science, 70\nDev, History, 68\nDev, Maths, 55\nEve, History, 88\nFinn, Computer Science, 45"
+        }
+      ]
+    },
+    {
+      "slug": "alevel-sql-t1-03",
+      "lesson": 1,
+      "tier": 3,
+      "difficulty": 3,
+      "xp": 30,
+      "title": "Mr Shah's class list",
+      "brief": "Mr Shah wants a list of the students he teaches. Write a query that shows the **name** and **form** of every student on a course taught by `'Mr Shah'`, in alphabetical order of name.\n\nDon't use the course's id number: find it through the teacher's name.",
+      "starter": "-- Sample database: students, courses, and enrolments (who takes what)\nCREATE TABLE students (id INTEGER PRIMARY KEY, name TEXT, year INTEGER, form TEXT);\nINSERT INTO students VALUES\n  (1, 'Ada', 12, 'Turing'),\n  (2, 'Ben', 13, 'Hopper'),\n  (3, 'Cara', 12, 'Hopper'),\n  (4, 'Dev', 13, 'Turing'),\n  (5, 'Eve', 12, 'Lovelace'),\n  (6, 'Finn', 13, 'Lovelace'),\n  (7, 'Gus', 12, 'Turing');\n\nCREATE TABLE courses (id INTEGER PRIMARY KEY, title TEXT, teacher TEXT);\nINSERT INTO courses VALUES\n  (1, 'Computer Science', 'Mr Shah'),\n  (2, 'Maths', 'Ms Okafor'),\n  (3, 'Physics', 'Dr Reid'),\n  (4, 'History', 'Mrs Bell'),\n  (5, 'Art', 'Ms Lowe');\n\n-- One row for each student on each course, with their latest test mark.\nCREATE TABLE enrolments (student_id INTEGER, course_id INTEGER, mark INTEGER);\nINSERT INTO enrolments VALUES\n  (1, 1, 82), (1, 2, 74),\n  (2, 1, 65), (2, 3, 58),\n  (3, 2, 91), (3, 3, 77),\n  (4, 1, 70), (4, 2, 55), (4, 4, 68),\n  (5, 4, 88),\n  (6, 1, 45);\n\n-- Write your query below this line:\n",
+      "hints": [
+        "You need all three tables: the teacher is in courses, the name is in students.",
+        "WHERE courses.teacher = 'Mr Shah' ORDER BY students.name"
+      ],
+      "tests": [
+        {
+          "expect": "Ada, Turing\nBen, Hopper\nDev, Turing\nFinn, Lovelace"
+        }
+      ]
+    },
+    {
+      "slug": "alevel-sql-t1-04",
+      "lesson": 1,
+      "tier": 3,
+      "difficulty": 4,
+      "xp": 35,
+      "title": "Not on any course",
+      "brief": "One student hasn't been put on any course yet. Write a query using a **LEFT JOIN** from `students` to `enrolments` that shows the **name** of every student who has no enrolments.\n\nA student with no match has `NULL` in the enrolment columns.",
+      "starter": "-- Sample database: students, courses, and enrolments (who takes what)\nCREATE TABLE students (id INTEGER PRIMARY KEY, name TEXT, year INTEGER, form TEXT);\nINSERT INTO students VALUES\n  (1, 'Ada', 12, 'Turing'),\n  (2, 'Ben', 13, 'Hopper'),\n  (3, 'Cara', 12, 'Hopper'),\n  (4, 'Dev', 13, 'Turing'),\n  (5, 'Eve', 12, 'Lovelace'),\n  (6, 'Finn', 13, 'Lovelace'),\n  (7, 'Gus', 12, 'Turing');\n\nCREATE TABLE courses (id INTEGER PRIMARY KEY, title TEXT, teacher TEXT);\nINSERT INTO courses VALUES\n  (1, 'Computer Science', 'Mr Shah'),\n  (2, 'Maths', 'Ms Okafor'),\n  (3, 'Physics', 'Dr Reid'),\n  (4, 'History', 'Mrs Bell'),\n  (5, 'Art', 'Ms Lowe');\n\n-- One row for each student on each course, with their latest test mark.\nCREATE TABLE enrolments (student_id INTEGER, course_id INTEGER, mark INTEGER);\nINSERT INTO enrolments VALUES\n  (1, 1, 82), (1, 2, 74),\n  (2, 1, 65), (2, 3, 58),\n  (3, 2, 91), (3, 3, 77),\n  (4, 1, 70), (4, 2, 55), (4, 4, 68),\n  (5, 4, 88),\n  (6, 1, 45);\n\n-- Write your query below this line:\n",
+      "hints": [
+        "FROM students LEFT JOIN enrolments ON students.id = enrolments.student_id",
+        "WHERE enrolments.student_id IS NULL (use IS NULL, not = NULL)"
+      ],
+      "tests": [
+        {
+          "expect": "Gus"
+        }
+      ]
+    },
+    {
+      "slug": "alevel-sql-t1-stretch",
+      "lesson": 1,
+      "tier": 4,
+      "difficulty": 5,
+      "xp": 45,
+      "stretch": true,
+      "title": "Form partners",
+      "brief": "A table can be joined to **itself**, using two different short names (aliases) for it: `FROM students AS a INNER JOIN students AS b ON ...`.\n\nWrite a query that lists every pair of different students in the **same form**, as `a.name`, `b.name` and the form. Show each pair only once, by keeping only the rows where `a.id < b.id`. Order by form, then by the first name, then the second.",
+      "starter": "-- Sample database: students, courses, and enrolments (who takes what)\nCREATE TABLE students (id INTEGER PRIMARY KEY, name TEXT, year INTEGER, form TEXT);\nINSERT INTO students VALUES\n  (1, 'Ada', 12, 'Turing'),\n  (2, 'Ben', 13, 'Hopper'),\n  (3, 'Cara', 12, 'Hopper'),\n  (4, 'Dev', 13, 'Turing'),\n  (5, 'Eve', 12, 'Lovelace'),\n  (6, 'Finn', 13, 'Lovelace'),\n  (7, 'Gus', 12, 'Turing');\n\nCREATE TABLE courses (id INTEGER PRIMARY KEY, title TEXT, teacher TEXT);\nINSERT INTO courses VALUES\n  (1, 'Computer Science', 'Mr Shah'),\n  (2, 'Maths', 'Ms Okafor'),\n  (3, 'Physics', 'Dr Reid'),\n  (4, 'History', 'Mrs Bell'),\n  (5, 'Art', 'Ms Lowe');\n\n-- One row for each student on each course, with their latest test mark.\nCREATE TABLE enrolments (student_id INTEGER, course_id INTEGER, mark INTEGER);\nINSERT INTO enrolments VALUES\n  (1, 1, 82), (1, 2, 74),\n  (2, 1, 65), (2, 3, 58),\n  (3, 2, 91), (3, 3, 77),\n  (4, 1, 70), (4, 2, 55), (4, 4, 68),\n  (5, 4, 88),\n  (6, 1, 45);\n\n-- Write your query below this line:\n",
+      "hints": [
+        "ON a.form = b.form AND a.id < b.id",
+        "ORDER BY a.form, a.name, b.name"
+      ],
+      "tests": [
+        {
+          "expect": "Ben, Cara, Hopper\nEve, Finn, Lovelace\nAda, Dev, Turing\nAda, Gus, Turing\nDev, Gus, Turing"
+        }
+      ]
+    },
+    {
+      "slug": "alevel-sql-t2-01",
+      "lesson": 2,
+      "tier": 1,
+      "difficulty": 2,
+      "xp": 20,
+      "title": "How big is each form?",
+      "brief": "Write a query that shows each **form** and the **number of students** in it, in alphabetical order of form.",
+      "starter": "-- Sample database: students, courses, and enrolments (who takes what)\nCREATE TABLE students (id INTEGER PRIMARY KEY, name TEXT, year INTEGER, form TEXT);\nINSERT INTO students VALUES\n  (1, 'Ada', 12, 'Turing'),\n  (2, 'Ben', 13, 'Hopper'),\n  (3, 'Cara', 12, 'Hopper'),\n  (4, 'Dev', 13, 'Turing'),\n  (5, 'Eve', 12, 'Lovelace'),\n  (6, 'Finn', 13, 'Lovelace'),\n  (7, 'Gus', 12, 'Turing');\n\nCREATE TABLE courses (id INTEGER PRIMARY KEY, title TEXT, teacher TEXT);\nINSERT INTO courses VALUES\n  (1, 'Computer Science', 'Mr Shah'),\n  (2, 'Maths', 'Ms Okafor'),\n  (3, 'Physics', 'Dr Reid'),\n  (4, 'History', 'Mrs Bell'),\n  (5, 'Art', 'Ms Lowe');\n\n-- One row for each student on each course, with their latest test mark.\nCREATE TABLE enrolments (student_id INTEGER, course_id INTEGER, mark INTEGER);\nINSERT INTO enrolments VALUES\n  (1, 1, 82), (1, 2, 74),\n  (2, 1, 65), (2, 3, 58),\n  (3, 2, 91), (3, 3, 77),\n  (4, 1, 70), (4, 2, 55), (4, 4, 68),\n  (5, 4, 88),\n  (6, 1, 45);\n\n-- Write your query below this line:\n",
+      "hints": [
+        "SELECT form, COUNT(*) FROM students",
+        "GROUP BY form ORDER BY form"
+      ],
+      "tests": [
+        {
+          "expect": "Hopper, 2\nLovelace, 2\nTuring, 3"
+        }
+      ]
+    },
+    {
+      "slug": "alevel-sql-t2-02",
+      "lesson": 2,
+      "tier": 2,
+      "difficulty": 3,
+      "xp": 25,
+      "title": "Average mark per course",
+      "brief": "Write a query that shows each course's **title** and its **average mark**, rounded to 1 decimal place, with the highest average first. Only courses with enrolments will appear.",
+      "starter": "-- Sample database: students, courses, and enrolments (who takes what)\nCREATE TABLE students (id INTEGER PRIMARY KEY, name TEXT, year INTEGER, form TEXT);\nINSERT INTO students VALUES\n  (1, 'Ada', 12, 'Turing'),\n  (2, 'Ben', 13, 'Hopper'),\n  (3, 'Cara', 12, 'Hopper'),\n  (4, 'Dev', 13, 'Turing'),\n  (5, 'Eve', 12, 'Lovelace'),\n  (6, 'Finn', 13, 'Lovelace'),\n  (7, 'Gus', 12, 'Turing');\n\nCREATE TABLE courses (id INTEGER PRIMARY KEY, title TEXT, teacher TEXT);\nINSERT INTO courses VALUES\n  (1, 'Computer Science', 'Mr Shah'),\n  (2, 'Maths', 'Ms Okafor'),\n  (3, 'Physics', 'Dr Reid'),\n  (4, 'History', 'Mrs Bell'),\n  (5, 'Art', 'Ms Lowe');\n\n-- One row for each student on each course, with their latest test mark.\nCREATE TABLE enrolments (student_id INTEGER, course_id INTEGER, mark INTEGER);\nINSERT INTO enrolments VALUES\n  (1, 1, 82), (1, 2, 74),\n  (2, 1, 65), (2, 3, 58),\n  (3, 2, 91), (3, 3, 77),\n  (4, 1, 70), (4, 2, 55), (4, 4, 68),\n  (5, 4, 88),\n  (6, 1, 45);\n\n-- Write your query below this line:\n",
+      "hints": [
+        "Join courses to enrolments and GROUP BY courses.title.",
+        "ROUND(AVG(enrolments.mark), 1) AS average, then ORDER BY average DESC"
+      ],
+      "tests": [
+        {
+          "expect": "History, 78\nMaths, 73.3\nPhysics, 67.5\nComputer Science, 65.5"
+        }
+      ]
+    },
+    {
+      "slug": "alevel-sql-t2-03",
+      "lesson": 2,
+      "tier": 3,
+      "difficulty": 3,
+      "xp": 30,
+      "title": "Taking more than one course",
+      "brief": "Write a query that shows the **name** of each student taking **more than one** course, and **how many** courses they take, in alphabetical order of name.",
+      "starter": "-- Sample database: students, courses, and enrolments (who takes what)\nCREATE TABLE students (id INTEGER PRIMARY KEY, name TEXT, year INTEGER, form TEXT);\nINSERT INTO students VALUES\n  (1, 'Ada', 12, 'Turing'),\n  (2, 'Ben', 13, 'Hopper'),\n  (3, 'Cara', 12, 'Hopper'),\n  (4, 'Dev', 13, 'Turing'),\n  (5, 'Eve', 12, 'Lovelace'),\n  (6, 'Finn', 13, 'Lovelace'),\n  (7, 'Gus', 12, 'Turing');\n\nCREATE TABLE courses (id INTEGER PRIMARY KEY, title TEXT, teacher TEXT);\nINSERT INTO courses VALUES\n  (1, 'Computer Science', 'Mr Shah'),\n  (2, 'Maths', 'Ms Okafor'),\n  (3, 'Physics', 'Dr Reid'),\n  (4, 'History', 'Mrs Bell'),\n  (5, 'Art', 'Ms Lowe');\n\n-- One row for each student on each course, with their latest test mark.\nCREATE TABLE enrolments (student_id INTEGER, course_id INTEGER, mark INTEGER);\nINSERT INTO enrolments VALUES\n  (1, 1, 82), (1, 2, 74),\n  (2, 1, 65), (2, 3, 58),\n  (3, 2, 91), (3, 3, 77),\n  (4, 1, 70), (4, 2, 55), (4, 4, 68),\n  (5, 4, 88),\n  (6, 1, 45);\n\n-- Write your query below this line:\n",
+      "hints": [
+        "Join students to enrolments and GROUP BY students.name.",
+        "HAVING COUNT(*) > 1"
+      ],
+      "tests": [
+        {
+          "expect": "Ada, 2\nBen, 2\nCara, 2\nDev, 3"
+        }
+      ]
+    },
+    {
+      "slug": "alevel-sql-t2-04",
+      "lesson": 2,
+      "tier": 3,
+      "difficulty": 4,
+      "xp": 35,
+      "title": "Lowest and highest",
+      "brief": "For each **teacher**, show the teacher's name, the **lowest** mark and the **highest** mark among their students, and the **gap** between them (highest minus lowest). Order by the gap, largest first. Only teachers with students will appear.",
+      "starter": "-- Sample database: students, courses, and enrolments (who takes what)\nCREATE TABLE students (id INTEGER PRIMARY KEY, name TEXT, year INTEGER, form TEXT);\nINSERT INTO students VALUES\n  (1, 'Ada', 12, 'Turing'),\n  (2, 'Ben', 13, 'Hopper'),\n  (3, 'Cara', 12, 'Hopper'),\n  (4, 'Dev', 13, 'Turing'),\n  (5, 'Eve', 12, 'Lovelace'),\n  (6, 'Finn', 13, 'Lovelace'),\n  (7, 'Gus', 12, 'Turing');\n\nCREATE TABLE courses (id INTEGER PRIMARY KEY, title TEXT, teacher TEXT);\nINSERT INTO courses VALUES\n  (1, 'Computer Science', 'Mr Shah'),\n  (2, 'Maths', 'Ms Okafor'),\n  (3, 'Physics', 'Dr Reid'),\n  (4, 'History', 'Mrs Bell'),\n  (5, 'Art', 'Ms Lowe');\n\n-- One row for each student on each course, with their latest test mark.\nCREATE TABLE enrolments (student_id INTEGER, course_id INTEGER, mark INTEGER);\nINSERT INTO enrolments VALUES\n  (1, 1, 82), (1, 2, 74),\n  (2, 1, 65), (2, 3, 58),\n  (3, 2, 91), (3, 3, 77),\n  (4, 1, 70), (4, 2, 55), (4, 4, 68),\n  (5, 4, 88),\n  (6, 1, 45);\n\n-- Write your query below this line:\n",
+      "hints": [
+        "MIN(enrolments.mark), MAX(enrolments.mark), and MAX(...) - MIN(...) AS gap",
+        "GROUP BY courses.teacher ORDER BY gap DESC"
+      ],
+      "tests": [
+        {
+          "expect": "Mr Shah, 45, 82, 37\nMs Okafor, 55, 91, 36\nMrs Bell, 68, 88, 20\nDr Reid, 58, 77, 19"
+        }
+      ]
+    },
+    {
+      "slug": "alevel-sql-t2-stretch",
+      "lesson": 2,
+      "tier": 4,
+      "difficulty": 5,
+      "xp": 45,
+      "stretch": true,
+      "title": "Every course, even the empty one",
+      "brief": "Write a query that shows **every** course's **title** and **how many students** are on it, **including** a course with nobody on it (which should show 0). Order by the number of students, most first, and then by title A to Z.\n\nAn INNER JOIN would leave the empty course out, and `COUNT(*)` would count it as 1.",
+      "starter": "-- Sample database: students, courses, and enrolments (who takes what)\nCREATE TABLE students (id INTEGER PRIMARY KEY, name TEXT, year INTEGER, form TEXT);\nINSERT INTO students VALUES\n  (1, 'Ada', 12, 'Turing'),\n  (2, 'Ben', 13, 'Hopper'),\n  (3, 'Cara', 12, 'Hopper'),\n  (4, 'Dev', 13, 'Turing'),\n  (5, 'Eve', 12, 'Lovelace'),\n  (6, 'Finn', 13, 'Lovelace'),\n  (7, 'Gus', 12, 'Turing');\n\nCREATE TABLE courses (id INTEGER PRIMARY KEY, title TEXT, teacher TEXT);\nINSERT INTO courses VALUES\n  (1, 'Computer Science', 'Mr Shah'),\n  (2, 'Maths', 'Ms Okafor'),\n  (3, 'Physics', 'Dr Reid'),\n  (4, 'History', 'Mrs Bell'),\n  (5, 'Art', 'Ms Lowe');\n\n-- One row for each student on each course, with their latest test mark.\nCREATE TABLE enrolments (student_id INTEGER, course_id INTEGER, mark INTEGER);\nINSERT INTO enrolments VALUES\n  (1, 1, 82), (1, 2, 74),\n  (2, 1, 65), (2, 3, 58),\n  (3, 2, 91), (3, 3, 77),\n  (4, 1, 70), (4, 2, 55), (4, 4, 68),\n  (5, 4, 88),\n  (6, 1, 45);\n\n-- Write your query below this line:\n",
+      "hints": [
+        "FROM courses LEFT JOIN enrolments ON courses.id = enrolments.course_id",
+        "COUNT(enrolments.student_id) AS students counts only the matched rows."
+      ],
+      "tests": [
+        {
+          "expect": "Computer Science, 4\nMaths, 3\nHistory, 2\nPhysics, 2\nArt, 0"
+        }
+      ]
+    },
+    {
+      "slug": "alevel-sql-t3-01",
+      "lesson": 3,
+      "tier": 2,
+      "difficulty": 3,
+      "xp": 25,
+      "title": "Above average",
+      "brief": "Write a query that shows the **name** and **mark** for every enrolment whose mark is **higher than the average of all marks**, highest mark first. Use a subquery to work out the average.",
+      "starter": "-- Sample database: students, courses, and enrolments (who takes what)\nCREATE TABLE students (id INTEGER PRIMARY KEY, name TEXT, year INTEGER, form TEXT);\nINSERT INTO students VALUES\n  (1, 'Ada', 12, 'Turing'),\n  (2, 'Ben', 13, 'Hopper'),\n  (3, 'Cara', 12, 'Hopper'),\n  (4, 'Dev', 13, 'Turing'),\n  (5, 'Eve', 12, 'Lovelace'),\n  (6, 'Finn', 13, 'Lovelace'),\n  (7, 'Gus', 12, 'Turing');\n\nCREATE TABLE courses (id INTEGER PRIMARY KEY, title TEXT, teacher TEXT);\nINSERT INTO courses VALUES\n  (1, 'Computer Science', 'Mr Shah'),\n  (2, 'Maths', 'Ms Okafor'),\n  (3, 'Physics', 'Dr Reid'),\n  (4, 'History', 'Mrs Bell'),\n  (5, 'Art', 'Ms Lowe');\n\n-- One row for each student on each course, with their latest test mark.\nCREATE TABLE enrolments (student_id INTEGER, course_id INTEGER, mark INTEGER);\nINSERT INTO enrolments VALUES\n  (1, 1, 82), (1, 2, 74),\n  (2, 1, 65), (2, 3, 58),\n  (3, 2, 91), (3, 3, 77),\n  (4, 1, 70), (4, 2, 55), (4, 4, 68),\n  (5, 4, 88),\n  (6, 1, 45);\n\n-- Write your query below this line:\n",
+      "hints": [
+        "WHERE enrolments.mark > (SELECT AVG(mark) FROM enrolments)",
+        "Join students to enrolments for the name."
+      ],
+      "tests": [
+        {
+          "expect": "Cara, 91\nEve, 88\nAda, 82\nCara, 77\nAda, 74"
+        }
+      ]
+    },
+    {
+      "slug": "alevel-sql-t3-02",
+      "lesson": 3,
+      "tier": 2,
+      "difficulty": 3,
+      "xp": 25,
+      "title": "Who takes Physics?",
+      "brief": "Write a query that shows the **name** of every student who takes Physics, in alphabetical order. Don't use a join: use `IN` with a subquery on `enrolments`, and a second subquery to find Physics's course id from its title.",
+      "starter": "-- Sample database: students, courses, and enrolments (who takes what)\nCREATE TABLE students (id INTEGER PRIMARY KEY, name TEXT, year INTEGER, form TEXT);\nINSERT INTO students VALUES\n  (1, 'Ada', 12, 'Turing'),\n  (2, 'Ben', 13, 'Hopper'),\n  (3, 'Cara', 12, 'Hopper'),\n  (4, 'Dev', 13, 'Turing'),\n  (5, 'Eve', 12, 'Lovelace'),\n  (6, 'Finn', 13, 'Lovelace'),\n  (7, 'Gus', 12, 'Turing');\n\nCREATE TABLE courses (id INTEGER PRIMARY KEY, title TEXT, teacher TEXT);\nINSERT INTO courses VALUES\n  (1, 'Computer Science', 'Mr Shah'),\n  (2, 'Maths', 'Ms Okafor'),\n  (3, 'Physics', 'Dr Reid'),\n  (4, 'History', 'Mrs Bell'),\n  (5, 'Art', 'Ms Lowe');\n\n-- One row for each student on each course, with their latest test mark.\nCREATE TABLE enrolments (student_id INTEGER, course_id INTEGER, mark INTEGER);\nINSERT INTO enrolments VALUES\n  (1, 1, 82), (1, 2, 74),\n  (2, 1, 65), (2, 3, 58),\n  (3, 2, 91), (3, 3, 77),\n  (4, 1, 70), (4, 2, 55), (4, 4, 68),\n  (5, 4, 88),\n  (6, 1, 45);\n\n-- Write your query below this line:\n",
+      "hints": [
+        "WHERE id IN (SELECT student_id FROM enrolments WHERE course_id = ...)",
+        "The ... is (SELECT id FROM courses WHERE title = 'Physics')."
+      ],
+      "tests": [
+        {
+          "expect": "Ben\nCara"
+        }
+      ]
+    },
+    {
+      "slug": "alevel-sql-t3-03",
+      "lesson": 3,
+      "tier": 3,
+      "difficulty": 3,
+      "xp": 30,
+      "title": "Not doing Maths",
+      "brief": "Write a query that shows the **name** and **year** of every student who does **not** take Maths (course 2), in alphabetical order of name. Students on no course at all should be included.",
+      "starter": "-- Sample database: students, courses, and enrolments (who takes what)\nCREATE TABLE students (id INTEGER PRIMARY KEY, name TEXT, year INTEGER, form TEXT);\nINSERT INTO students VALUES\n  (1, 'Ada', 12, 'Turing'),\n  (2, 'Ben', 13, 'Hopper'),\n  (3, 'Cara', 12, 'Hopper'),\n  (4, 'Dev', 13, 'Turing'),\n  (5, 'Eve', 12, 'Lovelace'),\n  (6, 'Finn', 13, 'Lovelace'),\n  (7, 'Gus', 12, 'Turing');\n\nCREATE TABLE courses (id INTEGER PRIMARY KEY, title TEXT, teacher TEXT);\nINSERT INTO courses VALUES\n  (1, 'Computer Science', 'Mr Shah'),\n  (2, 'Maths', 'Ms Okafor'),\n  (3, 'Physics', 'Dr Reid'),\n  (4, 'History', 'Mrs Bell'),\n  (5, 'Art', 'Ms Lowe');\n\n-- One row for each student on each course, with their latest test mark.\nCREATE TABLE enrolments (student_id INTEGER, course_id INTEGER, mark INTEGER);\nINSERT INTO enrolments VALUES\n  (1, 1, 82), (1, 2, 74),\n  (2, 1, 65), (2, 3, 58),\n  (3, 2, 91), (3, 3, 77),\n  (4, 1, 70), (4, 2, 55), (4, 4, 68),\n  (5, 4, 88),\n  (6, 1, 45);\n\n-- Write your query below this line:\n",
+      "hints": [
+        "NOT IN (SELECT student_id FROM enrolments WHERE course_id = 2)",
+        "A LEFT JOIN isn't needed: NOT IN already includes students with no enrolments."
+      ],
+      "tests": [
+        {
+          "expect": "Ben, 13\nEve, 12\nFinn, 13\nGus, 12"
+        }
+      ]
+    },
+    {
+      "slug": "alevel-sql-t3-04",
+      "lesson": 3,
+      "tier": 3,
+      "difficulty": 4,
+      "xp": 40,
+      "title": "Top of each course",
+      "brief": "Write a query that shows, for each course with enrolments, the course **title**, the **name** of the student with the highest mark on that course, and that **mark**, in alphabetical order of title.\n\nUse a **correlated subquery**: keep an enrolment only if its mark equals the highest mark on the same course.",
+      "starter": "-- Sample database: students, courses, and enrolments (who takes what)\nCREATE TABLE students (id INTEGER PRIMARY KEY, name TEXT, year INTEGER, form TEXT);\nINSERT INTO students VALUES\n  (1, 'Ada', 12, 'Turing'),\n  (2, 'Ben', 13, 'Hopper'),\n  (3, 'Cara', 12, 'Hopper'),\n  (4, 'Dev', 13, 'Turing'),\n  (5, 'Eve', 12, 'Lovelace'),\n  (6, 'Finn', 13, 'Lovelace'),\n  (7, 'Gus', 12, 'Turing');\n\nCREATE TABLE courses (id INTEGER PRIMARY KEY, title TEXT, teacher TEXT);\nINSERT INTO courses VALUES\n  (1, 'Computer Science', 'Mr Shah'),\n  (2, 'Maths', 'Ms Okafor'),\n  (3, 'Physics', 'Dr Reid'),\n  (4, 'History', 'Mrs Bell'),\n  (5, 'Art', 'Ms Lowe');\n\n-- One row for each student on each course, with their latest test mark.\nCREATE TABLE enrolments (student_id INTEGER, course_id INTEGER, mark INTEGER);\nINSERT INTO enrolments VALUES\n  (1, 1, 82), (1, 2, 74),\n  (2, 1, 65), (2, 3, 58),\n  (3, 2, 91), (3, 3, 77),\n  (4, 1, 70), (4, 2, 55), (4, 4, 68),\n  (5, 4, 88),\n  (6, 1, 45);\n\n-- Write your query below this line:\n",
+      "hints": [
+        "Give the outer enrolments an alias: FROM enrolments AS e",
+        "WHERE e.mark = (SELECT MAX(mark) FROM enrolments WHERE course_id = e.course_id)"
+      ],
+      "tests": [
+        {
+          "expect": "Computer Science, Ada, 82\nHistory, Eve, 88\nMaths, Cara, 91\nPhysics, Cara, 77"
+        }
+      ]
+    },
+    {
+      "slug": "alevel-sql-t3-stretch",
+      "lesson": 3,
+      "tier": 4,
+      "difficulty": 5,
+      "xp": 45,
+      "stretch": true,
+      "title": "Better than the school",
+      "brief": "Write a query that shows the **name** of each student whose **own average mark** is higher than the **average of all marks**, along with their average rounded to 1 decimal place. Highest average first.\n\nYou'll need `GROUP BY`, and `HAVING` with a subquery.",
+      "starter": "-- Sample database: students, courses, and enrolments (who takes what)\nCREATE TABLE students (id INTEGER PRIMARY KEY, name TEXT, year INTEGER, form TEXT);\nINSERT INTO students VALUES\n  (1, 'Ada', 12, 'Turing'),\n  (2, 'Ben', 13, 'Hopper'),\n  (3, 'Cara', 12, 'Hopper'),\n  (4, 'Dev', 13, 'Turing'),\n  (5, 'Eve', 12, 'Lovelace'),\n  (6, 'Finn', 13, 'Lovelace'),\n  (7, 'Gus', 12, 'Turing');\n\nCREATE TABLE courses (id INTEGER PRIMARY KEY, title TEXT, teacher TEXT);\nINSERT INTO courses VALUES\n  (1, 'Computer Science', 'Mr Shah'),\n  (2, 'Maths', 'Ms Okafor'),\n  (3, 'Physics', 'Dr Reid'),\n  (4, 'History', 'Mrs Bell'),\n  (5, 'Art', 'Ms Lowe');\n\n-- One row for each student on each course, with their latest test mark.\nCREATE TABLE enrolments (student_id INTEGER, course_id INTEGER, mark INTEGER);\nINSERT INTO enrolments VALUES\n  (1, 1, 82), (1, 2, 74),\n  (2, 1, 65), (2, 3, 58),\n  (3, 2, 91), (3, 3, 77),\n  (4, 1, 70), (4, 2, 55), (4, 4, 68),\n  (5, 4, 88),\n  (6, 1, 45);\n\n-- Write your query below this line:\n",
+      "hints": [
+        "GROUP BY students.name, then HAVING AVG(enrolments.mark) > (SELECT AVG(mark) FROM enrolments)",
+        "ROUND(AVG(enrolments.mark), 1) AS average ... ORDER BY average DESC"
+      ],
+      "tests": [
+        {
+          "expect": "Eve, 88\nCara, 84\nAda, 78"
+        }
+      ]
+    },
+    {
+      "slug": "alevel-sql-t4-01",
+      "lesson": 4,
+      "tier": 1,
+      "difficulty": 2,
+      "xp": 20,
+      "title": "A new student",
+      "brief": "A new student has joined. Add a row to `students` with id **8**, name **Hana**, year **12** and form **Hopper**.\n\nThen show every column of every student in the Hopper form, ordered by id.",
+      "starter": "-- Sample database: students, courses, and enrolments (who takes what)\nCREATE TABLE students (id INTEGER PRIMARY KEY, name TEXT, year INTEGER, form TEXT);\nINSERT INTO students VALUES\n  (1, 'Ada', 12, 'Turing'),\n  (2, 'Ben', 13, 'Hopper'),\n  (3, 'Cara', 12, 'Hopper'),\n  (4, 'Dev', 13, 'Turing'),\n  (5, 'Eve', 12, 'Lovelace'),\n  (6, 'Finn', 13, 'Lovelace'),\n  (7, 'Gus', 12, 'Turing');\n\nCREATE TABLE courses (id INTEGER PRIMARY KEY, title TEXT, teacher TEXT);\nINSERT INTO courses VALUES\n  (1, 'Computer Science', 'Mr Shah'),\n  (2, 'Maths', 'Ms Okafor'),\n  (3, 'Physics', 'Dr Reid'),\n  (4, 'History', 'Mrs Bell'),\n  (5, 'Art', 'Ms Lowe');\n\n-- One row for each student on each course, with their latest test mark.\nCREATE TABLE enrolments (student_id INTEGER, course_id INTEGER, mark INTEGER);\nINSERT INTO enrolments VALUES\n  (1, 1, 82), (1, 2, 74),\n  (2, 1, 65), (2, 3, 58),\n  (3, 2, 91), (3, 3, 77),\n  (4, 1, 70), (4, 2, 55), (4, 4, 68),\n  (5, 4, 88),\n  (6, 1, 45);\n\n-- Write your query below this line:\n",
+      "hints": [
+        "INSERT INTO students VALUES (8, 'Hana', 12, 'Hopper');",
+        "SELECT * FROM students WHERE form = 'Hopper' ORDER BY id;"
+      ],
+      "tests": [
+        {
+          "expect": "2, Ben, 13, Hopper\n3, Cara, 12, Hopper\n8, Hana, 12, Hopper"
+        }
+      ]
+    },
+    {
+      "slug": "alevel-sql-t4-02",
+      "lesson": 4,
+      "tier": 2,
+      "difficulty": 3,
+      "xp": 25,
+      "title": "Correct a mark",
+      "brief": "Finn's Computer Science mark was typed in wrongly: it should be **54**, not 45. Finn's student id is 6 and Computer Science is course 1.\n\nUpdate just that one mark. Then show the `student_id` and `mark` of every Computer Science enrolment, ordered by student_id.",
+      "starter": "-- Sample database: students, courses, and enrolments (who takes what)\nCREATE TABLE students (id INTEGER PRIMARY KEY, name TEXT, year INTEGER, form TEXT);\nINSERT INTO students VALUES\n  (1, 'Ada', 12, 'Turing'),\n  (2, 'Ben', 13, 'Hopper'),\n  (3, 'Cara', 12, 'Hopper'),\n  (4, 'Dev', 13, 'Turing'),\n  (5, 'Eve', 12, 'Lovelace'),\n  (6, 'Finn', 13, 'Lovelace'),\n  (7, 'Gus', 12, 'Turing');\n\nCREATE TABLE courses (id INTEGER PRIMARY KEY, title TEXT, teacher TEXT);\nINSERT INTO courses VALUES\n  (1, 'Computer Science', 'Mr Shah'),\n  (2, 'Maths', 'Ms Okafor'),\n  (3, 'Physics', 'Dr Reid'),\n  (4, 'History', 'Mrs Bell'),\n  (5, 'Art', 'Ms Lowe');\n\n-- One row for each student on each course, with their latest test mark.\nCREATE TABLE enrolments (student_id INTEGER, course_id INTEGER, mark INTEGER);\nINSERT INTO enrolments VALUES\n  (1, 1, 82), (1, 2, 74),\n  (2, 1, 65), (2, 3, 58),\n  (3, 2, 91), (3, 3, 77),\n  (4, 1, 70), (4, 2, 55), (4, 4, 68),\n  (5, 4, 88),\n  (6, 1, 45);\n\n-- Write your query below this line:\n",
+      "hints": [
+        "The WHERE needs both conditions: student_id = 6 AND course_id = 1.",
+        "Then SELECT student_id, mark FROM enrolments WHERE course_id = 1 ORDER BY student_id;"
+      ],
+      "tests": [
+        {
+          "expect": "1, 82\n2, 65\n4, 70\n6, 54"
+        }
+      ]
+    },
+    {
+      "slug": "alevel-sql-t4-03",
+      "lesson": 4,
+      "tier": 3,
+      "difficulty": 3,
+      "xp": 30,
+      "title": "A student leaves",
+      "brief": "Ben (id 2) has left the school. Delete his enrolments, and then delete Ben from `students`, in that order.\n\nThen show how many students and how many enrolments are left, as one row with two numbers: `SELECT (SELECT COUNT(*) FROM students), (SELECT COUNT(*) FROM enrolments);`",
+      "starter": "-- Sample database: students, courses, and enrolments (who takes what)\nCREATE TABLE students (id INTEGER PRIMARY KEY, name TEXT, year INTEGER, form TEXT);\nINSERT INTO students VALUES\n  (1, 'Ada', 12, 'Turing'),\n  (2, 'Ben', 13, 'Hopper'),\n  (3, 'Cara', 12, 'Hopper'),\n  (4, 'Dev', 13, 'Turing'),\n  (5, 'Eve', 12, 'Lovelace'),\n  (6, 'Finn', 13, 'Lovelace'),\n  (7, 'Gus', 12, 'Turing');\n\nCREATE TABLE courses (id INTEGER PRIMARY KEY, title TEXT, teacher TEXT);\nINSERT INTO courses VALUES\n  (1, 'Computer Science', 'Mr Shah'),\n  (2, 'Maths', 'Ms Okafor'),\n  (3, 'Physics', 'Dr Reid'),\n  (4, 'History', 'Mrs Bell'),\n  (5, 'Art', 'Ms Lowe');\n\n-- One row for each student on each course, with their latest test mark.\nCREATE TABLE enrolments (student_id INTEGER, course_id INTEGER, mark INTEGER);\nINSERT INTO enrolments VALUES\n  (1, 1, 82), (1, 2, 74),\n  (2, 1, 65), (2, 3, 58),\n  (3, 2, 91), (3, 3, 77),\n  (4, 1, 70), (4, 2, 55), (4, 4, 68),\n  (5, 4, 88),\n  (6, 1, 45);\n\n-- Write your query below this line:\n",
+      "hints": [
+        "DELETE FROM enrolments WHERE student_id = 2;",
+        "DELETE FROM students WHERE id = 2;"
+      ],
+      "tests": [
+        {
+          "expect": "6, 9"
+        }
+      ]
+    },
+    {
+      "slug": "alevel-sql-t4-04",
+      "lesson": 4,
+      "tier": 3,
+      "difficulty": 4,
+      "xp": 35,
+      "title": "Moderation",
+      "brief": "The exam board has moderated the History marks up by **10%**. Update every History mark (course 4) to be its old mark multiplied by 1.1, rounded to the nearest whole number. Leave other courses alone.\n\nThen show the `name` and new `mark` of every History student, highest mark first.",
+      "starter": "-- Sample database: students, courses, and enrolments (who takes what)\nCREATE TABLE students (id INTEGER PRIMARY KEY, name TEXT, year INTEGER, form TEXT);\nINSERT INTO students VALUES\n  (1, 'Ada', 12, 'Turing'),\n  (2, 'Ben', 13, 'Hopper'),\n  (3, 'Cara', 12, 'Hopper'),\n  (4, 'Dev', 13, 'Turing'),\n  (5, 'Eve', 12, 'Lovelace'),\n  (6, 'Finn', 13, 'Lovelace'),\n  (7, 'Gus', 12, 'Turing');\n\nCREATE TABLE courses (id INTEGER PRIMARY KEY, title TEXT, teacher TEXT);\nINSERT INTO courses VALUES\n  (1, 'Computer Science', 'Mr Shah'),\n  (2, 'Maths', 'Ms Okafor'),\n  (3, 'Physics', 'Dr Reid'),\n  (4, 'History', 'Mrs Bell'),\n  (5, 'Art', 'Ms Lowe');\n\n-- One row for each student on each course, with their latest test mark.\nCREATE TABLE enrolments (student_id INTEGER, course_id INTEGER, mark INTEGER);\nINSERT INTO enrolments VALUES\n  (1, 1, 82), (1, 2, 74),\n  (2, 1, 65), (2, 3, 58),\n  (3, 2, 91), (3, 3, 77),\n  (4, 1, 70), (4, 2, 55), (4, 4, 68),\n  (5, 4, 88),\n  (6, 1, 45);\n\n-- Write your query below this line:\n",
+      "hints": [
+        "UPDATE enrolments SET mark = ROUND(mark * 1.1) WHERE course_id = 4;",
+        "Join students to enrolments for the final SELECT, filtering on course_id = 4."
+      ],
+      "tests": [
+        {
+          "expect": "Eve, 97\nDev, 75"
+        }
+      ]
+    },
+    {
+      "slug": "alevel-sql-t4-stretch",
+      "lesson": 4,
+      "tier": 4,
+      "difficulty": 5,
+      "xp": 45,
+      "stretch": true,
+      "title": "Clubs",
+      "brief": "Create two new tables:\n- `clubs`: `id` (whole number, the primary key) and `name` (text, must have a value).\n- `members`: `student_id` and `club_id` (both whole numbers, foreign keys to `students` and `clubs`), with the pair of them as a composite primary key.\n\nAdd two clubs: **1, Chess** and **2, Robotics**. Then add members: Ada (1), Dev (4) and Eve (5) to Chess, and Ada (1) and Gus (7) to Robotics.\n\nFinally show each club's **name** and its members' **names**, ordered by club name and then student name.",
+      "starter": "-- Sample database: students, courses, and enrolments (who takes what)\nCREATE TABLE students (id INTEGER PRIMARY KEY, name TEXT, year INTEGER, form TEXT);\nINSERT INTO students VALUES\n  (1, 'Ada', 12, 'Turing'),\n  (2, 'Ben', 13, 'Hopper'),\n  (3, 'Cara', 12, 'Hopper'),\n  (4, 'Dev', 13, 'Turing'),\n  (5, 'Eve', 12, 'Lovelace'),\n  (6, 'Finn', 13, 'Lovelace'),\n  (7, 'Gus', 12, 'Turing');\n\nCREATE TABLE courses (id INTEGER PRIMARY KEY, title TEXT, teacher TEXT);\nINSERT INTO courses VALUES\n  (1, 'Computer Science', 'Mr Shah'),\n  (2, 'Maths', 'Ms Okafor'),\n  (3, 'Physics', 'Dr Reid'),\n  (4, 'History', 'Mrs Bell'),\n  (5, 'Art', 'Ms Lowe');\n\n-- One row for each student on each course, with their latest test mark.\nCREATE TABLE enrolments (student_id INTEGER, course_id INTEGER, mark INTEGER);\nINSERT INTO enrolments VALUES\n  (1, 1, 82), (1, 2, 74),\n  (2, 1, 65), (2, 3, 58),\n  (3, 2, 91), (3, 3, 77),\n  (4, 1, 70), (4, 2, 55), (4, 4, 68),\n  (5, 4, 88),\n  (6, 1, 45);\n\n-- Write your query below this line:\n",
+      "hints": [
+        "PRIMARY KEY (student_id, club_id), FOREIGN KEY (club_id) REFERENCES clubs(id)",
+        "The final SELECT joins members to both clubs and students."
+      ],
+      "tests": [
+        {
+          "expect": "Chess, Ada\nChess, Dev\nChess, Eve\nRobotics, Ada\nRobotics, Gus"
+        }
+      ]
+    }
+  ],
+  "homeworkTasks": [
+    {
+      "slug": "alevel-sql-hw-01",
+      "lesson": 1,
+      "tier": 2,
+      "difficulty": 3,
+      "xp": 25,
+      "title": "Hopper form report",
+      "brief": "Write a query that shows the **name**, course **title** and **mark** for every enrolment of a student in the `'Hopper'` form, highest mark first.",
+      "starter": "-- Sample database: students, courses, and enrolments (who takes what)\nCREATE TABLE students (id INTEGER PRIMARY KEY, name TEXT, year INTEGER, form TEXT);\nINSERT INTO students VALUES\n  (1, 'Ada', 12, 'Turing'),\n  (2, 'Ben', 13, 'Hopper'),\n  (3, 'Cara', 12, 'Hopper'),\n  (4, 'Dev', 13, 'Turing'),\n  (5, 'Eve', 12, 'Lovelace'),\n  (6, 'Finn', 13, 'Lovelace'),\n  (7, 'Gus', 12, 'Turing');\n\nCREATE TABLE courses (id INTEGER PRIMARY KEY, title TEXT, teacher TEXT);\nINSERT INTO courses VALUES\n  (1, 'Computer Science', 'Mr Shah'),\n  (2, 'Maths', 'Ms Okafor'),\n  (3, 'Physics', 'Dr Reid'),\n  (4, 'History', 'Mrs Bell'),\n  (5, 'Art', 'Ms Lowe');\n\n-- One row for each student on each course, with their latest test mark.\nCREATE TABLE enrolments (student_id INTEGER, course_id INTEGER, mark INTEGER);\nINSERT INTO enrolments VALUES\n  (1, 1, 82), (1, 2, 74),\n  (2, 1, 65), (2, 3, 58),\n  (3, 2, 91), (3, 3, 77),\n  (4, 1, 70), (4, 2, 55), (4, 4, 68),\n  (5, 4, 88),\n  (6, 1, 45);\n\n-- Write your query below this line:\n",
+      "hints": [
+        "Join all three tables, then filter on students.form.",
+        "ORDER BY enrolments.mark DESC"
+      ],
+      "tests": [
+        {
+          "expect": "Cara, Maths, 91\nCara, Physics, 77\nBen, Computer Science, 65\nBen, Physics, 58"
+        }
+      ]
+    },
+    {
+      "slug": "alevel-sql-hw-02",
+      "lesson": 1,
+      "tier": 3,
+      "difficulty": 4,
+      "xp": 35,
+      "title": "An empty course",
+      "brief": "One course has nobody on it. Write a query using a LEFT JOIN from `courses` to `enrolments` that shows the **title** and **teacher** of every course with no enrolments.",
+      "starter": "-- Sample database: students, courses, and enrolments (who takes what)\nCREATE TABLE students (id INTEGER PRIMARY KEY, name TEXT, year INTEGER, form TEXT);\nINSERT INTO students VALUES\n  (1, 'Ada', 12, 'Turing'),\n  (2, 'Ben', 13, 'Hopper'),\n  (3, 'Cara', 12, 'Hopper'),\n  (4, 'Dev', 13, 'Turing'),\n  (5, 'Eve', 12, 'Lovelace'),\n  (6, 'Finn', 13, 'Lovelace'),\n  (7, 'Gus', 12, 'Turing');\n\nCREATE TABLE courses (id INTEGER PRIMARY KEY, title TEXT, teacher TEXT);\nINSERT INTO courses VALUES\n  (1, 'Computer Science', 'Mr Shah'),\n  (2, 'Maths', 'Ms Okafor'),\n  (3, 'Physics', 'Dr Reid'),\n  (4, 'History', 'Mrs Bell'),\n  (5, 'Art', 'Ms Lowe');\n\n-- One row for each student on each course, with their latest test mark.\nCREATE TABLE enrolments (student_id INTEGER, course_id INTEGER, mark INTEGER);\nINSERT INTO enrolments VALUES\n  (1, 1, 82), (1, 2, 74),\n  (2, 1, 65), (2, 3, 58),\n  (3, 2, 91), (3, 3, 77),\n  (4, 1, 70), (4, 2, 55), (4, 4, 68),\n  (5, 4, 88),\n  (6, 1, 45);\n\n-- Write your query below this line:\n",
+      "hints": [
+        "FROM courses LEFT JOIN enrolments ON courses.id = enrolments.course_id",
+        "WHERE enrolments.course_id IS NULL"
+      ],
+      "tests": [
+        {
+          "expect": "Art, Ms Lowe"
+        }
+      ]
+    },
+    {
+      "slug": "alevel-sql-hw-03",
+      "lesson": 2,
+      "tier": 2,
+      "difficulty": 3,
+      "xp": 25,
+      "title": "Form averages",
+      "brief": "Write a query that shows each **form** and the **average mark** of every enrolment by students in that form, rounded to 1 decimal place, in alphabetical order of form.",
+      "starter": "-- Sample database: students, courses, and enrolments (who takes what)\nCREATE TABLE students (id INTEGER PRIMARY KEY, name TEXT, year INTEGER, form TEXT);\nINSERT INTO students VALUES\n  (1, 'Ada', 12, 'Turing'),\n  (2, 'Ben', 13, 'Hopper'),\n  (3, 'Cara', 12, 'Hopper'),\n  (4, 'Dev', 13, 'Turing'),\n  (5, 'Eve', 12, 'Lovelace'),\n  (6, 'Finn', 13, 'Lovelace'),\n  (7, 'Gus', 12, 'Turing');\n\nCREATE TABLE courses (id INTEGER PRIMARY KEY, title TEXT, teacher TEXT);\nINSERT INTO courses VALUES\n  (1, 'Computer Science', 'Mr Shah'),\n  (2, 'Maths', 'Ms Okafor'),\n  (3, 'Physics', 'Dr Reid'),\n  (4, 'History', 'Mrs Bell'),\n  (5, 'Art', 'Ms Lowe');\n\n-- One row for each student on each course, with their latest test mark.\nCREATE TABLE enrolments (student_id INTEGER, course_id INTEGER, mark INTEGER);\nINSERT INTO enrolments VALUES\n  (1, 1, 82), (1, 2, 74),\n  (2, 1, 65), (2, 3, 58),\n  (3, 2, 91), (3, 3, 77),\n  (4, 1, 70), (4, 2, 55), (4, 4, 68),\n  (5, 4, 88),\n  (6, 1, 45);\n\n-- Write your query below this line:\n",
+      "hints": [
+        "Join students to enrolments, then GROUP BY students.form.",
+        "ROUND(AVG(enrolments.mark), 1)"
+      ],
+      "tests": [
+        {
+          "expect": "Hopper, 72.8\nLovelace, 66.5\nTuring, 69.8"
+        }
+      ]
+    },
+    {
+      "slug": "alevel-sql-hw-04",
+      "lesson": 2,
+      "tier": 3,
+      "difficulty": 4,
+      "xp": 35,
+      "title": "Busy teachers",
+      "brief": "Write a query that shows each **teacher** with **at least 3** students, with the number of students and their students' **total** marks. Order by the number of students, most first.",
+      "starter": "-- Sample database: students, courses, and enrolments (who takes what)\nCREATE TABLE students (id INTEGER PRIMARY KEY, name TEXT, year INTEGER, form TEXT);\nINSERT INTO students VALUES\n  (1, 'Ada', 12, 'Turing'),\n  (2, 'Ben', 13, 'Hopper'),\n  (3, 'Cara', 12, 'Hopper'),\n  (4, 'Dev', 13, 'Turing'),\n  (5, 'Eve', 12, 'Lovelace'),\n  (6, 'Finn', 13, 'Lovelace'),\n  (7, 'Gus', 12, 'Turing');\n\nCREATE TABLE courses (id INTEGER PRIMARY KEY, title TEXT, teacher TEXT);\nINSERT INTO courses VALUES\n  (1, 'Computer Science', 'Mr Shah'),\n  (2, 'Maths', 'Ms Okafor'),\n  (3, 'Physics', 'Dr Reid'),\n  (4, 'History', 'Mrs Bell'),\n  (5, 'Art', 'Ms Lowe');\n\n-- One row for each student on each course, with their latest test mark.\nCREATE TABLE enrolments (student_id INTEGER, course_id INTEGER, mark INTEGER);\nINSERT INTO enrolments VALUES\n  (1, 1, 82), (1, 2, 74),\n  (2, 1, 65), (2, 3, 58),\n  (3, 2, 91), (3, 3, 77),\n  (4, 1, 70), (4, 2, 55), (4, 4, 68),\n  (5, 4, 88),\n  (6, 1, 45);\n\n-- Write your query below this line:\n",
+      "hints": [
+        "GROUP BY courses.teacher, then HAVING COUNT(*) >= 3.",
+        "SUM(enrolments.mark) gives the total."
+      ],
+      "tests": [
+        {
+          "expect": "Mr Shah, 4, 262\nMs Okafor, 3, 220"
+        }
+      ]
+    },
+    {
+      "slug": "alevel-sql-hw-05",
+      "lesson": 3,
+      "tier": 2,
+      "difficulty": 3,
+      "xp": 25,
+      "title": "The best mark in the school",
+      "brief": "Write a query that shows the **name**, course **title** and **mark** of the single highest mark in the school. Use a subquery with `MAX` rather than `ORDER BY` and `LIMIT`.",
+      "starter": "-- Sample database: students, courses, and enrolments (who takes what)\nCREATE TABLE students (id INTEGER PRIMARY KEY, name TEXT, year INTEGER, form TEXT);\nINSERT INTO students VALUES\n  (1, 'Ada', 12, 'Turing'),\n  (2, 'Ben', 13, 'Hopper'),\n  (3, 'Cara', 12, 'Hopper'),\n  (4, 'Dev', 13, 'Turing'),\n  (5, 'Eve', 12, 'Lovelace'),\n  (6, 'Finn', 13, 'Lovelace'),\n  (7, 'Gus', 12, 'Turing');\n\nCREATE TABLE courses (id INTEGER PRIMARY KEY, title TEXT, teacher TEXT);\nINSERT INTO courses VALUES\n  (1, 'Computer Science', 'Mr Shah'),\n  (2, 'Maths', 'Ms Okafor'),\n  (3, 'Physics', 'Dr Reid'),\n  (4, 'History', 'Mrs Bell'),\n  (5, 'Art', 'Ms Lowe');\n\n-- One row for each student on each course, with their latest test mark.\nCREATE TABLE enrolments (student_id INTEGER, course_id INTEGER, mark INTEGER);\nINSERT INTO enrolments VALUES\n  (1, 1, 82), (1, 2, 74),\n  (2, 1, 65), (2, 3, 58),\n  (3, 2, 91), (3, 3, 77),\n  (4, 1, 70), (4, 2, 55), (4, 4, 68),\n  (5, 4, 88),\n  (6, 1, 45);\n\n-- Write your query below this line:\n",
+      "hints": [
+        "WHERE enrolments.mark = (SELECT MAX(mark) FROM enrolments)",
+        "Join all three tables for the name and title."
+      ],
+      "tests": [
+        {
+          "expect": "Cara, Maths, 91"
+        }
+      ]
+    },
+    {
+      "slug": "alevel-sql-hw-06",
+      "lesson": 3,
+      "tier": 4,
+      "difficulty": 4,
+      "xp": 40,
+      "title": "Most popular course",
+      "brief": "Write a query that shows the **title** of the course with the **most** students, and how many it has. Don't use `LIMIT`: if two courses tied, both should appear.\n\nA subquery can itself be used as a table: `SELECT MAX(n) FROM (SELECT COUNT(*) AS n FROM enrolments GROUP BY course_id)` finds the biggest count.",
+      "starter": "-- Sample database: students, courses, and enrolments (who takes what)\nCREATE TABLE students (id INTEGER PRIMARY KEY, name TEXT, year INTEGER, form TEXT);\nINSERT INTO students VALUES\n  (1, 'Ada', 12, 'Turing'),\n  (2, 'Ben', 13, 'Hopper'),\n  (3, 'Cara', 12, 'Hopper'),\n  (4, 'Dev', 13, 'Turing'),\n  (5, 'Eve', 12, 'Lovelace'),\n  (6, 'Finn', 13, 'Lovelace'),\n  (7, 'Gus', 12, 'Turing');\n\nCREATE TABLE courses (id INTEGER PRIMARY KEY, title TEXT, teacher TEXT);\nINSERT INTO courses VALUES\n  (1, 'Computer Science', 'Mr Shah'),\n  (2, 'Maths', 'Ms Okafor'),\n  (3, 'Physics', 'Dr Reid'),\n  (4, 'History', 'Mrs Bell'),\n  (5, 'Art', 'Ms Lowe');\n\n-- One row for each student on each course, with their latest test mark.\nCREATE TABLE enrolments (student_id INTEGER, course_id INTEGER, mark INTEGER);\nINSERT INTO enrolments VALUES\n  (1, 1, 82), (1, 2, 74),\n  (2, 1, 65), (2, 3, 58),\n  (3, 2, 91), (3, 3, 77),\n  (4, 1, 70), (4, 2, 55), (4, 4, 68),\n  (5, 4, 88),\n  (6, 1, 45);\n\n-- Write your query below this line:\n",
+      "hints": [
+        "GROUP BY courses.title, then HAVING COUNT(*) = (the subquery from the brief).",
+        "Join courses to enrolments for the title."
+      ],
+      "tests": [
+        {
+          "expect": "Computer Science, 4"
+        }
+      ]
+    },
+    {
+      "slug": "alevel-sql-hw-07",
+      "lesson": 4,
+      "tier": 2,
+      "difficulty": 3,
+      "xp": 25,
+      "title": "Forms merge",
+      "brief": "The Lovelace form is closing, and its students are moving to **Turing**. Update every Lovelace student's form to Turing.\n\nThen show each **form** and the **number of students** in it, in alphabetical order of form.",
+      "starter": "-- Sample database: students, courses, and enrolments (who takes what)\nCREATE TABLE students (id INTEGER PRIMARY KEY, name TEXT, year INTEGER, form TEXT);\nINSERT INTO students VALUES\n  (1, 'Ada', 12, 'Turing'),\n  (2, 'Ben', 13, 'Hopper'),\n  (3, 'Cara', 12, 'Hopper'),\n  (4, 'Dev', 13, 'Turing'),\n  (5, 'Eve', 12, 'Lovelace'),\n  (6, 'Finn', 13, 'Lovelace'),\n  (7, 'Gus', 12, 'Turing');\n\nCREATE TABLE courses (id INTEGER PRIMARY KEY, title TEXT, teacher TEXT);\nINSERT INTO courses VALUES\n  (1, 'Computer Science', 'Mr Shah'),\n  (2, 'Maths', 'Ms Okafor'),\n  (3, 'Physics', 'Dr Reid'),\n  (4, 'History', 'Mrs Bell'),\n  (5, 'Art', 'Ms Lowe');\n\n-- One row for each student on each course, with their latest test mark.\nCREATE TABLE enrolments (student_id INTEGER, course_id INTEGER, mark INTEGER);\nINSERT INTO enrolments VALUES\n  (1, 1, 82), (1, 2, 74),\n  (2, 1, 65), (2, 3, 58),\n  (3, 2, 91), (3, 3, 77),\n  (4, 1, 70), (4, 2, 55), (4, 4, 68),\n  (5, 4, 88),\n  (6, 1, 45);\n\n-- Write your query below this line:\n",
+      "hints": [
+        "UPDATE students SET form = 'Turing' WHERE form = 'Lovelace';",
+        "SELECT form, COUNT(*) FROM students GROUP BY form ORDER BY form;"
+      ],
+      "tests": [
+        {
+          "expect": "Hopper, 2\nTuring, 5"
+        }
+      ]
+    },
+    {
+      "slug": "alevel-sql-hw-08",
+      "lesson": 4,
+      "tier": 3,
+      "difficulty": 4,
+      "xp": 35,
+      "title": "A new course",
+      "brief": "A new course is starting: add course **6**, **Economics**, taught by **Mr Price**. Then enrol Gus (7) on it with a mark of **60**, and Cara (3) with a mark of **72**.\n\nThen show the **name** and **mark** of every Economics student, in alphabetical order of name. Find Economics in the final query by its title, not its id.",
+      "starter": "-- Sample database: students, courses, and enrolments (who takes what)\nCREATE TABLE students (id INTEGER PRIMARY KEY, name TEXT, year INTEGER, form TEXT);\nINSERT INTO students VALUES\n  (1, 'Ada', 12, 'Turing'),\n  (2, 'Ben', 13, 'Hopper'),\n  (3, 'Cara', 12, 'Hopper'),\n  (4, 'Dev', 13, 'Turing'),\n  (5, 'Eve', 12, 'Lovelace'),\n  (6, 'Finn', 13, 'Lovelace'),\n  (7, 'Gus', 12, 'Turing');\n\nCREATE TABLE courses (id INTEGER PRIMARY KEY, title TEXT, teacher TEXT);\nINSERT INTO courses VALUES\n  (1, 'Computer Science', 'Mr Shah'),\n  (2, 'Maths', 'Ms Okafor'),\n  (3, 'Physics', 'Dr Reid'),\n  (4, 'History', 'Mrs Bell'),\n  (5, 'Art', 'Ms Lowe');\n\n-- One row for each student on each course, with their latest test mark.\nCREATE TABLE enrolments (student_id INTEGER, course_id INTEGER, mark INTEGER);\nINSERT INTO enrolments VALUES\n  (1, 1, 82), (1, 2, 74),\n  (2, 1, 65), (2, 3, 58),\n  (3, 2, 91), (3, 3, 77),\n  (4, 1, 70), (4, 2, 55), (4, 4, 68),\n  (5, 4, 88),\n  (6, 1, 45);\n\n-- Write your query below this line:\n",
+      "hints": [
+        "INSERT INTO courses VALUES (6, 'Economics', 'Mr Price'); then INSERT INTO enrolments VALUES (7, 6, 60), (3, 6, 72);",
+        "Join all three tables and use WHERE courses.title = 'Economics'."
+      ],
+      "tests": [
+        {
+          "expect": "Cara, 72\nGus, 60"
+        }
+      ]
+    }
+  ]
+}

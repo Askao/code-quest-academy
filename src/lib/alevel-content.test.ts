@@ -25,6 +25,9 @@ type Topic = {
   homeworkTasks: Task[];
 };
 
+// Matches build.mjs: a topic key that already starts "alevel-" isn't doubled.
+const slugBase = (topic: string) => (topic.startsWith("alevel-") ? topic : `alevel-${topic}`);
+
 const contentDir = new URL("../content/", import.meta.url);
 const topics = fs
   .readdirSync(contentDir)
@@ -45,7 +48,7 @@ test("every A level topic file is loaded and listed", () => {
   for (const t of topics) {
     assert.equal(t.track, "alevel", `${t.topic}: track`);
     assert.ok(
-      contentModule.includes(`@/content/alevel-${t.topic}.json`),
+      contentModule.includes(`@/content/${slugBase(t.topic)}.json`),
       `${t.topic}: not imported in content.ts`,
     );
     assert.ok(gameModule.includes(`key: "${t.topic}"`), `${t.topic}: not in ALEVEL_TOPICS`);
@@ -61,7 +64,9 @@ test("every A level task is complete and has a database row", () => {
       assert.ok(task.hints.length >= 2, `${task.slug}: needs two hints`);
       assert.ok(task.difficulty >= 1 && task.difficulty <= 5, `${task.slug}: difficulty`);
       assert.ok(task.tier >= 1 && task.tier <= 4, `${task.slug}: tier`);
-      assert.ok(task.tests.length >= 3, `${task.slug}: needs 3+ tests`);
+      // SQL tasks have one test: the result of the student's query on the sample database.
+      const minTests = t.topic === "alevel-sql" ? 1 : 3;
+      assert.ok(task.tests.length >= minTests, `${task.slug}: needs ${minTests}+ tests`);
       const inputs = task.tests.map((x) => x.stdin ?? "");
       assert.equal(new Set(inputs).size, inputs.length, `${task.slug}: repeated test input`);
       for (const x of task.tests)
@@ -80,7 +85,7 @@ test("every A level lesson has notes and a quiz whose answers are among the opti
       for (const q of quiz)
         assert.ok(q.options.includes(q.answer), `${l.slug}: quiz answer missing`);
       assert.ok(
-        t.tasks.some((x) => x.slug.startsWith(`alevel-${t.topic}-t${l.slug.split("-").pop()}-`)),
+        t.tasks.some((x) => x.slug.startsWith(`${slugBase(t.topic)}-t${l.slug.split("-").pop()}-`)),
         `${l.slug}: no tasks`,
       );
     }
