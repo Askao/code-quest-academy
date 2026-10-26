@@ -388,7 +388,11 @@ export type LessonViewer = {
 
 export type LessonAccess =
   | { open: true }
-  | { open: false; reason: "review" | "not-assigned" | "previous-lesson" | "previous-topic"; after?: string };
+  | {
+      open: false;
+      reason: "review" | "not-assigned" | "previous-lesson" | "previous-topic";
+      after?: string;
+    };
 
 /**
  * Whether a lesson is open to this viewer, and if not, why. The one place

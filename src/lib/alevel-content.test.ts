@@ -44,7 +44,10 @@ test("every A level topic file is loaded and listed", () => {
   assert.ok(topics.length > 0);
   for (const t of topics) {
     assert.equal(t.track, "alevel", `${t.topic}: track`);
-    assert.ok(contentModule.includes(`@/content/alevel-${t.topic}.json`), `${t.topic}: not imported in content.ts`);
+    assert.ok(
+      contentModule.includes(`@/content/alevel-${t.topic}.json`),
+      `${t.topic}: not imported in content.ts`,
+    );
     assert.ok(gameModule.includes(`key: "${t.topic}"`), `${t.topic}: not in ALEVEL_TOPICS`);
   }
 });
@@ -61,7 +64,8 @@ test("every A level task is complete and has a database row", () => {
       assert.ok(task.tests.length >= 3, `${task.slug}: needs 3+ tests`);
       const inputs = task.tests.map((x) => x.stdin ?? "");
       assert.equal(new Set(inputs).size, inputs.length, `${task.slug}: repeated test input`);
-      for (const x of task.tests) assert.ok(x.expect.trim(), `${task.slug}: a test expects no output`);
+      for (const x of task.tests)
+        assert.ok(x.expect.trim(), `${task.slug}: a test expects no output`);
       assert.ok(migrations.includes(`$t$${task.slug}$t$`), `${task.slug}: no challenges row`);
     }
   }
@@ -73,8 +77,12 @@ test("every A level lesson has notes and a quiz whose answers are among the opti
       assert.ok(l.notes.length > 200, `${l.slug}: notes too short`);
       const quiz = t.quiz.filter((q) => q.lessonSlug === l.slug);
       assert.ok(quiz.length >= 2, `${l.slug}: needs a quiz`);
-      for (const q of quiz) assert.ok(q.options.includes(q.answer), `${l.slug}: quiz answer missing`);
-      assert.ok(t.tasks.some((x) => x.slug.startsWith(`alevel-${t.topic}-t${l.slug.split("-").pop()}-`)), `${l.slug}: no tasks`);
+      for (const q of quiz)
+        assert.ok(q.options.includes(q.answer), `${l.slug}: quiz answer missing`);
+      assert.ok(
+        t.tasks.some((x) => x.slug.startsWith(`alevel-${t.topic}-t${l.slug.split("-").pop()}-`)),
+        `${l.slug}: no tasks`,
+      );
     }
   }
 });

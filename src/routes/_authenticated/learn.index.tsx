@@ -3,13 +3,7 @@ import { useQuery } from "@tanstack/react-query";
 import { useEffect, useState } from "react";
 import { supabase } from "@/integrations/supabase/client";
 import { useAuth } from "@/hooks/useAuth";
-import {
-  isTopicInReview,
-  topicBoardTag,
-  topicLabel,
-  type Board,
-  type TrackKey,
-} from "@/lib/game";
+import { isTopicInReview, topicBoardTag, topicLabel, type Board, type TrackKey } from "@/lib/game";
 import {
   isTopicComplete,
   lessonAccess,
@@ -255,8 +249,8 @@ function LearnIndex() {
 
       {mainTopics.length === 0 ? (
         <p className="panel p-6 text-sm text-muted-foreground">
-          No A level topics are open yet. Your teacher will open them as the course goes on. In
-          the meantime, every GCSE topic is below.
+          No A level topics are open yet. Your teacher will open them as the course goes on. In the
+          meantime, every GCSE topic is below.
         </p>
       ) : null}
 
