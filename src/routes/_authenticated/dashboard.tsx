@@ -6,7 +6,10 @@ import {
 import { studentHomeworkArchiveReason } from "@/lib/archive";
 import { ResultsAnalysis } from "@/components/ResultsAnalysis";
 import { RevisionCard } from "@/components/RevisionCard";
+import { useEffect, useState } from "react";
 import { JoinClassBox } from "@/components/JoinClassBox";
+import { JoinClassReminder } from "@/components/JoinClassReminder";
+import { JOIN_REMINDER_KEY, readSnoozed, snooze } from "@/lib/nudges";
 import { createFileRoute, Link } from "@tanstack/react-router";
 import { useQuery, useQueryClient } from "@tanstack/react-query";
 import { supabase } from "@/integrations/supabase/client";
@@ -43,6 +46,10 @@ export const Route = createFileRoute("/_authenticated/dashboard")({
 function Dashboard() {
   const { user, fullName, isTeacher, schoolId } = useAuth();
   const qc = useQueryClient();
+  // Read after mounting (localStorage), so the reminder never flashes up
+  // for a student who has already said "remind me in 2 weeks".
+  const [joinSnoozed, setJoinSnoozed] = useState(true);
+  useEffect(() => setJoinSnoozed(readSnoozed(JOIN_REMINDER_KEY)), []);
 
   const { data } = useQuery({
     queryKey: ["dashboard", user?.id],
@@ -321,6 +328,8 @@ function Dashboard() {
   }
 
   const selectedBannerGradient = BANNERS.find((b) => b.key === data?.selectedBanner)?.gradient;
+  const notInClass = !!data && (data.classes ?? []).length === 0;
+  const showJoinReminder = notInClass && !joinSnoozed && !!user;
 
   return (
     <div className="space-y-8">
@@ -351,6 +360,16 @@ function Dashboard() {
           </Button>
         </div>
       </div>
+
+      {showJoinReminder ? (
+        <JoinClassReminder
+          userId={user!.id}
+          onSnooze={() => {
+            snooze(JOIN_REMINDER_KEY, 14);
+            setJoinSnoozed(true);
+          }}
+        />
+      ) : null}
 
       <div className="grid gap-4 sm:grid-cols-3">
         <div className="panel p-5">
@@ -517,7 +536,7 @@ function Dashboard() {
               </li>
             ) : null}
           </ul>
-          {data && (data.classes ?? []).length === 0 && user ? <JoinClassBox userId={user.id} /> : null}
+          {notInClass && user && !showJoinReminder ? <JoinClassBox userId={user.id} /> : null}
         </div>
 
         <div className="panel p-5">

@@ -6,7 +6,7 @@
  */
 import { AVATARS, BANNERS, levelFromXp, topicLabel } from "./game.ts";
 import { ctaButton, escapeHtml, shellHtml } from "./email-shell.ts";
-import { formatDue, type EmailContent } from "./homework-emails.ts";
+import { firstName, formatDue, type EmailContent } from "./homework-emails.ts";
 
 // ---------------------------------------------------------------------------
 // Data the database hands over (see 20261003110000_weekly_reports.sql)
@@ -176,10 +176,6 @@ function weekRange(from: Date, to: Date): string {
 }
 
 const plural = (n: number, one: string, many = `${one}s`) => `${n} ${n === 1 ? one : many}`;
-
-function firstName(full: string): string {
-  return full.trim().split(/\s+/)[0] || "there";
-}
 
 /** "Marcus T." - enough to know who, without a full name travelling by email. */
 export function shortName(full: string): string {

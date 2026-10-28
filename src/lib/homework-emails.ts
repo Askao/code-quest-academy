@@ -95,9 +95,17 @@ type EmailFields = {
   siteUrl: string;
 };
 
+// Teachers often sign up as "Mr Smith": "Hi Mr," would be wrong, so a name
+// that starts with a title is used whole.
+const TITLES = new Set(["mr", "mrs", "ms", "miss", "mx", "dr", "prof", "sir"]);
+
 export function firstName(fullName: string): string {
-  const first = fullName.trim().split(/\s+/)[0];
-  return first || "there";
+  const parts = fullName.trim().split(/\s+/).filter(Boolean);
+  if (parts.length === 0) return "there";
+  if (parts.length > 1 && TITLES.has(parts[0]!.toLowerCase().replace(/\.$/, ""))) {
+    return parts.join(" ");
+  }
+  return parts[0]!;
 }
 
 export function detailRows(rows: [string, string][]): string {

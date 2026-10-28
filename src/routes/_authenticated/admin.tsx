@@ -7,6 +7,7 @@ import { useAuth } from "@/hooks/useAuth";
 import { Button } from "@/components/ui/button";
 import { Input } from "@/components/ui/input";
 import { VisitorLocations } from "@/components/VisitorLocations";
+import { TeacherFeedbackAdmin } from "@/components/TeacherFeedbackAdmin";
 import {
   AlertDialog,
   AlertDialogAction,
@@ -230,6 +231,8 @@ function Admin() {
       </div>
 
       <VisitorLocations />
+
+      <TeacherFeedbackAdmin />
 
       <section className="panel space-y-4 p-5">
         <div>
