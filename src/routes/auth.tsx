@@ -17,9 +17,9 @@ export const Route = createFileRoute("/auth")({
   head: () => ({
     meta: [
       { title: "Sign in — H-Code" },
-      { name: "description", content: "Sign in or create a free H-Code account." },
+      { name: "description", content: "Sign in or create an H-Code account." },
       { property: "og:title", content: "Sign in — H-Code" },
-      { property: "og:description", content: "Sign in or create a free H-Code account." },
+      { property: "og:description", content: "Sign in or create an H-Code account." },
     ],
   }),
   component: AuthPage,
@@ -266,7 +266,7 @@ function AuthPage() {
         </h1>
         <p className="mt-1 text-sm text-muted-foreground">
           {mode === "signup"
-            ? "Free for students and teachers."
+            ? "For students and teachers."
             : mode === "forgot"
               ? "We'll email you a link to set a new password."
               : "Sign in to keep your streak going."}

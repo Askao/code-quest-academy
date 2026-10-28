@@ -6,6 +6,7 @@ Disallow: /account
 Disallow: /admin
 Disallow: /dashboard
 Disallow: /duels
+Disallow: /feedback
 Disallow: /homework/
 Disallow: /leaderboard
 Disallow: /learn

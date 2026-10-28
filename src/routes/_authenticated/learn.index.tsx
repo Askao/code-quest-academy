@@ -72,7 +72,7 @@ function LearnIndex() {
   // locked until their teacher assigns them, on top of the mastery gate.
   // Teachers/admins are exempt (see isTeacher use below) - they need to
   // freely browse every lesson, not progress through it like a student.
-  const { data: classIds = [] } = useQuery({
+  const { data: classIds = [], isFetched: classIdsFetched } = useQuery({
     queryKey: ["class-ids", user?.id],
     enabled: !!user && !isTeacher,
     queryFn: async () => {
@@ -146,6 +146,18 @@ function LearnIndex() {
           Work down the list, or jump to whatever you need.
         </p>
       </div>
+
+      {!isTeacher && classIdsFetched && !enrolled ? (
+        <div className="flex flex-wrap items-center justify-between gap-3 rounded-lg bg-secondary px-4 py-3 text-sm">
+          <span>In a class? Your teacher's code unlocks the lessons they've set for you.</span>
+          <Link
+            to="/dashboard"
+            className="font-medium text-primary underline-offset-4 hover:underline"
+          >
+            Join a class
+          </Link>
+        </div>
+      ) : null}
 
       <TopicRoadmap topics={roadmap} />
 

@@ -14,12 +14,14 @@ import { Route as AuthenticatedRouteRouteImport } from './routes/_authenticated/
 import { Route as AuthRouteImport } from './routes/auth'
 import { Route as ConfirmEmailRouteImport } from './routes/confirm-email'
 import { Route as ContactRouteImport } from './routes/contact'
+import { Route as FeaturesRouteImport } from './routes/features'
 import { Route as IdeRouteImport } from './routes/ide'
 import { Route as PrivacyRouteImport } from './routes/privacy'
 import { Route as AuthenticatedAccountRouteImport } from './routes/_authenticated/account'
 import { Route as AuthenticatedAdminRouteImport } from './routes/_authenticated/admin'
 import { Route as AuthenticatedDashboardRouteImport } from './routes/_authenticated/dashboard'
 import { Route as AuthenticatedDuelsRouteImport } from './routes/_authenticated/duels'
+import { Route as AuthenticatedFeedbackRouteImport } from './routes/_authenticated/feedback'
 import { Route as AuthenticatedLeaderboardRouteImport } from './routes/_authenticated/leaderboard'
 import { Route as AuthenticatedLockerRouteImport } from './routes/_authenticated/locker'
 import { Route as AuthenticatedPracticeRouteImport } from './routes/_authenticated/practice'
@@ -60,6 +62,11 @@ const ContactRoute = ContactRouteImport.update({
   path: '/contact',
   getParentRoute: () => rootRouteImport,
 } as any)
+const FeaturesRoute = FeaturesRouteImport.update({
+  id: '/features',
+  path: '/features',
+  getParentRoute: () => rootRouteImport,
+} as any)
 const IdeRoute = IdeRouteImport.update({
   id: '/ide',
   path: '/ide',
@@ -88,6 +95,11 @@ const AuthenticatedDashboardRoute = AuthenticatedDashboardRouteImport.update({
 const AuthenticatedDuelsRoute = AuthenticatedDuelsRouteImport.update({
   id: '/duels',
   path: '/duels',
+  getParentRoute: () => AuthenticatedRouteRoute,
+} as any)
+const AuthenticatedFeedbackRoute = AuthenticatedFeedbackRouteImport.update({
+  id: '/feedback',
+  path: '/feedback',
   getParentRoute: () => AuthenticatedRouteRoute,
 } as any)
 const AuthenticatedLeaderboardRoute =
@@ -181,12 +193,14 @@ export interface FileRoutesByFullPath {
   '/auth': typeof AuthRoute
   '/confirm-email': typeof ConfirmEmailRoute
   '/contact': typeof ContactRoute
+  '/features': typeof FeaturesRoute
   '/ide': typeof IdeRoute
   '/privacy': typeof PrivacyRoute
   '/account': typeof AuthenticatedAccountRoute
   '/admin': typeof AuthenticatedAdminRouteWithChildren
   '/dashboard': typeof AuthenticatedDashboardRoute
   '/duels': typeof AuthenticatedDuelsRoute
+  '/feedback': typeof AuthenticatedFeedbackRoute
   '/leaderboard': typeof AuthenticatedLeaderboardRoute
   '/locker': typeof AuthenticatedLockerRoute
   '/practice': typeof AuthenticatedPracticeRoute
@@ -208,12 +222,14 @@ export interface FileRoutesByTo {
   '/auth': typeof AuthRoute
   '/confirm-email': typeof ConfirmEmailRoute
   '/contact': typeof ContactRoute
+  '/features': typeof FeaturesRoute
   '/ide': typeof IdeRoute
   '/privacy': typeof PrivacyRoute
   '/account': typeof AuthenticatedAccountRoute
   '/admin': typeof AuthenticatedAdminRouteWithChildren
   '/dashboard': typeof AuthenticatedDashboardRoute
   '/duels': typeof AuthenticatedDuelsRoute
+  '/feedback': typeof AuthenticatedFeedbackRoute
   '/leaderboard': typeof AuthenticatedLeaderboardRoute
   '/locker': typeof AuthenticatedLockerRoute
   '/practice': typeof AuthenticatedPracticeRoute
@@ -237,12 +253,14 @@ export interface FileRoutesById {
   '/auth': typeof AuthRoute
   '/confirm-email': typeof ConfirmEmailRoute
   '/contact': typeof ContactRoute
+  '/features': typeof FeaturesRoute
   '/ide': typeof IdeRoute
   '/privacy': typeof PrivacyRoute
   '/_authenticated/account': typeof AuthenticatedAccountRoute
   '/_authenticated/admin': typeof AuthenticatedAdminRouteWithChildren
   '/_authenticated/dashboard': typeof AuthenticatedDashboardRoute
   '/_authenticated/duels': typeof AuthenticatedDuelsRoute
+  '/_authenticated/feedback': typeof AuthenticatedFeedbackRoute
   '/_authenticated/leaderboard': typeof AuthenticatedLeaderboardRoute
   '/_authenticated/locker': typeof AuthenticatedLockerRoute
   '/_authenticated/practice': typeof AuthenticatedPracticeRoute
@@ -266,12 +284,14 @@ export interface FileRouteTypes {
     | '/auth'
     | '/confirm-email'
     | '/contact'
+    | '/features'
     | '/ide'
     | '/privacy'
     | '/account'
     | '/admin'
     | '/dashboard'
     | '/duels'
+    | '/feedback'
     | '/leaderboard'
     | '/locker'
     | '/practice'
@@ -293,12 +313,14 @@ export interface FileRouteTypes {
     | '/auth'
     | '/confirm-email'
     | '/contact'
+    | '/features'
     | '/ide'
     | '/privacy'
     | '/account'
     | '/admin'
     | '/dashboard'
     | '/duels'
+    | '/feedback'
     | '/leaderboard'
     | '/locker'
     | '/practice'
@@ -321,12 +343,14 @@ export interface FileRouteTypes {
     | '/auth'
     | '/confirm-email'
     | '/contact'
+    | '/features'
     | '/ide'
     | '/privacy'
     | '/_authenticated/account'
     | '/_authenticated/admin'
     | '/_authenticated/dashboard'
     | '/_authenticated/duels'
+    | '/_authenticated/feedback'
     | '/_authenticated/leaderboard'
     | '/_authenticated/locker'
     | '/_authenticated/practice'
@@ -350,6 +374,7 @@ export interface RootRouteChildren {
   AuthRoute: typeof AuthRoute
   ConfirmEmailRoute: typeof ConfirmEmailRoute
   ContactRoute: typeof ContactRoute
+  FeaturesRoute: typeof FeaturesRoute
   IdeRoute: typeof IdeRoute
   PrivacyRoute: typeof PrivacyRoute
   JoinCodeRoute: typeof JoinCodeRoute
@@ -392,6 +417,13 @@ declare module '@tanstack/react-router' {
       preLoaderRoute: typeof ContactRouteImport
       parentRoute: typeof rootRouteImport
     }
+    '/features': {
+      id: '/features'
+      path: '/features'
+      fullPath: '/features'
+      preLoaderRoute: typeof FeaturesRouteImport
+      parentRoute: typeof rootRouteImport
+    }
     '/ide': {
       id: '/ide'
       path: '/ide'
@@ -432,6 +464,13 @@ declare module '@tanstack/react-router' {
       path: '/duels'
       fullPath: '/duels'
       preLoaderRoute: typeof AuthenticatedDuelsRouteImport
+      parentRoute: typeof AuthenticatedRouteRoute
+    }
+    '/_authenticated/feedback': {
+      id: '/_authenticated/feedback'
+      path: '/feedback'
+      fullPath: '/feedback'
+      preLoaderRoute: typeof AuthenticatedFeedbackRouteImport
       parentRoute: typeof AuthenticatedRouteRoute
     }
     '/_authenticated/leaderboard': {
@@ -558,6 +597,7 @@ interface AuthenticatedRouteRouteChildren {
   AuthenticatedAdminRoute: typeof AuthenticatedAdminRouteWithChildren
   AuthenticatedDashboardRoute: typeof AuthenticatedDashboardRoute
   AuthenticatedDuelsRoute: typeof AuthenticatedDuelsRoute
+  AuthenticatedFeedbackRoute: typeof AuthenticatedFeedbackRoute
   AuthenticatedLeaderboardRoute: typeof AuthenticatedLeaderboardRoute
   AuthenticatedLockerRoute: typeof AuthenticatedLockerRoute
   AuthenticatedPracticeRoute: typeof AuthenticatedPracticeRoute
@@ -578,6 +618,7 @@ const AuthenticatedRouteRouteChildren: AuthenticatedRouteRouteChildren = {
   AuthenticatedAdminRoute: AuthenticatedAdminRouteWithChildren,
   AuthenticatedDashboardRoute: AuthenticatedDashboardRoute,
   AuthenticatedDuelsRoute: AuthenticatedDuelsRoute,
+  AuthenticatedFeedbackRoute: AuthenticatedFeedbackRoute,
   AuthenticatedLeaderboardRoute: AuthenticatedLeaderboardRoute,
   AuthenticatedLockerRoute: AuthenticatedLockerRoute,
   AuthenticatedPracticeRoute: AuthenticatedPracticeRoute,
@@ -602,6 +643,7 @@ const rootRouteChildren: RootRouteChildren = {
   AuthRoute: AuthRoute,
   ConfirmEmailRoute: ConfirmEmailRoute,
   ContactRoute: ContactRoute,
+  FeaturesRoute: FeaturesRoute,
   IdeRoute: IdeRoute,
   PrivacyRoute: PrivacyRoute,
   JoinCodeRoute: JoinCodeRoute,

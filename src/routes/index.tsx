@@ -11,13 +11,13 @@ import { GCSE_TOPICS } from "@/lib/game";
 export const Route = createFileRoute("/")({
   head: () => ({
     meta: [
-      { title: "H-Code Academy — free Python practice for GCSE & A level" },
+      { title: "H-Code Academy — Python practice for GCSE & A level" },
       {
         name: "description",
         content:
-          "Free Python lessons, auto-marked tasks and OCR and AQA style exam questions for GCSE and A level computer science, with classes, homework and a markbook for teachers.",
+          "Python lessons, auto-marked tasks and OCR and AQA style exam questions for GCSE and A level computer science, with classes, homework and a markbook for teachers.",
       },
-      { property: "og:title", content: "H-Code Academy — free Python practice for GCSE & A level" },
+      { property: "og:title", content: "H-Code Academy — Python practice for GCSE & A level" },
       {
         property: "og:description",
         content:
@@ -36,7 +36,7 @@ const STATS = [
   { n: String(GCSE_TOPICS.length), label: "GCSE topics, OCR and AQA" },
   { n: "700+", label: "auto-marked tasks" },
   { n: "414", label: "exam-style questions" },
-  { n: "£0", label: "for students and schools" },
+  { n: "OCR + AQA", label: "both exam boards covered" },
 ];
 
 const STEPS = [
@@ -78,7 +78,7 @@ const FEATURES: Feature[] = [
     d: "Every student by topic, with CSV export.",
     isNew: true,
   },
-  { icon: Code2, t: "Free Python editor", d: "Runs in the browser, with error help. No install." },
+  { icon: Code2, t: "Python editor", d: "Runs in the browser, with error help. No install." },
   {
     icon: Swords,
     t: "Duels, leaderboards and the Locker",
@@ -264,10 +264,10 @@ function Landing() {
       <section className="mx-auto grid max-w-6xl items-center gap-10 px-4 pt-14 pb-12 lg:grid-cols-[1fr_1.15fr] lg:pt-20">
         <div>
           <p className="font-mono text-xs tracking-[0.08em] text-primary uppercase">
-            Free · GCSE OCR &amp; AQA · A level
+            GCSE OCR &amp; AQA · A level
           </p>
           <h1 className="font-display mt-4 text-4xl leading-[1.05] font-semibold text-balance sm:text-6xl">
-            Free Python practice for GCSE computer science.
+            Python practice for GCSE computer science.
           </h1>
           <p className="mt-5 max-w-xl text-lg text-muted-foreground">
             Lessons, auto-marked tasks and exam-style questions, with a markbook that fills itself
@@ -347,6 +347,14 @@ function Landing() {
             </li>
           ))}
         </ul>
+        <p className="mt-5">
+          <Link
+            to="/features"
+            className="font-medium text-primary underline-offset-4 hover:underline"
+          >
+            See every feature, with screenshots →
+          </Link>
+        </p>
       </section>
 
       {/* Topics */}
@@ -369,10 +377,10 @@ function Landing() {
       <section className="mx-auto max-w-6xl px-4 py-16">
         <div className="panel px-6 py-12 text-center">
           <h2 className="font-display text-3xl font-semibold text-balance sm:text-4xl">
-            Free for your department. No catch.
+            Ready when your department is.
           </h2>
           <p className="mx-auto mt-3 max-w-md text-muted-foreground">
-            No subscription, no per-seat pricing, no adverts.
+            Set up a class in a couple of minutes and share one join link with your students.
           </p>
           <div className="mt-7 flex flex-wrap justify-center gap-3">
             <Button asChild size="lg">

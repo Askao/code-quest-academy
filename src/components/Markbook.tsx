@@ -43,7 +43,9 @@ export function Markbook({
         student: s,
         levels,
         weakest: withData.length ? Math.min(...withData) : null,
-        assessPercent: report.analysis.overall.percent,
+        // No marked assessments yet is "-", not 0%.
+        assessPercent:
+          report.analysis.overall.assessments > 0 ? report.analysis.overall.percent : null,
         homeworkPercent: report.homework.total > 0 ? report.homework.percent : null,
       };
     });

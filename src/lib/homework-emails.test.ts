@@ -1,6 +1,7 @@
 import { test } from "node:test";
 import assert from "node:assert/strict";
 import {
+  firstName,
   isQuietHours,
   reminderEmail,
   runHourly,
@@ -306,4 +307,13 @@ test("once the day's email allowance is used, the run stops and the rest go on a
   const tomorrow = await runHourly({ store, send, canSend, now: new Date(day.getTime() + 20 * 3_600_000), siteUrl: "https://x" });
   assert.equal(tomorrow.sent, 1);
   assert.deepEqual(r.sent.map((s) => s.to).sort(), ["ann@x.test", "ben@x.test"]);
+});
+
+test("greetings use the first name, or the whole name when it starts with a title", () => {
+  assert.equal(firstName("Priya Shah"), "Priya");
+  assert.equal(firstName("Mr Smith"), "Mr Smith");
+  assert.equal(firstName("mrs. Jones"), "mrs. Jones");
+  assert.equal(firstName("Dr Ada Lovelace"), "Dr Ada Lovelace");
+  assert.equal(firstName("Miss"), "Miss");
+  assert.equal(firstName("  "), "there");
 });

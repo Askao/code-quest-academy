@@ -5,7 +5,7 @@ import { ThemeToggle } from "@/components/ThemeToggle";
 // Who runs the site, shown in "Who we are", and where privacy questions go.
 const RUN_BY = "Charlie Hughes";
 const PRIVACY_EMAIL = "privacy@hcodeacademy.co.uk";
-const LAST_UPDATED = "26 October 2026";
+const LAST_UPDATED = "28 October 2026";
 
 export const Route = createFileRoute("/privacy")({
   head: () => ({
@@ -56,7 +56,7 @@ function Privacy() {
           <h1 className="text-3xl font-bold">Privacy policy</h1>
           <p className="mt-2 text-sm text-muted-foreground">Last updated {LAST_UPDATED}</p>
           <p className="mt-4">
-            H-Code Academy is a free site where GCSE and A level students practise Python and their
+            H-Code Academy is a site where GCSE and A level students practise Python and their
             teachers set work and follow their progress. This page explains, in plain English, what
             we keep about you, why, who can see it, and how to get it removed. If you're a student
             and anything here is unclear, ask your teacher or email {mail}.
@@ -93,6 +93,13 @@ function Privacy() {
           <p>
             <strong>Contact form messages:</strong> if you use the Contact us form, your name, email
             address and message are emailed to us so we can reply. They aren't saved on the site.
+          </p>
+          <p>
+            <strong>Teacher feedback:</strong> teachers (never students) are asked once for
+            feedback on the site, and can send it any time. We keep their answers with their name,
+            and the days they used the site, which is how we know when to ask. We only see a
+            teacher's email address next to their feedback if they tick that we can contact them.
+            It's all deleted with their account.
           </p>
           <p>
             <strong>Rough visitor numbers:</strong> once you scroll, tap or type on a page, your
