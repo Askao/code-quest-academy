@@ -73,7 +73,7 @@ function LearnIndex() {
 
   // Which course(s) a student is on comes from their classes. Teachers and
   // admins have no class rows of their own and can switch freely.
-  const { data: memberships = [] } = useQuery({
+  const { data: memberships = [], isFetched: membershipsFetched } = useQuery({
     queryKey: ["learn-memberships", user?.id],
     enabled: !!user && !isTeacher,
     queryFn: async () => {
@@ -225,6 +225,15 @@ function LearnIndex() {
               : "Your A level topics, with every GCSE topic open below if you want to go back over something."}
         </p>
       </div>
+
+      {!isTeacher && membershipsFetched && !enrolled ? (
+        <div className="flex flex-wrap items-center justify-between gap-3 rounded-lg bg-secondary px-4 py-3 text-sm">
+          <span>In a class? Your teacher's code unlocks the lessons they've set for you.</span>
+          <Link to="/dashboard" className="font-medium text-primary underline-offset-4 hover:underline">
+            Join a class
+          </Link>
+        </div>
+      ) : null}
 
       {isTeacher && inReview.length > 0 ? (
         <div className="flex items-start gap-3 rounded-lg border border-primary/40 bg-primary/10 p-4 text-sm">

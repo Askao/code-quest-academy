@@ -90,7 +90,7 @@ const SITE_JSON_LD = JSON.stringify({
       name: "H-Code Academy",
       alternateName: ["hcodeacademy", "HCode Academy", "H-Code"],
       description:
-        "Free Python practice, lessons and revision for GCSE (OCR and AQA) and A level computer science, with teacher classes, homework and assessments.",
+        "Python practice, lessons and revision for GCSE (OCR and AQA) and A level computer science, with teacher classes, homework and assessments.",
       inLanguage: "en-GB",
     },
     {
@@ -113,7 +113,7 @@ export const Route = createRootRouteWithContext<{ queryClient: QueryClient }>()(
       {
         name: "description",
         content:
-          "Free adaptive Python practice for GCSE (OCR and AQA) and A level computer science, with teacher classes, homework and leaderboards.",
+          "Adaptive Python practice for GCSE (OCR and AQA) and A level computer science, with teacher classes, homework and leaderboards.",
       },
       { property: "og:type", content: "website" },
       { property: "og:site_name", content: "H-Code Academy" },

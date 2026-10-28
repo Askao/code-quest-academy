@@ -302,9 +302,14 @@ function Teacher() {
             Create a class, share the join code, then set homework and watch progress.
           </p>
         </div>
-        <Button asChild size="sm" variant="secondary">
-          <Link to="/admin/task-drafts">Task drafts</Link>
-        </Button>
+        <div className="flex flex-wrap gap-2">
+          <Button asChild size="sm" variant="ghost">
+            <Link to="/feedback">Give feedback</Link>
+          </Button>
+          <Button asChild size="sm" variant="secondary">
+            <Link to="/admin/task-drafts">Task drafts</Link>
+          </Button>
+        </div>
       </div>
 
       <div className="panel space-y-3 p-5">

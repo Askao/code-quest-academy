@@ -15,7 +15,15 @@ type Found = { code: string; name: string; track: "gcse" | "alevel"; board: stri
  * before joining, so a mistyped code that happens to be real doesn't quietly
  * put someone in the wrong class.
  */
-export function JoinClassBox({ userId }: { userId: string }) {
+export function JoinClassBox({
+  userId,
+  inputId = "join-code",
+  label = "Got a join code from your teacher?",
+}: {
+  userId: string;
+  inputId?: string;
+  label?: string;
+}) {
   const qc = useQueryClient();
   const [text, setText] = useState("");
   const [found, setFound] = useState<Found | null>(null);
@@ -84,12 +92,12 @@ export function JoinClassBox({ userId }: { userId: string }) {
 
   return (
     <form onSubmit={lookUp} className="mt-3" aria-label="Join a class">
-      <label htmlFor="join-code" className="text-sm font-medium">
-        Got a join code from your teacher?
+      <label htmlFor={inputId} className="text-sm font-medium">
+        {label}
       </label>
       <div className="mt-2 flex gap-2">
         <Input
-          id="join-code"
+          id={inputId}
           value={text}
           onChange={(e) => {
             setText(e.target.value);
