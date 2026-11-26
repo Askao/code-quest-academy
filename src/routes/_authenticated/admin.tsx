@@ -8,6 +8,7 @@ import { Button } from "@/components/ui/button";
 import { Input } from "@/components/ui/input";
 import { VisitorLocations } from "@/components/VisitorLocations";
 import { TeacherFeedbackAdmin } from "@/components/TeacherFeedbackAdmin";
+import { pagedAll } from "@/lib/paged-in";
 import {
   AlertDialog,
   AlertDialogAction,
@@ -63,21 +64,47 @@ function Admin() {
       // not here - unmasked names/emails never leave the database for an
       // admin's browser, so there's nothing to redact client-side and
       // nothing sensitive sitting in a network response to inspect.
+      //
+      // Users, roles, classes and memberships are paged: PostgREST returns at
+      // most 1,000 rows per request, and a short list would quietly make the
+      // totals wrong (the Users box once stuck at 200 for the same reason).
       const [profiles, roles, appSettings, challenges, classes, members] = await Promise.all([
-        supabase.rpc("admin_list_users"),
-        supabase.from("user_roles").select("*"),
+        pagedAll((from, to) =>
+          supabase
+            .rpc("admin_list_users")
+            .order("created_at", { ascending: false })
+            .range(from, to),
+        ),
+        pagedAll((from, to) =>
+          supabase.from("user_roles").select("*").order("user_id").range(from, to),
+        ),
         supabase.from("app_settings").select("*"),
-        supabase.from("challenges").select("id, track"),
-        supabase.from("classes").select("id, name, track, teacher_id"),
-        supabase.from("class_members").select("class_id, student_id"),
+        pagedAll((from, to) =>
+          supabase.from("challenges").select("id, track").order("id").range(from, to),
+        ),
+        pagedAll((from, to) =>
+          supabase
+            .from("classes")
+            .select("id, name, track, teacher_id")
+            .order("id")
+            .range(from, to),
+        ),
+        pagedAll((from, to) =>
+          supabase
+            .from("class_members")
+            .select("class_id, student_id")
+            .order("class_id")
+            .order("student_id")
+            .range(from, to),
+        ),
       ]);
       return {
-        profiles: profiles.data ?? [],
-        roles: roles.data ?? [],
+        profiles,
+        roles,
         settings: appSettings.data ?? [],
-        challenges: challenges.data ?? [],
-        classes: classes.data ?? [],
-        members: members.data ?? [],
+        challenges,
+        classes,
+        members,
       };
     },
   });
@@ -413,8 +440,8 @@ function Admin() {
                 <>
                   {" "}
                   They'll be moved to <strong>{moveTarget.toLabel}</strong> and will see that
-                  class's homework, assessments and assigned lessons instead. Their own progress
-                  and results are kept.
+                  class's homework, assessments and assigned lessons instead. Their own progress and
+                  results are kept.
                 </>
               ) : (
                 " They'll lose access to that class's homework and assigned lessons, but their own progress is kept."
@@ -451,8 +478,7 @@ function Admin() {
             <AlertDialogDescription>
               This permanently deletes{" "}
               <strong>{deleteTarget?.maskedName || deleteTarget?.maskedEmail}</strong> — their
-              profile, progress, class membership and login are gone for good. This can't be
-              undone.
+              profile, progress, class membership and login are gone for good. This can't be undone.
             </AlertDialogDescription>
           </AlertDialogHeader>
           <div className="space-y-2">
