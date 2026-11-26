@@ -1,6 +1,6 @@
 import test from "node:test";
 import assert from "node:assert/strict";
-import { pagedIn } from "./paged-in.ts";
+import { pagedAll, pagedIn } from "./paged-in.ts";
 
 /**
  * A fake Supabase client just real enough to exercise pagedIn's chunking and
@@ -89,5 +89,27 @@ test("throws instead of silently swallowing a query error", async () => {
   await assert.rejects(
     () => pagedIn(client, "attempts", "user_id", "user_id", ["a"]),
     /connection reset/,
+  );
+});
+
+test("pagedAll keeps asking for pages until one comes back short", async () => {
+  const rows = Array.from({ length: 2345 }, (_, i) => i);
+  const asked: [number, number][] = [];
+  const all = await pagedAll<number>(async (from, to) => {
+    asked.push([from, to]);
+    return { data: rows.slice(from, to + 1), error: null };
+  });
+  assert.equal(all.length, 2345);
+  assert.deepEqual(asked, [
+    [0, 999],
+    [1000, 1999],
+    [2000, 2999],
+  ]);
+});
+
+test("pagedAll stops at a database error instead of returning a short list", async () => {
+  await assert.rejects(
+    pagedAll(async () => ({ data: null, error: { message: "Admins only" } })),
+    /Admins only/,
   );
 });
